@@ -869,6 +869,17 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: -1;
+            pointer-events: none;
+            /* Create ring effect - only show the border/outline */
+            -webkit-mask: 
+              linear-gradient(#fff 0 0) padding-box, 
+              linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: 
+              linear-gradient(#fff 0 0) padding-box, 
+              linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            padding: 2px;
           }
           .mega-menu-card__icon::after {
             content: '';
@@ -877,13 +888,14 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             border-radius: 28px;
             background: radial-gradient(
               circle at center,
-              hsl(var(--primary) / 0.35) 0%,
-              hsl(var(--primary) / 0.15) 40%,
+              hsl(var(--primary) / 0.20) 0%,
+              hsl(var(--primary) / 0.08) 40%,
               transparent 70%
             );
             opacity: 0;
             transition: opacity 0.4s ease;
             z-index: -2;
+            pointer-events: none;
           }
           .mega-menu-card:hover .mega-menu-card__icon,
           .mega-menu-list-card:hover .mega-menu-card__icon {
@@ -894,14 +906,10 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
               0 2px 10px hsl(var(--primary) / 0.18),
               inset 0 2px 4px hsl(var(--background)),
               inset 0 -2px 4px hsl(var(--primary) / 0.15);
-            border-color: hsl(var(--primary) / 0.85);
+            border-color: hsl(var(--primary));
             border-width: 3px;
-            background: linear-gradient(
-              135deg,
-              hsl(var(--primary) / 0.32),
-              hsl(var(--primary) / 0.20),
-              hsl(var(--primary) / 0.12)
-            );
+            background: hsl(var(--card));
+            color: hsl(var(--primary));
           }
           .mega-menu-card:hover .mega-menu-card__icon::before,
           .mega-menu-list-card:hover .mega-menu-card__icon::before {
@@ -1270,7 +1278,11 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
                       </div>
                       <div className="mega-menu-card__header-main">
                         <div className="mega-menu-card__title-row">
-                          <Title level={5} className="mega-menu-card__title">
+                          <Title
+                            level={5}
+                            className="mega-menu-card__title"
+                            style={{ color: "hsl(var(--foreground))" }}
+                          >
                             {menuItem.label}
                           </Title>
                           {actions}
@@ -1281,6 +1293,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
                       <Paragraph
                         className="mega-menu-card__description"
                         ellipsis={{ rows: 1, tooltip: menuItem.description }}
+                        style={{ color: "hsl(var(--muted-foreground))" }}
                       >
                         {menuItem.description}
                       </Paragraph>
@@ -1355,7 +1368,11 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
                         </div>
                         <div className="mega-menu-card__header-main">
                           <div className="mega-menu-card__title-row">
-                            <Title level={5} className="mega-menu-card__title">
+                            <Title
+                              level={5}
+                              className="mega-menu-card__title"
+                              style={{ color: "hsl(var(--foreground))" }}
+                            >
                               {menuItem.label}
                             </Title>
                             {actions}
@@ -1367,6 +1384,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
                         <Paragraph
                           className="mega-menu-card__description"
                           ellipsis={{ rows: 2, tooltip: menuItem.description }}
+                          style={{ color: "hsl(var(--muted-foreground))" }}
                         >
                           {menuItem.description}
                         </Paragraph>
