@@ -373,33 +373,6 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(({
     animations: metadata.theme?.animations !== false
   }), [metadata.theme]);
   
-  const companyName = metadata.branding?.companyName || 'intelliSPEC';
-  
-  const heroContent = useMemo(() => ({
-    headline: 'Industrial Intelligence Platform',
-    title: 'IntelliSpec Symmetry Suite',
-    tagline: 'Modular. Scalable. Enterprise-ready. Future-proof.',
-    description: metadata.description || 'Command inspections, integrity, and turnarounds from one harmonious control plane.',
-    sellingPoints: [
-      {
-        id: 'orchestrate',
-        title: 'Orchestrate Enterprise Ops',
-        detail: 'Synchronize field, engineering, and safety teams across every site with live AI copilots.'
-      },
-      {
-        id: 'velocity',
-        title: 'Deploy in 4–6 Weeks',
-        detail: 'Modular launch playbooks proven across Fortune 500 operators.'
-      }
-    ],
-    stats: [
-      { id: 'efficiency', value: '35%', label: 'Efficiency lift' },
-      { id: 'deployments', value: '50+', label: 'Enterprise rollouts' }
-    ],
-    ctaPrimary: 'Start Free Trial',
-    ctaSecondary: 'Explore Platform'
-  }), [metadata.description]);
-  
   // ==================== TENANT DISCOVERY ====================
   
   /**
@@ -659,7 +632,6 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(({
     validateForm,
     metadata.fields,
     metadata.apiEndpoint,
-    metadata.redirectUrl,
     errors,
     formData,
     tenantDiscovered,
@@ -730,27 +702,28 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(({
   /**
    * Render action button
    */
-  const primaryActions = useMemo(
-    () => metadata.actions.filter(
-      (action): action is LoginAction & { type: 'submit' | 'button' } => action.type !== 'link'
-    ),
-    [metadata.actions]
-  );
-
-  const linkActions = useMemo(
-    () => metadata.actions.filter(action => action.type === 'link'),
-    [metadata.actions]
-  );
-  
-  const renderPrimaryAction = useCallback((action: LoginAction & { type: 'submit' | 'button' }) => {
+  const renderAction = useCallback((action: LoginAction) => {
     const isSubmitAction = action.type === 'submit';
     const isLoading = (isSubmitAction && isSubmitting) || action.loading || externalLoading;
-    const buttonType: 'submit' | 'button' = action.type === 'submit' ? 'submit' : 'button';
+    
+    if (action.type === 'link') {
+      return (
+        <button
+          key={action.id}
+          type="button"
+          className={`action-button action-button--${action.variant}`}
+          disabled={action.disabled || isLoading}
+          onClick={action.onClick}
+        >
+          {sanitizeHtml(action.label)}
+        </button>
+      );
+    }
     
     return (
       <button
         key={action.id}
-        type={buttonType}
+        type={action.type}
         className={`action-button action-button--${action.variant} ${isLoading ? 'action-button--loading' : ''}`}
         disabled={action.disabled || isLoading}
         onClick={action.type === 'button' ? action.onClick : undefined}
@@ -762,18 +735,6 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(({
       </button>
     );
   }, [isSubmitting, externalLoading]);
-  
-  const renderLinkAction = useCallback((action: LoginAction) => (
-    <button
-      key={action.id}
-      type="button"
-      className="action-link"
-      disabled={action.disabled}
-      onClick={action.onClick}
-    >
-      {sanitizeHtml(action.label)}
-    </button>
-  ), []);
   
   // ==================== RENDER ====================
   
@@ -797,157 +758,99 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(({
       className={`login-shell login-shell--${theme.mode} login-shell--${theme.layout} ${className}`}
       style={brandingStyles}
     >
-      <div className="login-shell__background" aria-hidden="true">
-        <span className="login-shell__gradient login-shell__gradient--primary"></span>
-        <span className="login-shell__gradient login-shell__gradient--secondary"></span>
-        <span className="login-shell__orb login-shell__orb--one"></span>
-        <span className="login-shell__orb login-shell__orb--two"></span>
-        <span className="login-shell__mesh"></span>
-      </div>
-
-      <div className="login-shell__content">
-        <section
-          className="login-shell__panel login-shell__panel--hero"
-          aria-label="Platform overview"
+      <div className="login-shell__container">
+        {/* Branding Section */}
+        <div className="login-shell__branding">
+          <LoginLogo 
+            alt={`${metadata.branding?.companyName || 'intelliSPEC'} Logo`}
+            className="branding-logo"
+          />
+        </div>
+        
+        {/* Header Section */}
+        <div className="login-shell__header">
+          <h1 className="login-title">{sanitizeHtml(metadata.title)}</h1>
+          {metadata.subtitle && (
+            <p className="login-subtitle">{sanitizeHtml(metadata.subtitle)}</p>
+          )}
+          {metadata.description && (
+            <p className="login-description">{sanitizeHtml(metadata.description)}</p>
+          )}
+        </div>
+        
+        {/* Form Section */}
+        <form 
+          ref={formRef}
+          className="login-shell__form"
+          onSubmit={handleSubmit}
+          noValidate
         >
-          <div className="hero-panel">
-            <div className="hero-panel__identity">
-              <span className="hero-panel__badge">
-                <span className="hero-panel__badge-dot" aria-hidden="true"></span>
-                {sanitizeHtml('Industrial Intelligence')}
-              </span>
-              <h2 className="hero-panel__headline">{sanitizeHtml(heroContent.headline)}</h2>
-              <h3 className="hero-panel__title">{sanitizeHtml(heroContent.title)}</h3>
-              <span className="hero-panel__divider" aria-hidden="true"></span>
-              <p className="hero-panel__tagline">{sanitizeHtml(heroContent.tagline)}</p>
-            </div>
-            <p className="hero-panel__description">{sanitizeHtml(heroContent.description)}</p>
-            <div className="hero-panel__selling-points">
-              {heroContent.sellingPoints.map((point) => (
-                <div key={point.id} className="selling-point">
-                  <span className="selling-point__title">{sanitizeHtml(point.title)}</span>
-                  <span className="selling-point__detail">{sanitizeHtml(point.detail)}</span>
-                </div>
-              ))}
-            </div>
-            <div className="hero-panel__stats" role="list">
-              {heroContent.stats.map((stat) => (
-                <div key={stat.id} className="hero-panel__stat" role="listitem">
-                  <span className="hero-panel__stat-value">{sanitizeHtml(stat.value)}</span>
-                  <span className="hero-panel__stat-label">{sanitizeHtml(stat.label)}</span>
-                </div>
-              ))}
-            </div>
-            <div className="hero-panel__cta" role="group" aria-label="Platform call to action">
-              <button type="button" className="cta-button cta-button--primary">
-                {sanitizeHtml(heroContent.ctaPrimary)}
-              </button>
-              <button type="button" className="cta-button cta-button--ghost">
-                {sanitizeHtml(heroContent.ctaSecondary)}
-              </button>
-            </div>
+          {/* Fields */}
+          <div className="form-fields">
+            {metadata.fields.map((field, index) => renderField(field, index))}
           </div>
-        </section>
-
-        <section
-          className="login-shell__panel login-shell__panel--form"
-          aria-labelledby="login-form-title"
-        >
-          <div className="login-shell__panel-content">
-            <div className="login-shell__branding">
-              <LoginLogo 
-                alt={`${companyName} Logo`}
-                className="branding-logo"
-                height={56}
-              />
-              <p className="branding-tagline">
-                {sanitizeHtml(`Precision workflows for ${companyName} teams.`)}
+          
+          {/* Tenant Discovery Indicator */}
+          {isDiscoveringTenant && (
+            <div className="tenant-discovery-indicator" role="status" aria-live="polite">
+              <span className="discovery-spinner"></span>
+              <span className="discovery-text">Finding your organization...</span>
+            </div>
+          )}
+          
+          {/* Tenant Selector Dropdown */}
+          {showTenantSelector && availableTenants.length > 0 && (
+            <div className="tenant-selector-container">
+              <label htmlFor="tenant-selector" className="tenant-selector-label">
+                Select Your Organization
+              </label>
+              <select
+                id="tenant-selector"
+                className="tenant-selector"
+                value={tenantDiscovered || ''}
+                onChange={(e) => handleTenantSelect(e.target.value)}
+                aria-label="Select organization"
+              >
+                <option value="">-- Select Organization --</option>
+                {availableTenants.map((tenant) => (
+                  <option key={tenant.slug} value={tenant.slug}>
+                    {tenant.name}
+                  </option>
+                ))}
+              </select>
+              <p className="tenant-selector-hint">
+                You have access to multiple organizations. Please select one to continue.
               </p>
             </div>
-            
-            <div className="login-shell__header">
-              <h1 id="login-form-title" className="login-title">{sanitizeHtml(metadata.title)}</h1>
-              {metadata.subtitle && (
-                <p className="login-subtitle">{sanitizeHtml(metadata.subtitle)}</p>
-              )}
-              {metadata.description && (
-                <p className="login-description">{sanitizeHtml(metadata.description)}</p>
-              )}
+          )}
+          
+          {/* Tenant Confirmed Indicator */}
+          {tenantDiscovered && !showTenantSelector && formData['email'] && (
+            <div className="tenant-confirmed-indicator" role="status">
+              <svg className="tenant-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+              </svg>
+              <span className="tenant-name">
+                Organization: <strong>{availableTenants.find(t => t.slug === tenantDiscovered)?.name || tenantDiscovered}</strong>
+              </span>
             </div>
-            
-            <form 
-              ref={formRef}
-              className="login-shell__form"
-              onSubmit={handleSubmit}
-              noValidate
-            >
-              <div className="form-fields">
-                {metadata.fields.map((field, index) => renderField(field, index))}
-              </div>
-              
-              {isDiscoveringTenant && (
-                <div className="tenant-discovery-indicator" role="status" aria-live="polite">
-                  <span className="discovery-spinner"></span>
-                  <span className="discovery-text">Finding your organization...</span>
-                </div>
-              )}
-              
-              {showTenantSelector && availableTenants.length > 0 && (
-                <div className="tenant-selector-container">
-                  <label htmlFor="tenant-selector" className="tenant-selector-label">
-                    Select Your Organization
-                  </label>
-                  <select
-                    id="tenant-selector"
-                    className="tenant-selector"
-                    value={tenantDiscovered || ''}
-                    onChange={(e) => handleTenantSelect(e.target.value)}
-                    aria-label="Select organization"
-                  >
-                    <option value="">-- Select Organization --</option>
-                    {availableTenants.map((tenant) => (
-                      <option key={tenant.slug} value={tenant.slug}>
-                        {tenant.name}
-                      </option>
-                    ))}
-                  </select>
-                  <p className="tenant-selector-hint">
-                    You have access to multiple organizations. Please select one to continue.
-                  </p>
-                </div>
-              )}
-              
-              {tenantDiscovered && !showTenantSelector && formData['email'] && (
-                <div className="tenant-confirmed-indicator" role="status">
-                  <svg className="tenant-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-                  </svg>
-                  <span className="tenant-name">
-                    Organization: <strong>{availableTenants.find(t => t.slug === tenantDiscovered)?.name || tenantDiscovered}</strong>
-                  </span>
-                </div>
-              )}
-              
-              {submitError && (
-                <div className="form-error" role="alert" aria-live="polite">
-                  {submitError}
-                </div>
-              )}
-              
-              <div className="form-actions">
-                {primaryActions.map(renderPrimaryAction)}
-              </div>
-              
-              {linkActions.length > 0 && (
-                <div className="form-links">
-                  {linkActions.map(renderLinkAction)}
-                </div>
-              )}
-            </form>
+          )}
+          
+          {/* Submit Error */}
+          {submitError && (
+            <div className="form-error" role="alert" aria-live="polite">
+              {submitError}
+            </div>
+          )}
+          
+          {/* Actions */}
+          <div className="form-actions">
+            {metadata.actions.map(renderAction)}
           </div>
-        </section>
+        </form>
       </div>
       
+      {/* Loading Overlay */}
       {(isSubmitting || externalLoading) && (
         <div className="login-shell__overlay" aria-hidden="true">
           <div className="loading-indicator">
@@ -968,440 +871,95 @@ LoginShell.displayName = 'LoginShell';
  * Professional, accessible, and responsive CSS styles
  * Following shadcn design tokens and the project's theme system
  */
-export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShell component */
-
+export const loginShellStyles = `
 .login-shell {
   --login-spacing-xs: 0.5rem;
   --login-spacing-sm: 1rem;
   --login-spacing-md: 1.5rem;
   --login-spacing-lg: 2rem;
   --login-spacing-xl: 3rem;
-  --login-border-radius: 1.25rem;
-  --login-border-radius-sm: 0.85rem;
+  
+  --login-border-radius: 0.5rem;
   --login-border-width: 1px;
-  --login-font-size-xs: 0.75rem;
   --login-font-size-sm: 0.875rem;
   --login-font-size-base: 1rem;
   --login-font-size-lg: 1.125rem;
-  --login-font-size-xl: 1.35rem;
-  --login-font-size-2xl: 1.75rem;
-  --login-font-size-3xl: 2.3rem;
-  --login-transition: all 0.25s ease;
-  --login-shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.06);
-  --login-shadow-md: 0 12px 30px -18px rgb(15 23 42 / 0.28);
-  --login-shadow-lg: 0 32px 60px -35px hsl(var(--primary) / 0.45);
-  --login-padding-block: clamp(1rem, 3vh, 2rem);
-  --login-padding-inline: clamp(1.5rem, 4vw, 3rem);
+  --login-font-size-xl: 1.25rem;
+  --login-font-size-2xl: 1.5rem;
   
-  height: 100dvh;
-  min-height: 100dvh;
-  padding-block: var(--login-padding-block);
-  padding-inline: var(--login-padding-inline);
+  --login-transition: all 0.2s ease-in-out;
+  --login-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --login-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --login-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
-  background:
-    radial-gradient(circle at 8% -10%, hsl(var(--primary) / 0.18) 0%, transparent 45%),
-    radial-gradient(circle at 85% 0%, hsl(var(--secondary) / 0.16) 0%, transparent 42%),
-    hsl(var(--background));
+  background: hsl(var(--background));
   color: hsl(var(--foreground));
   font-family: var(--font-sans);
-}
-
-.login-shell__background {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.login-shell__gradient {
-  position: absolute;
-  border-radius: 999px;
-  filter: blur(130px);
-  opacity: 0.65;
-}
-
-.login-shell__gradient--primary {
-  width: 40vw;
-  height: 40vw;
-  top: -18%;
-  right: -12%;
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.55), hsl(var(--accent) / 0.3));
-  animation: floatOrb 18s ease-in-out infinite;
-}
-
-.login-shell__gradient--secondary {
-  width: 50vw;
-  height: 50vw;
-  bottom: -25%;
-  left: -18%;
-  background: linear-gradient(150deg, hsl(var(--secondary) / 0.5), hsl(var(--muted) / 0.35));
-  animation: floatOrb 22s ease-in-out infinite reverse;
-}
-
-.login-shell__orb {
-  position: absolute;
-  width: clamp(160px, 16vw, 220px);
-  height: clamp(160px, 16vw, 220px);
-  border-radius: 50%;
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.4), hsl(var(--secondary) / 0.3));
-  opacity: 0.35;
-  filter: blur(40px);
-}
-
-.login-shell__orb--one {
-  top: 22%;
-  left: 12%;
-}
-
-.login-shell__orb--two {
-  bottom: 18%;
-  right: 16%;
-}
-
-.login-shell__mesh {
-  position: absolute;
-  inset: 0;
-  background-size: 22px 22px;
-  background-image: linear-gradient(to right, hsl(var(--border) / 0.08) 1px, transparent 1px),
-    linear-gradient(to bottom, hsl(var(--border) / 0.08) 1px, transparent 1px);
-  opacity: 0.32;
-  mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.75), transparent 70%);
-}
-
-.login-shell__content {
   position: relative;
-  z-index: 1;
-  width: min(1100px, 100%);
-  height: calc(100% - (var(--login-padding-block) * 2));
-  display: flex;
-  align-items: stretch;
-  gap: clamp(1.5rem, 4vw, 3rem);
 }
 
-.login-shell__panel {
+.login-shell__container {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--login-spacing-lg);
+  background: hsl(var(--card));
+  border: var(--login-border-width) solid hsl(var(--border));
   border-radius: var(--login-border-radius);
-  display: flex;
-}
-
-.login-shell__panel--hero {
-  display: flex;
-  align-items: flex-start;
-  flex: 1 1 0%;
-  background: linear-gradient(160deg, hsl(var(--card) / 0.45), hsl(var(--background) / 0.2));
-  border: var(--login-border-width) solid hsl(var(--border) / 0.35);
   box-shadow: var(--login-shadow-lg);
-  backdrop-filter: blur(18px);
-  padding: clamp(1.8rem, 3.5vw, 2.6rem);
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 100%;
-  position: relative;
-  isolation: isolate;
-  animation: heroFadeIn 0.9s ease 0.1s both;
-  scrollbar-width: thin;
-  scrollbar-color: hsl(var(--border) / 0.5) transparent;
-}
-
-.login-shell__panel--hero::-webkit-scrollbar {
-  width: 6px;
-}
-
-.login-shell__panel--hero::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.login-shell__panel--hero::-webkit-scrollbar-thumb {
-  background: hsl(var(--border) / 0.5);
-  border-radius: 999px;
-}
-
-.login-shell__panel--hero::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--border) / 0.7);
-}
-
-.hero-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: clamp(1.1rem, 2.2vw, 1.6rem);
-  max-width: 28rem;
-  position: relative;
-  padding-block: clamp(0.5rem, 2vw, 1rem);
-  width: 100%;
-}
-
-.hero-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(circle at 20% 20%, hsl(var(--primary) / 0.12), transparent 60%);
-  opacity: 0.7;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.hero-panel__identity {
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.hero-panel__badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.45rem 0.95rem;
-  border-radius: 999px;
-  font-size: var(--login-font-size-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 600;
-  color: hsl(var(--primary-foreground));
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.18), hsl(var(--primary)));
-  box-shadow: 0 10px 22px -18px hsl(var(--primary));
-}
-
-.hero-panel__badge-dot {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 999px;
-  background: hsl(var(--accent));
-  box-shadow: 0 0 0 6px hsl(var(--accent) / 0.25);
-}
-
-.hero-panel__headline {
-  margin: 0;
-  font-size: clamp(2.1rem, 4vw, 2.8rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: hsl(var(--foreground));
-}
-
-.hero-panel__title {
-  margin: 0;
-  font-size: clamp(1.3rem, 2.5vw, 1.6rem);
-  font-weight: 500;
-  color: hsl(var(--muted-foreground));
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.hero-panel__divider {
-  width: 120px;
-  height: 2px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-  margin-top: 0.5rem;
-}
-
-.hero-panel__tagline {
-  margin: 0;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  color: hsl(var(--muted-foreground));
-  line-height: 1.5;
-}
-
-.hero-panel__description {
-  margin: 0;
-  font-size: 0.95rem;
-  color: hsl(var(--foreground));
-  line-height: 1.6;
-}
-
-.hero-panel__selling-points {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
-}
-
-.selling-point {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.85rem 1rem;
-  border-radius: var(--login-border-radius-sm);
-  border: 1px solid hsl(var(--border) / 0.35);
-  background: hsl(var(--card) / 0.2);
-  box-shadow: inset 0 0 0 1px hsl(var(--border) / 0.15);
-}
-
-.selling-point__title {
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: hsl(var(--foreground));
-}
-
-.selling-point__detail {
-  font-size: 0.8rem;
-  color: hsl(var(--muted-foreground));
-  line-height: 1.4;
-}
-
-.hero-panel__stats {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem;
-}
-
-.hero-panel__stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  padding: 0.75rem 1rem;
-  border-radius: var(--login-border-radius-sm);
-  border: 1px solid hsl(var(--border) / 0.35);
-  background: hsl(var(--card) / 0.2);
-  min-width: 140px;
-  box-shadow: inset 0 0 0 1px hsl(var(--border) / 0.2);
-}
-
-.hero-panel__stat-value {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  font-weight: 600;
-  color: hsl(var(--primary));
-  letter-spacing: -0.02em;
-  background: linear-gradient(120deg, hsl(var(--primary)), hsl(var(--accent)));
-  -webkit-background-clip: text;
-  color: transparent;
-}
-
-.hero-panel__stat-label {
-  font-size: 0.78rem;
-  color: hsl(var(--muted-foreground));
-}
-
-.hero-panel__cta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.cta-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  padding: 0.85rem 1.4rem;
-  border-radius: var(--login-border-radius-sm);
-  border: 1px solid transparent;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--login-transition);
-  color: hsl(var(--primary-foreground));
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.85));
-  box-shadow: 0 18px 30px -18px hsl(var(--primary)), 0 10px 24px -22px hsl(var(--accent));
-}
-
-.cta-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 24px 38px -18px hsl(var(--primary) / 0.9);
-}
-
-.cta-button--ghost {
-  background: transparent;
-  color: hsl(var(--primary));
-  border-color: hsl(var(--primary) / 0.35);
-  box-shadow: none;
-}
-
-.cta-button--ghost:hover {
-  border-color: hsl(var(--primary));
-  color: hsl(var(--primary) / 0.9);
-}
-
-.login-shell__panel--form {
-  animation: formSlideIn 0.9s ease 0.2s both;
-}
-
-.login-shell__panel--form {
-  display: flex;
-  align-items: center;
-  flex: 0 0 clamp(340px, 32vw, 420px);
-  background: linear-gradient(160deg, hsl(var(--card) / 0.95), hsl(var(--muted) / 0.6));
-  border: var(--login-border-width) solid hsl(var(--border) / 0.45);
-  box-shadow: var(--login-shadow-md);
-  backdrop-filter: blur(20px);
-  padding: clamp(1.8rem, 3.3vw, 2.6rem);
-  overflow: hidden;
-  max-height: 100%;
-}
-
-.login-shell__panel-content {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1.3rem, 3vw, 2rem);
-  width: 100%;
-  position: relative;
-  padding-block: clamp(1rem, 3vw, 1.75rem);
-  justify-content: center;
 }
 
 .login-shell__branding {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--login-spacing-xs);
+  text-align: center;
+  margin-bottom: var(--login-spacing-lg);
 }
 
 .branding-logo {
-  max-height: 56px;
+  max-height: 60px;
+  max-width: 200px;
   width: auto;
   height: auto;
-  filter: drop-shadow(0 10px 24px hsl(var(--primary) / 0.22));
-}
-
-.branding-tagline {
-  margin: 0;
-  font-size: var(--login-font-size-sm);
-  color: hsl(var(--muted-foreground));
-  letter-spacing: 0.01em;
 }
 
 .login-shell__header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
+  text-align: center;
+  margin-bottom: var(--login-spacing-xl);
 }
 
 .login-title {
-  font-size: clamp(1.8rem, 4vw, 2.2rem);
+  font-size: var(--login-font-size-2xl);
   font-weight: 600;
   color: hsl(var(--foreground));
-  margin: 0;
-  letter-spacing: -0.02em;
+  margin: 0 0 var(--login-spacing-sm) 0;
+  line-height: 1.2;
 }
 
 .login-subtitle {
-  margin: 0;
   font-size: var(--login-font-size-base);
   color: hsl(var(--muted-foreground));
-  line-height: 1.5;
+  margin: 0 0 var(--login-spacing-sm) 0;
+  line-height: 1.4;
 }
 
 .login-description {
-  margin: 0;
   font-size: var(--login-font-size-sm);
   color: hsl(var(--muted-foreground));
-  line-height: 1.55;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .login-shell__form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--login-spacing-lg);
+  width: 100%;
 }
 
 .form-fields {
   display: flex;
   flex-direction: column;
   gap: var(--login-spacing-md);
+  margin-bottom: var(--login-spacing-lg);
 }
 
 .field-group {
@@ -1412,205 +970,172 @@ export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShel
 
 .field-label {
   font-size: var(--login-font-size-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: hsl(var(--foreground));
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .required-indicator {
   color: hsl(var(--destructive));
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .field-input {
   width: 100%;
-  padding: calc(var(--login-spacing-sm) + 2px) calc(var(--login-spacing-sm) + 6px);
+  padding: var(--login-spacing-sm);
   font-size: var(--login-font-size-base);
   line-height: 1.5;
   color: hsl(var(--foreground));
-  background: linear-gradient(180deg, hsl(var(--background) / 0.9), hsl(var(--background) / 0.85));
-  border: var(--login-border-width) solid hsl(var(--input) / 0.8);
-  border-radius: var(--login-border-radius-sm);
+  background: hsl(var(--background));
+  border: var(--login-border-width) solid hsl(var(--border));
+  border-radius: var(--login-border-radius);
   transition: var(--login-transition);
   outline: none;
-  box-shadow: inset 0 1px 0 hsl(var(--border) / 0.35);
 }
 
 .field-input:focus {
   border-color: hsl(var(--ring));
-  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.12);
-  background: hsl(var(--background));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
 }
 
 .field-input:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
-  background: hsl(var(--muted) / 0.4);
+  background: hsl(var(--muted));
 }
 
 .field-input--error {
   border-color: hsl(var(--destructive));
-  box-shadow: 0 0 0 4px hsl(var(--destructive) / 0.12);
+}
+
+.field-input--error:focus {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
 }
 
 .field-error {
   font-size: var(--login-font-size-sm);
   color: hsl(var(--destructive));
-  margin: 0;
+  margin-top: var(--login-spacing-xs);
 }
 
 .form-error {
-  padding: var(--login-spacing-sm) var(--login-spacing-md);
-  background: hsl(var(--destructive) / 0.12);
-  border: var(--login-border-width) solid hsl(var(--destructive) / 0.28);
-  border-radius: var(--login-border-radius-sm);
+  padding: var(--login-spacing-sm);
+  background: hsl(var(--destructive) / 0.1);
+  border: var(--login-border-width) solid hsl(var(--destructive) / 0.2);
+  border-radius: var(--login-border-radius);
   color: hsl(var(--destructive));
   font-size: var(--login-font-size-sm);
+  margin-bottom: var(--login-spacing-md);
 }
 
 .form-actions {
   display: flex;
   flex-direction: column;
   gap: var(--login-spacing-sm);
-  align-items: stretch;
 }
 
 .action-button {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--login-spacing-xs);
-  padding: calc(var(--login-spacing-sm) + 2px) var(--login-spacing-lg);
+  padding: var(--login-spacing-sm) var(--login-spacing-md);
   font-size: var(--login-font-size-base);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.5;
   border: var(--login-border-width) solid transparent;
-  border-radius: var(--login-border-radius-sm);
+  border-radius: var(--login-border-radius);
   cursor: pointer;
   transition: var(--login-transition);
   text-decoration: none;
   outline: none;
-  min-height: 48px;
-  position: relative;
+  min-height: 44px;
 }
 
 .action-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.25);
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
 }
 
 .action-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.action-button--primary {
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary) / 0.82));
-  color: hsl(var(--primary-foreground));
-  box-shadow: 0 18px 32px -20px hsl(var(--primary)), 0 10px 24px -26px hsl(var(--accent));
-}
-
-.action-button--primary:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 24px 36px -18px hsl(var(--primary) / 0.9);
-}
-
-.action-button--secondary {
-  background: linear-gradient(135deg, hsl(var(--secondary) / 0.95), hsl(var(--muted) / 0.7));
-  color: hsl(var(--secondary-foreground));
-  border-color: hsl(var(--secondary) / 0.4);
-}
-
-.action-button--secondary:hover:not(:disabled) {
-  border-color: hsl(var(--secondary));
-}
-
-.action-button--text,
-.action-button--link {
-  background: transparent;
-  color: hsl(var(--primary));
-  border-color: transparent;
-  padding-left: 0;
-  padding-right: 0;
-  font-weight: 500;
-}
-
-.action-button--link {
-  text-decoration: underline;
-  text-underline-offset: 0.35rem;
-}
-
-.form-links {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 0.25rem;
-}
-
-.action-link {
-  background: none;
-  border: none;
-  font-size: 0.9rem;
-  color: hsl(var(--primary));
-  cursor: pointer;
-  font-weight: 600;
-  text-decoration: none;
-  position: relative;
-  padding: 0.25rem 0;
-  transition: color 0.2s ease;
-}
-
-.action-link::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -2px;
-  height: 2px;
-  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.2s ease;
-}
-
-.action-link:hover,
-.action-link:focus-visible {
-  color: hsl(var(--primary) / 0.85);
-}
-
-.action-link:hover::after,
-.action-link:focus-visible::after {
-  transform: scaleX(1);
-}
-
-.action-link:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
+.action-button--primary {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.action-button--primary:hover:not(:disabled) {
+  background: hsl(var(--primary) / 0.9);
+}
+
+.action-button--secondary {
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
+}
+
+.action-button--secondary:hover:not(:disabled) {
+  background: hsl(var(--secondary) / 0.8);
+}
+
+.action-button--text {
+  background: transparent;
+  color: hsl(var(--primary));
+  border-color: transparent;
+  padding: var(--login-spacing-xs) 0;
+}
+
+.action-button--text:hover:not(:disabled) {
+  background: hsl(var(--primary) / 0.1);
+}
+
+.action-button--link {
+  background: transparent;
+  color: hsl(var(--primary));
+  border: none;
+  padding: 0;
+  min-height: auto;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.action-button--link:hover:not(:disabled) {
+  text-decoration-thickness: 2px;
+}
+
 .action-button--loading {
+  position: relative;
   color: transparent;
 }
 
 .loading-spinner {
-  width: 1.05rem;
-  height: 1.05rem;
+  width: 1rem;
+  height: 1rem;
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
+.action-button--loading .loading-spinner {
+  position: absolute;
+  color: inherit;
+}
+
 .login-shell__overlay {
   position: absolute;
   inset: 0;
-  background: hsl(var(--background) / 0.82);
-  backdrop-filter: blur(6px);
+  background: hsl(var(--background) / 0.8);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5;
+  z-index: 50;
 }
 
 .loading-indicator {
@@ -1621,8 +1146,7 @@ export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShel
   padding: var(--login-spacing-lg);
   background: hsl(var(--card));
   border-radius: var(--login-border-radius);
-  box-shadow: var(--login-shadow-sm);
-  border: 1px solid hsl(var(--border) / 0.3);
+  box-shadow: var(--login-shadow-lg);
 }
 
 .loading-text {
@@ -1630,42 +1154,153 @@ export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShel
   color: hsl(var(--muted-foreground));
 }
 
+.login-shell-error {
+  max-width: 500px;
+  padding: var(--login-spacing-lg);
+  background: hsl(var(--destructive) / 0.1);
+  border: var(--login-border-width) solid hsl(var(--destructive) / 0.2);
+  border-radius: var(--login-border-radius);
+  color: hsl(var(--destructive));
+}
+
+.login-shell-error h2 {
+  margin: 0 0 var(--login-spacing-sm) 0;
+  font-size: var(--login-font-size-xl);
+}
+
+.login-shell-error p {
+  margin: 0 0 var(--login-spacing-sm) 0;
+}
+
+.login-shell-error ul {
+  margin: 0;
+  padding-left: var(--login-spacing-md);
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Theme Variations */
+.login-shell--modern {
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--secondary) / 0.1));
+}
+
+.login-shell--minimal .login-shell__container {
+  box-shadow: none;
+  border: none;
+  background: transparent;
+}
+
+/* Layout Variations */
+.login-shell--split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+.login-shell--sidebar .login-shell__container {
+  max-width: 300px;
+  position: fixed;
+  left: var(--login-spacing-lg);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-shell {
+    padding: var(--login-spacing-md);
+    align-items: flex-start;
+    padding-top: var(--login-spacing-xl);
+  }
+  
+  .login-shell__container {
+    max-width: 100%;
+    padding: var(--login-spacing-md);
+  }
+  
+  .login-shell--split {
+    grid-template-columns: 1fr;
+  }
+  
+  .login-shell--sidebar .login-shell__container {
+    position: static;
+    transform: none;
+    max-width: 100%;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .field-input {
+    border-width: 2px;
+  }
+  
+  .action-button {
+    border-width: 2px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .login-shell *,
+  .login-shell *::before,
+  .login-shell *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .login-shell {
+    color-scheme: dark;
+  }
+}
+
+/* Tenant Discovery & Selection Styles */
 .tenant-discovery-indicator {
   display: flex;
   align-items: center;
   gap: var(--login-spacing-sm);
-  padding: var(--login-spacing-sm) var(--login-spacing-md);
-  background: hsl(var(--primary) / 0.08);
-  border: 1px dashed hsl(var(--primary) / 0.4);
-  border-radius: var(--login-border-radius-sm);
+  padding: var(--login-spacing-md);
+  background: hsl(var(--primary) / 0.05);
+  border: 1px solid hsl(var(--primary) / 0.2);
+  border-radius: var(--login-border-radius);
+  margin-top: var(--login-spacing-md);
   color: hsl(var(--primary));
-  font-size: var(--login-font-size-sm);
+  font-size: 0.875rem;
 }
 
 .discovery-spinner {
   width: 1rem;
   height: 1rem;
-  border: 2px solid hsl(var(--primary) / 0.25);
+  border: 2px solid hsl(var(--primary) / 0.3);
   border-top-color: hsl(var(--primary));
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
+.discovery-text {
+  font-weight: 500;
+}
+
 .tenant-selector-container {
-  display: flex;
-  flex-direction: column;
-  gap: var(--login-spacing-xs);
   margin-top: var(--login-spacing-md);
   padding: var(--login-spacing-md);
-  background: hsl(var(--muted) / 0.45);
-  border: 1px solid hsl(var(--border) / 0.45);
-  border-radius: var(--login-border-radius-sm);
+  background: hsl(var(--muted) / 0.5);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--login-border-radius);
 }
 
 .tenant-selector-label {
-  font-size: var(--login-font-size-sm);
+  display: block;
+  font-size: 0.875rem;
   font-weight: 600;
   color: hsl(var(--foreground));
+  margin-bottom: var(--login-spacing-xs);
 }
 
 .tenant-selector {
@@ -1676,8 +1311,8 @@ export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShel
   color: hsl(var(--foreground));
   background: hsl(var(--background));
   border: 1px solid hsl(var(--input));
-  border-radius: var(--login-border-radius-sm);
-  transition: var(--login-transition);
+  border-radius: var(--login-border-radius);
+  transition: all 0.2s ease;
   cursor: pointer;
 }
 
@@ -1688,10 +1323,11 @@ export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShel
 .tenant-selector:focus {
   outline: none;
   border-color: hsl(var(--ring));
-  box-shadow: 0 0 0 4px hsl(var(--ring) / 0.15);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.1);
 }
 
 .tenant-selector-hint {
+  margin-top: var(--login-spacing-xs);
   font-size: 0.75rem;
   color: hsl(var(--muted-foreground));
   line-height: 1.4;
@@ -1703,16 +1339,18 @@ export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShel
   gap: var(--login-spacing-sm);
   padding: var(--login-spacing-sm) var(--login-spacing-md);
   margin-top: var(--login-spacing-md);
-  background: hsl(var(--success) / 0.12);
-  border: 1px solid hsl(var(--success) / 0.35);
-  border-radius: var(--login-border-radius-sm);
-  font-size: var(--login-font-size-sm);
-  color: hsl(var(--success));
+  background: hsl(var(--success) / 0.1);
+  border: 1px solid hsl(var(--success) / 0.3);
+  border-radius: var(--login-border-radius);
+  font-size: 0.875rem;
+  color: hsl(var(--success-foreground));
 }
 
 .tenant-icon {
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: hsl(var(--success));
 }
 
 .tenant-name {
@@ -1723,155 +1361,7 @@ export const loginShellStyles = `/* Login Shell Styles - Imported from LoginShel
   font-weight: 600;
   color: hsl(var(--primary));
 }
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes heroFadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(24px) scale(0.98);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(0) scale(1.01);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes formSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateX(32px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes floatOrb {
-  0%, 100% {
-    transform: translate3d(0, -10px, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(0, 12px, 0) scale(1.02);
-  }
-}
-
-@media (max-width: 1024px) {
-  .login-shell__content {
-    gap: clamp(1.25rem, 4vw, 2rem);
-  }
-
-  .login-shell__panel--form {
-    flex-basis: clamp(320px, 36vw, 380px);
-  }
-
-  .hero-panel {
-    max-width: 28rem;
-  }
-}
-
-@media (max-width: 900px) {
-  .login-shell {
-    min-height: auto;
-    height: auto;
-    padding-inline: clamp(1rem, 6vw, 1.75rem);
-  }
-
-  .login-shell__content {
-    flex-direction: column;
-    height: auto;
-  }
-
-  .login-shell__panel--form,
-  .login-shell__panel--hero {
-    order: initial;
-    flex-basis: auto;
-    width: min(460px, 100%);
-    margin: 0 auto;
-    max-height: none;
-    overflow: visible;
-  }
-
-  .login-shell__panel--hero {
-    padding: clamp(1.6rem, 5vw, 2rem);
-  }
-
-  .hero-panel,
-  .login-shell__panel-content {
-    max-height: none;
-    height: auto;
-    overflow: visible;
-    padding-right: 0;
-  }
-}
-
-@media (max-width: 540px) {
-  .login-shell {
-    padding: clamp(0.75rem, 5vh, 1.5rem) clamp(0.85rem, 6vw, 1.25rem);
-  }
-
-  .login-shell__panel--form {
-    padding: 1.6rem;
-    border-radius: 1rem;
-  }
-
-  .login-title {
-    font-size: 1.85rem;
-  }
-
-  .hero-panel__stats {
-    gap: 0.65rem;
-  }
-
-  .hero-panel__stat {
-    flex: 1 1 calc(50% - 0.65rem);
-    min-width: 0;
-  }
-
-  .form-links {
-    justify-content: center;
-  }
-}
-
-@media (prefers-contrast: high) {
-  .field-input,
-  .action-button,
-  .cta-button {
-    border-width: 2px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .login-shell *,
-  .login-shell *::before,
-  .login-shell *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .login-shell__gradient--primary,
-  .login-shell__gradient--secondary {
-    animation: none;
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  .login-shell {
-    color-scheme: dark;
-  }
-}
-`
+`;
 
 // ==================== DEFAULT METADATA ====================
 
