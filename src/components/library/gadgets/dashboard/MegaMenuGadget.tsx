@@ -234,7 +234,7 @@ const getIconPresentation = (menuItem: MenuItem, palette: string[]) => {
     "--icon-accent": baseColor,
     "--icon-glow":
       "radial-gradient(circle at center, color-mix(in srgb, var(--icon-accent) 35%, transparent) 0%, transparent 68%)",
-    color: baseColor,
+    color: `hsl(var(--primary))`,
   };
   return {
     accent: baseColor,
@@ -393,7 +393,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
         return React.createElement(IconComponent, {
           style: {
             fontSize: "26px",
-            color: accentColor || "currentColor",
+            color: "currentColor",
             fontWeight: 600,
             strokeWidth: 0.5,
           },
@@ -404,7 +404,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
         return React.createElement(Icons.CalculatorOutlined, {
           style: {
             fontSize: "26px",
-            color: accentColor || "currentColor",
+            color: "currentColor",
             fontWeight: 600,
           },
         });
@@ -415,7 +415,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
       return React.createElement(Icons.QuestionCircleOutlined, {
         style: {
           fontSize: "26px",
-          color: accentColor || "currentColor",
+          color: "currentColor",
           fontWeight: 600,
         },
       });
@@ -435,16 +435,16 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
       }}
     >
       <div className="mega-menu-card__header">
-         <div
-           className="mega-menu-card__icon"
-           style={{ border: "none", background: "hsl(var(--muted) / 0.1)" }}
-         >
-           <Skeleton.Avatar
-             size={28}
-             shape="square"
-             style={{ borderRadius: "8px" }}
-           />
-         </div>
+        <div
+          className="mega-menu-card__icon"
+          style={{ border: "none", background: "hsl(var(--muted) / 0.1)" }}
+        >
+          <Skeleton.Avatar
+            size={28}
+            shape="square"
+            style={{ borderRadius: "8px" }}
+          />
+        </div>
         <div className="mega-menu-card__header-main">
           <div className="mega-menu-card__title-row">
             <Skeleton.Input style={{ width: "70%", height: "16px" }} active />
@@ -847,7 +847,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--icon-accent);
+            color: hsl(var(--primary));
             overflow: visible;
             box-shadow: 
               0 4px 16px hsl(var(--primary) / 0.20),
