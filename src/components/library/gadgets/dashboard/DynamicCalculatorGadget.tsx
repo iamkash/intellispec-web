@@ -17,7 +17,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useOpenAI } from '../../../../hooks/useOpenAI';
 import { GenericPdfMetadata, normalizeForPdf, PDFGeneratorWidget } from '../../widgets/input/PDFGeneratorWidget';
-import { BaseGadget, GadgetConfig, GadgetMetadata, GadgetSchema, GadgetType } from '../base';
+import { BaseGadget, GadgetConfig, GadgetContext, GadgetMetadata, GadgetSchema, GadgetType } from '../base';
 import DocumentFormGadget from '../forms/DocumentFormGadget';
 import { FormRenderer } from '../forms/FormRenderer';
 
@@ -72,6 +72,13 @@ export class DynamicCalculatorGadget extends BaseGadget {
     },
     widgetSchemas: {}
   };
+
+  getContainerProps(props: any, context?: GadgetContext): any {
+    return {
+      ...super.getContainerProps(props, context),
+      noPadding: true // Calculator manages its own internal padding
+    };
+  }
 
   renderBody(props: any): React.ReactNode {
     // Handle both direct config and nested config structure
