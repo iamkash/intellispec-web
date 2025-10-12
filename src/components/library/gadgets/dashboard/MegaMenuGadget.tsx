@@ -839,68 +839,71 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             border-radius: 16px;
             background: linear-gradient(
               145deg,
-              color-mix(in srgb, var(--icon-accent) 18%, hsl(var(--background)) 82%),
-              color-mix(in srgb, var(--icon-accent) 10%, hsl(var(--background)) 90%),
-              color-mix(in srgb, var(--icon-accent) 6%, hsl(var(--background)) 94%)
+              color-mix(in srgb, var(--icon-accent) 22%, hsl(var(--background)) 78%),
+              color-mix(in srgb, var(--icon-accent) 14%, hsl(var(--background)) 86%),
+              color-mix(in srgb, var(--icon-accent) 8%, hsl(var(--background)) 92%)
             );
-            border: 1.5px solid color-mix(in srgb, var(--icon-accent) 30%, hsl(var(--border)));
+            border: 2px solid color-mix(in srgb, var(--icon-accent) 40%, hsl(var(--border)));
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--icon-accent);
             overflow: visible;
             box-shadow: 
-              0 3px 12px color-mix(in srgb, var(--icon-accent) 16%, transparent),
-              0 1px 4px color-mix(in srgb, var(--icon-accent) 8%, transparent),
-              inset 0 1px 2px hsl(var(--background) / 0.9),
-              inset 0 -1px 2px color-mix(in srgb, var(--icon-accent) 5%, transparent);
+              0 4px 16px color-mix(in srgb, var(--icon-accent) 20%, transparent),
+              0 2px 6px color-mix(in srgb, var(--icon-accent) 12%, transparent),
+              inset 0 1px 3px hsl(var(--background) / 0.95),
+              inset 0 -1px 3px color-mix(in srgb, var(--icon-accent) 8%, transparent);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
           .mega-menu-card__icon::before {
             content: '';
             position: absolute;
-            inset: -1px;
-            border-radius: inherit;
-            padding: 1.5px;
-            background: linear-gradient(145deg, 
-              color-mix(in srgb, var(--icon-accent) 40%, transparent),
-              color-mix(in srgb, var(--icon-accent) 10%, transparent)
+            inset: -2px;
+            border-radius: 18px;
+            padding: 2px;
+            background: linear-gradient(135deg, 
+              var(--icon-accent),
+              color-mix(in srgb, var(--icon-accent) 70%, transparent),
+              color-mix(in srgb, var(--icon-accent) 40%, transparent)
             );
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             opacity: 0;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.3s ease;
           }
           .mega-menu-card__icon::after {
             content: '';
             position: absolute;
-            inset: -8px;
-            border-radius: inherit;
+            inset: -12px;
+            border-radius: 28px;
             background: radial-gradient(
               circle at center,
-              color-mix(in srgb, var(--icon-accent) 28%, transparent) 0%,
+              color-mix(in srgb, var(--icon-accent) 35%, transparent) 0%,
+              color-mix(in srgb, var(--icon-accent) 15%, transparent) 40%,
               transparent 70%
             );
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.4s ease;
             z-index: -1;
           }
           .mega-menu-card:hover .mega-menu-card__icon,
           .mega-menu-list-card:hover .mega-menu-card__icon {
             transform: translateY(-3px) scale(1.08);
             box-shadow: 
-              0 10px 28px color-mix(in srgb, var(--icon-accent) 28%, transparent),
-              0 4px 16px color-mix(in srgb, var(--icon-accent) 18%, transparent),
-              0 2px 8px color-mix(in srgb, var(--icon-accent) 12%, transparent),
-              inset 0 1px 2px hsl(var(--background)),
-              inset 0 -1px 2px color-mix(in srgb, var(--icon-accent) 8%, transparent);
-            border-color: color-mix(in srgb, var(--icon-accent) 45%, hsl(var(--border)));
+              0 12px 32px color-mix(in srgb, var(--icon-accent) 32%, transparent),
+              0 6px 20px color-mix(in srgb, var(--icon-accent) 22%, transparent),
+              0 2px 10px color-mix(in srgb, var(--icon-accent) 16%, transparent),
+              inset 0 2px 4px hsl(var(--background)),
+              inset 0 -2px 4px color-mix(in srgb, var(--icon-accent) 12%, transparent);
+            border-color: var(--icon-accent);
+            border-width: 2.5px;
             background: linear-gradient(
-              145deg,
-              color-mix(in srgb, var(--icon-accent) 22%, hsl(var(--background)) 78%),
-              color-mix(in srgb, var(--icon-accent) 14%, hsl(var(--background)) 86%),
-              color-mix(in srgb, var(--icon-accent) 8%, hsl(var(--background)) 92%)
+              135deg,
+              color-mix(in srgb, var(--icon-accent) 28%, hsl(var(--background)) 72%),
+              color-mix(in srgb, var(--icon-accent) 18%, hsl(var(--background)) 82%),
+              color-mix(in srgb, var(--icon-accent) 10%, hsl(var(--background)) 90%)
             );
           }
           .mega-menu-card:hover .mega-menu-card__icon::before,
