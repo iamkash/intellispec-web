@@ -22,6 +22,9 @@ export const ModuleBar: React.FC<ExtendedModuleBarProps> = ({
   collapsed = false,
   isMobile = false,
 }) => {
+  const buttonHeight = isMobile ? 30 : 32;
+  const buttonPadding = isMobile ? '0 8px' : '0 10px';
+
   // Get icon component from string name
   const getIcon = (iconName: string) => {
     const IconComponent = (Icons as any)[iconName];
@@ -50,7 +53,7 @@ export const ModuleBar: React.FC<ExtendedModuleBarProps> = ({
     <div className={getModuleBarClasses()}>
       <div className="module-bar-content">
         <Space 
-          size="small" 
+          size={isMobile ? 4 : 6}
           style={{ 
             display: 'flex', 
             flexWrap: 'nowrap', 
@@ -80,12 +83,13 @@ export const ModuleBar: React.FC<ExtendedModuleBarProps> = ({
                 onClick={() => handleModuleClick(module)}
                 className={`module-button ${currentModule?.id === module.id ? 'active' : ''}`}
                 style={{
-                  height: '40px',
+                  height: `${buttonHeight}px`,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '0 12px',
-                  borderRadius: '6px',
+                  gap: '6px',
+                  padding: buttonPadding,
+                  borderRadius: '5px',
+                  fontSize: isMobile ? '12px' : '13px',
                   fontWeight: currentModule?.id === module.id ? 600 : 400,
                   color: currentModule?.id === module.id ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))',
                   backgroundColor: currentModule?.id === module.id ? module.color : 'transparent',

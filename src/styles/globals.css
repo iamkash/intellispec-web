@@ -686,31 +686,33 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 .module-bar {
   background: hsl(var(--card));
   border-bottom: 1px solid hsl(var(--border));
-  padding: 8px 16px;
+  padding: 6px 12px;
   position: fixed;
-  top: 64px;
-  left: 250px;
+  top: 48px;
+  left: 240px;
   right: 0;
   z-index: 999;
   box-shadow: 0 2px 4px hsl(var(--shadow) / 0.02);
   transition: all 0.2s ease;
-  height: 56px;
+  height: 40px;
   display: flex;
   align-items: center;
   overflow: hidden;
 }
 
 .module-bar.collapsed-sidebar {
-  left: 80px;
+  left: 64px;
 }
 
 .module-bar.mobile-view {
   left: 0;
+  top: 44px;
+  height: 36px;
 }
 
 .module-bar-content {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0 4px;
@@ -727,17 +729,17 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 .module-button {
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 5px;
   color: hsl(var(--foreground));
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 14px;
+  gap: 6px;
+  padding: 0 10px;
   transition: all 0.2s ease;
   white-space: nowrap;
-  height: 38px;
-  font-size: 13px;
+  height: 32px;
+  font-size: 12px;
   font-weight: 500;
   min-width: fit-content;
   flex-shrink: 0;
@@ -755,7 +757,7 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
   color: hsl(var(--primary-foreground));
   border-color: hsl(var(--primary));
   font-weight: 600;
-  box-shadow: 0 2px 4px hsl(var(--shadow) / 0.1);
+  box-shadow: 0 2px 4px hsl(var(--shadow) / 0.08);
 }
 
 .module-button:focus,
@@ -833,12 +835,14 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 /* Mobile module bar styles */
 @media (max-width: 768px) {
   .module-bar {
-    padding: 6px 12px;
+    padding: 5px 10px;
     left: 0 !important;
+    top: 44px;
+    height: 36px;
   }
   
   .module-button {
-    height: 36px;
+    height: 30px;
     padding: 0 8px;
     font-size: 12px;
   }
@@ -852,10 +856,11 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 @media (max-width: 480px) {
   .module-bar {
     padding: 4px 8px;
+    height: 34px;
   }
   
   .module-button {
-    height: 32px;
+    height: 28px;
     padding: 0 6px;
   }
   
@@ -2763,31 +2768,33 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 .module-bar {
   background: hsl(var(--card));
   border-bottom: 1px solid hsl(var(--border));
-  padding: 8px 16px;
+  padding: 6px 12px;
   position: fixed;
-  top: 64px;
-  left: 250px;
+  top: 48px;
+  left: 240px;
   right: 0;
   z-index: 999;
   box-shadow: 0 2px 4px hsl(var(--shadow) / 0.02);
   transition: all 0.2s ease;
-  height: 56px;
+  height: 40px;
   display: flex;
   align-items: center;
   overflow: hidden;
 }
 
 .module-bar.collapsed-sidebar {
-  left: 80px;
+  left: 64px;
 }
 
 .module-bar.mobile-view {
   left: 0;
+  top: 44px;
+  height: 36px;
 }
 
 .module-bar-content {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   overflow-x: auto;
   overflow-y: hidden;
   padding: 0 4px;
@@ -2804,17 +2811,17 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 .module-button {
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 8px;
+  border-radius: 5px;
   color: hsl(var(--foreground));
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 14px;
+  gap: 6px;
+  padding: 0 10px;
   transition: all 0.2s ease;
   white-space: nowrap;
-  height: 38px;
-  font-size: 13px;
+  height: 32px;
+  font-size: 12px;
   font-weight: 500;
   min-width: fit-content;
   flex-shrink: 0;
@@ -2832,7 +2839,7 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
   color: hsl(var(--primary-foreground));
   border-color: hsl(var(--primary));
   font-weight: 600;
-  box-shadow: 0 2px 4px hsl(var(--shadow) / 0.1);
+  box-shadow: 0 2px 4px hsl(var(--shadow) / 0.08);
 }
 
 .module-button:focus,
@@ -2910,12 +2917,14 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 /* Mobile module bar styles */
 @media (max-width: 768px) {
   .module-bar {
-    padding: 6px 12px;
+    padding: 5px 10px;
     left: 0 !important;
+    top: 44px;
+    height: 36px;
   }
   
   .module-button {
-    height: 36px;
+    height: 30px;
     padding: 0 8px;
     font-size: 12px;
   }
@@ -2929,10 +2938,11 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 @media (max-width: 480px) {
   .module-bar {
     padding: 4px 8px;
+    height: 34px;
   }
   
   .module-button {
-    height: 32px;
+    height: 28px;
     padding: 0 6px;
   }
   

@@ -122,8 +122,8 @@ export const AppLayout: React.FC<LayoutProps> = ({
 }) => {
   const { availableModules, currentModule, moduleDefinition, selectModule } = useModule();
 
-  const headerHeight = isMobile ? 56 : 64;
-  const moduleBarHeight = isMobile ? 44 : 48;
+  const headerHeight = isMobile ? 44 : 48;
+  const moduleBarHeight = isMobile ? 36 : 40;
 
   const handleToggle = useCallback(() => {
     onCollapse?.(!collapsed);
@@ -186,9 +186,9 @@ return [currentMenuItem.key];
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 12,
-            padding: '0 16px',
-            height: 64,
+            gap: 10,
+            padding: isMobile ? '0 12px' : '0 16px',
+            height: headerHeight,
             background: 'hsl(var(--card))',
             borderBottom: '1px solid hsl(var(--border))',
             position: 'sticky',
@@ -196,7 +196,7 @@ return [currentMenuItem.key];
             zIndex: 1000,
           }}
         >
-          <Space size={12} align="center">
+          <Space size={10} align="center">
             <Button
               type="text"
               aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -207,8 +207,8 @@ return [currentMenuItem.key];
                 border: '1px solid hsl(var(--border))',
                 background: 'hsl(var(--background))',
                 borderRadius: '6px',
-                height: 32,
-                width: 32,
+                height: 28,
+                width: 28,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -227,25 +227,25 @@ return [currentMenuItem.key];
             </div>
           </Space>
 
-          <Space size={12} align="center" className="app-user" style={{ padding: '6px 10px', borderRadius: 8 }}>
+          <Space size={10} align="center" className="app-user" style={{ padding: '4px 8px', borderRadius: 8 }}>
             <ThemeSelector />
             {user?.role && (
               <Text style={{ color: 'hsl(var(--muted-foreground))', fontSize: 12 }}>{user.role}</Text>
             )}
-            <Avatar 
-              size={32} 
-              src={user?.avatar} 
-              style={{ 
+            <Avatar
+              size={28}
+              src={user?.avatar}
+              style={{
                 backgroundColor: 'hsl(var(--primary))',
                 border: '1px solid hsl(var(--border))',
                 color: 'hsl(var(--primary-foreground))',
-                fontSize: '14px',
+                fontSize: '13px',
                 fontWeight: '500'
               }}
             >
               {user?.name?.[0] || 'U'}
             </Avatar>
-            <Text strong style={{ color: 'hsl(var(--foreground))' }}>
+            <Text strong style={{ color: 'hsl(var(--foreground))', fontSize: 13 }}>
               {user?.name}
             </Text>
             {onLogout && (
@@ -260,9 +260,9 @@ return [currentMenuItem.key];
                   border: '1px solid hsl(var(--border))',
                   background: 'hsl(var(--background))',
                   borderRadius: '6px',
-                  padding: '4px 8px',
-                  height: 32,
-                  width: 32,
+                  padding: '2px 6px',
+                  height: 28,
+                  width: 28,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -316,7 +316,16 @@ return [currentMenuItem.key];
 
         {/* Right column: module bar on top, content scrolls below */}
         <Layout style={{ height: '100%', background: 'hsl(var(--background))' }}>
-          <div style={{ borderBottom: '1px solid hsl(var(--border))', background: 'hsl(var(--card))', padding: '0 8px', height: moduleBarHeight, display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{
+              borderBottom: '1px solid hsl(var(--border))',
+              background: 'hsl(var(--card))',
+              padding: isMobile ? '0 6px' : '0 10px',
+              height: moduleBarHeight,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
             <ModuleBar
               modules={availableModules}
               currentModule={currentModule}
@@ -344,4 +353,3 @@ return [currentMenuItem.key];
 };
 
 export default AppLayout;
-
