@@ -160,6 +160,13 @@ export class MegaMenuGadget extends BaseGadget {
     widgetSchemas: {},
   };
 
+  getContainerProps(props: any, context?: GadgetContext): any {
+    return {
+      ...super.getContainerProps(props, context),
+      noPadding: true, // MegaMenu manages its own internal padding
+    };
+  }
+
   renderBody(props: any, context?: GadgetContext): React.ReactNode {
     return React.createElement(MegaMenuComponent, {
       config: props.config || props,
@@ -735,7 +742,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "24px",
+            marginBottom: "20px",
             padding: "16px",
             background:
               "linear-gradient(135deg, hsl(var(--muted) / 0.3) 0%, hsl(var(--muted) / 0.1) 100%)",
@@ -1034,7 +1041,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "28px",
+            marginBottom: "20px",
             padding: "20px 24px",
             background:
               "linear-gradient(135deg, hsl(var(--muted) / 0.25) 0%, hsl(var(--muted) / 0.08) 100%)",
@@ -1149,8 +1156,8 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
         {/* Search and Filter Controls */}
         <Space
           direction="vertical"
-          size="middle"
-          style={{ width: "100%", marginBottom: "24px" }}
+          size={8}
+          style={{ width: "100%", marginBottom: "16px" }}
         >
           {config.enableSearch && (
             <Input
@@ -1218,18 +1225,6 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             )}
           </Space>
         </Space>
-
-        {/* Results Summary */}
-        <div style={{ marginBottom: "16px" }}>
-          <Text type="secondary">
-            Showing {filteredMenuItems.length} of {menuItems.length}{" "}
-            {config.itemType || "items"}
-            {selectedCategory && ` in ${selectedCategory}`}
-            {selectedTags.length > 0 &&
-              ` with tags: ${selectedTags.join(", ")}`}
-            {sortBy !== "name" && ` • sorted by ${sortBy}`}
-          </Text>
-        </div>
 
         {/* Menu Items - Dynamic Layout */}
         {filteredMenuItems.length === 0 ? (

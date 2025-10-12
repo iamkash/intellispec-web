@@ -93,7 +93,10 @@ export class DynamicCalculatorGadget extends BaseGadget {
       ...super.getContainerProps(props, context),
       noPadding: true, // Calculator manages its own internal padding
     };
-    console.log('[DynamicCalculatorGadget] getContainerProps returning:', containerProps);
+    console.log(
+      "[DynamicCalculatorGadget] getContainerProps returning:",
+      containerProps
+    );
     return containerProps;
   }
 
@@ -1171,7 +1174,7 @@ const SimpleCalculatorComponent: React.FC<{
   const scrollableFormStyle = React.useMemo(
     () => ({
       flex: 1,
-      padding: 16,
+      padding: 0,
       overflowY: isLargeScreen ? ("auto" as const) : ("visible" as const),
       minHeight: 0,
     }),
@@ -1181,7 +1184,7 @@ const SimpleCalculatorComponent: React.FC<{
   const scrollableResultsStyle = React.useMemo(
     () => ({
       flex: 1,
-      padding: 16,
+      padding: 0,
       overflowY: isLargeScreen ? ("auto" as const) : ("visible" as const),
       minHeight: 0,
       position: "relative" as const,
