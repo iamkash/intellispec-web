@@ -1,8 +1,38 @@
-import * as Icons from '@ant-design/icons';
-import { AppstoreOutlined, BarsOutlined, ClockCircleOutlined, FilterOutlined, HeartFilled, HeartOutlined, SearchOutlined, SortAscendingOutlined } from '@ant-design/icons';
-import { Badge, Button, Card, Col, Empty, Input, Row, Select, Skeleton, Space, Tag, Tooltip, Typography } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
-import { BaseGadget, GadgetConfig, GadgetContext, GadgetMetadata, GadgetSchema, GadgetType } from '../base';
+import * as Icons from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  BarsOutlined,
+  ClockCircleOutlined,
+  FilterOutlined,
+  HeartFilled,
+  HeartOutlined,
+  SearchOutlined,
+  SortAscendingOutlined,
+} from "@ant-design/icons";
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Empty,
+  Input,
+  Row,
+  Select,
+  Skeleton,
+  Space,
+  Tag,
+  Tooltip,
+  Typography,
+} from "antd";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  BaseGadget,
+  GadgetConfig,
+  GadgetContext,
+  GadgetMetadata,
+  GadgetSchema,
+  GadgetType,
+} from "../base";
 
 const { Title, Text, Paragraph } = Typography;
 const { Option } = Select;
@@ -34,7 +64,7 @@ interface MegaMenuGadgetConfig extends GadgetConfig {
   enableSorting: boolean;
   enableViewToggle: boolean;
   searchFields: string[];
-  cardSize: 'small' | 'medium' | 'large';
+  cardSize: "small" | "medium" | "large";
 }
 
 /**
@@ -83,57 +113,57 @@ interface MegaMenuGadgetConfig extends GadgetConfig {
  */
 export class MegaMenuGadget extends BaseGadget {
   metadata: GadgetMetadata = {
-    id: 'mega-menu-gadget',
-    name: 'Mega Menu Gadget',
-    description: 'Advanced searchable mega menu with filtering capabilities',
-    category: 'dashboard',
-    tags: ['menu', 'search', 'filter', 'mega', 'navigation'],
-    version: '1.0.0',
-    author: 'System',
+    id: "mega-menu-gadget",
+    name: "Mega Menu Gadget",
+    description: "Advanced searchable mega menu with filtering capabilities",
+    category: "dashboard",
+    tags: ["menu", "search", "filter", "mega", "navigation"],
+    version: "1.0.0",
+    author: "System",
     gadgetType: GadgetType.DASHBOARD,
     widgetTypes: [],
     dataFlow: {
-      inputs: ['calculators-data'],
-      outputs: ['navigation-events'],
-      transformations: ['data-filtering']
-    }
+      inputs: ["calculators-data"],
+      outputs: ["navigation-events"],
+      transformations: ["data-filtering"],
+    },
   };
 
   schema: GadgetSchema = {
-    type: 'object',
+    type: "object",
     properties: {
-      dataUrl: { type: 'string', format: 'uri' },
-      dataPath: { type: 'string' },
-      title: { type: 'string' },
-      itemType: { type: 'string' },
-      modulePath: { type: 'string' },
-      workspacePath: { type: 'string' },
-      showDescriptions: { type: 'boolean', default: true },
-      enableSearch: { type: 'boolean', default: true },
-      enableCategoryFilter: { type: 'boolean', default: true },
-      enableTagFilter: { type: 'boolean', default: true },
-      enableFavorites: { type: 'boolean', default: true },
-      enableSorting: { type: 'boolean', default: true },
-      enableViewToggle: { type: 'boolean', default: true },
+      dataUrl: { type: "string", format: "uri" },
+      dataPath: { type: "string" },
+      title: { type: "string" },
+      itemType: { type: "string" },
+      modulePath: { type: "string" },
+      workspacePath: { type: "string" },
+      showDescriptions: { type: "boolean", default: true },
+      enableSearch: { type: "boolean", default: true },
+      enableCategoryFilter: { type: "boolean", default: true },
+      enableTagFilter: { type: "boolean", default: true },
+      enableFavorites: { type: "boolean", default: true },
+      enableSorting: { type: "boolean", default: true },
+      enableViewToggle: { type: "boolean", default: true },
       searchFields: {
-        type: 'array',
-        items: { type: 'string' },
-        default: ['label', 'description', 'tags']
+        type: "array",
+        items: { type: "string" },
+        default: ["label", "description", "tags"],
       },
       cardSize: {
-        type: 'string',
-        enum: ['small', 'medium', 'large'],
-        default: 'medium'
-      }
+        type: "string",
+        enum: ["small", "medium", "large"],
+        default: "medium",
+      },
     },
-    required: ['dataUrl'],
-    widgetSchemas: {}
+    required: ["dataUrl"],
+    widgetSchemas: {},
   };
 
   renderBody(props: any, context?: GadgetContext): React.ReactNode {
     return React.createElement(MegaMenuComponent, {
       config: props.config || props,
-      context
+      context,
     });
   }
 
@@ -143,8 +173,8 @@ export class MegaMenuGadget extends BaseGadget {
 
   getWidgetLayout(): Record<string, any> {
     return {
-      type: 'grid',
-      responsive: true
+      type: "grid",
+      responsive: true,
     };
   }
 
@@ -155,11 +185,11 @@ export class MegaMenuGadget extends BaseGadget {
   validate(config: any): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
     if (!config.dataUrl) {
-      errors.push('dataUrl is required');
+      errors.push("dataUrl is required");
     }
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }
@@ -169,17 +199,20 @@ interface MegaMenuComponentProps {
   context?: GadgetContext;
 }
 
-type IconContainerStyle = React.CSSProperties & { '--icon-glow': string; '--icon-accent': string };
+type IconContainerStyle = React.CSSProperties & {
+  "--icon-glow": string;
+  "--icon-accent": string;
+};
 
 const ICON_ACCENT_TOKENS = [
-  '--color-primary',
-  '--color-accent-yellow',
-  '--color-accent-orange',
-  '--color-success',
-  '--color-info',
-  '--primary',
-  '--accent',
-  '--secondary'
+  "--color-primary",
+  "--color-accent-yellow",
+  "--color-accent-orange",
+  "--color-success",
+  "--color-info",
+  "--primary",
+  "--accent",
+  "--secondary",
 ];
 
 const stringToHash = (value: string): number => {
@@ -192,32 +225,41 @@ const stringToHash = (value: string): number => {
 };
 
 const getIconPresentation = (menuItem: MenuItem, palette: string[]) => {
-  const seed = menuItem.category || menuItem.workspace || menuItem.type || menuItem.key;
+  const seed =
+    menuItem.category || menuItem.workspace || menuItem.type || menuItem.key;
   const paletteIndex = Math.abs(stringToHash(seed)) % palette.length;
-  const accentToken = palette[paletteIndex] || '--color-primary';
+  const accentToken = palette[paletteIndex] || "--color-primary";
   const baseColor = `var(${accentToken}, var(--color-primary, var(--primary)))`;
   const containerStyle: IconContainerStyle = {
-    '--icon-accent': baseColor,
-    '--icon-glow': 'radial-gradient(circle at center, color-mix(in srgb, var(--icon-accent) 35%, transparent) 0%, transparent 68%)',
-    color: baseColor
+    "--icon-accent": baseColor,
+    "--icon-glow":
+      "radial-gradient(circle at center, color-mix(in srgb, var(--icon-accent) 35%, transparent) 0%, transparent 68%)",
+    color: baseColor,
   };
   return {
     accent: baseColor,
-    containerStyle
+    containerStyle,
   };
 };
 
-const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }) => {
+const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
+  config,
+  context,
+}) => {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchText, setSearchText] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string | undefined>();
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<
+    string | undefined
+  >();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   // Load favorites from localStorage
   const loadFavorites = () => {
     try {
-      const stored = localStorage.getItem(`${config.itemType || 'menu'}-favorites`);
+      const stored = localStorage.getItem(
+        `${config.itemType || "menu"}-favorites`
+      );
       return stored ? JSON.parse(stored) : [];
     } catch {
       return [];
@@ -227,34 +269,45 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
   // Save favorites to localStorage
   const saveFavorites = (favorites: string[]) => {
     try {
-      localStorage.setItem(`${config.itemType || 'menu'}-favorites`, JSON.stringify(favorites));
+      localStorage.setItem(
+        `${config.itemType || "menu"}-favorites`,
+        JSON.stringify(favorites)
+      );
     } catch (error) {
-      console.warn('Failed to save favorites to localStorage:', error);
+      console.warn("Failed to save favorites to localStorage:", error);
     }
   };
 
   // Load user preferences from localStorage
   const loadUserPreferences = () => {
     try {
-      const stored = localStorage.getItem('calculator-preferences');
-      return stored ? JSON.parse(stored) : {
-        viewMode: 'grid' as 'grid' | 'list',
-        sortBy: 'name' as 'name' | 'category' | 'recent' | 'favorites'
-      };
+      const stored = localStorage.getItem("calculator-preferences");
+      return stored
+        ? JSON.parse(stored)
+        : {
+            viewMode: "grid" as "grid" | "list",
+            sortBy: "name" as "name" | "category" | "recent" | "favorites",
+          };
     } catch {
       return {
-        viewMode: 'grid' as 'grid' | 'list',
-        sortBy: 'name' as 'name' | 'category' | 'recent' | 'favorites'
+        viewMode: "grid" as "grid" | "list",
+        sortBy: "name" as "name" | "category" | "recent" | "favorites",
       };
     }
   };
 
   // Save user preferences to localStorage
-  const saveUserPreferences = (preferences: { viewMode: 'grid' | 'list', sortBy: 'name' | 'category' | 'recent' | 'favorites' }) => {
+  const saveUserPreferences = (preferences: {
+    viewMode: "grid" | "list";
+    sortBy: "name" | "category" | "recent" | "favorites";
+  }) => {
     try {
-      localStorage.setItem('calculator-preferences', JSON.stringify(preferences));
+      localStorage.setItem(
+        "calculator-preferences",
+        JSON.stringify(preferences)
+      );
     } catch (error) {
-      console.warn('Failed to save preferences to localStorage:', error);
+      console.warn("Failed to save preferences to localStorage:", error);
     }
   };
 
@@ -262,17 +315,24 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
 
   const [favorites, setFavorites] = useState<string[]>(loadFavorites());
   const [recentItems, setRecentItems] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>(preferences.viewMode);
-  const [sortBy, setSortBy] = useState<'name' | 'category' | 'recent' | 'favorites'>(preferences.sortBy);
+  const [viewMode, setViewMode] = useState<"grid" | "list">(
+    preferences.viewMode
+  );
+  const [sortBy, setSortBy] = useState<
+    "name" | "category" | "recent" | "favorites"
+  >(preferences.sortBy);
 
-  const [searchDebounce, setSearchDebounce] = useState('');
+  const [searchDebounce, setSearchDebounce] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
-  const toggleFavorite = (event: React.MouseEvent<HTMLElement>, itemKey: string) => {
+  const toggleFavorite = (
+    event: React.MouseEvent<HTMLElement>,
+    itemKey: string
+  ) => {
     event.stopPropagation();
-    setFavorites(prev => {
+    setFavorites((prev) => {
       const newFavorites = prev.includes(itemKey)
-        ? prev.filter(id => id !== itemKey)
+        ? prev.filter((id) => id !== itemKey)
         : [...prev, itemKey];
       saveFavorites(newFavorites);
       return newFavorites;
@@ -290,13 +350,22 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
     return (
       <div className="mega-menu-card__actions">
         {showFavoriteAction && (
-          <Tooltip title={favorites.includes(menuItem.key) ? "Remove from favorites" : "Add to favorites"}>
+          <Tooltip
+            title={
+              favorites.includes(menuItem.key)
+                ? "Remove from favorites"
+                : "Add to favorites"
+            }
+          >
             <Button
               type="text"
               size="small"
-              icon={favorites.includes(menuItem.key)
-                ? <HeartFilled style={{ color: '#ff4d4f' }} />
-                : <HeartOutlined />
+              icon={
+                favorites.includes(menuItem.key) ? (
+                  <HeartFilled style={{ color: "#ff4d4f" }} />
+                ) : (
+                  <HeartOutlined />
+                )
               }
               onClick={(event) => toggleFavorite(event, menuItem.key)}
             />
@@ -305,7 +374,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
         {showRecentMarker && (
           <Tooltip title="Recently used">
             <Badge dot>
-              <ClockCircleOutlined style={{ color: 'hsl(var(--primary))' }} />
+              <ClockCircleOutlined style={{ color: "hsl(var(--primary))" }} />
             </Badge>
           </Tooltip>
         )}
@@ -320,22 +389,35 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
       const IconComponent = (Icons as any)[iconName];
 
       if (IconComponent) {
-        // Return the actual icon component with proper styling
+        // Return the actual icon component with enhanced professional styling
         return React.createElement(IconComponent, {
-          style: { fontSize: '24px', color: accentColor || 'currentColor' }
+          style: {
+            fontSize: "26px",
+            color: accentColor || "currentColor",
+            fontWeight: 600,
+            strokeWidth: 0.5,
+          },
         });
       } else {
         // Fallback to a default icon if the specified icon doesn't exist
         console.warn(`Icon "${iconName}" not found, using fallback`);
         return React.createElement(Icons.CalculatorOutlined, {
-          style: { fontSize: '24px', color: accentColor || 'currentColor' }
+          style: {
+            fontSize: "26px",
+            color: accentColor || "currentColor",
+            fontWeight: 600,
+          },
         });
       }
     } catch (error) {
       console.warn(`Failed to render icon: ${iconName}`, error);
       // Ultimate fallback
       return React.createElement(Icons.QuestionCircleOutlined, {
-        style: { fontSize: '24px', color: accentColor || 'currentColor' }
+        style: {
+          fontSize: "26px",
+          color: accentColor || "currentColor",
+          fontWeight: 600,
+        },
       });
     }
   };
@@ -344,29 +426,40 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
   const SkeletonCard = () => (
     <Card
       className="mega-menu-card"
-      style={{ position: 'relative', height: '100%' }}
+      style={{ position: "relative", height: "100%" }}
       bodyStyle={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        height: '100%'
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        height: "100%",
       }}
     >
       <div className="mega-menu-card__header">
-        <div className="mega-menu-card__icon" style={{ border: 'none', background: 'hsl(var(--muted) / 0.1)' }}>
-          <Skeleton.Avatar size={24} shape="square" style={{ borderRadius: '6px' }} />
-        </div>
+         <div
+           className="mega-menu-card__icon"
+           style={{ border: "none", background: "hsl(var(--muted) / 0.1)" }}
+         >
+           <Skeleton.Avatar
+             size={28}
+             shape="square"
+             style={{ borderRadius: "8px" }}
+           />
+         </div>
         <div className="mega-menu-card__header-main">
           <div className="mega-menu-card__title-row">
-            <Skeleton.Input style={{ width: '70%', height: '16px' }} active />
-            <Skeleton.Button active size="small" style={{ width: '24px', height: '24px', borderRadius: '6px' }} />
+            <Skeleton.Input style={{ width: "70%", height: "16px" }} active />
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: "24px", height: "24px", borderRadius: "6px" }}
+            />
           </div>
         </div>
       </div>
-      <Skeleton paragraph={{ rows: 2, width: ['100%', '85%'] }} active />
+      <Skeleton paragraph={{ rows: 2, width: ["100%", "85%"] }} active />
       <div className="mega-menu-card__tags">
-        <Skeleton.Input style={{ width: '72px', height: '22px' }} active />
-        <Skeleton.Input style={{ width: '56px', height: '22px' }} active />
+        <Skeleton.Input style={{ width: "72px", height: "22px" }} active />
+        <Skeleton.Input style={{ width: "56px", height: "22px" }} active />
       </div>
     </Card>
   );
@@ -399,7 +492,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
         // Navigate to data path if specified
         let calculatorData = data;
         if (config.dataPath) {
-          const pathParts = config.dataPath.split('.');
+          const pathParts = config.dataPath.split(".");
           for (const part of pathParts) {
             calculatorData = calculatorData?.[part];
           }
@@ -409,7 +502,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
           setMenuItems(calculatorData);
         }
       } catch (error) {
-        console.error('Error fetching calculators:', error);
+        console.error("Error fetching calculators:", error);
       } finally {
         setLoading(false);
       }
@@ -422,14 +515,16 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
 
   // Get unique categories and tags
   const categories = useMemo(() => {
-    const uniqueCategories = Array.from(new Set(menuItems.map(item => item.category)));
+    const uniqueCategories = Array.from(
+      new Set(menuItems.map((item) => item.category))
+    );
     return uniqueCategories.sort();
   }, [menuItems]);
 
   const allTags = useMemo(() => {
     const tagSet = new Set<string>();
-    menuItems.forEach(item => {
-      item.tags?.forEach(tag => tagSet.add(tag));
+    menuItems.forEach((item) => {
+      item.tags?.forEach((tag) => tagSet.add(tag));
     });
     return Array.from(tagSet).sort();
   }, [menuItems]);
@@ -439,13 +534,13 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
     let sorted = [...menuItems];
 
     switch (sortBy) {
-      case 'name':
+      case "name":
         sorted.sort((a, b) => a.label.localeCompare(b.label));
         break;
-      case 'category':
+      case "category":
         sorted.sort((a, b) => a.category.localeCompare(b.category));
         break;
-      case 'recent':
+      case "recent":
         // Sort by recent items first, then by name
         sorted.sort((a, b) => {
           const aRecent = recentItems.includes(a.key);
@@ -455,7 +550,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
           return a.label.localeCompare(b.label);
         });
         break;
-      case 'favorites':
+      case "favorites":
         // Sort by favorites first, then by name
         sorted.sort((a, b) => {
           const aFav = favorites.includes(a.key);
@@ -474,7 +569,7 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
 
   // Filter menu items based on search and filters
   const filteredMenuItems = useMemo(() => {
-    return sortedMenuItems.filter(item => {
+    return sortedMenuItems.filter((item) => {
       // Favorites filter
       if (showOnlyFavorites && !favorites.includes(item.key)) {
         return false;
@@ -483,12 +578,17 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
       // Search filter
       if (searchDebounce && config.searchFields?.length) {
         const searchLower = searchDebounce.toLowerCase();
-        const matchesSearch = config.searchFields.some(field => {
-          if (field === 'tags' && item.tags) {
-            return item.tags.some(tag => tag.toLowerCase().includes(searchLower));
+        const matchesSearch = config.searchFields.some((field) => {
+          if (field === "tags" && item.tags) {
+            return item.tags.some((tag) =>
+              tag.toLowerCase().includes(searchLower)
+            );
           }
           const value = item[field as keyof MenuItem];
-          return typeof value === 'string' && value.toLowerCase().includes(searchLower);
+          return (
+            typeof value === "string" &&
+            value.toLowerCase().includes(searchLower)
+          );
         });
         if (!matchesSearch) return false;
       }
@@ -500,125 +600,160 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({ config, context }
 
       // Tags filter
       if (selectedTags.length > 0) {
-        const hasMatchingTag = selectedTags.some(tag => item.tags?.includes(tag));
+        const hasMatchingTag = selectedTags.some((tag) =>
+          item.tags?.includes(tag)
+        );
         if (!hasMatchingTag) return false;
       }
 
       return true;
     });
-  }, [sortedMenuItems, searchDebounce, selectedCategory, selectedTags, config.searchFields, showOnlyFavorites, favorites]);
+  }, [
+    sortedMenuItems,
+    searchDebounce,
+    selectedCategory,
+    selectedTags,
+    config.searchFields,
+    showOnlyFavorites,
+    favorites,
+  ]);
 
   const handleMenuItemClick = (menuItem: MenuItem) => {
     if (menuItem.workspace) {
       // Track recent items for premium UX
-      setRecentItems(prev => {
-        const filtered = prev.filter(id => id !== menuItem.key);
+      setRecentItems((prev) => {
+        const filtered = prev.filter((id) => id !== menuItem.key);
         return [menuItem.key, ...filtered].slice(0, 5); // Keep only 5 recent items
       });
 
       // Use the proper navigation system like ActionPanelGadget
       if (context && (context as any).onAction) {
-console.log('🔗 Navigating to workspace:', menuItem.workspace);
+        console.log("🔗 Navigating to workspace:", menuItem.workspace);
 
         // Determine the current module from current workspace query
         const workspacePath = menuItem.workspace;
-        const moduleIdFromItem = workspacePath.split('/')[0];
-// Check if we need to switch modules by comparing workspace paths
-        const currentWorkspace = window.location.search.includes('workspace=')
-          ? new URLSearchParams(window.location.search).get('workspace')
-          : '';
-        const currentModuleId = currentWorkspace ? currentWorkspace.split('/')[0] : '';
+        const moduleIdFromItem = workspacePath.split("/")[0];
+        // Check if we need to switch modules by comparing workspace paths
+        const currentWorkspace = window.location.search.includes("workspace=")
+          ? new URLSearchParams(window.location.search).get("workspace")
+          : "";
+        const currentModuleId = currentWorkspace
+          ? currentWorkspace.split("/")[0]
+          : "";
 
         const desiredModuleId = (config as any)?.modulePath || moduleIdFromItem;
-if (currentModuleId !== desiredModuleId) {
-console.log('🎯 Navigating from', currentModuleId, 'to', desiredModuleId);
-// Build module-correct dynamic-calculator target for calculators
+        if (currentModuleId !== desiredModuleId) {
+          console.log(
+            "🎯 Navigating from",
+            currentModuleId,
+            "to",
+            desiredModuleId
+          );
+          // Build module-correct dynamic-calculator target for calculators
           let workspaceForUrl = menuItem.workspace;
-          let extraParams = '';
-          if (menuItem.workspace?.includes('/calculators/')) {
-            const parts = menuItem.workspace.split('/');
+          let extraParams = "";
+          if (menuItem.workspace?.includes("/calculators/")) {
+            const parts = menuItem.workspace.split("/");
             const calculatorId = parts[parts.length - 1];
             const moduleIdForCalc = desiredModuleId;
-            const workspacePathName = (config as any)?.workspacePath || 'calculators';
+            const workspacePathName =
+              (config as any)?.workspacePath || "calculators";
             workspaceForUrl = `${moduleIdForCalc}/${workspacePathName}/dynamic-calculator`;
             extraParams = `&calculatorId=${encodeURIComponent(calculatorId)}`;
           }
           // Use clean URL construction - base URL with workspace (and calculatorId if present)
           const baseUrl = window.location.origin + window.location.pathname;
-          const cleanUrl = `${baseUrl}?workspace=${encodeURIComponent(workspaceForUrl)}${extraParams}`;
-window.location.href = cleanUrl;
+          const cleanUrl = `${baseUrl}?workspace=${encodeURIComponent(
+            workspaceForUrl
+          )}${extraParams}`;
+          window.location.href = cleanUrl;
           return;
         }
 
         // Handle workspace navigation using the proper action system within same module
         // For calculators, route to the module's dynamic calculator workspace
         let targetWorkspace = menuItem.workspace;
-        if (menuItem.workspace?.includes('/calculators/')) {
-          const parts = menuItem.workspace.split('/');
+        if (menuItem.workspace?.includes("/calculators/")) {
+          const parts = menuItem.workspace.split("/");
           const calculatorId = parts[parts.length - 1];
-          const moduleIdForCalc = desiredModuleId || currentModuleId || parts[0];
-          const workspacePathName = (config as any)?.workspacePath || 'calculators';
+          const moduleIdForCalc =
+            desiredModuleId || currentModuleId || parts[0];
+          const workspacePathName =
+            (config as any)?.workspacePath || "calculators";
           targetWorkspace = `${moduleIdForCalc}/${workspacePathName}/dynamic-calculator`;
-          (context as any).onAction('navigate', {
+          (context as any).onAction("navigate", {
             workspace: targetWorkspace,
             route: menuItem.route,
             key: menuItem.key,
             label: menuItem.label,
-            type: menuItem.type || 'item',
-            params: { calculatorId }
+            type: menuItem.type || "item",
+            params: { calculatorId },
           });
         } else {
-          (context as any).onAction('navigate', {
+          (context as any).onAction("navigate", {
             workspace: targetWorkspace,
             route: menuItem.route,
             key: menuItem.key,
             label: menuItem.label,
-            type: menuItem.type || 'item'
+            type: menuItem.type || "item",
           });
         }
       } else {
         // Fallback to direct URL navigation if context is not available
-const baseUrl = window.location.origin + window.location.pathname;
-        const cleanUrl = `${baseUrl}?workspace=${encodeURIComponent(menuItem.workspace)}`;
-window.location.href = cleanUrl;
+        const baseUrl = window.location.origin + window.location.pathname;
+        const cleanUrl = `${baseUrl}?workspace=${encodeURIComponent(
+          menuItem.workspace
+        )}`;
+        window.location.href = cleanUrl;
       }
     }
   };
 
   const getCardSize = () => {
     switch (config.cardSize) {
-      case 'small': return 6;
-      case 'large': return 8;
-      default: return 6;
+      case "small":
+        return 6;
+      case "large":
+        return 8;
+      default:
+        return 6;
     }
   };
 
   if (loading) {
     return (
-      <div style={{
-        padding: '24px',
-        backgroundColor: 'hsl(var(--background))',
-        borderRadius: '20px',
-        boxShadow: 'inset 0 1px 3px hsl(var(--foreground) / 0.05)'
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '24px',
-          padding: '16px',
-          background: 'linear-gradient(135deg, hsl(var(--muted) / 0.3) 0%, hsl(var(--muted) / 0.1) 100%)',
-          borderRadius: '12px',
-          border: '1px solid hsl(var(--border) / 0.5)'
-        }}>
+      <div
+        style={{
+          padding: "24px",
+          backgroundColor: "hsl(var(--background))",
+          borderRadius: "20px",
+          boxShadow: "inset 0 1px 3px hsl(var(--foreground) / 0.05)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "24px",
+            padding: "16px",
+            background:
+              "linear-gradient(135deg, hsl(var(--muted) / 0.3) 0%, hsl(var(--muted) / 0.1) 100%)",
+            borderRadius: "12px",
+            border: "1px solid hsl(var(--border) / 0.5)",
+          }}
+        >
           <div>
-            <Skeleton.Input style={{ width: '200px', height: '24px' }} active />
-            <Skeleton.Input style={{ width: '150px', height: '16px', marginTop: '8px' }} active />
+            <Skeleton.Input style={{ width: "200px", height: "24px" }} active />
+            <Skeleton.Input
+              style={{ width: "150px", height: "16px", marginTop: "8px" }}
+              active
+            />
           </div>
           <Space>
             <Skeleton.Button active size="small" />
             <Skeleton.Button active size="small" />
-            <Skeleton.Input style={{ width: '120px', height: '24px' }} active />
+            <Skeleton.Input style={{ width: "120px", height: "24px" }} active />
           </Space>
         </div>
 
@@ -635,8 +770,9 @@ window.location.href = cleanUrl;
 
   return (
     <>
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
           .mega-menu-card,
           .mega-menu-list-card {
             position: relative;
@@ -698,24 +834,27 @@ window.location.href = cleanUrl;
           }
           .mega-menu-card__icon {
             position: relative;
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
             background: linear-gradient(
               145deg,
-              color-mix(in srgb, var(--icon-accent) 15%, hsl(var(--background)) 85%),
-              color-mix(in srgb, var(--icon-accent) 8%, hsl(var(--background)) 92%)
+              color-mix(in srgb, var(--icon-accent) 18%, hsl(var(--background)) 82%),
+              color-mix(in srgb, var(--icon-accent) 10%, hsl(var(--background)) 90%),
+              color-mix(in srgb, var(--icon-accent) 6%, hsl(var(--background)) 94%)
             );
-            border: 1.5px solid color-mix(in srgb, var(--icon-accent) 25%, hsl(var(--border)));
+            border: 1.5px solid color-mix(in srgb, var(--icon-accent) 30%, hsl(var(--border)));
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--icon-accent);
             overflow: visible;
             box-shadow: 
-              0 2px 8px color-mix(in srgb, var(--icon-accent) 12%, transparent),
-              inset 0 1px 2px hsl(var(--background) / 0.8);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+              0 3px 12px color-mix(in srgb, var(--icon-accent) 16%, transparent),
+              0 1px 4px color-mix(in srgb, var(--icon-accent) 8%, transparent),
+              inset 0 1px 2px hsl(var(--background) / 0.9),
+              inset 0 -1px 2px color-mix(in srgb, var(--icon-accent) 5%, transparent);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
           .mega-menu-card__icon::before {
             content: '';
@@ -749,12 +888,20 @@ window.location.href = cleanUrl;
           }
           .mega-menu-card:hover .mega-menu-card__icon,
           .mega-menu-list-card:hover .mega-menu-card__icon {
-            transform: translateY(-2px) scale(1.05);
+            transform: translateY(-3px) scale(1.08);
             box-shadow: 
-              0 8px 20px color-mix(in srgb, var(--icon-accent) 22%, transparent),
-              0 2px 8px color-mix(in srgb, var(--icon-accent) 10%, transparent),
-              inset 0 1px 2px hsl(var(--background) / 0.9);
-            border-color: color-mix(in srgb, var(--icon-accent) 40%, hsl(var(--border)));
+              0 10px 28px color-mix(in srgb, var(--icon-accent) 28%, transparent),
+              0 4px 16px color-mix(in srgb, var(--icon-accent) 18%, transparent),
+              0 2px 8px color-mix(in srgb, var(--icon-accent) 12%, transparent),
+              inset 0 1px 2px hsl(var(--background)),
+              inset 0 -1px 2px color-mix(in srgb, var(--icon-accent) 8%, transparent);
+            border-color: color-mix(in srgb, var(--icon-accent) 45%, hsl(var(--border)));
+            background: linear-gradient(
+              145deg,
+              color-mix(in srgb, var(--icon-accent) 22%, hsl(var(--background)) 78%),
+              color-mix(in srgb, var(--icon-accent) 14%, hsl(var(--background)) 86%),
+              color-mix(in srgb, var(--icon-accent) 8%, hsl(var(--background)) 92%)
+            );
           }
           .mega-menu-card:hover .mega-menu-card__icon::before,
           .mega-menu-list-card:hover .mega-menu-card__icon::before {
@@ -765,12 +912,19 @@ window.location.href = cleanUrl;
             opacity: 1;
           }
           .mega-menu-card__icon svg {
-            filter: drop-shadow(0 1px 3px color-mix(in srgb, var(--icon-accent) 30%, transparent));
-            transition: filter 0.25s ease;
+            filter: 
+              drop-shadow(0 1px 3px color-mix(in srgb, var(--icon-accent) 30%, transparent))
+              drop-shadow(0 0 0 color-mix(in srgb, var(--icon-accent) 0%, transparent));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.92;
           }
           .mega-menu-card:hover .mega-menu-card__icon svg,
           .mega-menu-list-card:hover .mega-menu-card__icon svg {
-            filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--icon-accent) 40%, transparent));
+            filter: 
+              drop-shadow(0 2px 8px color-mix(in srgb, var(--icon-accent) 45%, transparent))
+              drop-shadow(0 0 12px color-mix(in srgb, var(--icon-accent) 20%, transparent));
+            opacity: 1;
+            transform: scale(1.05);
           }
           .mega-menu-card__header-main {
             flex: 1;
@@ -855,278 +1009,263 @@ window.location.href = cleanUrl;
             border-style: dashed;
             background: transparent;
           }
-        `
-      }} />
-      <div style={{
-        padding: '24px',
-        backgroundColor: 'hsl(var(--background))',
-        borderRadius: '20px',
-        boxShadow: 'inset 0 1px 3px hsl(var(--foreground) / 0.05)'
-      }}>
-      {/* Premium Header with Stats and Controls */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '28px',
-        padding: '20px 24px',
-        background: 'linear-gradient(135deg, hsl(var(--muted) / 0.25) 0%, hsl(var(--muted) / 0.08) 100%)',
-        backdropFilter: 'blur(8px)',
-        borderRadius: '16px',
-        border: '1px solid hsl(var(--border) / 0.4)',
-        boxShadow: '0 2px 8px hsl(var(--foreground) / 0.03), inset 0 1px 0 hsl(var(--background) / 0.6)'
-      }}>
-        <div style={{ flex: 1 }}>
-          <Title level={4} style={{
-            margin: '0 0 6px 0',
-            color: 'hsl(var(--foreground))',
-            fontSize: '22px',
-            fontWeight: 700,
-            letterSpacing: '-0.02em',
-            lineHeight: 1.2
-          }}>
-            {config.title || 'Menu Items'}
-          </Title>
-          <Text style={{
-            color: 'hsl(var(--muted-foreground))',
-            fontSize: '13.5px',
-            fontWeight: 500,
-            letterSpacing: '0.01em'
-          }}>
-            {filteredMenuItems.length} of {menuItems.length} {config.itemType || 'items'}
-            {selectedCategory && ` • ${selectedCategory}`}
-            {selectedTags.length > 0 && ` • ${selectedTags.length} tag${selectedTags.length > 1 ? 's' : ''}`}
-            {showOnlyFavorites && ` • favorites only`}
-          </Text>
-        </div>
-        <Space>
-          {config.enableViewToggle && (
-            <>
-              <Tooltip title="Grid View">
-                <Button
-                  type={viewMode === 'grid' ? 'primary' : 'text'}
-                  icon={<AppstoreOutlined />}
-                  onClick={() => {
-                  setViewMode('grid');
-                  saveUserPreferences({ viewMode: 'grid', sortBy });
-                }}
-                  size="small"
-                />
-              </Tooltip>
-              <Tooltip title="List View">
-                <Button
-                  type={viewMode === 'list' ? 'primary' : 'text'}
-                  icon={<BarsOutlined />}
-                  onClick={() => {
-                  setViewMode('list');
-                  saveUserPreferences({ viewMode: 'list', sortBy });
-                }}
-                  size="small"
-                />
-              </Tooltip>
-            </>
-          )}
-          {config.enableFavorites && (
-            <Tooltip title={showOnlyFavorites ? `Show all ${config.itemType || 'items'}` : "Show only favorites"}>
-              <Button
-                type={showOnlyFavorites ? 'primary' : 'text'}
-                icon={<HeartFilled style={{ color: showOnlyFavorites ? '#ff4d4f' : undefined }} />}
-                onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
-                size="small"
-              />
-            </Tooltip>
-          )}
-          {config.enableSorting && (
-            <Select
-              value={sortBy}
-              onChange={(value) => {
-                setSortBy(value);
-                saveUserPreferences({ viewMode, sortBy: value });
+        `,
+        }}
+      />
+      <div
+        style={{
+          padding: "24px",
+          backgroundColor: "hsl(var(--background))",
+          borderRadius: "20px",
+          boxShadow: "inset 0 1px 3px hsl(var(--foreground) / 0.05)",
+        }}
+      >
+        {/* Premium Header with Stats and Controls */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "28px",
+            padding: "20px 24px",
+            background:
+              "linear-gradient(135deg, hsl(var(--muted) / 0.25) 0%, hsl(var(--muted) / 0.08) 100%)",
+            backdropFilter: "blur(8px)",
+            borderRadius: "16px",
+            border: "1px solid hsl(var(--border) / 0.4)",
+            boxShadow:
+              "0 2px 8px hsl(var(--foreground) / 0.03), inset 0 1px 0 hsl(var(--background) / 0.6)",
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <Title
+              level={4}
+              style={{
+                margin: "0 0 6px 0",
+                color: "hsl(var(--foreground))",
+                fontSize: "22px",
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.2,
               }}
-              size="small"
-              style={{ width: '120px' }}
-              suffixIcon={<SortAscendingOutlined />}
             >
-              <Option value="name">Name</Option>
-              <Option value="category">Category</Option>
-              <Option value="favorites">Favorites</Option>
-              <Option value="recent">Recent</Option>
-            </Select>
-          )}
-        </Space>
-      </div>
-
-      {/* Search and Filter Controls */}
-      <Space direction="vertical" size="middle" style={{ width: '100%', marginBottom: '24px' }}>
-        {config.enableSearch && (
-          <Input
-            placeholder={`Search ${config.itemType || 'items'}...`}
-            prefix={isSearching ? <ClockCircleOutlined spin /> : <SearchOutlined />}
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            size="large"
-            allowClear
-            style={{
-              borderRadius: '12px',
-              border: '2px solid hsl(var(--border))',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 2px 8px hsl(var(--foreground) / 0.04)'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = 'hsl(var(--primary) / 0.5)';
-              e.target.style.boxShadow = '0 4px 12px hsl(var(--primary) / 0.1)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = 'hsl(var(--border))';
-              e.target.style.boxShadow = '0 2px 8px hsl(var(--foreground) / 0.04)';
-            }}
-          />
-        )}
-
-        <Space wrap>
-          {config.enableCategoryFilter && categories.length > 0 && (
-            <Select
-              placeholder="Filter by category"
-              value={selectedCategory}
-              onChange={setSelectedCategory}
-              allowClear
-              style={{ minWidth: '200px' }}
-              suffixIcon={<FilterOutlined />}
+              {config.title || "Menu Items"}
+            </Title>
+            <Text
+              style={{
+                color: "hsl(var(--muted-foreground))",
+                fontSize: "13.5px",
+                fontWeight: 500,
+                letterSpacing: "0.01em",
+              }}
             >
-              {categories.map(category => (
-                <Option key={category} value={category}>{category}</Option>
-              ))}
-            </Select>
-          )}
-
-          {config.enableTagFilter && allTags.length > 0 && (
-            <Select
-              mode="multiple"
-              placeholder="Filter by tags"
-              value={selectedTags}
-              onChange={setSelectedTags}
-              allowClear
-              style={{ minWidth: '250px' }}
-              suffixIcon={<FilterOutlined />}
-            >
-              {allTags.map(tag => (
-                <Option key={tag} value={tag}>{tag}</Option>
-              ))}
-            </Select>
-          )}
-        </Space>
-      </Space>
-
-      {/* Results Summary */}
-      <div style={{ marginBottom: '16px' }}>
-        <Text type="secondary">
-          Showing {filteredMenuItems.length} of {menuItems.length} {config.itemType || 'items'}
-            {selectedCategory && ` in ${selectedCategory}`}
-            {selectedTags.length > 0 && ` with tags: ${selectedTags.join(', ')}`}
-            {sortBy !== 'name' && ` • sorted by ${sortBy}`}
-        </Text>
-      </div>
-
-      {/* Menu Items - Dynamic Layout */}
-      {filteredMenuItems.length === 0 ? (
-        <Empty
-          description={`No ${config.itemType || 'items'} found matching your criteria`}
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
-      ) : viewMode === 'list' ? (
-        // List View
-        <div style={{ padding: '12px 0' }}>
-          <Space direction="vertical" size={10} style={{ width: '100%' }}>
-            {filteredMenuItems.map((menuItem) => {
-              const visibleTags = menuItem.tags ? menuItem.tags.slice(0, 2) : [];
-              const extraTagsCount = menuItem.tags && menuItem.tags.length > visibleTags.length
-                ? menuItem.tags.length - visibleTags.length
-                : 0;
-              const hasTags = Boolean(menuItem.category) || visibleTags.length > 0 || extraTagsCount > 0;
-              const actions = renderActions(menuItem);
-              const { accent, containerStyle } = getIconPresentation(menuItem, ICON_ACCENT_TOKENS);
-
-              return (
-                <Card
-                  key={menuItem.key}
-                  hoverable
-                  onClick={() => handleMenuItemClick(menuItem)}
-                  className="mega-menu-list-card"
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="mega-menu-card__header">
-                    <div className="mega-menu-card__icon" style={containerStyle}>
-                      {getIconComponent(menuItem.icon, accent)}
-                    </div>
-                    <div className="mega-menu-card__header-main">
-                      <div className="mega-menu-card__title-row">
-                        <Title level={5} className="mega-menu-card__title">
-                          {menuItem.label}
-                        </Title>
-                        {actions}
-                      </div>
-                    </div>
-                  </div>
-                  {config.showDescriptions && menuItem.description && (
-                    <Paragraph
-                      className="mega-menu-card__description"
-                      ellipsis={{ rows: 1, tooltip: menuItem.description }}
-                    >
-                      {menuItem.description}
-                    </Paragraph>
-                  )}
-                  {hasTags && (
-                    <div className="mega-menu-card__tags">
-                      {menuItem.category && (
-                        <Tag className="mega-menu-card__chip mega-menu-card__chip--category">
-                          {menuItem.category}
-                        </Tag>
-                      )}
-                      {visibleTags.map((tag) => (
-                        <Tag key={tag} className="mega-menu-card__chip">
-                          {tag}
-                        </Tag>
-                      ))}
-                      {extraTagsCount > 0 && (
-                        <Tag className="mega-menu-card__chip mega-menu-card__chip--more">
-                          +{extraTagsCount} more
-                        </Tag>
-                      )}
-                    </div>
-                  )}
-                </Card>
-              );
-            })}
+              {filteredMenuItems.length} of {menuItems.length}{" "}
+              {config.itemType || "items"}
+              {selectedCategory && ` • ${selectedCategory}`}
+              {selectedTags.length > 0 &&
+                ` • ${selectedTags.length} tag${
+                  selectedTags.length > 1 ? "s" : ""
+                }`}
+              {showOnlyFavorites && ` • favorites only`}
+            </Text>
+          </div>
+          <Space>
+            {config.enableViewToggle && (
+              <>
+                <Tooltip title="Grid View">
+                  <Button
+                    type={viewMode === "grid" ? "primary" : "text"}
+                    icon={<AppstoreOutlined />}
+                    onClick={() => {
+                      setViewMode("grid");
+                      saveUserPreferences({ viewMode: "grid", sortBy });
+                    }}
+                    size="small"
+                  />
+                </Tooltip>
+                <Tooltip title="List View">
+                  <Button
+                    type={viewMode === "list" ? "primary" : "text"}
+                    icon={<BarsOutlined />}
+                    onClick={() => {
+                      setViewMode("list");
+                      saveUserPreferences({ viewMode: "list", sortBy });
+                    }}
+                    size="small"
+                  />
+                </Tooltip>
+              </>
+            )}
+            {config.enableFavorites && (
+              <Tooltip
+                title={
+                  showOnlyFavorites
+                    ? `Show all ${config.itemType || "items"}`
+                    : "Show only favorites"
+                }
+              >
+                <Button
+                  type={showOnlyFavorites ? "primary" : "text"}
+                  icon={
+                    <HeartFilled
+                      style={{
+                        color: showOnlyFavorites ? "#ff4d4f" : undefined,
+                      }}
+                    />
+                  }
+                  onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                  size="small"
+                />
+              </Tooltip>
+            )}
+            {config.enableSorting && (
+              <Select
+                value={sortBy}
+                onChange={(value) => {
+                  setSortBy(value);
+                  saveUserPreferences({ viewMode, sortBy: value });
+                }}
+                size="small"
+                style={{ width: "120px" }}
+                suffixIcon={<SortAscendingOutlined />}
+              >
+                <Option value="name">Name</Option>
+                <Option value="category">Category</Option>
+                <Option value="favorites">Favorites</Option>
+                <Option value="recent">Recent</Option>
+              </Select>
+            )}
           </Space>
         </div>
-      ) : (
-        // Grid View
-        <div style={{
-          padding: '12px 0'
-        }}>
-          <Row gutter={[16, 16]}>
-            {filteredMenuItems.map((menuItem) => {
-              const visibleTags = menuItem.tags ? menuItem.tags.slice(0, 2) : [];
-              const extraTagsCount = menuItem.tags && menuItem.tags.length > visibleTags.length
-                ? menuItem.tags.length - visibleTags.length
-                : 0;
-              const hasTags = Boolean(menuItem.category) || visibleTags.length > 0 || extraTagsCount > 0;
-              const actions = renderActions(menuItem);
-              const { accent, containerStyle } = getIconPresentation(menuItem, ICON_ACCENT_TOKENS);
 
-              return (
-                <Col xs={24} sm={12} md={getCardSize()} key={menuItem.key}>
+        {/* Search and Filter Controls */}
+        <Space
+          direction="vertical"
+          size="middle"
+          style={{ width: "100%", marginBottom: "24px" }}
+        >
+          {config.enableSearch && (
+            <Input
+              placeholder={`Search ${config.itemType || "items"}...`}
+              prefix={
+                isSearching ? <ClockCircleOutlined spin /> : <SearchOutlined />
+              }
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              size="large"
+              allowClear
+              style={{
+                borderRadius: "12px",
+                border: "2px solid hsl(var(--border))",
+                transition: "all 0.3s ease",
+                boxShadow: "0 2px 8px hsl(var(--foreground) / 0.04)",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "hsl(var(--primary) / 0.5)";
+                e.target.style.boxShadow =
+                  "0 4px 12px hsl(var(--primary) / 0.1)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "hsl(var(--border))";
+                e.target.style.boxShadow =
+                  "0 2px 8px hsl(var(--foreground) / 0.04)";
+              }}
+            />
+          )}
+
+          <Space wrap>
+            {config.enableCategoryFilter && categories.length > 0 && (
+              <Select
+                placeholder="Filter by category"
+                value={selectedCategory}
+                onChange={setSelectedCategory}
+                allowClear
+                style={{ minWidth: "200px" }}
+                suffixIcon={<FilterOutlined />}
+              >
+                {categories.map((category) => (
+                  <Option key={category} value={category}>
+                    {category}
+                  </Option>
+                ))}
+              </Select>
+            )}
+
+            {config.enableTagFilter && allTags.length > 0 && (
+              <Select
+                mode="multiple"
+                placeholder="Filter by tags"
+                value={selectedTags}
+                onChange={setSelectedTags}
+                allowClear
+                style={{ minWidth: "250px" }}
+                suffixIcon={<FilterOutlined />}
+              >
+                {allTags.map((tag) => (
+                  <Option key={tag} value={tag}>
+                    {tag}
+                  </Option>
+                ))}
+              </Select>
+            )}
+          </Space>
+        </Space>
+
+        {/* Results Summary */}
+        <div style={{ marginBottom: "16px" }}>
+          <Text type="secondary">
+            Showing {filteredMenuItems.length} of {menuItems.length}{" "}
+            {config.itemType || "items"}
+            {selectedCategory && ` in ${selectedCategory}`}
+            {selectedTags.length > 0 &&
+              ` with tags: ${selectedTags.join(", ")}`}
+            {sortBy !== "name" && ` • sorted by ${sortBy}`}
+          </Text>
+        </div>
+
+        {/* Menu Items - Dynamic Layout */}
+        {filteredMenuItems.length === 0 ? (
+          <Empty
+            description={`No ${
+              config.itemType || "items"
+            } found matching your criteria`}
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
+        ) : viewMode === "list" ? (
+          // List View
+          <div style={{ padding: "12px 0" }}>
+            <Space direction="vertical" size={10} style={{ width: "100%" }}>
+              {filteredMenuItems.map((menuItem) => {
+                const visibleTags = menuItem.tags
+                  ? menuItem.tags.slice(0, 2)
+                  : [];
+                const extraTagsCount =
+                  menuItem.tags && menuItem.tags.length > visibleTags.length
+                    ? menuItem.tags.length - visibleTags.length
+                    : 0;
+                const hasTags =
+                  Boolean(menuItem.category) ||
+                  visibleTags.length > 0 ||
+                  extraTagsCount > 0;
+                const actions = renderActions(menuItem);
+                const { accent, containerStyle } = getIconPresentation(
+                  menuItem,
+                  ICON_ACCENT_TOKENS
+                );
+
+                return (
                   <Card
+                    key={menuItem.key}
                     hoverable
                     onClick={() => handleMenuItemClick(menuItem)}
-                    className="mega-menu-card"
-                    style={{
-                      cursor: 'pointer',
-                      height: '100%'
-                    }}
+                    className="mega-menu-list-card"
+                    style={{ cursor: "pointer" }}
                   >
                     <div className="mega-menu-card__header">
-                      <div className="mega-menu-card__icon" style={containerStyle}>
+                      <div
+                        className="mega-menu-card__icon"
+                        style={containerStyle}
+                      >
                         {getIconComponent(menuItem.icon, accent)}
                       </div>
                       <div className="mega-menu-card__header-main">
@@ -1138,16 +1277,14 @@ window.location.href = cleanUrl;
                         </div>
                       </div>
                     </div>
-
                     {config.showDescriptions && menuItem.description && (
                       <Paragraph
                         className="mega-menu-card__description"
-                        ellipsis={{ rows: 2, tooltip: menuItem.description }}
+                        ellipsis={{ rows: 1, tooltip: menuItem.description }}
                       >
                         {menuItem.description}
                       </Paragraph>
                     )}
-
                     {hasTags && (
                       <div className="mega-menu-card__tags">
                         {menuItem.category && (
@@ -1168,12 +1305,99 @@ window.location.href = cleanUrl;
                       </div>
                     )}
                   </Card>
-                </Col>
-              );
-            })}
-          </Row>
-        </div>
-      )}
+                );
+              })}
+            </Space>
+          </div>
+        ) : (
+          // Grid View
+          <div
+            style={{
+              padding: "12px 0",
+            }}
+          >
+            <Row gutter={[16, 16]}>
+              {filteredMenuItems.map((menuItem) => {
+                const visibleTags = menuItem.tags
+                  ? menuItem.tags.slice(0, 2)
+                  : [];
+                const extraTagsCount =
+                  menuItem.tags && menuItem.tags.length > visibleTags.length
+                    ? menuItem.tags.length - visibleTags.length
+                    : 0;
+                const hasTags =
+                  Boolean(menuItem.category) ||
+                  visibleTags.length > 0 ||
+                  extraTagsCount > 0;
+                const actions = renderActions(menuItem);
+                const { accent, containerStyle } = getIconPresentation(
+                  menuItem,
+                  ICON_ACCENT_TOKENS
+                );
+
+                return (
+                  <Col xs={24} sm={12} md={getCardSize()} key={menuItem.key}>
+                    <Card
+                      hoverable
+                      onClick={() => handleMenuItemClick(menuItem)}
+                      className="mega-menu-card"
+                      style={{
+                        cursor: "pointer",
+                        height: "100%",
+                      }}
+                    >
+                      <div className="mega-menu-card__header">
+                        <div
+                          className="mega-menu-card__icon"
+                          style={containerStyle}
+                        >
+                          {getIconComponent(menuItem.icon, accent)}
+                        </div>
+                        <div className="mega-menu-card__header-main">
+                          <div className="mega-menu-card__title-row">
+                            <Title level={5} className="mega-menu-card__title">
+                              {menuItem.label}
+                            </Title>
+                            {actions}
+                          </div>
+                        </div>
+                      </div>
+
+                      {config.showDescriptions && menuItem.description && (
+                        <Paragraph
+                          className="mega-menu-card__description"
+                          ellipsis={{ rows: 2, tooltip: menuItem.description }}
+                        >
+                          {menuItem.description}
+                        </Paragraph>
+                      )}
+
+                      {hasTags && (
+                        <div className="mega-menu-card__tags">
+                          {menuItem.category && (
+                            <Tag className="mega-menu-card__chip mega-menu-card__chip--category">
+                              {menuItem.category}
+                            </Tag>
+                          )}
+                          {visibleTags.map((tag) => (
+                            <Tag key={tag} className="mega-menu-card__chip">
+                              {tag}
+                            </Tag>
+                          ))}
+                          {extraTagsCount > 0 && (
+                            <Tag className="mega-menu-card__chip mega-menu-card__chip--more">
+                              +{extraTagsCount} more
+                            </Tag>
+                          )}
+                        </div>
+                      )}
+                    </Card>
+                  </Col>
+                );
+              })}
+            </Row>
+          </div>
+        )}
       </div>
     </>
   );
