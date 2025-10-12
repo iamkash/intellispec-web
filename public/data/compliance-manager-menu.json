@@ -1,0 +1,95 @@
+{
+  "menu_items": [
+    {
+      "key": "compliance-dashboard",
+      "icon": "DashboardOutlined",
+      "label": "Compliance Dashboard",
+      "license_id": "LIC_COMPLIANCE",
+      "auth_id": "AUTH_COMPLIANCE",
+      "enabled": true,
+      "order": 1,
+      "route": "/compliance/dashboard",
+      "type": "item",
+      "permissions": ["compliance.view"]
+    },
+    {
+      "key": "regulations",
+      "icon": "SafetyCertificateOutlined",
+      "label": "Regulations",
+      "license_id": "LIC_COMPLIANCE",
+      "auth_id": "AUTH_COMPLIANCE",
+      "enabled": true,
+      "order": 2,
+      "route": "/compliance/regulations",
+      "type": "item",
+      "permissions": ["compliance.regulations"]
+    },
+    {
+      "key": "audits",
+      "icon": "AuditOutlined",
+      "label": "Audits",
+      "license_id": "LIC_COMPLIANCE",
+      "auth_id": "AUTH_COMPLIANCE",
+      "enabled": true,
+      "order": 3,
+      "route": "/compliance/audits",
+      "type": "item",
+      "permissions": ["compliance.audits"]
+    },
+    {
+      "key": "reporting",
+      "icon": "FileTextOutlined",
+      "label": "Reporting",
+      "license_id": "LIC_COMPLIANCE",
+      "auth_id": "AUTH_COMPLIANCE",
+      "enabled": true,
+      "order": 4,
+      "route": "/compliance/reporting",
+      "type": "item",
+      "permissions": ["compliance.reporting"]
+    }, 
+    {
+      "key": "tsti-audit-form",
+      "icon": "AuditOutlined",
+      "label": "TSTI Audit Form",
+      "license_id": "LIC_COMPLIANCE",
+      "auth_id": "AUTH_COMPLIANCE",
+      "enabled": true,
+      "order": 17,
+      "route": "/compliance/tsti-audit-form",
+      "type": "item",
+      "permissions": ["compliance.tsti_audit.view", "compliance.tsti_audit.create"],
+      "workspace": "compliance/tsti-audit-form",
+      "description": "Form for conducting TSTI (Task-Specific Task Instruction) audits."
+    },
+    {
+      "key": "employee-time-card",
+      "icon": "ClockCircleOutlined",
+      "label": "Employee Time Card",
+      "license_id": "LIC_COMPLIANCE",
+      "auth_id": "AUTH_COMPLIANCE",
+      "enabled": true,
+      "order": 18,
+      "route": "/compliance/employee-time-card",
+      "type": "item",
+      "permissions": ["compliance.timecard.view", "compliance.timecard.create"],
+      "workspace": "compliance/employee-time-card",
+      "description": "Form for capturing employee time cards with daily entries, weekly totals, and approval workflow."
+    },
+    {
+      "key": "voc-workspace",
+      "icon": "ExperimentOutlined",
+      "label": "VOC Workspace",
+      "license_id": "LIC_COMPLIANCE",
+      "auth_id": "AUTH_COMPLIANCE",
+      "enabled": true,
+      "order": 19,
+      "route": "/compliance/voc-workspace",
+      "type": "item",
+      "permissions": ["compliance.voc.view", "compliance.voc.manage"],
+      "workspace": "compliance-manager/voc-workspace",
+      "description": "Volatile Organic Compound management and paint specifications tracking."
+    }
+
+  ]
+} 

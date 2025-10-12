@@ -1,0 +1,70 @@
+{
+  "id": "rescue-equipment-readiness",
+  "title": "Rescue Equipment Readiness",
+  "description": "Checklist and readiness status for rescue equipment; AI can suggest missing items.",
+  "gadgets": [
+    {
+      "id": "rescue-equipment-readiness-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Rescue Equipment Readiness",
+      "description": "Capture notes, auto-suggest equipment list, and export PDF.",
+      "config": {
+        "sections": [
+          { "id": "voice_capture", "title": "Voice Capture", "sectionType": "voice", "includeInPdf": false },
+          { "id": "image_capture", "title": "Image Capture", "sectionType": "image", "includeInPdf": false },
+          {
+            "id": "image_analysis",
+            "title": "Scene Analysis",
+            "imageAnalysisPromptRef": "deepImageAnalysis",
+            "promptSourceIds": ["image_capture"],
+            "includeInPdf": true,
+            "pdf": { "includeOverview": true, "includeImages": false }
+          },
+          {
+            "id": "equipment_readiness",
+            "title": "Equipment Readiness",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Equipment List",
+              "dataKey": "equipment",
+              "columns": [
+                { "key": "item", "title": "Item", "editable": true, "summary": "uniqueCount" },
+                { "key": "quantity", "title": "Qty", "editable": true, "summary": "sum" },
+                { "key": "status", "title": "Status", "editable": true },
+                { "key": "notes", "title": "Notes", "editable": true }
+              ],
+              "promptRef": "equipmentPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+        ],
+        "groups": [ { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
+        "fields": [
+          { "id": "supervisor_name", "label": "Supervisor Name", "type": "text", "required": true, "groupId": "signoff_group", "lgSpan": 12 },
+          { "id": "signoff_date", "label": "Date", "type": "date", "required": true, "groupId": "signoff_group", "lgSpan": 12 }
+        ],
+        "pdfStyling": {
+          "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" },
+          "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Equipment Readiness", "centerText": "Confidential", "rightText": "Page {page} of {pages}" },
+          "sections": { "headerFontSize": 10, "contentFontSize": 8, "lineSpacing": 3.5, "margins": { "left": 15, "right": 195 } },
+          "tables": { "headerBackground": [2,6,23], "headerTextColor": [255,255,255], "headerFontSize": 8, "contentFontSize": 7, "cellPadding": 3 }
+        },
+        "prompts": {
+          "deepImageAnalysis": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000 }, "promptConfig": { "systemPrompt": "Analyze images for staging and potential equipment needs. Output JSON only.", "userPrompt": "JSON only" } },
+          "equipmentPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800, "temperature": 0.3 },
+            "promptConfig": {
+              "systemPrompt": "ROLE: Suggest a readiness equipment list based on transcript and image overview. FORMAT: JSON array of {item, quantity, status, notes}.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"item\": \"string\", \"quantity\": \"string|number\", \"status\": \"Ready|Missing|Check\", \"notes\": \"string\" } ]"
+            }
+          }
+        }
+      },
+      "position": 24
+    }
+  ]
+}
+
+
+

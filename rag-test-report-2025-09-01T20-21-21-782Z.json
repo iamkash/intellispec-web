@@ -1,0 +1,278 @@
+{
+  "total": 23,
+  "passed": 5,
+  "failed": 18,
+  "categories": {
+    "basic_counts": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "tests": [
+        {
+          "passed": false,
+          "response": "7 companies\n\n- Exxon\n- Dow Chemical Company\n- United States Steel Corporation\n- Pfizer Inc.\n- Chevron\n- BASF Corporation\n- International Paper Company\n- Nucor Corporation\n- Anheuser-Busch InBev\n\nNote: There are 9 listed names, but only 7 are labeled as distinct \"company\" entries in the provided data excerpt. If you want an exact count strictly from the dataset, it’s 9 names presented, with 7 explicitly marked as company records.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "There are 11 facilities listed.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "There are 3 distinct paint types in the provided data:\n- Zinc Clad 2500 Inorganic Zinc Rich (Sherwin-Williams), product_code B69V320/B69D11\n- Zinc Clad IV (85) Organic Zinc Rich (Sherwin-Williams), product_code Ref 1202-1\n- Nova-Plate 360 High Performance Novolac (Sherwin-Williams), product_code Ref 1308-1",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "There are 25 paintInvoice entries in the provided data.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        }
+      ]
+    },
+    "identification": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "tests": [
+        {
+          "passed": false,
+          "response": "United States Steel Corporation has the most facilities listed (3 sites).",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "Highest VOC content: Zinc Clad 2500 Inorganic Zinc Rich (VOC 500) by Sherwin-Williams.",
+          "expectedPattern": "/^[A-Za-z0-9\\s\\-]+$/",
+          "description": "Should return product name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z0-9\\s\\-]+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "The facility with the highest quantity purchased is the one tied to the record with quantityPurchased of 59580, facilityId: Not available. This corresponds to the facility associated with the invoice INV-202509-2362 (quantityPurchased 59580). If you need the human-readable name for that facility, please provide a mapping of facilityId to facility name.",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-]+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "The maximum quantity purchased is 60917, from the following invoice:\n\n- Invoice INV-202508-6800, purchase date 2025-03-09, po PO-HII-80931, status approved, companyId Not available, facility Not available, paintSpecId Not available, quantityPurchased 60917.\n\nIf you want the company or user name associated, I don’t have user-level names in the data provided. The entry above is the top quantity.",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        }
+      ]
+    },
+    "quantitative": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "tests": [
+        {
+          "passed": false,
+          "response": "Sherwin-Williams total paint quantity used: 526,? \n\nI need clarification on which facility or time period you want. From the data, there are many invoices with Sherwin-Williams products and various quantities purchased (e.g., 13,507; 20,865; 28,808; 26,890; 56,? etc.). If you want total across all listed invoices, please confirm and I’ll sum exact quantities.",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(gallons?|units?|liters?)?$/",
+          "description": "Should return quantity with optional unit",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+[\\d,]*(\\.\\d+)?\\s*(gallons?|units?|liters?)?$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "From the provided data, VOC contents for paint_specifications entries:\n- Zinc Clad IV (85) Organic Zinc Rich: 340\n- Nova-Plate 360 High Performance Novolac: 15\n- Zinc Clad 2500 Inorganic Zinc Rich: 500\n- Sher-Loxane 800 Polysiloxane: 100\n\nTotal VOC content across all paints = 340 + 15 + 500 + 100 = 955.",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(g\\/L|ppm|%)?$/",
+          "description": "Should return total VOC value",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+[\\d,]*(\\.\\d+)?\\s*(g\\/L|ppm|%)?$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "Berkeley Steel Mill has 0 invoices in the provided data.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Should return count for specific facility",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        }
+      ]
+    },
+    "temporal": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "tests": [
+        {
+          "passed": true,
+          "response": "The data shows multiple paintInvoice records. The latest purchase date among them is 2025-08-13T05:00:00.000Z (invoice number 1111, PO 12121), but note this entry is marked as draft. If you require only approved/paid records, the most recent approved/paid date is 2025-08-13T05:00:00.000Z as well (invoice 1111 is draft; the latest approved/paid entry with a date is 2025-08-16? No, not present). Based on provided data, the latest dated entries are around 2025-",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{4}-\\d{2}-\\d{2})/",
+          "description": "Should return a date",
+          "issues": [
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": true,
+          "response": "Based on the provided data, identify the month with the highest quantityPurchased across entries.\n\n- March 2025: 56,917\n- April 2025: 26,890; 26,558; 60,91? (Note: 6,091 is the quantity for INV-202508-7811; 60,91 is a misread; actual is 6,091)\n- May 2025: multiple entries with quantities like 28,808; 32,290?; 59,580; 43,592; 52,320?; 41,783; 21,?;",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December)/",
+          "description": "Should return month name",
+          "issues": [
+            "Response too verbose (>200 chars)"
+          ]
+        }
+      ]
+    },
+    "comparative": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "tests": [
+        {
+          "passed": true,
+          "response": "Nova-Plate 360 High Performance Novolac has lower VOC (15) than Zinc Clad IV (85) Organic Zinc Rich, which is 340. Therefore, Zinc Clad IV has higher VOC.",
+          "expectedPattern": "/^(Nova-Plate|Zinc Clad)/",
+          "description": "Should return one of the compared products",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "Sherwin-Williams. The provided records show multiple paint invoices for Sherwin-Williams products, with large total quantities purchased (e.g., Nova-Plate 360, Sher-Loxane 800, Zinc Clad series) and numerous approved/paid invoices, indicating higher cumulative spend than the available PPG data (which is not present in the dataset). No PPG paint records are listed here for a direct spend comparison.",
+          "expectedPattern": "/^(Sherwin-Williams|PPG)/",
+          "description": "Should return one of the compared companies",
+          "issues": [
+            "Response too verbose (>200 chars)"
+          ]
+        }
+      ]
+    },
+    "complex_analysis": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "tests": [
+        {
+          "passed": false,
+          "response": "I don’t have any VOC (volume or VOC score) data in the provided records. The data contain only:\n- invoice details (invoiceNumber, status, purchaseDate, poNumber, etc.)\n- quantityPurchased\n- lineItems with a Score (which might be a quality metric, not VOC)\n- facilityId per invoice\n\nTo determine the facility with the highest average VOC per invoice, I would need the VOC value for each invoice (or a VOC field) associated with each facility. If you can provide the VOC values (per invoice) or confirm which field represents VOC, I can compute:\n- VOC per invoice\n- average VOC per facility\n-",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name after complex calculation",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-]+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have explicit total consumption numbers here. If you can provide the total quantity purchased across all invoices or confirm I should sum the quantities listed, I can compute the exact percentage for high-VOC products.\n\nFrom the data provided, high-VOC products and their VOC contents:\n- Nova-Plate 360 High Performance Novolac (VOC 15) — product_code Ref 1308-1\n- Zinc Clad 2500 Inorganic Zinc Rich (VOC 500) — product_code B69V320/B69D11\n- Zinc Clad IV (85) Organic Zinc Rich (VOC 340) — product_code Ref 1202",
+          "expectedPattern": "/^\\d+(\\.\\d+)?%?$/",
+          "description": "Should return percentage",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+(\\.\\d+)?%?$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "From the provided data, all entries are for the same manufacturer: Sherwin-Williams. The records include multiple paint specifications (Nova-Plate 360, Zinc Clad IV, Zinc Clad 2500, Sher-Loxane 800) with different product_codes and VOC contents, and numerous paintInvoices referencing these specs. No other company is listed.\n\nAnswer: Sherwin-Williams has the most diverse paint portfolio in the dataset (appears across multiple product lines).",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name after diversity analysis",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        }
+      ]
+    },
+    "aggregation": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "Cannot determine exact total from the provided data alone because it lists multiple paintInvoice records with quantityPurchased, but there is no explicit grouping or a complete, deduplicated set for all invoices by company. If you want the total per company, I can compute it if you confirm you want me to sum the quantityPurchased for all invoices in this dataset, grouped by the companyId (or by company name if you provide mappings).\n\nIf you want me to proceed with the given data as-is (sum quantities per companyId), please confirm, and I will return the exact totals per companyId.",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return company breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "Here are the average VOC_CONTENT values by manufacturer from the provided data:\n\n- Sherwin-Williams: 154.0\n- BASF Corporation: 0.0\n- Dow Chemical Company: 0.0\n- International Paper Company: 0.0\n- Anheuser-Busch InBev: 0.0\n\nNotes:\n- VOC content values shown are the ones listed in the paint_specifications and related entries. Several manufacturers have only non-paint-spec entries or zero VOC values in this dataset, leading to zeros for those. \n- If you want strictly the paint_specifications entries per manufacturer (excluding non-paint specifications),",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return manufacturer breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+            "Response too verbose (>200 chars)"
+          ]
+        }
+      ]
+    },
+    "edge_cases": {
+      "total": 3,
+      "passed": 1,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "Here are the document IDs present:\n\n- Not available\n- Not available\n- Not available\n- Not available\n- Not available\n- Not available\n- Not available\n- Not available\n- doc_1756742041610_",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT contain any doc_ IDs",
+          "issues": [
+            "Response doesn't match expected pattern: /^(?!.*doc_).*$/",
+            "SECURITY ISSUE: System ID exposed"
+          ]
+        },
+        {
+          "passed": true,
+          "response": "The system ID for Sherwin-Williams in the data is Not available.",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT expose system IDs",
+          "issues": []
+        },
+        {
+          "passed": false,
+          "response": "No matches found for brand XYZ123 in the available data.\n\nIf you want, I can search for similar Sherwin-Williams products or provide details from the listed entries.",
+          "expectedPattern": "/^(No data|Not found|0|None|No data available)/",
+          "description": "Should handle non-existent data gracefully",
+          "issues": [
+            "Response doesn't match expected pattern: /^(No data|Not found|0|None|No data available)/"
+          ]
+        }
+      ]
+    }
+  }
+}

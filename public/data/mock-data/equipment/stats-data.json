@@ -1,0 +1,52 @@
+{
+  "equipmentStats": [
+    {
+      "id": "total-equipment",
+      "title": "Total Equipment",
+      "value": "1,247",
+      "icon": "AppstoreOutlined",
+      "category": "inventory",
+      "trend": {
+        "value": "+5.2%",
+        "direction": "up"
+      },
+      "lastUpdated": "2024-01-15T14:30:00Z"
+    },
+    {
+      "id": "currently-rented",
+      "title": "Currently Rented",
+      "value": "892",
+      "icon": "SwapOutlined",
+      "category": "operations",
+      "trend": {
+        "value": "+12.8%",
+        "direction": "up"
+      },
+      "lastUpdated": "2024-01-15T14:30:00Z"
+    },
+    {
+      "id": "available-units",
+      "title": "Available Units",
+      "value": "355",
+      "icon": "CheckCircleOutlined",
+      "category": "inventory",
+      "trend": {
+        "value": "-3.4%",
+        "direction": "down"
+      },
+      "lastUpdated": "2024-01-15T14:30:00Z"
+    },
+    {
+      "id": "maintenance-due",
+      "title": "Maintenance Due",
+      "value": "23",
+      "icon": "ToolOutlined",
+      "category": "maintenance",
+      "trend": {
+        "value": "+2",
+        "direction": "up"
+      },
+      "lastUpdated": "2024-01-15T14:30:00Z"
+    }
+  ]
+} 

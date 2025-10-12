@@ -1,0 +1,191 @@
+{
+  "quicklinks": [
+    {
+      "id": "executive-dashboard",
+      "title": "Executive Dashboard",
+      "description": "High-level business metrics and KPIs",
+      "icon": "DashboardOutlined",
+      "action": "navigate",
+      "route": "/executive/dashboard",
+      "enabled": true,
+      "category": "executive",
+      "priority": 1
+    },
+    {
+      "id": "financial-overview",
+      "title": "Financial Overview",
+      "description": "Revenue, profit margins, and financial performance",
+      "icon": "DollarOutlined",
+      "action": "navigate",
+      "route": "/executive/financial-overview",
+      "enabled": true,
+      "category": "executive",
+      "priority": 2
+    },
+    {
+      "id": "fleet-performance",
+      "title": "Fleet Performance",
+      "description": "Overall fleet utilization and efficiency metrics",
+      "icon": "CarOutlined",
+      "action": "navigate",
+      "route": "/executive/fleet-performance",
+      "enabled": true,
+      "category": "executive",
+      "priority": 3
+    },
+    {
+      "id": "strategic-planning",
+      "title": "Strategic Planning",
+      "description": "Long-term business planning and forecasting",
+      "icon": "FundOutlined",
+      "action": "navigate",
+      "route": "/executive/strategic-planning",
+      "enabled": true,
+      "category": "executive",
+      "priority": 4
+    },
+    {
+      "id": "risk-management",
+      "title": "Risk Management",
+      "description": "Risk assessment and mitigation strategies",
+      "icon": "ExclamationCircleOutlined",
+      "action": "navigate",
+      "route": "/executive/risk-management",
+      "enabled": true,
+      "category": "executive",
+      "priority": 5
+    },
+    {
+      "id": "market-analysis",
+      "title": "Market Analysis",
+      "description": "Market trends and competitive intelligence",
+      "icon": "LineChartOutlined",
+      "action": "navigate",
+      "route": "/executive/market-analysis",
+      "enabled": true,
+      "category": "executive",
+      "priority": 6
+    },
+    {
+      "id": "check-in-out",
+      "title": "Check-In / Check-Out",
+      "description": "Manage equipment check-in and check-out processes",
+      "icon": "SwapOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/check-in-out",
+      "enabled": true,
+      "category": "operations",
+      "priority": 7
+    },
+    {
+      "id": "inventory-management",
+      "title": "Inventory Management",
+      "description": "Real-time inventory tracking and availability management",
+      "icon": "AppstoreOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/inventory",
+      "enabled": true,
+      "category": "management",
+      "priority": 8
+    },
+    {
+      "id": "fleet-tracking",
+      "title": "Fleet Tracking",
+      "description": "GPS tracking and real-time location monitoring",
+      "icon": "EnvironmentOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/fleet-tracking",
+      "enabled": true,
+      "category": "tracking",
+      "priority": 9
+    },
+    {
+      "id": "dispatch-management",
+      "title": "Dispatch Management",
+      "description": "Delivery scheduling and route optimization",
+      "icon": "SendOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/dispatch",
+      "enabled": true,
+      "category": "operations",
+      "priority": 10
+    },
+    {
+      "id": "rental-contracts",
+      "title": "Rental Contracts",
+      "description": "Digital contracts and e-signature management",
+      "icon": "FileTextOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/contracts",
+      "enabled": true,
+      "category": "management",
+      "priority": 11
+    },
+    {
+      "id": "asset-utilization",
+      "title": "Asset Utilization",
+      "description": "Equipment usage analytics and optimization",
+      "icon": "BarChartOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/utilization",
+      "enabled": true,
+      "category": "analytics",
+      "priority": 12
+    },
+    {
+      "id": "maintenance-scheduling",
+      "title": "Maintenance Scheduling",
+      "description": "Preventive maintenance and service tracking",
+      "icon": "ScheduleOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/maintenance-scheduling",
+      "enabled": true,
+      "category": "maintenance",
+      "priority": 13
+    },
+    {
+      "id": "damage-inspection",
+      "title": "Damage & Inspection",
+      "description": "Pre/post-rental inspections and damage reporting",
+      "icon": "SearchOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/damage-inspection",
+      "enabled": true,
+      "category": "maintenance",
+      "priority": 14
+    },
+    {
+      "id": "billing-invoicing",
+      "title": "Billing & Invoicing",
+      "description": "Automated billing and payment processing",
+      "icon": "DollarOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/billing",
+      "enabled": true,
+      "category": "financial",
+      "priority": 15
+    },
+    {
+      "id": "customer-portal",
+      "title": "Customer Portal",
+      "description": "Self-service customer interface",
+      "icon": "UserOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/customer-portal",
+      "enabled": true,
+      "category": "customer",
+      "priority": 16
+    },
+    {
+      "id": "reports-analytics",
+      "title": "Reports & Analytics",
+      "description": "Performance metrics and business intelligence",
+      "icon": "LineChartOutlined",
+      "action": "navigate",
+      "route": "/assets/equipment/reports",
+      "enabled": true,
+      "category": "analytics",
+      "priority": 17
+    }
+  ]
+} 

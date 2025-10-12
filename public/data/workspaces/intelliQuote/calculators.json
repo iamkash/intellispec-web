@@ -1,0 +1,46 @@
+{
+  "id": "intelliQuote-calculators",
+  "type": "dashboard",
+  "title": "Quote Calculators",
+  "description": "Browse and access quoting and estimation calculation tools",
+  "icon": "CalculatorOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "filterContext": { "enabled": true, "filterDefinitions": [] },
+  "gadgets": [
+    {
+      "id": "calculators-mega-menu",
+      "type": "mega-menu-gadget",
+      "title": "Quote Calculators",
+      "description": "Browse and access quoting and estimation calculation tools",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "dataUrl": "/api/calculators?module=quote",
+        "dataPath": "calculators",
+        "title": "Quote Calculators",
+        "itemType": "calculators",
+        "modulePath": "intelliQuote",
+        "workspacePath": "calculators",
+        "showDescriptions": true,
+        "enableSearch": true,
+        "enableCategoryFilter": true,
+        "enableTagFilter": true,
+        "enableFavorites": true,
+        "enableSorting": true,
+        "enableViewToggle": true,
+        "searchFields": ["label", "description", "tags"],
+        "cardSize": "medium"
+      }
+    }
+  ],
+  "smartDefaults": {
+    "calculators-mega-menu": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": true
+    }
+  }
+}

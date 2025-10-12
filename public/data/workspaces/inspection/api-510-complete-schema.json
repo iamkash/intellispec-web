@@ -1,0 +1,861 @@
+{
+  "metadata": {
+    "title": "API 510 Pressure Vessel Inspection Form Schema",
+    "description": "Complete schema for API 510 pressure vessel inspection form with all fields, sections, and validation rules",
+    "version": "1.0.0",
+    "aiInstructions": {
+      "purpose": "This schema helps the AI understand the complete form structure to generate appropriate JSON responses for form field updates",
+      "responseFormat": "When updating form fields, respond with JSON format: {\"fieldId\": \"value\"}",
+      "specialHandling": {
+        "inspection-findings": "For inspection-findings type fields, provide an array of finding descriptions as strings. The system will convert these to proper finding objects with metadata.",
+        "textarea": "For textarea fields, provide detailed, well-formatted descriptions. These will be used directly as the field value.",
+        "radio": "Use 'yes' or 'no' values for radio buttons",
+        "select": "Use the exact value from the options array",
+        "text": "Provide concise text values",
+        "number": "Provide numeric values",
+        "date": "Provide date in YYYY-MM-DD format"
+      },
+      "examples": {
+        "simpleField": "{\"vessel-tag\": \"V-001\"}",
+        "selectField": "{\"design-code\": \"api-510\"}",
+        "radioField": "{\"safety-concerns\": \"yes\"}",
+        "findingsField": "{\"weld-condition-findings\": [\"Visible porosity in weld joint\", \"Discoloration indicating overheating\"]}",
+        "textareaField": "{\"safety-concerns-details\": \"Defects in the weld may compromise structural integrity and require immediate assessment. The presence of porosity and pitting could lead to crack propagation under operational stresses.\"}",
+        "multipleFields": "{\"weld-condition\": \"poor\", \"weld-condition-findings\": [\"Visible porosity in weld joint\"], \"safety-concerns\": \"yes\", \"safety-concerns-details\": \"Weld defects may compromise structural integrity.\"}"
+      }
+    }
+  },
+  "formSchema": [
+    {
+      "id": "vessel-tag",
+      "type": "text",
+      "title": "Vessel Tag Number",
+      "label": "Vessel Tag Number",
+      "sectionId": "vessel-identification",
+      "required": true
+    },
+    {
+      "id": "vessel-name",
+      "type": "text",
+      "title": "Vessel Name/Description",
+      "label": "Vessel Name/Description",
+      "sectionId": "vessel-identification",
+      "required": true
+    },
+    {
+      "id": "manufacturer",
+      "type": "text",
+      "title": "Manufacturer",
+      "label": "Manufacturer",
+      "sectionId": "vessel-identification"
+    },
+    {
+      "id": "serial-number",
+      "type": "text",
+      "title": "Serial Number",
+      "label": "Serial Number",
+      "sectionId": "vessel-identification"
+    },
+    {
+      "id": "design-code",
+      "type": "select",
+      "title": "Design Code",
+      "label": "Design Code",
+      "sectionId": "vessel-identification",
+      "required": true,
+      "options": [
+        {"label": "ASME Section VIII, Division 1", "value": "asme-viii-div1"},
+        {"label": "ASME Section VIII, Division 2", "value": "asme-viii-div2"},
+        {"label": "API 510", "value": "api-510"},
+        {"label": "Other", "value": "other"}
+      ]
+    },
+    {
+      "id": "construction-year",
+      "type": "number",
+      "title": "Year of Construction",
+      "label": "Year of Construction",
+      "sectionId": "vessel-identification"
+    },
+    {
+      "id": "inspection-type",
+      "type": "select",
+      "title": "Inspection Type",
+      "label": "Type of Inspection",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "External Inspection", "value": "external"},
+        {"label": "Internal Inspection", "value": "internal"},
+        {"label": "Confined Space Entry", "value": "confined-space"},
+        {"label": "Hot Work Area", "value": "hot-work"},
+        {"label": "Elevated Work", "value": "elevated"},
+        {"label": "Underwater/Submerged", "value": "underwater"},
+        {"label": "High Pressure System", "value": "high-pressure"},
+        {"label": "High Temperature System", "value": "high-temperature"},
+        {"label": "Other", "value": "other"}
+      ]
+    },
+    {
+      "id": "work-permit",
+      "type": "text",
+      "title": "Work Permit Number",
+      "label": "Work Permit Number",
+      "sectionId": "safety-preparation",
+      "required": true
+    },
+    {
+      "id": "lockout-tagout",
+      "type": "radio",
+      "title": "Lockout/Tagout Verified",
+      "label": "Lockout/Tagout procedures completed",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "lockout-tagout-reason",
+      "type": "textarea",
+      "title": "Reason for No Lockout/Tagout",
+      "label": "Please explain why Lockout/Tagout procedures were not completed",
+      "sectionId": "safety-preparation",
+      "watchField": "lockout-tagout",
+      "showWhen": "no"
+    },
+    {
+      "id": "lockout-tagout-details",
+      "type": "textarea",
+      "title": "Lockout/Tagout Details",
+      "label": "Please provide details of the Lockout/Tagout procedures completed",
+      "sectionId": "safety-preparation",
+      "watchField": "lockout-tagout",
+      "showWhen": "yes"
+    },
+    {
+      "id": "confined-space",
+      "type": "radio",
+      "title": "Confined Space Entry",
+      "label": "Confined space entry permit obtained",
+      "sectionId": "safety-preparation",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "confined-space-reason",
+      "type": "textarea",
+      "title": "Reason for No Confined Space Permit",
+      "label": "Please explain why confined space entry permit was not obtained",
+      "sectionId": "safety-preparation",
+      "watchField": "confined-space",
+      "showWhen": "no"
+    },
+    {
+      "id": "confined-space-details",
+      "type": "textarea",
+      "title": "Confined Space Entry Details",
+      "label": "Please provide details of the confined space entry permit and procedures",
+      "sectionId": "safety-preparation",
+      "watchField": "confined-space",
+      "showWhen": "yes"
+    },
+    {
+      "id": "hot-work",
+      "type": "radio",
+      "title": "Hot Work Permit",
+      "label": "Hot work permit obtained if required",
+      "sectionId": "safety-preparation",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "hot-work-reason",
+      "type": "textarea",
+      "title": "Reason for No Hot Work Permit",
+      "label": "Please explain why hot work permit was not obtained",
+      "sectionId": "safety-preparation",
+      "watchField": "hot-work",
+      "showWhen": "no"
+    },
+    {
+      "id": "hot-work-details",
+      "type": "textarea",
+      "title": "Hot Work Permit Details",
+      "label": "Please provide details of the hot work permit and fire safety measures",
+      "sectionId": "safety-preparation",
+      "watchField": "hot-work",
+      "showWhen": "yes"
+    },
+    {
+      "id": "fall-protection",
+      "type": "radio",
+      "title": "Fall Protection Equipment",
+      "label": "Fall protection equipment available and properly fitted",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "fall-protection-reason",
+      "type": "textarea",
+      "title": "Reason for No Fall Protection",
+      "label": "Please explain why fall protection equipment is not available",
+      "sectionId": "safety-preparation",
+      "watchField": "fall-protection",
+      "showWhen": "no"
+    },
+    {
+      "id": "scaffolding-inspected",
+      "type": "radio",
+      "title": "Scaffolding Inspected",
+      "label": "Scaffolding or access equipment inspected and certified",
+      "sectionId": "safety-preparation",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "scaffolding-inspected-reason",
+      "type": "textarea",
+      "title": "Reason for No Scaffolding Inspection",
+      "label": "Please explain why scaffolding was not inspected",
+      "sectionId": "safety-preparation",
+      "watchField": "scaffolding-inspected",
+      "showWhen": "no"
+    },
+    {
+      "id": "diving-certification",
+      "type": "radio",
+      "title": "Diving Certification",
+      "label": "Diving certification and training verified",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "diving-certification-reason",
+      "type": "textarea",
+      "title": "Reason for No Diving Certification",
+      "label": "Please explain why diving certification was not verified",
+      "sectionId": "safety-preparation",
+      "watchField": "diving-certification",
+      "showWhen": "no"
+    },
+    {
+      "id": "diving-equipment",
+      "type": "radio",
+      "title": "Diving Equipment",
+      "label": "Diving equipment inspected and functional",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "diving-equipment-reason",
+      "type": "textarea",
+      "title": "Reason for No Diving Equipment",
+      "label": "Please explain why diving equipment was not inspected",
+      "sectionId": "safety-preparation",
+      "watchField": "diving-equipment",
+      "showWhen": "no"
+    },
+    {
+      "id": "pressure-relief",
+      "type": "radio",
+      "title": "Pressure Relief Verified",
+      "label": "Pressure relief systems verified and functional",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "pressure-relief-reason",
+      "type": "textarea",
+      "title": "Reason for No Pressure Relief Verification",
+      "label": "Please explain why pressure relief systems were not verified",
+      "sectionId": "safety-preparation",
+      "watchField": "pressure-relief",
+      "showWhen": "no"
+    },
+    {
+      "id": "pressure-monitoring",
+      "type": "radio",
+      "title": "Pressure Monitoring",
+      "label": "Pressure monitoring equipment calibrated and functional",
+      "sectionId": "safety-preparation",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "pressure-monitoring-reason",
+      "type": "textarea",
+      "title": "Reason for No Pressure Monitoring",
+      "label": "Please explain why pressure monitoring equipment was not calibrated",
+      "sectionId": "safety-preparation",
+      "watchField": "pressure-monitoring",
+      "showWhen": "no"
+    },
+    {
+      "id": "temperature-monitoring",
+      "type": "radio",
+      "title": "Temperature Monitoring",
+      "label": "Temperature monitoring equipment calibrated and functional",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "temperature-monitoring-reason",
+      "type": "textarea",
+      "title": "Reason for No Temperature Monitoring",
+      "label": "Please explain why temperature monitoring equipment was not calibrated",
+      "sectionId": "safety-preparation",
+      "watchField": "temperature-monitoring",
+      "showWhen": "no"
+    },
+    {
+      "id": "heat-protection",
+      "type": "radio",
+      "title": "Heat Protection Equipment",
+      "label": "Heat protection equipment available and properly fitted",
+      "sectionId": "safety-preparation",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "heat-protection-reason",
+      "type": "textarea",
+      "title": "Reason for No Heat Protection",
+      "label": "Please explain why heat protection equipment is not available",
+      "sectionId": "safety-preparation",
+      "watchField": "heat-protection",
+      "showWhen": "no"
+    },
+    {
+      "id": "safety-equipment",
+      "type": "radio",
+      "title": "Safety Equipment Available",
+      "label": "Required safety equipment available",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "safety-equipment-reason",
+      "type": "textarea",
+      "title": "Reason for No Safety Equipment",
+      "label": "Please explain why required safety equipment is not available",
+      "sectionId": "safety-preparation",
+      "watchField": "safety-equipment",
+      "showWhen": "no"
+    },
+    {
+      "id": "emergency-procedures",
+      "type": "radio",
+      "title": "Emergency Procedures Reviewed",
+      "label": "Emergency procedures reviewed with team",
+      "sectionId": "safety-preparation",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "emergency-procedures-reason",
+      "type": "textarea",
+      "title": "Reason for No Emergency Procedures Review",
+      "label": "Please explain why emergency procedures were not reviewed",
+      "sectionId": "safety-preparation",
+      "watchField": "emergency-procedures",
+      "showWhen": "no"
+    },
+    {
+      "id": "general-condition",
+      "type": "select",
+      "title": "General Condition",
+      "label": "General Condition",
+      "sectionId": "visual-inspection",
+      "options": [
+        {"label": "Excellent", "value": "excellent"},
+        {"label": "Good", "value": "good"},
+        {"label": "Fair", "value": "fair"},
+        {"label": "Poor", "value": "poor"},
+        {"label": "Not Applicable", "value": "na"}
+      ]
+    },
+    {
+      "id": "general-condition-findings",
+      "type": "inspection-findings",
+      "title": "General Condition Findings",
+      "label": "Document general condition findings with images and details",
+      "sectionId": "visual-inspection",
+      "watchField": "general-condition",
+      "showWhen": "fair,poor"
+    },
+    {
+      "id": "weld-condition",
+      "type": "select",
+      "title": "Weld Condition",
+      "label": "Weld Condition",
+      "sectionId": "visual-inspection",
+      "options": [
+        {"label": "Excellent", "value": "excellent"},
+        {"label": "Good", "value": "good"},
+        {"label": "Fair", "value": "fair"},
+        {"label": "Poor", "value": "poor"},
+        {"label": "Not Applicable", "value": "na"}
+      ]
+    },
+    {
+      "id": "weld-condition-findings",
+      "type": "inspection-findings",
+      "title": "Weld Condition Findings",
+      "label": "Document weld condition findings with images and details",
+      "sectionId": "visual-inspection",
+      "watchField": "weld-condition",
+      "showWhen": "fair,poor",
+      "description": "Array of finding descriptions for weld condition issues. Each finding should be a detailed description of the defect or condition observed.",
+      "example": ["Visible porosity and pitting in the weld joint", "Discoloration indicating potential overheating", "Presence of small holes suggesting gas entrapment"]
+    },
+    {
+      "id": "corrosion-observed",
+      "type": "radio",
+      "title": "Corrosion Observed",
+      "label": "Corrosion or rust observed",
+      "sectionId": "visual-inspection",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "corrosion-findings",
+      "type": "inspection-findings",
+      "title": "Corrosion Findings",
+      "label": "Document corrosion findings with images and details",
+      "sectionId": "visual-inspection",
+      "watchField": "corrosion-observed",
+      "showWhen": "yes"
+    },
+    {
+      "id": "cracking-observed",
+      "type": "radio",
+      "title": "Cracking Observed",
+      "label": "Cracking or fractures observed",
+      "sectionId": "visual-inspection",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "cracking-findings",
+      "type": "inspection-findings",
+      "title": "Cracking Findings",
+      "label": "Document cracking findings with images and details",
+      "sectionId": "visual-inspection",
+      "watchField": "cracking-observed",
+      "showWhen": "yes"
+    },
+    {
+      "id": "deformation-observed",
+      "type": "radio",
+      "title": "Deformation Observed",
+      "label": "Deformation or distortion observed",
+      "sectionId": "visual-inspection",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "deformation-findings",
+      "type": "inspection-findings",
+      "title": "Deformation Findings",
+      "label": "Document deformation findings with images and details",
+      "sectionId": "visual-inspection",
+      "watchField": "deformation-observed",
+      "showWhen": "yes"
+    },
+    {
+      "id": "leakage-observed",
+      "type": "radio",
+      "title": "Leakage Observed",
+      "label": "Leakage or seepage observed",
+      "sectionId": "visual-inspection",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "leakage-findings",
+      "type": "inspection-findings",
+      "title": "Leakage Findings",
+      "label": "Document leakage findings with images and details",
+      "sectionId": "visual-inspection",
+      "watchField": "leakage-observed",
+      "showWhen": "yes"
+    },
+    {
+      "id": "weld-quality",
+      "type": "select",
+      "title": "Weld Quality",
+      "label": "Weld Quality Assessment",
+      "sectionId": "visual-inspection",
+      "options": [
+        {"label": "Excellent", "value": "excellent"},
+        {"label": "Good", "value": "good"},
+        {"label": "Fair", "value": "fair"},
+        {"label": "Poor", "value": "poor"},
+        {"label": "Not Applicable", "value": "na"}
+      ]
+    },
+    {
+      "id": "weld-quality-findings",
+      "type": "inspection-findings",
+      "title": "Weld Quality Findings",
+      "label": "Document weld quality findings with images and details",
+      "sectionId": "visual-inspection",
+      "watchField": "weld-quality",
+      "showWhen": "fair,poor"
+    },
+    {
+      "id": "thickness-measurements",
+      "type": "radio",
+      "title": "Thickness Measurements",
+      "label": "Thickness measurements taken",
+      "sectionId": "measurements-tests",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "thickness-data",
+      "type": "textarea",
+      "title": "Thickness Measurement Data",
+      "label": "Enter thickness measurement data and locations",
+      "sectionId": "measurements-tests",
+      "watchField": "thickness-measurements",
+      "showWhen": "yes"
+    },
+    {
+      "id": "pressure-test",
+      "type": "radio",
+      "title": "Pressure Test",
+      "label": "Pressure test performed",
+      "sectionId": "measurements-tests",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "pressure-test-data",
+      "type": "textarea",
+      "title": "Pressure Test Data",
+      "label": "Enter pressure test data and results",
+      "sectionId": "measurements-tests",
+      "watchField": "pressure-test",
+      "showWhen": "yes"
+    },
+    {
+      "id": "overall-assessment",
+      "type": "select",
+      "title": "Overall Assessment",
+      "label": "Overall Assessment",
+      "sectionId": "findings-assessment",
+      "required": true,
+      "options": [
+        {"label": "Fit for Service", "value": "fit-for-service"},
+        {"label": "Fit for Service with Monitoring", "value": "fit-with-monitoring"},
+        {"label": "Limited Service", "value": "limited-service"},
+        {"label": "Unfit for Service", "value": "unfit-for-service"}
+      ]
+    },
+    {
+      "id": "critical-findings",
+      "type": "radio",
+      "title": "Critical Findings",
+      "label": "Critical findings identified",
+      "sectionId": "findings-assessment",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "critical-findings-details",
+      "type": "textarea",
+      "title": "Critical Findings Details",
+      "label": "Please describe the critical findings in detail",
+      "sectionId": "findings-assessment",
+      "watchField": "critical-findings",
+      "showWhen": "yes",
+      "description": "Detailed description of critical findings that could affect vessel safety or operation. Should include severity, potential consequences, and immediate actions required. Use professional, technical language appropriate for inspection documentation.",
+      "example": "Weld defects could lead to structural failure under operational pressures. The combination of porosity and pitting creates stress concentration points that may initiate crack formation. These critical findings require immediate attention and the vessel should not be returned to service until these issues are resolved."
+    },
+    {
+      "id": "safety-concerns",
+      "type": "radio",
+      "title": "Safety Concerns",
+      "label": "Safety concerns identified",
+      "sectionId": "findings-assessment",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "safety-concerns-details",
+      "type": "textarea",
+      "title": "Safety Concerns Details",
+      "label": "Please describe the safety concerns in detail",
+      "sectionId": "findings-assessment",
+      "watchField": "safety-concerns",
+      "showWhen": "yes",
+      "description": "Detailed description of safety concerns identified during inspection. Should include potential risks, implications, and recommended actions. Use professional, technical language appropriate for inspection documentation.",
+      "example": "Defects in the weld may compromise structural integrity and require immediate assessment. The presence of porosity and pitting could lead to crack propagation under operational stresses. These conditions pose a significant safety risk and should be addressed before returning the vessel to service."
+    },
+    {
+      "id": "immediate-actions",
+      "type": "radio",
+      "title": "Immediate Actions Required",
+      "label": "Immediate actions required",
+      "sectionId": "findings-assessment",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "immediate-actions-details",
+      "type": "textarea",
+      "title": "Immediate Actions Details",
+      "label": "Please describe the immediate actions required",
+      "sectionId": "findings-assessment",
+      "watchField": "immediate-actions",
+      "showWhen": "yes"
+    },
+    {
+      "id": "api-510-compliance",
+      "type": "select",
+      "title": "API 510 Compliance",
+      "label": "API 510 Compliance Status",
+      "sectionId": "findings-assessment",
+      "required": true,
+      "options": [
+        {"label": "Compliant", "value": "compliant"},
+        {"label": "Non-Compliant", "value": "non-compliant"},
+        {"label": "Conditional Compliance", "value": "conditional"}
+      ]
+    },
+    {
+      "id": "recommendations",
+      "type": "textarea",
+      "title": "Recommendations",
+      "label": "Recommendations and actions required",
+      "sectionId": "findings-assessment",
+      "description": "Detailed recommendations for actions required based on inspection findings. Should include specific actions, timelines, and follow-up requirements. Use professional, technical language appropriate for inspection documentation.",
+      "example": "1. Conduct immediate repair of identified weld defects using qualified welding procedures. 2. Perform additional NDE testing on adjacent areas to ensure no further defects exist. 3. Schedule follow-up inspection within 3 months to verify repair effectiveness. 4. Implement enhanced monitoring program for this vessel during next operating cycle."
+    },
+    {
+      "id": "next-inspection-date",
+      "type": "select",
+      "title": "Next Inspection Date",
+      "label": "Recommended next inspection",
+      "sectionId": "findings-assessment",
+      "required": true,
+      "options": [
+        {"label": "3 Months", "value": "3-months"},
+        {"label": "6 Months", "value": "6-months"},
+        {"label": "1 Year", "value": "1-year"},
+        {"label": "2 Years", "value": "2-years"},
+        {"label": "5 Years", "value": "5-years"}
+      ]
+    },
+    {
+      "id": "assessment-notes",
+      "type": "textarea",
+      "title": "Assessment Notes",
+      "label": "Additional assessment notes and observations",
+      "sectionId": "findings-assessment",
+      "description": "Additional notes, observations, or comments about the inspection assessment. Should include any relevant information not captured in other fields. Use professional, technical language appropriate for inspection documentation.",
+      "example": "Overall vessel condition is acceptable with minor issues identified. The inspection was conducted under normal operating conditions. All required safety procedures were followed. Additional monitoring recommended for identified areas of concern."
+    },
+    {
+      "id": "photographic-documentation",
+      "type": "radio",
+      "title": "Photographic Documentation",
+      "label": "Photographs taken during inspection",
+      "sectionId": "documentation-report",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "inspection-photographs",
+      "type": "document-upload",
+      "title": "Upload Inspection Photographs",
+      "label": "Upload inspection photographs and visual documentation",
+      "sectionId": "documentation-report",
+      "watchField": "photographic-documentation",
+      "showWhen": "yes"
+    },
+    {
+      "id": "technical-drawings",
+      "type": "radio",
+      "title": "Technical Drawings",
+      "label": "Technical drawings or sketches created",
+      "sectionId": "documentation-report",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "technical-drawings-upload",
+      "type": "document-upload",
+      "title": "Upload Technical Drawings",
+      "label": "Upload technical drawings or sketches with descriptions",
+      "sectionId": "documentation-report",
+      "watchField": "technical-drawings",
+      "showWhen": "yes"
+    },
+    {
+      "id": "supporting-documents",
+      "type": "radio",
+      "title": "Supporting Documents",
+      "label": "Additional supporting documents attached",
+      "sectionId": "documentation-report",
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "supporting-documents-upload",
+      "type": "document-upload",
+      "title": "Upload Supporting Documents",
+      "label": "Upload additional supporting documents with descriptions",
+      "sectionId": "documentation-report",
+      "watchField": "supporting-documents",
+      "showWhen": "yes"
+    },
+    {
+      "id": "inspection-complete",
+      "type": "radio",
+      "title": "Inspection Complete",
+      "label": "Inspection is complete and ready for submission",
+      "sectionId": "documentation-report",
+      "required": true,
+      "options": [
+        {"label": "Yes", "value": "yes"},
+        {"label": "No", "value": "no"}
+      ]
+    },
+    {
+      "id": "inspector-signature",
+      "type": "signature",
+      "title": "Inspector Signature",
+      "label": "Digital signature of inspector",
+      "sectionId": "documentation-report",
+      "required": true,
+      "watchField": "inspection-complete",
+      "showWhen": "yes"
+    },
+    {
+      "id": "inspector-name",
+      "type": "text",
+      "title": "Inspector Name",
+      "label": "Inspector Name",
+      "sectionId": "documentation-report",
+      "required": true,
+      "watchField": "inspection-complete",
+      "showWhen": "yes"
+    },
+    {
+      "id": "inspection-date",
+      "type": "date",
+      "title": "Inspection Date",
+      "label": "Date of Inspection",
+      "sectionId": "documentation-report",
+      "required": true,
+      "watchField": "inspection-complete",
+      "showWhen": "yes"
+    },
+    {
+      "id": "completion-notes",
+      "type": "textarea",
+      "title": "Completion Notes",
+      "label": "Any final notes or special considerations",
+      "sectionId": "documentation-report",
+      "watchField": "inspection-complete",
+      "showWhen": "yes"
+    }
+  ],
+  "sections": [
+    {
+      "id": "vessel-identification",
+      "title": "Vessel Identification",
+      "description": "Basic vessel information, location, and inspection planning"
+    },
+    {
+      "id": "safety-preparation",
+      "title": "Safety Preparation",
+      "description": "Safety procedures, permits, and pre-inspection safety checks"
+    },
+    {
+      "id": "visual-inspection",
+      "title": "Visual Inspection",
+      "description": "General condition assessment, component inspection, and anomaly documentation"
+    },
+    {
+      "id": "measurements-tests",
+      "title": "Measurements & Tests",
+      "description": "Physical measurements, testing procedures, and data collection"
+    },
+    {
+      "id": "findings-assessment",
+      "title": "Findings & Assessment",
+      "description": "Inspection results, condition assessment, and recommendations"
+    },
+    {
+      "id": "documentation-report",
+      "title": "Documentation & Report",
+      "description": "Supporting documents, report generation, and final submission"
+    }
+  ]
+} 

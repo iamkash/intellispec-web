@@ -1,0 +1,239 @@
+{
+  "id": "audit-dashboard",
+  "title": "Audit Log Dashboard",
+  "description": "Comprehensive audit trail of all administrative actions performed by Super Admin",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "audit-stats",
+      "type": "generic-kpi-gadget",
+      "title": "Audit Statistics",
+      "description": "Overview of audit log activity",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/audit-logs/stats",
+        "kpis": [
+          {
+            "id": "total-logs",
+            "title": "Total Audit Logs",
+            "description": "All time",
+            "icon": "FaClipboardList",
+            "iconColor": "hsl(var(--chart-1))",
+            "format": "number",
+            "dataPath": "stats.totalLogs"
+          },
+          {
+            "id": "last-24-hours",
+            "title": "Last 24 Hours",
+            "description": "Recent activity",
+            "icon": "FaClock",
+            "iconColor": "hsl(var(--chart-2))",
+            "format": "number",
+            "dataPath": "stats.last24Hours"
+          },
+          {
+            "id": "top-action",
+            "title": "Most Common Action",
+            "description": "Primary activity",
+            "icon": "FaBolt",
+            "iconColor": "hsl(var(--chart-3))",
+            "format": "text",
+            "dataPath": "stats.topActions.0.action"
+          },
+          {
+            "id": "top-user",
+            "title": "Most Active User",
+            "description": "By action count",
+            "icon": "FaUserShield",
+            "iconColor": "hsl(var(--chart-4))",
+            "format": "text",
+            "dataPath": "stats.topUsers.0.userName"
+          }
+        ],
+        "kpiLayout": "grid",
+        "columns": 4,
+        "showTrends": false,
+        "showTargets": false,
+        "autoRefresh": true
+      }
+    },
+    {
+      "id": "audit-log-grid",
+      "type": "sgrid-search-gadget",
+      "title": "Audit Logs",
+      "description": "Complete audit trail with filtering and search capabilities",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/audit-logs",
+        "hideCreateButton": true,
+        "columns": [
+          {
+            "key": "createdAt",
+            "title": "Timestamp",
+            "width": 180,
+            "sortable": true,
+            "field": {
+              "type": "date",
+              "required": false
+            }
+          },
+          {
+            "key": "action",
+            "title": "Action",
+            "width": 180,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": false
+            }
+          },
+          {
+            "key": "entityType",
+            "title": "Entity Type",
+            "width": 130,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": false
+            }
+          },
+          {
+            "key": "entityName",
+            "title": "Entity Name",
+            "width": 200,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": false
+            }
+          },
+          {
+            "key": "performedByName",
+            "title": "Performed By",
+            "width": 180,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": false
+            }
+          },
+          {
+            "key": "ipAddress",
+            "title": "IP Address",
+            "width": 130,
+            "sortable": false,
+            "field": {
+              "type": "text",
+              "required": false
+            }
+          },
+          {
+            "key": "metadata",
+            "title": "Details",
+            "width": 250,
+            "sortable": false,
+            "field": {
+              "type": "text",
+              "required": false
+            }
+          }
+        ],
+        "rowActions": [
+          {
+            "key": "view-details",
+            "label": "View Details",
+            "icon": "EyeOutlined",
+            "type": "default",
+            "action": "modal",
+            "modalConfig": {
+              "title": "Audit Log Details",
+              "width": "800px",
+              "showChanges": true
+            }
+          }
+        ],
+        "search": {
+          "placeholder": "Search audit logs by action, entity, or user...",
+          "filters": [
+            {
+              "key": "action",
+              "label": "Action",
+              "type": "select",
+              "optionsUrl": "/api/audit-logs/actions"
+            },
+            {
+              "key": "entityType",
+              "label": "Entity Type",
+              "type": "select",
+              "optionsUrl": "/api/audit-logs/entity-types"
+            },
+            {
+              "key": "performedBy",
+              "label": "Performed By",
+              "type": "select",
+              "optionsUrl": "/api/multi-tenant/users?format=options"
+            },
+            {
+              "key": "dateRange",
+              "label": "Date Range",
+              "type": "daterange",
+              "presets": ["Today", "Last 7 Days", "Last 30 Days", "Last 90 Days"]
+            }
+          ]
+        },
+        "pagination": {
+          "pageSize": 50,
+          "showSizeChanger": true,
+          "showQuickJumper": true,
+          "pageSizeOptions": [25, 50, 100, 200]
+        },
+        "toolbar": {
+          "enableCreate": false,
+          "customActions": [
+            {
+              "key": "export-logs",
+              "label": "Export Logs",
+              "icon": "DownloadOutlined",
+              "type": "default",
+              "action": "export",
+              "exportConfig": {
+                "format": "csv",
+                "filename": "audit-logs"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 60000,
+    "theme": "light",
+    "density": "comfortable",
+    "requireSuperAdmin": true,
+    "showLastUpdated": true
+  },
+  "metadata": {
+    "created": "2025-01-24T11:00:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "audit", "compliance", "logs"],
+    "description": "Comprehensive audit dashboard for tracking all administrative actions",
+    "features": [
+      "View all audit logs",
+      "Filter by action, entity type, user, and date range",
+      "Search across all fields",
+      "View detailed changes (before/after)",
+      "Export logs for compliance",
+      "Real-time statistics"
+    ],
+    "permissions": {
+      "required": ["super_admin"],
+      "actions": [
+        "audit:read",
+        "audit:export"
+      ]
+    }
+  }
+}
+

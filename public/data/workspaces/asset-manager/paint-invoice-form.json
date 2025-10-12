@@ -1,0 +1,246 @@
+{
+  "id": "paint-invoice-form",
+  "title": "Paint Invoice Form",
+  "description": "Create and edit paint invoices with line item details",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "paint-invoice-form",
+      "type": "document-form-gadget",
+      "title": "Paint Invoice Details",
+      "description": "Form for creating and editing paint invoices with line item specifications and quantities",
+      "config": {
+        "title": "Paint Invoice Details",
+        "description": "Form for creating and editing paint invoices with line item specifications and quantities",
+        "dataUrl": "/api/documents/{id}?type=paintInvoice",
+        "submitUrl": "/api/documents",
+        "updateUrl": "/api/documents/{id}",
+        "deleteUrl": "/api/documents/{id}",
+        "documentType": "paintInvoice",
+        "layout": "vertical",
+        "size": "middle",
+        "showSaveButton": true,
+        "showResetButton": true,
+        "showCancelButton": true,
+        "headerActions": {
+          "showClose": true,
+          "showMaximize": true,
+          "showMinimize": false
+        },
+        "fitContent": false,
+        "fullHeight": true,
+        "onSaveSuccess": {
+          "message": "Paint invoice saved successfully!",
+          "action": "navigate",
+          "target": "back"
+        },
+        "onCancel": {
+          "action": "close"
+        },
+        "gadgetOptions": [
+          {
+            "id": "invoice-header",
+            "type": "section",
+            "title": "Invoice Information",
+            "description": "Basic invoice details and company information",
+            "icon": "FileTextOutlined",
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "invoice-header",
+            "id": "basic-info",
+            "type": "group",
+            "title": "Basic Information",
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "invoice-header",
+            "groupId": "basic-info",
+            "id": "companyId",
+            "type": "select",
+            "title": "Company",
+            "label": "Company",
+            "placeholder": "Select company",
+            "required": true,
+            "size": 12,
+            "optionsUrl": "/api/documents?type=company&fields=id,name",
+            "optionsPath": "data",
+            "optionsValueField": "id",
+            "optionsLabelField": "name"
+          },
+          {
+            "sectionId": "invoice-header",
+            "groupId": "basic-info",
+            "id": "facilityId",
+            "type": "select",
+            "title": "Facility",
+            "label": "Facility",
+            "placeholder": "Select facility",
+            "required": true,
+            "size": 12,
+            "optionsUrl": "/api/documents?type=site&fields=id,name,company_id",
+            "optionsPath": "data",
+            "optionsValueField": "id",
+            "optionsLabelField": "name",
+            "dependsOn": "companyId",
+            "filterBy": "company_id"
+          },
+          {
+            "sectionId": "invoice-header",
+            "groupId": "basic-info",
+            "id": "invoiceNumber",
+            "type": "text",
+            "title": "Invoice Number",
+            "label": "Invoice Number",
+            "placeholder": "Enter invoice number",
+            "required": true,
+            "size": 8
+          },
+          {
+            "sectionId": "invoice-header",
+            "groupId": "basic-info",
+            "id": "purchaseDate",
+            "type": "date",
+            "title": "Purchase Date",
+            "label": "Purchase Date",
+            "placeholder": "Select purchase date",
+            "required": true,
+            "size": 8
+          },
+          {
+            "sectionId": "invoice-header",
+            "groupId": "basic-info",
+            "id": "poNumber",
+            "type": "text",
+            "title": "PO Number",
+            "label": "PO Number",
+            "placeholder": "Enter PO number",
+            "required": true,
+            "size": 8
+          },
+          {
+            "id": "line-items",
+            "type": "section",
+            "title": "Paint Line Items",
+            "description": "Paint specifications and quantities purchased",
+            "icon": "UnorderedListOutlined",
+            "size": 24,
+            "order": 2
+          },
+          {
+            "sectionId": "line-items",
+            "id": "paint-items",
+            "type": "group",
+            "title": "Paint Items",
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "line-items",
+            "groupId": "paint-items",
+            "id": "lineItems",
+            "type": "inline-editable-grid",
+            "title": "Paint Line Items",
+            "label": "Paint Line Items",
+            "size": 24,
+            "widgetProps": {
+              "baseUrl": "/api/documents",
+              "endpoints": {
+                "read": "",
+                "create": "",
+                "update": "",
+                "delete": ""
+              },
+              "columns": [
+                {
+                  "key": "paintSpecId",
+                  "title": "Paint Specification",
+                  "dataIndex": "paintSpecId",
+                  "type": "select",
+                  "editable": true,
+                  "width": "60%",
+                  "placeholder": "Select paint specification",
+                  "optionsUrl": "/api/documents?type=paint_specifications&fields=id,manufacturer,product,product_code",
+                  "optionsPath": "data",
+                  "optionsValueField": "id",
+                  "optionsLabelField": "{manufacturer} - {product} ({product_code})",
+                  "validation": {
+                    "required": true
+                  }
+                },
+                {
+                  "key": "quantityPurchased",
+                  "title": "Quantity (g)",
+                  "dataIndex": "quantityPurchased",
+                  "type": "number",
+                  "editable": true,
+                  "width": "40%",
+                  "placeholder": "Enter quantity in grams",
+                  "validation": {
+                    "required": true,
+                    "min": 0.01
+                  }
+                }
+              ],
+              "config": {
+                "title": "Paint Line Items",
+                "subtitle": "Add paint specifications and quantities",
+                "enableAdd": true,
+                "enableDelete": true,
+                "addButtonText": "Add Paint Item",
+                "newRecordDefaults": {
+                  "paintSpecId": "",
+                  "quantityPurchased": 0
+                },
+                "embeddedMode": true,
+                "parentField": "lineItems"
+              }
+            }
+          }
+        ],
+        "newRecordDefaults": {
+          "type": "paintInvoice",
+          "companyId": "",
+          "facilityId": "",
+          "invoiceNumber": "",
+          "purchaseDate": "",
+          "poNumber": "",
+          "lineItems": [],
+          "totalQuantity": 0,
+          "status": "active"
+        },
+        "calculatedFields": {
+          "totalQuantity": {
+            "formula": "SUM(lineItems.quantityPurchased)",
+            "dependencies": ["lineItems"]
+          },
+          "companyName": {
+            "formula": "LOOKUP(companyId, '/api/documents?type=company&fields=id,name', 'name')",
+            "dependencies": ["companyId"]
+          },
+          "facilityName": {
+            "formula": "LOOKUP(facilityId, '/api/documents?type=Site&fields=id,name', 'name')",
+            "dependencies": ["facilityId"]
+          }
+        }
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": false,
+    "enablePrint": true
+  },
+  "metadata": {
+    "created": "2024-01-15T00:00:00Z",
+    "version": "1.0.0",
+    "tags": ["paint", "invoice", "form", "create", "edit"],
+    "description": "Paint invoice form for creating and editing invoices with line item details."
+  }
+}

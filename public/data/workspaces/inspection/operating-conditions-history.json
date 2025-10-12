@@ -1,0 +1,392 @@
+[
+  {
+    "id": "operating-conditions-history",
+    "type": "section",
+    "title": "Operating Conditions & History",
+    "description": "Operating conditions, service history, previous inspection findings, and remaining life assessment",
+    "icon": "HistoryOutlined",
+    "order": 3,
+    "size": 12
+  },
+  {
+    "id": "operating-conditions-group",
+    "type": "group",
+    "title": "Operating Conditions",
+    "description": "Current and historical operating conditions",
+    "sectionId": "operating-conditions-history",
+    "order": 1,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "operating-pressure",
+    "type": "number",
+    "title": "Operating Pressure (PSIG)",
+    "label": "Operating Pressure (PSIG)",
+    "placeholder": "Enter operating pressure",
+    "required": true,
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "operating-conditions-group"
+  },
+  {
+    "id": "design-pressure",
+    "type": "number",
+    "title": "Design Pressure (PSIG)",
+    "label": "Design Pressure (PSIG)",
+    "placeholder": "Enter design pressure",
+    "required": true,
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "operating-conditions-group"
+  },
+  {
+    "id": "operating-temperature",
+    "type": "number",
+    "title": "Operating Temperature (°F)",
+    "label": "Operating Temperature (°F)",
+    "placeholder": "Enter operating temperature",
+    "required": true,
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "operating-conditions-group"
+  },
+  {
+    "id": "design-temperature",
+    "type": "number",
+    "title": "Design Temperature (°F)",
+    "label": "Design Temperature (°F)",
+    "placeholder": "Enter design temperature",
+    "required": true,
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "operating-conditions-group"
+  },
+  {
+    "id": "service-fluid",
+    "type": "text",
+    "title": "Service Fluid",
+    "label": "Service Fluid",
+    "placeholder": "Enter service fluid",
+    "required": true,
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "operating-conditions-group"
+  },
+  {
+    "id": "fluid-properties",
+    "type": "textarea",
+    "title": "Fluid Properties",
+    "label": "Fluid Properties",
+    "placeholder": "Describe fluid properties (corrosive, toxic, etc.)",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "operating-conditions-group"
+  },
+  {
+    "id": "service-history-group",
+    "type": "group",
+    "title": "Service History",
+    "description": "Historical service information and operating history",
+    "sectionId": "operating-conditions-history",
+    "order": 2,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "years-in-service",
+    "type": "number",
+    "title": "Years in Service",
+    "label": "Years in Service",
+    "placeholder": "Enter years in service",
+    "required": true,
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "service-history-group"
+  },
+  {
+    "id": "operating-hours",
+    "type": "number",
+    "title": "Total Operating Hours",
+    "label": "Total Operating Hours",
+    "placeholder": "Enter total operating hours",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "service-history-group"
+  },
+  {
+    "id": "startup-shutdown-cycles",
+    "type": "number",
+    "title": "Startup/Shutdown Cycles",
+    "label": "Startup/Shutdown Cycles",
+    "placeholder": "Enter number of cycles",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "service-history-group"
+  },
+  {
+    "id": "pressure-cycles",
+    "type": "number",
+    "title": "Pressure Cycles",
+    "label": "Pressure Cycles",
+    "placeholder": "Enter number of pressure cycles",
+      "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "service-history-group"
+  },
+  {
+    "id": "previous-incidents",
+    "type": "radio",
+    "title": "Previous Incidents",
+    "label": "Previous Incidents",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "operating-conditions-history",
+    "groupId": "service-history-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "incident-descriptions",
+    "type": "textarea",
+    "title": "Incident Descriptions",
+    "label": "Incident Descriptions",
+    "placeholder": "Describe previous incidents",
+    "size": 24,
+    "watchField": "previous-incidents",
+    "showWhen": "yes",
+    "sectionId": "operating-conditions-history",
+    "groupId": "service-history-group"
+  },
+  {
+    "id": "previous-inspections-group",
+    "type": "group",
+    "title": "Previous Inspection History",
+    "description": "Previous inspection findings and recommendations",
+    "sectionId": "operating-conditions-history",
+    "order": 3,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "last-inspection-date",
+    "type": "date",
+    "title": "Last Inspection Date",
+    "label": "Last Inspection Date",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "previous-inspections-group"
+  },
+  {
+    "id": "last-inspection-type",
+    "type": "select",
+    "title": "Last Inspection Type",
+    "label": "Last Inspection Type",
+    "placeholder": "Select inspection type",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "previous-inspections-group",
+    "options": [
+      {"label": "Internal", "value": "internal"},
+      {"label": "External", "value": "external"},
+      {"label": "On-Stream", "value": "on-stream"},
+      {"label": "Combined", "value": "combined"},
+      {"label": "Unknown", "value": "unknown"}
+    ]
+  },
+  {
+    "id": "previous-findings",
+    "type": "radio",
+    "title": "Previous Inspection Findings",
+    "label": "Previous Inspection Findings",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "operating-conditions-history",
+    "groupId": "previous-inspections-group",
+    "options": [
+      {"label": "No Issues", "value": "no-issues"},
+      {"label": "Minor Issues", "value": "minor-issues"},
+      {"label": "Major Issues", "value": "major-issues"},
+      {"label": "Critical Issues", "value": "critical-issues"}
+    ]
+  },
+  {
+    "id": "previous-recommendations",
+    "type": "textarea",
+    "title": "Previous Recommendations",
+    "label": "Previous Recommendations",
+    "placeholder": "Describe previous inspection recommendations",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "previous-inspections-group"
+  },
+  {
+    "id": "repairs-modifications-group",
+    "type": "group",
+    "title": "Repairs & Modifications History",
+    "description": "History of repairs and modifications",
+    "sectionId": "operating-conditions-history",
+    "order": 4,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "repairs-performed",
+    "type": "radio",
+    "title": "Repairs Performed",
+    "label": "Repairs Performed",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "operating-conditions-history",
+    "groupId": "repairs-modifications-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "repair-details",
+    "type": "textarea",
+    "title": "Repair Details",
+    "label": "Repair Details",
+    "placeholder": "Describe repairs performed",
+    "size": 24,
+    "watchField": "repairs-performed",
+    "showWhen": "yes",
+    "sectionId": "operating-conditions-history",
+    "groupId": "repairs-modifications-group"
+  },
+  {
+    "id": "modifications-performed",
+    "type": "radio",
+    "title": "Modifications Performed",
+    "label": "Modifications Performed",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "operating-conditions-history",
+    "groupId": "repairs-modifications-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "modification-details",
+    "type": "textarea",
+    "title": "Modification Details",
+    "label": "Modification Details",
+    "placeholder": "Describe modifications performed",
+    "size": 24,
+    "watchField": "modifications-performed",
+    "showWhen": "yes",
+    "sectionId": "operating-conditions-history",
+    "groupId": "repairs-modifications-group"
+  },
+  {
+    "id": "remaining-life-assessment-group",
+    "type": "group",
+    "title": "Remaining Life Assessment",
+    "description": "Assessment of remaining useful life",
+    "sectionId": "operating-conditions-history",
+    "order": 5,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "corrosion-rate",
+    "type": "number",
+    "title": "Corrosion Rate (MPY)",
+    "label": "Corrosion Rate (MPY)",
+    "placeholder": "Enter corrosion rate",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "remaining-life-assessment-group"
+  },
+  {
+    "id": "minimum-thickness",
+    "type": "number",
+    "title": "Minimum Required Thickness (inches)",
+    "label": "Minimum Required Thickness (inches)",
+    "placeholder": "Enter minimum required thickness",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "remaining-life-assessment-group"
+  },
+  {
+    "id": "current-thickness",
+    "type": "number",
+    "title": "Current Minimum Thickness (inches)",
+    "label": "Current Minimum Thickness (inches)",
+    "placeholder": "Enter current minimum thickness",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "remaining-life-assessment-group"
+  },
+  {
+    "id": "remaining-life-years",
+    "type": "number",
+    "title": "Estimated Remaining Life (years)",
+    "label": "Estimated Remaining Life (years)",
+    "placeholder": "Enter estimated remaining life",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "remaining-life-assessment-group"
+  },
+  {
+    "id": "life-assessment-methodology",
+    "type": "select",
+    "title": "Life Assessment Methodology",
+    "label": "Life Assessment Methodology",
+    "placeholder": "Select methodology",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "remaining-life-assessment-group",
+    "options": [
+      {"label": "API 510", "value": "api-510"},
+      {"label": "ASME FFS-1", "value": "asme-ffs1"},
+      {"label": "Fitness for Service", "value": "ffs"},
+      {"label": "Engineering Judgment", "value": "engineering-judgment"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "life-assessment-notes",
+    "type": "textarea",
+    "title": "Life Assessment Notes",
+    "label": "Life Assessment Notes",
+    "placeholder": "Additional notes on remaining life assessment",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "remaining-life-assessment-group"
+  },
+  {
+    "id": "operating-notes-group",
+    "type": "group",
+    "title": "Operating Notes & Observations",
+    "description": "Additional operating notes and observations",
+    "sectionId": "operating-conditions-history",
+    "order": 6,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "operating-notes",
+    "type": "textarea",
+    "title": "Operating Notes",
+    "label": "Operating Notes",
+    "placeholder": "Additional operating notes and observations",
+    "size": 24,
+    "sectionId": "operating-conditions-history",
+    "groupId": "operating-notes-group"
+  }
+] 

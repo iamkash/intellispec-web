@@ -1,0 +1,92 @@
+/* AIAgenticWizardGadget.css
+   Professional layout using shadcn HSL tokens. Mirrors AIAnalysisWizardGadget look. */
+
+.ai-agentic-wizard {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: 100%;
+  min-height: 0;
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border)); /* subtle outer border */
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: 0 2px 8px hsl(var(--foreground) / 0.06); /* subtle elevation */
+  overflow: hidden; /* keep rounded corners on inner content */
+}
+
+.ai-agentic-wizard .wizard-header {
+  background: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 8px 16px; /* reduced height */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ai-agentic-wizard .wizard-title {
+  margin: 0;
+  font-size: 1.1rem; /* slightly smaller */
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.ai-agentic-wizard .wizard-subtitle {
+  margin: 4px 0 0 0;
+  color: hsl(var(--muted-foreground));
+  font-size: 0.8rem; /* slightly smaller */
+}
+
+.ai-agentic-wizard .wizard-body {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 100%;
+  min-height: 0;
+}
+
+.ai-agentic-wizard .wizard-sidebar {
+  background: hsl(var(--card));
+  border-right: 1px solid hsl(var(--border));
+  overflow: auto;
+}
+
+.ai-agentic-wizard .wizard-content {
+  padding: 12px; /* reduced body padding */
+  overflow: hidden;
+}
+
+.ai-agentic-wizard .wizard-footer {
+  background: hsl(var(--card));
+  border-top: 1px solid hsl(var(--border));
+  padding: 8px 16px; /* reduced height */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ai-agentic-wizard .progress-indicator {
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+}
+
+.ai-agentic-wizard .ant-menu {
+  border: none;
+  background: transparent;
+}
+
+.ai-agentic-wizard .ant-menu-item { margin: 4px 12px; border-radius: calc(var(--radius) - 2px); }
+.ai-agentic-wizard .ant-menu-item:hover { background: hsl(var(--accent)); }
+.ai-agentic-wizard .ant-menu-item-selected { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+
+.ai-agentic-wizard .ant-card.wizard-card {
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) + 2px);
+  background: hsl(var(--card));
+  box-shadow: 0 4px 6px hsl(var(--foreground) / 0.05), 0 1px 3px hsl(var(--foreground) / 0.1);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.ai-agentic-wizard .wizard-card .ant-card-body { flex: 1 1 auto; min-height: 0; padding: 24px; }
+.ai-agentic-wizard .wizard-card .section-content { height: calc(100vh - 420px); overflow: auto; }
+
+

@@ -1,0 +1,37 @@
+/* Enhanced Theme Icon Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+.enhanced-theme-icon {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.enhanced-theme-icon:active {
+  transform: translateY(0px) scale(0.95) !important;
+  transition: all 150ms ease !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .enhanced-theme-icon {
+    border-width: 2px !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-theme-icon,
+  .enhanced-theme-icon * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

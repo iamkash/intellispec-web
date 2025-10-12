@@ -1,0 +1,400 @@
+[
+  {
+    "id": "visual-examination",
+    "type": "section",
+    "title": "Visual Examination",
+    "description": "General condition assessment, component-specific inspection, anomaly documentation, and photographic documentation",
+    "icon": "EyeOutlined",
+    "order": 4,
+    "size": 12
+  },
+  {
+    "id": "general-condition-group",
+    "type": "group",
+    "title": "General Condition Assessment",
+    "description": "Overall vessel condition and appearance",
+    "sectionId": "visual-examination",
+    "order": 1,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "overall-condition",
+    "type": "select",
+    "title": "Overall Condition",
+    "label": "Overall Condition",
+    "placeholder": "Select overall condition",
+    "required": true,
+    "size": 6,
+    "sectionId": "visual-examination",
+    "groupId": "general-condition-group",
+    "options": [
+      {"label": "Excellent", "value": "excellent"},
+      {"label": "Good", "value": "good"},
+      {"label": "Fair", "value": "fair"},
+      {"label": "Poor", "value": "poor"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "surface-condition",
+    "type": "select",
+    "title": "Surface Condition",
+    "label": "Surface Condition",
+    "placeholder": "Select surface condition",
+    "required": true,
+    "size": 6,
+    "sectionId": "visual-examination",
+    "groupId": "general-condition-group",
+    "options": [
+      {"label": "Clean", "value": "clean"},
+      {"label": "Light Coating", "value": "light-coating"},
+      {"label": "Heavy Coating", "value": "heavy-coating"},
+      {"label": "Corroded", "value": "corroded"},
+      {"label": "Pitted", "value": "pitted"},
+      {"label": "Scratched", "value": "scratched"}
+    ]
+  },
+  {
+    "id": "coating-condition",
+    "type": "radio",
+    "title": "Coating Condition",
+    "label": "Coating Condition",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "visual-examination",
+    "groupId": "general-condition-group",
+    "options": [
+      {"label": "Good", "value": "good"},
+      {"label": "Fair", "value": "fair"},
+      {"label": "Poor", "value": "poor"},
+      {"label": "None", "value": "none"}
+    ]
+  },
+  {
+    "id": "coating-type",
+    "type": "text",
+    "title": "Coating Type",
+    "label": "Coating Type",
+    "placeholder": "Enter coating type",
+    "size": 6,
+    "watchField": "coating-condition",
+    "showWhen": "good,fair,poor",
+    "sectionId": "visual-examination",
+    "groupId": "general-condition-group"
+  },
+  {
+    "id": "component-inspection-group",
+    "type": "group",
+    "title": "Component-Specific Inspection",
+    "description": "Detailed inspection of individual vessel components",
+    "sectionId": "visual-examination",
+    "order": 2,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "shell-visual-inspection",
+    "type": "radio",
+    "title": "Shell Visual Inspection",
+    "label": "Shell Visual Inspection",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Completed", "value": "completed"},
+      {"label": "In Progress", "value": "in-progress"},
+      {"label": "Not Started", "value": "not-started"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "shell-condition",
+    "type": "select",
+    "title": "Shell Condition",
+    "label": "Shell Condition",
+    "placeholder": "Select shell condition",
+    "size": 6,
+    "watchField": "shell-visual-inspection",
+    "showWhen": "completed",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Excellent", "value": "excellent"},
+      {"label": "Good", "value": "good"},
+      {"label": "Fair", "value": "fair"},
+      {"label": "Poor", "value": "poor"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "head-visual-inspection",
+    "type": "radio",
+    "title": "Head Visual Inspection",
+    "label": "Head Visual Inspection",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Completed", "value": "completed"},
+      {"label": "In Progress", "value": "in-progress"},
+      {"label": "Not Started", "value": "not-started"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "head-condition",
+    "type": "select",
+    "title": "Head Condition",
+    "label": "Head Condition",
+    "placeholder": "Select head condition",
+    "size": 6,
+    "watchField": "head-visual-inspection",
+    "showWhen": "completed",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Excellent", "value": "excellent"},
+      {"label": "Good", "value": "good"},
+      {"label": "Fair", "value": "fair"},
+      {"label": "Poor", "value": "poor"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "nozzle-visual-inspection",
+    "type": "radio",
+    "title": "Nozzle Visual Inspection",
+    "label": "Nozzle Visual Inspection",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Completed", "value": "completed"},
+      {"label": "In Progress", "value": "in-progress"},
+      {"label": "Not Started", "value": "not-started"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "nozzle-condition",
+    "type": "select",
+    "title": "Nozzle Condition",
+    "label": "Nozzle Condition",
+    "placeholder": "Select nozzle condition",
+    "size": 6,
+    "watchField": "nozzle-visual-inspection",
+    "showWhen": "completed",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Excellent", "value": "excellent"},
+      {"label": "Good", "value": "good"},
+      {"label": "Fair", "value": "fair"},
+      {"label": "Poor", "value": "poor"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "support-visual-inspection",
+    "type": "radio",
+    "title": "Support Visual Inspection",
+    "label": "Support Visual Inspection",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Completed", "value": "completed"},
+      {"label": "In Progress", "value": "in-progress"},
+      {"label": "Not Started", "value": "not-started"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "support-condition",
+    "type": "select",
+    "title": "Support Condition",
+    "label": "Support Condition",
+    "placeholder": "Select support condition",
+    "size": 6,
+    "watchField": "support-visual-inspection",
+    "showWhen": "completed",
+    "sectionId": "visual-examination",
+    "groupId": "component-inspection-group",
+    "options": [
+      {"label": "Excellent", "value": "excellent"},
+      {"label": "Good", "value": "good"},
+      {"label": "Fair", "value": "fair"},
+      {"label": "Poor", "value": "poor"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "anomaly-documentation-group",
+    "type": "group",
+    "title": "Anomaly Documentation & Itemization",
+    "description": "Documentation of visual anomalies and defects",
+    "sectionId": "visual-examination",
+    "order": 3,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "visual-anomalies-found",
+    "type": "radio",
+    "title": "Visual Anomalies Found",
+    "label": "Visual Anomalies Found",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "visual-examination",
+    "groupId": "anomaly-documentation-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Minor", "value": "minor"}
+    ]
+  },
+  {
+    "id": "anomaly-types",
+    "type": "checkbox",
+    "title": "Anomaly Types",
+    "label": "Anomaly Types",
+    "size": 6,
+    "watchField": "visual-anomalies-found",
+    "showWhen": "yes,minor",
+    "sectionId": "visual-examination",
+    "groupId": "anomaly-documentation-group",
+    "options": [
+      {"label": "Corrosion", "value": "corrosion"},
+      {"label": "Cracking", "value": "cracking"},
+      {"label": "Erosion", "value": "erosion"},
+      {"label": "Dents", "value": "dents"},
+      {"label": "Bulges", "value": "bulges"},
+      {"label": "Weld Defects", "value": "weld-defects"},
+      {"label": "Coating Failure", "value": "coating-failure"},
+      {"label": "Leaks", "value": "leaks"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "anomaly-locations",
+    "type": "tags-input",
+    "title": "Anomaly Locations",
+    "label": "Anomaly Locations",
+    "placeholder": "Add anomaly location (e.g., 'Shell - 6 o'clock position, 2 feet from bottom')",
+    "size": 12,
+    "watchField": "visual-anomalies-found",
+    "showWhen": "yes,minor",
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Anomaly",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all anomaly locations?",
+    "sectionId": "visual-examination",
+    "groupId": "anomaly-documentation-group"
+  },
+  {
+    "id": "anomaly-descriptions",
+    "type": "textarea",
+    "title": "Anomaly Descriptions",
+    "label": "Anomaly Descriptions",
+    "placeholder": "Describe visual anomalies in detail",
+    "size": 12,
+    "watchField": "visual-anomalies-found",
+    "showWhen": "yes,minor",
+    "sectionId": "visual-examination",
+    "groupId": "anomaly-documentation-group"
+  },
+  {
+    "id": "photographic-documentation-group",
+    "type": "group",
+    "title": "Photographic Documentation",
+    "description": "Photographic documentation of visual examination",
+    "sectionId": "visual-examination",
+    "order": 4,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "visual-photographs-taken",
+    "type": "radio",
+    "title": "Visual Photographs Taken",
+    "label": "Visual Photographs Taken",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "visual-examination",
+    "groupId": "photographic-documentation-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Partial", "value": "partial"}
+    ]
+  },
+  {
+    "id": "visual-photograph-categories",
+    "type": "checkbox",
+    "title": "Visual Photograph Categories",
+    "label": "Visual Photograph Categories",
+    "size": 6,
+    "watchField": "visual-photographs-taken",
+    "showWhen": "yes,partial",
+    "sectionId": "visual-examination",
+    "groupId": "photographic-documentation-group",
+    "options": [
+      {"label": "Overall Vessel Views", "value": "overall-views"},
+      {"label": "Component Close-ups", "value": "component-closeups"},
+      {"label": "Anomaly Documentation", "value": "anomaly-docs"},
+      {"label": "Surface Condition", "value": "surface-condition"},
+      {"label": "Coating Condition", "value": "coating-condition"},
+      {"label": "Access Points", "value": "access-points"},
+      {"label": "Environmental Conditions", "value": "environmental"}
+    ]
+  },
+  {
+    "id": "visual-photograph-descriptions",
+    "type": "tags-input",
+    "title": "Visual Photograph Descriptions",
+    "label": "Visual Photograph Descriptions",
+    "placeholder": "Add photograph description (e.g., 'Shell corrosion at 6 o'clock position')",
+    "size": 12,
+    "watchField": "visual-photographs-taken",
+    "showWhen": "yes,partial",
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Description",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all photograph descriptions?",
+    "sectionId": "visual-examination",
+    "groupId": "photographic-documentation-group"
+  },
+  {
+    "id": "visual-inspection-notes",
+    "type": "textarea",
+    "title": "Visual Inspection Notes",
+    "label": "Visual Inspection Notes",
+    "placeholder": "Additional visual inspection notes and observations",
+    "size": 12,
+    "sectionId": "visual-examination",
+    "groupId": "photographic-documentation-group"
+  }
+] 

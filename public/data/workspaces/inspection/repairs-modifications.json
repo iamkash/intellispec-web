@@ -1,0 +1,539 @@
+{
+  "id": "repairs-modifications",
+  "type": "section",
+  "title": "Repairs & Modifications",
+  "description": "Documentation of repairs, modifications, pressure testing, and quality assurance",
+  "icon": "ToolOutlined",
+  "order": 7,
+  "size": 24,
+  "groups": [
+    {
+      "id": "repairs-group",
+      "type": "group",
+      "title": "Repairs",
+      "description": "Documentation of required repairs",
+      "order": 1,
+      "size": 24,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "repairs-required",
+          "type": "radio",
+          "title": "Repairs Required",
+          "label": "Repairs Required",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "Planned", "value": "planned"}
+          ]
+        },
+        {
+          "id": "repair-description",
+          "type": "textarea",
+          "title": "Repair Description",
+          "label": "Repair Description",
+          "placeholder": "Describe required repairs in detail",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes,planned"
+        },
+        {
+          "id": "repair-method",
+          "type": "select",
+          "title": "Repair Method",
+          "label": "Repair Method",
+          "placeholder": "Select repair method",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes,planned",
+          "options": [
+            {"label": "Welding", "value": "welding"},
+            {"label": "Patch Repair", "value": "patch"},
+            {"label": "Replacement", "value": "replacement"},
+            {"label": "Cladding", "value": "cladding"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "repair-date",
+          "type": "date",
+          "title": "Repair Date",
+          "label": "Repair Date",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes"
+        },
+        {
+          "id": "repair-locations",
+          "type": "tags-input",
+          "title": "Repair Locations",
+          "label": "Repair Locations",
+          "placeholder": "Add repair location (e.g., 'Shell - 6 o'clock position')",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes,planned",
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Location",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all repair locations?"
+        },
+        {
+          "id": "repair-materials",
+          "type": "tags-input",
+          "title": "Repair Materials",
+          "label": "Repair Materials",
+          "placeholder": "Add repair material (e.g., 'Carbon Steel Plate - SA-516-70')",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes,planned",
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Material",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all repair materials?"
+        },
+        {
+          "id": "repair-contractor",
+          "type": "text",
+          "title": "Repair Contractor",
+          "label": "Repair Contractor",
+          "placeholder": "Enter repair contractor name",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes"
+        },
+        {
+          "id": "repair-cost",
+          "type": "number",
+          "title": "Repair Cost ($)",
+          "label": "Repair Cost ($)",
+          "placeholder": "Enter repair cost",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes"
+        },
+        {
+          "id": "repair-attachments",
+          "type": "file-upload",
+          "title": "Repair Attachments",
+          "label": "Repair Attachments",
+          "placeholder": "Upload repair documentation",
+          "size": 24,
+          "watchField": "repairs-required",
+          "showWhen": "yes,planned"
+        }
+      ]
+    },
+    {
+      "id": "modifications-group",
+      "type": "group",
+      "title": "Modifications",
+      "description": "Documentation of modifications made",
+      "order": 2,
+      "size": 24,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "modifications-made",
+          "type": "radio",
+          "title": "Modifications Made",
+          "label": "Modifications Made",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"}
+          ]
+        },
+        {
+          "id": "modification-description",
+          "type": "textarea",
+          "title": "Modification Description",
+          "label": "Modification Description",
+          "placeholder": "Describe modifications made in detail",
+          "size": 24,
+          "watchField": "modifications-made",
+          "showWhen": "yes"
+        },
+        {
+          "id": "modification-date",
+          "type": "date",
+          "title": "Modification Date",
+          "label": "Modification Date",
+          "size": 24,
+          "watchField": "modifications-made",
+          "showWhen": "yes"
+        },
+        {
+          "id": "modification-type",
+          "type": "select",
+          "title": "Modification Type",
+          "label": "Modification Type",
+          "placeholder": "Select modification type",
+          "size": 24,
+          "watchField": "modifications-made",
+          "showWhen": "yes",
+          "options": [
+            {"label": "Nozzle Addition", "value": "nozzle-addition"},
+            {"label": "Nozzle Removal", "value": "nozzle-removal"},
+            {"label": "Support Modification", "value": "support-modification"},
+            {"label": "Internal Modification", "value": "internal-modification"},
+            {"label": "External Modification", "value": "external-modification"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "modification-reason",
+          "type": "textarea",
+          "title": "Modification Reason",
+          "label": "Modification Reason",
+          "placeholder": "Explain the reason for modification",
+          "size": 24,
+          "watchField": "modifications-made",
+          "showWhen": "yes"
+        },
+        {
+          "id": "modification-approval",
+          "type": "radio",
+          "title": "Modification Approval",
+          "label": "Modification Approval",
+          "size": 24,
+          "watchField": "modifications-made",
+          "showWhen": "yes",
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Approved", "value": "approved"},
+            {"label": "Pending", "value": "pending"},
+            {"label": "Not Required", "value": "not-required"}
+          ]
+        },
+        {
+          "id": "modification-attachments",
+          "type": "file-upload",
+          "title": "Modification Attachments",
+          "label": "Modification Attachments",
+          "placeholder": "Upload modification documentation",
+          "size": 24,
+          "watchField": "modifications-made",
+          "showWhen": "yes"
+        }
+      ]
+    },
+    {
+      "id": "pressure-testing-group",
+      "type": "group",
+      "title": "Pressure Testing",
+      "description": "Pressure testing requirements and results",
+      "order": 3,
+      "size": 24,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "pressure-test-required",
+          "type": "radio",
+          "title": "Pressure Test Required",
+          "label": "Pressure Test Required",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "Conditional", "value": "conditional"}
+          ]
+        },
+        {
+          "id": "test-type",
+          "type": "select",
+          "title": "Test Type",
+          "label": "Test Type",
+          "placeholder": "Select test type",
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes,conditional",
+          "options": [
+            {"label": "Hydrostatic Test", "value": "hydrostatic"},
+            {"label": "Pneumatic Test", "value": "pneumatic"},
+            {"label": "Leak Test", "value": "leak"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "test-pressure",
+          "type": "number",
+          "title": "Test Pressure (psig)",
+          "label": "Test Pressure (psig)",
+          "placeholder": "Enter test pressure",
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes,conditional"
+        },
+        {
+          "id": "test-temperature",
+          "type": "number",
+          "title": "Test Temperature (°F)",
+          "label": "Test Temperature (°F)",
+          "placeholder": "Enter test temperature",
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes,conditional"
+        },
+        {
+          "id": "test-date",
+          "type": "date",
+          "title": "Test Date",
+          "label": "Test Date",
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes"
+        },
+        {
+          "id": "test-duration",
+          "type": "number",
+          "title": "Test Duration (minutes)",
+          "label": "Test Duration (minutes)",
+          "placeholder": "Enter test duration",
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes"
+        },
+        {
+          "id": "test-results",
+          "type": "radio",
+          "title": "Test Results",
+          "label": "Test Results",
+          "required": true,
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes",
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Passed", "value": "passed"},
+            {"label": "Failed", "value": "failed"},
+            {"label": "Conditional", "value": "conditional"}
+          ]
+        },
+        {
+          "id": "test-notes",
+          "type": "textarea",
+          "title": "Test Notes",
+          "label": "Test Notes",
+          "placeholder": "Additional test notes and observations",
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes,conditional"
+        },
+        {
+          "id": "test-attachments",
+          "type": "file-upload",
+          "title": "Test Attachments",
+          "label": "Test Attachments",
+          "placeholder": "Upload test documentation",
+          "size": 24,
+          "watchField": "pressure-test-required",
+          "showWhen": "yes,conditional"
+        }
+      ]
+    },
+    {
+      "id": "quality-assurance-group",
+      "type": "group",
+      "title": "Quality Assurance",
+      "description": "Quality assurance verification and documentation",
+      "order": 4,
+      "size": 24,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "qa-verified",
+          "type": "radio",
+          "title": "QA Verified",
+          "label": "QA Verified",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "Conditional", "value": "conditional"}
+          ]
+        },
+        {
+          "id": "qa-personnel",
+          "type": "text",
+          "title": "QA Personnel",
+          "label": "QA Personnel",
+          "placeholder": "Enter QA personnel name",
+          "size": 24,
+          "watchField": "qa-verified",
+          "showWhen": "yes,conditional"
+        },
+        {
+          "id": "qa-date",
+          "type": "date",
+          "title": "QA Date",
+          "label": "QA Date",
+          "size": 24,
+          "watchField": "qa-verified",
+          "showWhen": "yes,conditional"
+        },
+        {
+          "id": "qa-notes",
+          "type": "textarea",
+          "title": "QA Notes",
+          "label": "QA Notes",
+          "placeholder": "QA verification notes and findings",
+          "size": 24,
+          "watchField": "qa-verified",
+          "showWhen": "conditional,no"
+        },
+        {
+          "id": "qa-requirements",
+          "type": "checkbox",
+          "title": "QA Requirements Met",
+          "label": "QA Requirements Met",
+          "size": 24,
+          "watchField": "qa-verified",
+          "showWhen": "yes,conditional",
+          "options": [
+            {"label": "Weld Procedures", "value": "weld-procedures"},
+            {"label": "Material Verification", "value": "material-verification"},
+            {"label": "NDE Requirements", "value": "nde-requirements"},
+            {"label": "Pressure Testing", "value": "pressure-testing"},
+            {"label": "Documentation", "value": "documentation"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "qa-deficiencies",
+          "type": "tags-input",
+          "title": "QA Deficiencies",
+          "label": "QA Deficiencies",
+          "placeholder": "Add QA deficiency",
+          "size": 24,
+          "watchField": "qa-verified",
+          "showWhen": "no,conditional",
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Deficiency",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all QA deficiencies?"
+        },
+        {
+          "id": "qa-attachments",
+          "type": "file-upload",
+          "title": "QA Attachments",
+          "label": "QA Attachments",
+          "placeholder": "Upload QA documentation",
+          "size": 24,
+          "watchField": "qa-verified",
+          "showWhen": "yes,conditional"
+        }
+      ]
+    },
+    {
+      "id": "final-verification-group",
+      "type": "group",
+      "title": "Final Verification",
+      "description": "Final verification of repairs and modifications",
+      "order": 5,
+      "size": 24,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "repairs-completed",
+          "type": "radio",
+          "title": "Repairs Completed",
+          "label": "Repairs Completed",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "In Progress", "value": "in-progress"}
+          ]
+        },
+        {
+          "id": "modifications-completed",
+          "type": "radio",
+          "title": "Modifications Completed",
+          "label": "Modifications Completed",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "Not Applicable", "value": "not-applicable"}
+          ]
+        },
+        {
+          "id": "final-inspection-required",
+          "type": "radio",
+          "title": "Final Inspection Required",
+          "label": "Final Inspection Required",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "Conditional", "value": "conditional"}
+          ]
+        },
+        {
+          "id": "final-inspection-date",
+          "type": "date",
+          "title": "Final Inspection Date",
+          "label": "Final Inspection Date",
+          "size": 24,
+          "watchField": "final-inspection-required",
+          "showWhen": "yes,conditional"
+        },
+        {
+          "id": "return-to-service-approved",
+          "type": "radio",
+          "title": "Return to Service Approved",
+          "label": "Return to Service Approved",
+          "required": true,
+          "size": 24,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Approved", "value": "approved"},
+            {"label": "Conditional Approval", "value": "conditional"},
+            {"label": "Not Approved", "value": "not-approved"}
+          ]
+        },
+        {
+          "id": "approval-conditions",
+          "type": "textarea",
+          "title": "Approval Conditions",
+          "label": "Approval Conditions",
+          "placeholder": "Describe any conditions for approval or restrictions",
+          "size": 24,
+          "watchField": "return-to-service-approved",
+          "showWhen": "conditional"
+        }
+      ]
+    }
+  ]
+} 

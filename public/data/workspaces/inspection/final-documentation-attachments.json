@@ -1,0 +1,527 @@
+[
+  {
+    "id": "final-documentation-attachments",
+    "type": "section",
+    "title": "Final Documentation & Attachments",
+    "description": "Inspection photographs, technical drawings, supporting documents, digital signatures, and final submission",
+    "icon": "FileTextOutlined",
+    "order": 7,
+    "size": 12
+  },
+  {
+    "id": "inspection-photographs-group",
+    "type": "group",
+    "title": "Inspection Photographs",
+    "description": "Photographic documentation of inspection findings",
+    "sectionId": "final-documentation-attachments",
+    "order": 1,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "photographs-uploaded",
+    "type": "radio",
+    "title": "Photographs Uploaded",
+    "label": "Photographs Uploaded",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "inspection-photographs-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "In Progress", "value": "in-progress"}
+    ]
+  },
+  {
+    "id": "photograph-count",
+    "type": "number",
+    "title": "Number of Photographs",
+    "label": "Number of Photographs",
+    "placeholder": "Enter number of photographs",
+    "size": 6,
+    "watchField": "photographs-uploaded",
+    "showWhen": "yes,in-progress",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "inspection-photographs-group"
+  },
+  {
+    "id": "photograph-categories",
+    "type": "checkbox",
+    "title": "Photograph Categories",
+    "label": "Photograph Categories",
+    "size": 6,
+    "watchField": "photographs-uploaded",
+    "showWhen": "yes,in-progress",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "inspection-photographs-group",
+    "options": [
+      {"label": "Overall Views", "value": "overall-views"},
+      {"label": "Component Close-ups", "value": "component-closeups"},
+      {"label": "Defect Documentation", "value": "defect-docs"},
+      {"label": "Anomaly Photos", "value": "anomaly-photos"},
+      {"label": "Before/After", "value": "before-after"},
+      {"label": "Environmental", "value": "environmental"},
+      {"label": "Safety Equipment", "value": "safety-equipment"}
+    ]
+  },
+  {
+    "id": "photograph-descriptions",
+    "type": "tags-input",
+    "title": "Photograph Descriptions",
+    "label": "Photograph Descriptions",
+    "placeholder": "Add photograph description",
+    "size": 12,
+    "watchField": "photographs-uploaded",
+    "showWhen": "yes,in-progress",
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Description",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all photograph descriptions?",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "inspection-photographs-group"
+  },
+  {
+    "id": "technical-drawings-group",
+    "type": "group",
+    "title": "Technical Drawings",
+    "description": "Technical drawings and sketches",
+    "sectionId": "final-documentation-attachments",
+    "order": 2,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "drawings-prepared",
+    "type": "radio",
+    "title": "Technical Drawings Prepared",
+    "label": "Technical Drawings Prepared",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "technical-drawings-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "drawing-types",
+    "type": "checkbox",
+    "title": "Drawing Types",
+    "label": "Drawing Types",
+    "size": 6,
+    "watchField": "drawings-prepared",
+    "showWhen": "yes",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "technical-drawings-group",
+    "options": [
+      {"label": "Vessel Layout", "value": "vessel-layout"},
+      {"label": "Component Details", "value": "component-details"},
+      {"label": "Defect Sketches", "value": "defect-sketches"},
+      {"label": "Repair Details", "value": "repair-details"},
+      {"label": "Isometric Views", "value": "isometric-views"},
+      {"label": "Cross Sections", "value": "cross-sections"}
+    ]
+  },
+  {
+    "id": "drawing-scale",
+    "type": "text",
+    "title": "Drawing Scale",
+    "label": "Drawing Scale",
+    "placeholder": "Enter drawing scale (e.g., 1:10)",
+    "size": 6,
+    "watchField": "drawings-prepared",
+    "showWhen": "yes",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "technical-drawings-group"
+  },
+  {
+    "id": "drawing-notes",
+    "type": "textarea",
+    "title": "Drawing Notes",
+    "label": "Drawing Notes",
+    "placeholder": "Additional notes about technical drawings",
+    "size": 12,
+    "watchField": "drawings-prepared",
+    "showWhen": "yes",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "technical-drawings-group"
+  },
+  {
+    "id": "supporting-documents-group",
+    "type": "group",
+    "title": "Supporting Documents",
+    "description": "Additional supporting documentation",
+    "sectionId": "final-documentation-attachments",
+    "order": 3,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "supporting-documents-uploaded",
+    "type": "radio",
+    "title": "Supporting Documents Uploaded",
+    "label": "Supporting Documents Uploaded",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "supporting-documents-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "In Progress", "value": "in-progress"}
+    ]
+  },
+  {
+    "id": "document-types",
+    "type": "checkbox",
+    "title": "Document Types",
+    "label": "Document Types",
+    "size": 6,
+    "watchField": "supporting-documents-uploaded",
+    "showWhen": "yes,in-progress",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "supporting-documents-group",
+    "options": [
+      {"label": "Previous Reports", "value": "previous-reports"},
+      {"label": "Manufacturer Data", "value": "manufacturer-data"},
+      {"label": "Test Results", "value": "test-results"},
+      {"label": "Calibration Certificates", "value": "calibration-certs"},
+      {"label": "Permits", "value": "permits"},
+      {"label": "Safety Documentation", "value": "safety-docs"},
+      {"label": "Material Certificates", "value": "material-certs"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "document-descriptions",
+    "type": "tags-input",
+    "title": "Document Descriptions",
+    "label": "Document Descriptions",
+    "placeholder": "Add document description",
+    "size": 12,
+    "watchField": "supporting-documents-uploaded",
+    "showWhen": "yes,in-progress",
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Description",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all document descriptions?",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "supporting-documents-group"
+  },
+  {
+    "id": "digital-signatures-group",
+    "type": "group",
+    "title": "Digital Signatures",
+    "description": "Digital signatures and approvals",
+    "sectionId": "final-documentation-attachments",
+    "order": 4,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "inspector-signature-date",
+    "type": "date",
+    "title": "Inspector Signature Date",
+    "label": "Inspector Signature Date",
+    "required": true,
+    "size": 6,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "digital-signatures-group"
+  },
+  {
+    "id": "inspector-qualification",
+    "type": "text",
+    "title": "Inspector Qualification",
+    "label": "Inspector Qualification",
+    "placeholder": "Enter inspector qualification",
+    "required": true,
+    "size": 6,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "digital-signatures-group"
+  },
+  {
+    "id": "supervisor-approval-required",
+    "type": "radio",
+    "title": "Supervisor Approval Required",
+    "label": "Supervisor Approval Required",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "digital-signatures-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Applicable", "value": "not-applicable"}
+    ]
+  },
+  {
+    "id": "supervisor-signature-date",
+    "type": "date",
+    "title": "Supervisor Signature Date",
+    "label": "Supervisor Signature Date",
+    "size": 6,
+    "watchField": "supervisor-approval-required",
+    "showWhen": "yes",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "digital-signatures-group"
+  },
+  {
+    "id": "client-approval-required",
+    "type": "radio",
+    "title": "Client Approval Required",
+    "label": "Client Approval Required",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "digital-signatures-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Applicable", "value": "not-applicable"}
+    ]
+  },
+  {
+    "id": "client-signature-date",
+    "type": "date",
+    "title": "Client Signature Date",
+    "label": "Client Signature Date",
+    "size": 6,
+    "watchField": "client-approval-required",
+    "showWhen": "yes",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "digital-signatures-group"
+  },
+  {
+    "id": "report-generation-group",
+    "type": "group",
+    "title": "Report Generation",
+    "description": "Final report generation and delivery",
+    "sectionId": "final-documentation-attachments",
+    "order": 5,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "report-format",
+    "type": "select",
+    "title": "Report Format",
+    "label": "Report Format",
+    "placeholder": "Select report format",
+    "required": true,
+    "size": 6,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "report-generation-group",
+    "options": [
+      {"label": "PDF", "value": "pdf"},
+      {"label": "Word Document", "value": "word"},
+      {"label": "Excel Spreadsheet", "value": "excel"},
+      {"label": "HTML", "value": "html"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "report-delivery-method",
+    "type": "select",
+    "title": "Report Delivery Method",
+    "label": "Report Delivery Method",
+    "placeholder": "Select delivery method",
+    "required": true,
+    "size": 6,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "report-generation-group",
+    "options": [
+      {"label": "Email", "value": "email"},
+      {"label": "File Transfer", "value": "file-transfer"},
+      {"label": "Physical Copy", "value": "physical-copy"},
+      {"label": "Cloud Storage", "value": "cloud-storage"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "report-urgency",
+    "type": "select",
+    "title": "Report Urgency",
+    "label": "Report Urgency",
+    "placeholder": "Select urgency level",
+    "required": true,
+    "size": 6,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "report-generation-group",
+    "options": [
+      {"label": "Routine", "value": "routine"},
+      {"label": "Standard", "value": "standard"},
+      {"label": "Urgent", "value": "urgent"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "report-recipients",
+    "type": "tags-input",
+    "title": "Report Recipients",
+    "label": "Report Recipients",
+    "placeholder": "Add report recipient (Name: Email)",
+    "size": 6,
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Recipient",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all report recipients?",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "report-generation-group"
+  },
+  {
+    "id": "final-verification-submission-group",
+    "type": "group",
+    "title": "Final Verification & Submission",
+    "description": "Final verification and submission process",
+    "sectionId": "final-documentation-attachments",
+    "order": 6,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "data-verification-complete",
+    "type": "radio",
+    "title": "Data Verification Complete",
+    "label": "Data Verification Complete",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-verification-submission-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "In Progress", "value": "in-progress"}
+    ]
+  },
+  {
+    "id": "quality-review-complete",
+    "type": "radio",
+    "title": "Quality Review Complete",
+    "label": "Quality Review Complete",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-verification-submission-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "In Progress", "value": "in-progress"}
+    ]
+  },
+  {
+    "id": "compliance-check-complete",
+    "type": "radio",
+    "title": "Compliance Check Complete",
+    "label": "Compliance Check Complete",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-verification-submission-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "In Progress", "value": "in-progress"}
+    ]
+  },
+  {
+    "id": "final-approval-given",
+    "type": "select",
+    "title": "Final Approval Given",
+    "label": "Final Approval Given",
+    "placeholder": "Select approval status",
+    "required": true,
+    "size": 6,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-verification-submission-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Pending", "value": "pending"}
+    ]
+  },
+  {
+    "id": "submission-status",
+    "type": "select",
+    "title": "Submission Status",
+    "label": "Submission Status",
+    "placeholder": "Select submission status",
+    "required": true,
+    "size": 6,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-verification-submission-group",
+    "options": [
+      {"label": "Draft", "value": "draft"},
+      {"label": "Ready for Review", "value": "ready-review"},
+      {"label": "Under Review", "value": "under-review"},
+      {"label": "Approved", "value": "approved"},
+      {"label": "Submitted", "value": "submitted"},
+      {"label": "Completed", "value": "completed"}
+    ]
+  },
+  {
+    "id": "submission-date",
+    "type": "date",
+    "title": "Submission Date",
+    "label": "Submission Date",
+    "size": 6,
+    "watchField": "submission-status",
+    "showWhen": "submitted,completed",
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-verification-submission-group"
+  },
+  {
+    "id": "final-notes-group",
+    "type": "group",
+    "title": "Final Notes & Comments",
+    "description": "Final notes and comments about the documentation process",
+    "sectionId": "final-documentation-attachments",
+    "order": 7,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "documentation-notes",
+    "type": "textarea",
+    "title": "Documentation Notes",
+    "label": "Documentation Notes",
+    "placeholder": "Additional notes about the documentation process",
+    "size": 12,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-notes-group"
+  },
+  {
+    "id": "follow-up-actions",
+    "type": "textarea",
+    "title": "Follow-up Actions",
+    "label": "Follow-up Actions",
+    "placeholder": "Any follow-up actions required",
+    "size": 12,
+    "sectionId": "final-documentation-attachments",
+    "groupId": "final-notes-group"
+  }
+] 

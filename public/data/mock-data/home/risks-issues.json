@@ -1,0 +1,82 @@
+{
+  "issues": [
+    {
+      "id": "issue-001",
+      "title": "Safety Permit Delay - BASF Project",
+      "description": "Safety permits for BASF plant maintenance operations are delayed due to regulatory review",
+      "project": "BASF Plant Maintenance Scaffolding",
+      "severity": "high",
+      "status": "open",
+      "assignedTo": "John Doe",
+      "dueDate": "2024-01-25",
+      "type": "regulatory",
+      "tags": ["Safety", "Permits", "Regulatory"],
+      "timestamp": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "issue-002",
+      "title": "Material Shortage - Dow Chemical",
+      "description": "Critical scaffolding materials are in short supply, affecting installation timeline",
+      "project": "Dow Chemical Plant Scaffolding",
+      "severity": "medium",
+      "status": "in-progress",
+      "assignedTo": "Jane Smith",
+      "dueDate": "2024-01-18",
+      "type": "supply",
+      "tags": ["Materials", "Supply Chain", "Timeline"],
+      "timestamp": "2024-01-15T09:15:00Z"
+    },
+    {
+      "id": "issue-003",
+      "title": "Weather Delay - Shell Pipeline",
+      "description": "Heavy rain forecast may delay bridge scaffolding installation",
+      "project": "Shell Pipeline Bridge Scaffolding",
+      "severity": "medium",
+      "status": "monitoring",
+      "assignedTo": "Mike Johnson",
+      "dueDate": "2024-01-20",
+      "type": "weather",
+      "tags": ["Weather", "Delay", "Installation"],
+      "timestamp": "2024-01-15T08:45:00Z"
+    },
+    {
+      "id": "issue-004",
+      "title": "Resource Overload - Project Management",
+      "description": "Project management team is overloaded with 6 active projects",
+      "project": "All Projects",
+      "severity": "high",
+      "status": "open",
+      "assignedTo": "Project Manager",
+      "dueDate": "2024-01-30",
+      "type": "resource",
+      "tags": ["Resource", "Overload", "Management"],
+      "timestamp": "2024-01-15T07:30:00Z"
+    },
+    {
+      "id": "issue-005",
+      "title": "Quality Inspection Required - ExxonMobil",
+      "description": "Quality inspection required before proceeding with Level 4 installation",
+      "project": "ExxonMobil Refinery Tower Access",
+      "severity": "medium",
+      "status": "pending",
+      "assignedTo": "David Miller",
+      "dueDate": "2024-01-19",
+      "type": "quality",
+      "tags": ["Quality", "Inspection", "Safety"],
+      "timestamp": "2024-01-15T06:20:00Z"
+    },
+    {
+      "id": "issue-006",
+      "title": "Budget Variance - Marathon Petroleum",
+      "description": "Project running 5% over budget due to additional safety requirements",
+      "project": "Marathon Petroleum Unit Scaffolding",
+      "severity": "low",
+      "status": "monitoring",
+      "assignedTo": "John Doe",
+      "dueDate": "2024-01-22",
+      "type": "budget",
+      "tags": ["Budget", "Variance", "Safety"],
+      "timestamp": "2024-01-15T05:10:00Z"
+    }
+  ]
+} 

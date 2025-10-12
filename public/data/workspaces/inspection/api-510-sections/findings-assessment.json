@@ -1,0 +1,238 @@
+[
+  {
+    "id": "findings-assessment",
+    "type": "section",
+    "title": "Findings & Assessment",
+    "description": "Inspection results, condition assessment, and recommendations",
+    "icon": "BarChartOutlined",
+    "order": 5,
+    "size": 12
+  },
+  {
+    "id": "overall-assessment-group",
+    "type": "group",
+    "title": "Overall Assessment",
+    "description": "Overall vessel condition and fitness for service assessment",
+    "sectionId": "findings-assessment",
+    "order": 1,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "overall-assessment",
+    "type": "select",
+    "title": "Overall Assessment",
+    "label": "Overall Assessment",
+    "placeholder": "Select overall assessment",
+    "required": true,
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "overall-assessment-group",
+    "defaultValue": "",
+    "options": [
+      {"label": "Fit for Service", "value": "fit-for-service"},
+      {"label": "Fit for Service with Monitoring", "value": "fit-with-monitoring"},
+      {"label": "Limited Service", "value": "limited-service"},
+      {"label": "Unfit for Service", "value": "unfit-for-service"}
+    ]
+  },
+  {
+    "id": "critical-findings-group",
+    "type": "group",
+    "title": "Critical Findings",
+    "description": "Critical findings and defects identified during inspection",
+    "sectionId": "findings-assessment",
+    "order": 2,
+    "size": 8,
+    "collapsible": true
+  },
+  {
+    "id": "critical-findings",
+    "type": "radio",
+    "title": "Critical Findings",
+    "label": "Critical findings identified",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "critical-findings-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "critical-findings-details",
+    "type": "textarea",
+    "title": "Critical Findings Details",
+    "label": "Please describe the critical findings in detail",
+    "placeholder": "Enter detailed description of critical findings and their implications",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "critical-findings-group",
+    "defaultValue": "",
+    "watchField": "critical-findings",
+    "showWhen": "yes"
+  },
+  {
+    "id": "safety-concerns-group",
+    "type": "group",
+    "title": "Safety Concerns",
+    "description": "Safety concerns and potential risks identified",
+    "sectionId": "findings-assessment",
+    "order": 3,
+    "size": 8,
+    "collapsible": true
+  },
+  {
+    "id": "safety-concerns",
+    "type": "radio",
+    "title": "Safety Concerns",
+    "label": "Safety concerns identified",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "safety-concerns-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "safety-concerns-details",
+    "type": "textarea",
+    "title": "Safety Concerns Details",
+    "label": "Please describe the safety concerns in detail",
+    "placeholder": "Enter detailed description of safety concerns and potential risks",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "safety-concerns-group",
+    "defaultValue": "",
+    "watchField": "safety-concerns",
+    "showWhen": "yes"
+  },
+  {
+    "id": "immediate-actions-group",
+    "type": "group",
+    "title": "Immediate Actions",
+    "description": "Immediate actions required to address findings",
+    "sectionId": "findings-assessment",
+    "order": 4,
+    "size": 8,
+    "collapsible": true
+  },
+  {
+    "id": "immediate-actions",
+    "type": "radio",
+    "title": "Immediate Actions Required",
+    "label": "Immediate actions required",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "immediate-actions-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "immediate-actions-details",
+    "type": "textarea",
+    "title": "Immediate Actions Details",
+    "label": "Please describe the immediate actions required",
+    "placeholder": "Enter detailed description of immediate actions that must be taken",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "immediate-actions-group",
+    "defaultValue": "",
+    "watchField": "immediate-actions",
+    "showWhen": "yes"
+  },
+  {
+    "id": "compliance-recommendations-group",
+    "type": "group",
+    "title": "Compliance & Recommendations",
+    "description": "Regulatory compliance and detailed recommendations",
+    "sectionId": "findings-assessment",
+    "order": 5,
+    "size": 12,
+    "collapsible": true
+  },
+  {
+    "id": "api-510-compliance",
+    "type": "select",
+    "title": "API 510 Compliance",
+    "label": "API 510 Compliance Status",
+    "placeholder": "Select compliance status",
+    "required": true,
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "compliance-recommendations-group",
+    "defaultValue": "",
+    "options": [
+      {"label": "Compliant", "value": "compliant"},
+      {"label": "Non-Compliant", "value": "non-compliant"},
+      {"label": "Conditional Compliance", "value": "conditional"}
+    ]
+  },
+  {
+    "id": "recommendations",
+    "type": "textarea",
+    "title": "Recommendations",
+    "label": "Recommendations and actions required",
+    "placeholder": "Enter detailed recommendations and required actions",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "compliance-recommendations-group",
+    "defaultValue": ""
+  },
+  {
+    "id": "inspection-planning-group",
+    "type": "group",
+    "title": "Inspection Planning",
+    "description": "Next inspection planning and scheduling",
+    "sectionId": "findings-assessment",
+    "order": 6,
+    "size": 12,
+    "collapsible": true
+  },
+  {
+    "id": "next-inspection-date",
+    "type": "select",
+    "title": "Next Inspection Date",
+    "label": "Recommended next inspection",
+    "placeholder": "Select next inspection interval",
+    "required": true,
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "inspection-planning-group",
+    "defaultValue": "",
+    "options": [
+      {"label": "3 Months", "value": "3-months"},
+      {"label": "6 Months", "value": "6-months"},
+      {"label": "1 Year", "value": "1-year"},
+      {"label": "2 Years", "value": "2-years"},
+      {"label": "5 Years", "value": "5-years"}
+    ]
+  },
+  {
+    "id": "assessment-notes-group",
+    "type": "group",
+    "title": "Assessment Notes",
+    "description": "Additional assessment notes and observations",
+    "sectionId": "findings-assessment",
+    "order": 7,
+    "size": 24,
+    "collapsible": true
+  },
+  {
+    "id": "assessment-notes",
+    "type": "textarea",
+    "title": "Assessment Notes",
+    "label": "Additional assessment notes and observations",
+    "placeholder": "Enter additional assessment notes",
+    "size": 24,
+    "sectionId": "findings-assessment",
+    "groupId": "assessment-notes-group",
+    "defaultValue": ""
+  }
+] 

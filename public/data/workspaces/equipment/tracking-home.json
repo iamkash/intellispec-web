@@ -1,0 +1,172 @@
+{
+  "id": "equipment-tracking-home",
+  "title": "Equipment Tracking & Management Executive Dashboard",
+  "description": "Executive-level overview of equipment rental and tracking operations with comprehensive KPIs, financial metrics, and operational insights",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "executive-actions",
+      "type": "action-panel-gadget",
+      "title": "Executive Quick Actions",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/quicklinks-data.json",
+        "dataPath": "quicklinks",
+        "size": "large",
+        "layout": "grid",
+        "maxItems": 60
+      },
+      "position": 24
+    },
+    {
+      "id": "executive-kpis",
+      "type": "kpi-gadget",
+      "title": "Executive KPIs",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/executive-kpis.json",
+        "dataPath": "kpis",
+        "maxItems": 6,
+        "refreshInterval": 60000,
+        "autoRefresh": true
+      },
+      "position": 24
+    },
+    {
+      "id": "revenue-trend",
+      "type": "line-chart-gadget",
+      "title": "Revenue Trend",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/monthly-revenue.json",
+        "dataPath": "monthly_revenue",
+        "dataKey": "revenue",
+        "nameKey": "month",
+        "xAxisLabel": "Month",
+        "yAxisLabel": "Revenue ($)",
+        "title": "Monthly Revenue Trend",
+        "color": "#4CAF50"
+      },
+      "position": 24
+    },
+    {
+      "id": "profit-trend",
+      "type": "area-chart-gadget",
+      "title": "Revenue & Profit Trend",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/monthly-revenue.json",
+        "dataPath": "monthly_revenue",
+        "dataKeys": ["revenue", "profit"],
+        "areaColors": ["#1890ff", "#52c41a"],
+        "areaNames": ["Revenue", "Profit"],
+        "useGradient": true,
+        "xAxisKey": "month",
+        "xAxisLabel": "Month",
+        "yAxisLabel": "Amount ($)",
+        "title": "Monthly Revenue & Profit Analysis"
+      },
+      "position": 24
+    },
+    {
+      "id": "revenue-breakdown",
+      "type": "pie-chart-gadget",
+      "title": "Revenue Distribution",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/revenue-breakdown.json",
+        "dataPath": "revenue_breakdown",
+        "dataKey": "value",
+        "nameKey": "name"
+      },
+      "position": 24
+    },
+    {
+      "id": "fleet-utilization",
+      "type": "stats-gadget",
+      "title": "Fleet Utilization Overview",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/fleet-status-data.json",
+        "dataPath": "fleetStatus",
+        "size": "large",
+        "showTrends": true,
+        "layout": "grid"
+      },
+      "position": 24
+    },
+    {
+      "id": "maintenance-status",
+      "type": "stats-gadget",
+      "title": "Maintenance & Compliance",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/stats-data.json",
+        "dataPath": "equipmentStats",
+        "category": "maintenance",
+        "size": "large",
+        "showTrends": true,
+        "layout": "grid"
+      },
+      "position": 24
+    },
+    {
+      "id": "equipment-roi-analysis",
+      "type": "bar-chart-gadget",
+      "title": "ROI by Equipment Category",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/revenue-breakdown.json",
+        "dataPath": "revenue_breakdown",
+        "dataKey": "percentage",
+        "color": "#4CAF50",
+        "title": "ROI by Equipment Category",
+        "xAxisLabel": "Equipment Category",
+        "yAxisLabel": "ROI (%)"
+      },
+      "position": 24
+    },
+    {
+      "id": "revenue-trend1",
+      "type": "line-chart-gadget",
+      "title": "Revenue Trend",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/monthly-revenue.json",
+        "dataPath": "monthly_revenue",
+        "dataKey": "revenue",
+        "nameKey": "month",
+        "xAxisLabel": "Month",
+        "yAxisLabel": "Revenue ($)",
+        "title": "Monthly Revenue Trend",
+        "color": "#4CAF50"
+      },
+      "position": 24
+    },
+    {
+      "id": "operational-activity",
+      "type": "activity-feed-gadget",
+      "title": "Recent Operations & Activities",
+      "config": {
+        "dataUrl": "/data/mock-data/equipment/activity-data.json",
+        "dataPath": "activities",
+        "maxItems": 10,
+        "showTimestamp": true,
+        "showAvatar": true,
+        "showTags": true,
+        "enableSearch": true,
+        "enableFilters": true,
+        "maxHeight": 350,
+        "searchPlaceholder": "Search operations...",
+        "compact": true
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": true,
+    "enablePrint": true
+  },
+  "metadata": {
+    "created": "2024-01-07T10:00:00Z",
+    "version": "2.0.0",
+    "tags": ["executive", "equipment", "tracking", "dashboard", "kpis"],
+    "description": "Comprehensive executive dashboard for equipment rental and tracking management featuring financial performance, fleet utilization, maintenance compliance, and operational insights tailored for safety equipment rental and scaffolding operations."
+  }
+} 

@@ -1,0 +1,198 @@
+{
+  "id": "ai-project-plan-wizard",
+  "title": "AI Project Plan Wizard",
+  "description": "Capture voice notes and images, then generate a comprehensive inspection project plan in Markdown (scope, equipment, labor, duration, schedule, risks).",
+  "gadgets": [
+    {
+      "id": "ai-project-plan-wizard-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "AI Project Plan Wizard",
+      "description": "Wizard that creates a detailed inspection project plan from voice and images.",
+      "config": {
+        "sections": [
+          {
+            "id": "voice_capture",
+            "title": "Voice Capture",
+            "description": "Record site notes, context, constraints, and objectives. Transcription feeds project planning.",
+            "sectionType": "voice",
+            "includeInPdf": false
+          },
+          {
+            "id": "nameplate_capture",
+            "title": "Site & Equipment Images",
+            "description": "Upload images of equipment, site constraints, access points, permits, hazards, and logistics.",
+            "sectionType": "image",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_analysis",
+            "title": "Project Plan Analysis",
+            "description": "AI analyzes images and voice notes to propose a complete inspection project plan in Markdown.",
+            "imageAnalysisPromptRef": "projectPlanAnalysis",
+            "imageAnalysisPrompt": {
+              "modelConfig": {
+                "model": "gpt-5-mini",
+                "maxCompletionTokens": 7000,
+                "temperature": 0.2
+              },
+              "promptConfig": {
+                "systemPrompt": "ROLE: You are a senior inspection project planner and scheduler. GOAL: Produce a complete, professional project plan in Markdown from provided IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once when applicable): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Equipment and Tools, ## Materials and Consumables, ## Permits and Safety, ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation. TABLES: Where data is structured, use Markdown tables with the following columns: - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials and Consumables: | Item | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - Work Breakdown Structure and Estimates: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks and Mitigations: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CALCULATIONS: Compute Extended (USD) = Qty × Hours × Hourly Rate where applicable; show Labor Subtotal and Grand Total (sum of line items). FORMATTING: Use USD with thousands separators (e.g., $12,345). TONE: Concise, actionable, and field‑ready. RULES: No duplicate headings; prefer bullets and tables where possible.",
+                "userPrompt": "Context (transcript and notes):\n{text}\n\nUsing the images and transcript above, produce the project plan using the specified headings. Convert lists into the tables defined in the instructions (Equipment, Materials, Team and Roles, WBS, Schedule, Risks, Quotation) and compute Extended and totals where applicable. Ensure clear USD currency formatting and include a Labor Subtotal and a Grand Total in Quotation. Return Markdown only."
+              },
+              "streaming": { "enabled": true, "showProgress": true, "updateInterval": 100 }
+            },
+            "promptSourceIds": ["nameplate_capture", "voice_capture"],
+            "includeInPdf": true,
+            "analysisWidget": "simple",
+            "pdf": { 
+              "includeOverview": true, 
+              "includeImages": true,
+              "imagesDataPath": "sections[nameplate_capture].images",
+              "widthPercent": 1,
+              "fit": "contain",
+              "align": "center"
+            }
+          },
+          { "id": "objectives", "title": "Objectives", "description": "Project objectives and success criteria.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Objectives", "promptRef": "objectivesPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "scope", "title": "Scope", "description": "Scope of work and inclusions/exclusions.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Scope", "promptRef": "scopePlanPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "assumptions", "title": "Assumptions", "description": "Key planning assumptions.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Assumptions", "promptRef": "assumptionsPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "site_conditions", "title": "Site Conditions", "description": "Access, environment, logistics, constraints.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Site Conditions", "promptRef": "siteConditionsPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "permits_safety", "title": "Permits and Safety", "description": "Permitting and safety requirements.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Permits & Safety", "promptRef": "permitsSafetyPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "equipment_tools", "title": "Equipment and Tools", "description": "Required equipment and tools list.", "includeInPdf": true, "grid": { "title": "Equipment and Tools", "dataKey": "equipmentTools", "columns": [ { "key": "item", "title": "Item", "editable": true }, { "key": "category", "title": "Category", "editable": true }, { "key": "qty", "title": "Qty", "editable": true, "summary": "sum" }, { "key": "unitRateUSD", "title": "Unit Rate (USD)", "editable": true, "summary": "sum", "format": "currency" }, { "key": "notes", "title": "Notes", "editable": true } ], "btnLabel": "Populate Equipment", "promptRef": "equipmentToolsPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+          { "id": "materials_consumables", "title": "Materials and Consumables", "description": "Materials and consumables list.", "includeInPdf": true, "grid": { "title": "Materials and Consumables", "dataKey": "materialsConsumables", "columns": [ { "key": "item", "title": "Item", "editable": true }, { "key": "qty", "title": "Qty", "editable": true, "summary": "sum" }, { "key": "unitRateUSD", "title": "Unit Rate (USD)", "editable": true, "summary": "sum", "format": "currency" }, { "key": "notes", "title": "Notes", "editable": true } ], "btnLabel": "Populate Materials", "promptRef": "materialsConsumablesPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+          { "id": "team_roles", "title": "Team and Roles", "description": "Staffing plan and labor estimates.", "includeInPdf": true, "grid": { "title": "Team and Roles", "dataKey": "teamRoles", "columns": [ { "key": "role", "title": "Role", "editable": true }, { "key": "qtyPersons", "title": "Qty (persons)", "editable": true, "summary": "sum" }, { "key": "hours", "title": "Hours", "editable": true, "summary": "sum" }, { "key": "hourlyRateUSD", "title": "Hourly Rate (USD)", "editable": true, "format": "currency" }, { "key": "extendedUSD", "title": "Extended (USD)", "editable": true, "summary": "sum", "format": "currency" } ], "btnLabel": "Populate Team & Roles", "promptRef": "teamRolesPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+          { "id": "wbs", "title": "Work Breakdown Structure and Estimates", "description": "Work packages with estimates.", "includeInPdf": true, "grid": { "title": "WBS", "dataKey": "wbs", "columns": [ { "key": "task", "title": "Task", "editable": true }, { "key": "duration", "title": "Duration", "editable": true }, { "key": "laborHours", "title": "Labor Hours", "editable": true }, { "key": "roles", "title": "Roles", "editable": true }, { "key": "dependencies", "title": "Dependencies", "editable": true } ], "btnLabel": "Populate WBS", "promptRef": "wbsPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+          { "id": "schedule", "title": "Schedule", "description": "Timeline and dependencies.", "includeInPdf": true, "grid": { "title": "Schedule", "dataKey": "schedule", "columns": [ { "key": "task", "title": "Task", "editable": true }, { "key": "start", "title": "Start", "editable": true }, { "key": "finish", "title": "Finish", "editable": true }, { "key": "duration", "title": "Duration", "editable": true }, { "key": "predecessors", "title": "Predecessors", "editable": true }, { "key": "critical", "title": "Critical", "editable": true } ], "btnLabel": "Populate Schedule", "promptRef": "schedulePopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+          { "id": "risks", "title": "Risks and Mitigations", "description": "Key risks and mitigations.", "includeInPdf": true, "grid": { "title": "Risks and Mitigations", "dataKey": "risks", "columns": [ { "key": "risk", "title": "Risk", "editable": true }, { "key": "likelihood", "title": "Likelihood", "editable": true }, { "key": "impact", "title": "Impact", "editable": true }, { "key": "mitigation", "title": "Mitigation", "editable": true }, { "key": "owner", "title": "Owner", "editable": true } ], "btnLabel": "Populate Risks", "promptRef": "risksPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+          { "id": "deliverables", "title": "Deliverables", "description": "Expected deliverables.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Deliverables", "promptRef": "deliverablesPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "acceptance_criteria", "title": "Acceptance Criteria", "description": "Acceptance and completion criteria.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Acceptance Criteria", "promptRef": "acceptanceCriteriaPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "quotation", "title": "Quotation", "description": "Cost summary and totals.", "includeInPdf": true, "grid": { "title": "Quotation", "dataKey": "quotation", "columns": [ { "key": "item", "title": "Item", "editable": true }, { "key": "amountUSD", "title": "Amount (USD)", "editable": true, "summary": "sum", "format": "currency" }, { "key": "notes", "title": "Notes", "editable": true } ], "btnLabel": "Populate Quotation", "promptRef": "quotationPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] }
+        ],
+        "groups": [
+          { "id": "objectives_group", "title": "Objectives", "sectionId": "objectives", "lgSpan": 24 },
+          { "id": "scope_group", "title": "Scope", "sectionId": "scope", "lgSpan": 24 },
+          { "id": "assumptions_group", "title": "Assumptions", "sectionId": "assumptions", "lgSpan": 24 },
+          { "id": "site_conditions_group", "title": "Site Conditions", "sectionId": "site_conditions", "lgSpan": 24 },
+          { "id": "permits_safety_group", "title": "Permits & Safety", "sectionId": "permits_safety", "lgSpan": 24 },
+          { "id": "deliverables_group", "title": "Deliverables", "sectionId": "deliverables", "lgSpan": 24 },
+          { "id": "acceptance_criteria_group", "title": "Acceptance Criteria", "sectionId": "acceptance_criteria", "lgSpan": 24 }
+        ],
+        "fields": [
+          { "id": "objectives_text", "label": "Objectives (Markdown)", "type": "textarea", "groupId": "objectives_group", "lgSpan": 24 },
+          { "id": "scope_text", "label": "Scope (Markdown)", "type": "textarea", "groupId": "scope_group", "lgSpan": 24 },
+          { "id": "assumptions_text", "label": "Assumptions (Markdown)", "type": "textarea", "groupId": "assumptions_group", "lgSpan": 24 },
+          { "id": "site_conditions_text", "label": "Site Conditions (Markdown)", "type": "textarea", "groupId": "site_conditions_group", "lgSpan": 24 },
+          { "id": "permits_safety_text", "label": "Permits & Safety (Markdown)", "type": "textarea", "groupId": "permits_safety_group", "lgSpan": 24 },
+          { "id": "deliverables_text", "label": "Deliverables (Markdown)", "type": "textarea", "groupId": "deliverables_group", "lgSpan": 24 },
+          { "id": "acceptance_criteria_text", "label": "Acceptance Criteria (Markdown)", "type": "textarea", "groupId": "acceptance_criteria_group", "lgSpan": 24 }
+        ],
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [24, 24, 27],
+            "textColor": [255, 255, 255],
+            "fontSize": 12,
+            "companyName": "Inspection Project Plan",
+            "companyAddress": ""
+          },
+          "footer": {
+            "textColor": [100, 116, 139],
+            "fontSize": 6,
+            "leftText": "AI Project Plan Wizard",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": { "left": 15, "right": 195 }
+          }
+        },
+        "prompts": {
+          "projectPlanAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5",
+              "maxCompletionTokens": 7000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "ROLE: You are a senior inspection project planner and scheduler. GOAL: Produce a complete, professional project plan in Markdown from IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Equipment and Tools, ## Materials and Consumables, ## Permits and Safety, ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation. TABLES (required formats): - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials and Consumables: | Item | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - WBS: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks and Mitigations: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CALCULATIONS: Compute Extended and totals; include Labor Subtotal and Grand Total with USD formatting (e.g., $12,345). TONE: Concise and actionable. RULES: No duplicate headings; prefer tables where possible.",
+              "userPrompt": "Context (transcript and notes):\n{text}\n\nCreate the project plan using the specified headings and table formats. Compute Extended (Qty × Hours × Rate) and show Labor Subtotal and Grand Total in Quotation. Use USD currency formatting with thousands separators. Return Markdown only."
+            },
+            "streaming": {
+              "enabled": true,
+              "showProgress": true,
+              "updateInterval": 100
+            }
+          },
+          "objectivesPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 800, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON with a single field objectives_text containing concise objectives in Markdown bullet points based on analysis and notes." }
+          },
+          "scopePlanPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1000, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON with scope_text containing scope of work in Markdown (bullets where helpful). Include inclusions/exclusions when clear from context." }
+          },
+          "assumptionsPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 600, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON with assumptions_text listing key assumptions in Markdown bullets. Avoid speculation beyond provided context." }
+          },
+          "siteConditionsPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 800, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON with site_conditions_text summarizing access, environment, logistics, and constraints in Markdown bullets." }
+          },
+          "permitsSafetyPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 800, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON with permits_safety_text describing required permits and safety measures in Markdown bullets." }
+          },
+          "deliverablesPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 600, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON with deliverables_text listing expected deliverables in Markdown bullets." }
+          },
+          "acceptanceCriteriaPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 600, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON with acceptance_criteria_text describing acceptance criteria in Markdown bullets." }
+          },
+          "equipmentToolsPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1200, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON array for equipmentTools with fields: item, category, qty, unitRateUSD, notes. Base on images/notes; use realistic unit rates when appropriate." },
+            "autoPrompt": true
+          },
+          "materialsConsumablesPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1200, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON array for materialsConsumables with fields: item, qty, unitRateUSD, notes." },
+            "autoPrompt": true
+          },
+          "teamRolesPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1200, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON array for teamRoles with fields: role, qtyPersons, hours, hourlyRateUSD, extendedUSD where extendedUSD = qtyPersons * hours * hourlyRateUSD." },
+            "autoPrompt": true
+          },
+          "wbsPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1600, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON array for wbs with fields: task, duration, laborHours, roles, dependencies." },
+            "autoPrompt": true
+          },
+          "schedulePopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1400, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON array for schedule with fields: task, start, finish, duration, predecessors, critical." },
+            "autoPrompt": true
+          },
+          "risksPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1000, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON array for risks with fields: risk, likelihood, impact, mitigation, owner." },
+            "autoPrompt": true
+          },
+          "quotationPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1000, "temperature": 0.2 },
+            "promptConfig": { "systemPrompt": "Return ONLY JSON array for quotation with fields: item, amountUSD, notes. Include Labor Subtotal, Equipment and Tools, Materials and Consumables, Mobilization, Taxes/Overhead, and Grand Total as items with numeric amounts." },
+            "autoPrompt": true
+          }
+        }
+      },
+      "position": 24
+    }
+  ]
+}
+
+

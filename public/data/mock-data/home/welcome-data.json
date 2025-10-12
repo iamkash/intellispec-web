@@ -1,0 +1,31 @@
+{
+  "welcomeStats": [
+    {
+      "id": "welcome-message",
+      "title": "Welcome Back",
+      "value": "John Doe",
+      "description": "Ready to tackle today's scaffolding challenges?",
+      "icon": "UserOutlined",
+      "trend": null,
+      "color": "#1890ff"
+    },
+    {
+      "id": "current-time",
+      "title": "Current Time",
+      "value": "9:30 AM",
+      "description": "Monday, January 15, 2024",
+      "icon": "ClockCircleOutlined",
+      "trend": null,
+      "color": "#52c41a"
+    },
+    {
+      "id": "weather",
+      "title": "Weather",
+      "value": "72°F",
+      "description": "Sunny • Houston, TX",
+      "icon": "SunOutlined",
+      "trend": null,
+      "color": "#faad14"
+    }
+  ]
+} 

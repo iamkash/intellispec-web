@@ -1,0 +1,52 @@
+{
+  "kpis": [
+    {
+      "id": "project-progress",
+      "title": "Project Progress",
+      "value": "78%",
+      "description": "Average completion across all active projects",
+      "icon": "ProjectOutlined",
+      "trend": {
+        "value": "+5%",
+        "direction": "up"
+      },
+      "status": "good"
+    },
+    {
+      "id": "schedule-health",
+      "title": "Schedule Health",
+      "value": "92%",
+      "description": "Projects on schedule vs delayed",
+      "icon": "ClockCircleOutlined",
+      "trend": {
+        "value": "+3%",
+        "direction": "up"
+      },
+      "status": "good"
+    },
+    {
+      "id": "budget-variance",
+      "title": "Budget vs Actual",
+      "value": "-2.3%",
+      "description": "Under budget variance across projects",
+      "icon": "DollarOutlined",
+      "trend": {
+        "value": "-1.2%",
+        "direction": "down"
+      },
+      "status": "good"
+    },
+    {
+      "id": "risk-count",
+      "title": "Active Risks",
+      "value": "12",
+      "description": "Open risks and issues requiring attention",
+      "icon": "ExclamationCircleOutlined",
+      "trend": {
+        "value": "-3",
+        "direction": "down"
+      },
+      "status": "warning"
+    }
+  ]
+} 

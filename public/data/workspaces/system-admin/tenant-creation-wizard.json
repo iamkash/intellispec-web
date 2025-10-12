@@ -1,0 +1,267 @@
+{
+  "id": "tenant-creation-wizard",
+  "title": "New Tenant Creation Wizard",
+  "description": "4-step wizard to create a new tenant with entitlements, subscription, and first user",
+  "layout": "wizard",
+  "gadgets": [
+    {
+      "id": "tenant-wizard",
+      "type": "form-wizard-gadget",
+      "title": "Create New Tenant",
+      "config": {
+        "submitUrl": "/api/admin/tenants",
+        "method": "POST",
+        "steps": [
+          {
+            "id": "details",
+            "title": "Tenant Details",
+            "description": "Basic tenant information and organization",
+            "icon": "InfoCircleOutlined",
+            "fields": [
+              {
+                "key": "name",
+                "label": "Tenant Name",
+                "type": "text",
+                "required": true,
+                "placeholder": "Enter tenant name (e.g., Acme Corporation)",
+                "validation": {
+                  "min": 2,
+                  "max": 100,
+                  "message": "Tenant name must be between 2-100 characters"
+                }
+              },
+              {
+                "key": "slug",
+                "label": "URL Slug",
+                "type": "text",
+                "required": true,
+                "placeholder": "acme-corp",
+                "help": "Used in URLs: app.com/t/your-slug/dashboard",
+                "validation": {
+                  "pattern": "^[a-z0-9-]+$",
+                  "message": "Slug must contain only lowercase letters, numbers, and hyphens"
+                }
+              },
+              {
+                "key": "orgId",
+                "label": "Organization",
+                "type": "select",
+                "required": false,
+                "placeholder": "Select organization (optional)",
+                "optionsUrl": "/api/admin/organizations?format=options",
+                "help": "Group this tenant under an existing organization"
+              },
+              {
+                "key": "status",
+                "label": "Initial Status",
+                "type": "select",
+                "required": true,
+                "defaultValue": "active",
+                "options": [
+                  { "value": "active", "label": "Active", "color": "green" },
+                  { "value": "suspended", "label": "Suspended", "color": "red" }
+                ]
+              },
+              {
+                "key": "notes",
+                "label": "Notes",
+                "type": "textarea",
+                "required": false,
+                "placeholder": "Optional notes about this tenant",
+                "maxLength": 500,
+                "rows": 3
+              }
+            ]
+          },
+          {
+            "id": "entitlements",
+            "title": "Entitlements & Modules",
+            "description": "Configure sites and module access",
+            "icon": "AppstoreOutlined",
+            "fields": [
+              {
+                "key": "sitesAllowed",
+                "label": "Sites Allowed",
+                "type": "number",
+                "required": true,
+                "defaultValue": 1,
+                "min": 1,
+                "max": 100,
+                "help": "Number of sites this tenant can manage"
+              },
+              {
+                "key": "modules",
+                "label": "Module Access",
+                "type": "checkbox-group",
+                "required": true,
+                "optionsUrl": "/api/admin/modules?status=active&format=options",
+                "defaultValue": ["system"],
+                "help": "System Administration is always included and cannot be removed",
+                "layout": "grid",
+                "columns": 2,
+                "disabled": ["system"]
+              },
+              {
+                "key": "unlimitedUsers",
+                "label": "User Limit",
+                "type": "radio",
+                "required": true,
+                "defaultValue": "true",
+                "options": [
+                  { "value": "true", "label": "Unlimited Users", "help": "No limit on number of users" },
+                  { "value": "false", "label": "Limited Users", "help": "Set a specific user limit", "disabled": true }
+                ],
+                "help": "Currently only unlimited users is supported"
+              }
+            ]
+          },
+          {
+            "id": "first-user",
+            "title": "First User",
+            "description": "Create the initial tenant administrator",
+            "icon": "UserAddOutlined",
+            "fields": [
+              {
+                "key": "firstUserEmail",
+                "label": "Email Address",
+                "type": "email",
+                "required": true,
+                "placeholder": "admin@company.com",
+                "validation": {
+                  "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+                  "message": "Please enter a valid email address"
+                }
+              },
+              {
+                "key": "firstUserName",
+                "label": "Full Name",
+                "type": "text",
+                "required": false,
+                "placeholder": "John Smith",
+                "validation": {
+                  "max": 100
+                }
+              },
+              {
+                "key": "firstUserRole",
+                "label": "Role",
+                "type": "select",
+                "required": true,
+                "defaultValue": "tenant_admin",
+                "options": [
+                  { "value": "tenant_admin", "label": "Tenant Administrator", "color": "red" },
+                  { "value": "user", "label": "User", "color": "blue" }
+                ],
+                "help": "Tenant Administrator has full access to manage the tenant"
+              },
+              {
+                "key": "sendInvite",
+                "label": "Send Invitation",
+                "type": "switch",
+                "required": false,
+                "defaultValue": true,
+                "help": "Send an email invitation to the user"
+              }
+            ]
+          },
+          {
+            "id": "subscription",
+            "title": "Subscription Terms",
+            "description": "Set subscription dates and renewal options",
+            "icon": "CalendarOutlined",
+            "fields": [
+              {
+                "key": "termStartAt",
+                "label": "Term Start Date",
+                "type": "date",
+                "required": false,
+                "defaultValue": "today",
+                "help": "Leave empty to set up later"
+              },
+              {
+                "key": "termEndAt",
+                "label": "Term End Date",
+                "type": "date",
+                "required": false,
+                "help": "Leave empty to set up later"
+              },
+              {
+                "key": "autoRenew",
+                "label": "Auto Renewal",
+                "type": "switch",
+                "required": false,
+                "defaultValue": false,
+                "help": "Automatically renew subscription when it expires"
+              },
+              {
+                "key": "gracePeriodDays",
+                "label": "Grace Period (Days)",
+                "type": "number",
+                "required": false,
+                "defaultValue": 7,
+                "min": 0,
+                "max": 30,
+                "help": "Days of continued access after subscription expires"
+              }
+            ]
+          },
+          {
+            "id": "review",
+            "title": "Review & Create",
+            "description": "Review all settings before creating the tenant",
+            "icon": "CheckCircleOutlined",
+            "type": "review",
+            "sections": [
+              {
+                "title": "Tenant Information",
+                "fields": ["name", "slug", "orgId", "status", "notes"]
+              },
+              {
+                "title": "Entitlements",
+                "fields": ["sitesAllowed", "modules", "unlimitedUsers"]
+              },
+              {
+                "title": "First User",
+                "fields": ["firstUserEmail", "firstUserName", "firstUserRole", "sendInvite"]
+              },
+              {
+                "title": "Subscription",
+                "fields": ["termStartAt", "termEndAt", "autoRenew", "gracePeriodDays"]
+              }
+            ]
+          }
+        ],
+        "navigation": {
+          "showSteps": true,
+          "allowSkip": false,
+          "showProgress": true
+        },
+        "validation": {
+          "validateOnChange": true,
+          "validateOnStep": true
+        },
+        "onSuccess": {
+          "message": "Tenant created successfully!",
+          "redirect": "/admin/tenants/{id}/details"
+        },
+        "onError": {
+          "message": "Failed to create tenant. Please check the form and try again."
+        }
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "theme": "light",
+    "showHeader": true,
+    "showFooter": false,
+    "requireSuperAdmin": true,
+    "auditAllActions": true
+  },
+  "metadata": {
+    "created": "2025-01-22T10:00:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "tenant", "wizard", "creation"],
+    "description": "Step-by-step wizard for creating new tenants with all required configuration"
+  }
+}

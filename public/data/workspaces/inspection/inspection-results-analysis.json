@@ -1,0 +1,472 @@
+[
+  {
+    "id": "inspection-results-analysis",
+    "type": "section",
+    "title": "Inspection Results & Analysis",
+    "description": "Assessment results, remaining life calculations, recommendations, compliance verification, and final approval",
+    "icon": "BarChartOutlined",
+    "order": 6,
+    "size": 12
+  },
+  {
+    "id": "assessment-results-group",
+    "type": "group",
+    "title": "Assessment Results",
+    "description": "Overall assessment and findings summary",
+    "sectionId": "inspection-results-analysis",
+    "order": 1,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "overall-assessment",
+    "type": "select",
+    "title": "Overall Assessment",
+    "label": "Overall Assessment",
+    "placeholder": "Select overall assessment",
+    "required": true,
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "assessment-results-group",
+    "options": [
+      {"label": "Acceptable", "value": "acceptable"},
+      {"label": "Acceptable with Monitoring", "value": "acceptable-monitoring"},
+      {"label": "Conditional", "value": "conditional"},
+      {"label": "Repair Required", "value": "repair-required"},
+      {"label": "Replacement Required", "value": "replacement-required"},
+      {"label": "Immediate Shutdown", "value": "immediate-shutdown"}
+    ]
+  },
+  {
+    "id": "defects-found",
+    "type": "radio",
+    "title": "Defects Found",
+    "label": "Defects Found",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "assessment-results-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Minor", "value": "minor"}
+    ]
+  },
+  {
+    "id": "defect-severity",
+    "type": "select",
+    "title": "Defect Severity",
+    "label": "Defect Severity",
+    "placeholder": "Select defect severity",
+    "size": 6,
+    "watchField": "defects-found",
+    "showWhen": "yes,minor",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "assessment-results-group",
+    "options": [
+      {"label": "Minor", "value": "minor"},
+      {"label": "Moderate", "value": "moderate"},
+      {"label": "Major", "value": "major"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "critical-findings",
+    "type": "radio",
+    "title": "Critical Findings",
+    "label": "Critical Findings",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "assessment-results-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "critical-findings-description",
+    "type": "textarea",
+    "title": "Critical Findings Description",
+    "label": "Critical Findings Description",
+    "placeholder": "Describe critical findings in detail",
+    "size": 12,
+    "watchField": "critical-findings",
+    "showWhen": "yes",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "assessment-results-group"
+  },
+  {
+    "id": "remaining-life-calculations-group",
+    "type": "group",
+    "title": "Remaining Life Calculations",
+    "description": "Detailed remaining life calculations and analysis",
+    "sectionId": "inspection-results-analysis",
+    "order": 2,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "next-inspection-interval",
+    "type": "select",
+    "title": "Next Inspection Interval",
+    "label": "Next Inspection Interval",
+    "placeholder": "Select inspection interval",
+    "required": true,
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "remaining-life-calculations-group",
+    "options": [
+      {"label": "1 Year", "value": "1-year"},
+      {"label": "2 Years", "value": "2-years"},
+      {"label": "3 Years", "value": "3-years"},
+      {"label": "5 Years", "value": "5-years"},
+      {"label": "10 Years", "value": "10-years"},
+      {"label": "As Required", "value": "as-required"},
+      {"label": "Continuous Monitoring", "value": "continuous-monitoring"}
+    ]
+  },
+  {
+    "id": "remaining-life-years",
+    "type": "number",
+    "title": "Remaining Life (Years)",
+    "label": "Remaining Life (Years)",
+    "placeholder": "Enter remaining life",
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "remaining-life-calculations-group"
+  },
+  {
+    "id": "life-assessment-methodology",
+    "type": "select",
+    "title": "Life Assessment Methodology",
+    "label": "Life Assessment Methodology",
+    "placeholder": "Select methodology",
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "remaining-life-calculations-group",
+    "options": [
+      {"label": "API 510", "value": "api-510"},
+      {"label": "ASME FFS-1", "value": "asme-ffs1"},
+      {"label": "Fitness for Service", "value": "ffs"},
+      {"label": "Engineering Judgment", "value": "engineering-judgment"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "life-assessment-notes",
+    "type": "textarea",
+    "title": "Life Assessment Notes",
+    "label": "Life Assessment Notes",
+    "placeholder": "Additional notes on life assessment",
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "remaining-life-calculations-group"
+  },
+  {
+    "id": "recommendations-group",
+    "type": "group",
+    "title": "Recommendations",
+    "description": "Specific recommendations and actions required",
+    "sectionId": "inspection-results-analysis",
+    "order": 3,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "repair-requirements",
+    "type": "radio",
+    "title": "Repair Requirements",
+    "label": "Repair Requirements",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "recommendations-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Minor", "value": "minor"}
+    ]
+  },
+  {
+    "id": "repair-description",
+    "type": "textarea",
+    "title": "Repair Description",
+    "label": "Repair Description",
+    "placeholder": "Describe required repairs",
+    "size": 6,
+    "watchField": "repair-requirements",
+    "showWhen": "yes,minor",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "recommendations-group"
+  },
+  {
+    "id": "repair-priority",
+    "type": "select",
+    "title": "Repair Priority",
+    "label": "Repair Priority",
+    "placeholder": "Select repair priority",
+    "size": 6,
+    "watchField": "repair-requirements",
+    "showWhen": "yes,minor",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "recommendations-group",
+    "options": [
+      {"label": "Immediate", "value": "immediate"},
+      {"label": "High", "value": "high"},
+      {"label": "Medium", "value": "medium"},
+      {"label": "Low", "value": "low"}
+    ]
+  },
+  {
+    "id": "repair-deadline",
+    "type": "date",
+    "title": "Repair Deadline",
+    "label": "Repair Deadline",
+    "size": 6,
+    "watchField": "repair-requirements",
+    "showWhen": "yes,minor",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "recommendations-group"
+  },
+  {
+    "id": "monitoring-requirements",
+    "type": "radio",
+    "title": "Monitoring Requirements",
+    "label": "Monitoring Requirements",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "recommendations-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "monitoring-description",
+    "type": "textarea",
+    "title": "Monitoring Description",
+    "label": "Monitoring Description",
+    "placeholder": "Describe monitoring requirements",
+    "size": 6,
+    "watchField": "monitoring-requirements",
+    "showWhen": "yes",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "recommendations-group"
+  },
+  {
+    "id": "compliance-verification-group",
+    "type": "group",
+    "title": "Compliance Verification",
+    "description": "Verification of compliance with applicable codes and standards",
+    "sectionId": "inspection-results-analysis",
+    "order": 4,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "api-510-compliance",
+    "type": "select",
+    "title": "API 510 Compliance",
+    "label": "API 510 Compliance",
+    "placeholder": "Select compliance status",
+    "required": true,
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "compliance-verification-group",
+    "options": [
+      {"label": "Compliant", "value": "compliant"},
+      {"label": "Conditional", "value": "conditional"},
+      {"label": "Non-Compliant", "value": "non-compliant"}
+    ]
+  },
+  {
+    "id": "asme-compliance",
+    "type": "select",
+    "title": "ASME Compliance",
+    "label": "ASME Compliance",
+    "placeholder": "Select compliance status",
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "compliance-verification-group",
+    "options": [
+      {"label": "Compliant", "value": "compliant"},
+      {"label": "Conditional", "value": "conditional"},
+      {"label": "Non-Compliant", "value": "non-compliant"}
+    ]
+  },
+  {
+    "id": "compliance-issues",
+    "type": "textarea",
+    "title": "Compliance Issues",
+    "label": "Compliance Issues",
+    "placeholder": "Describe any compliance issues",
+    "size": 12,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "compliance-verification-group"
+  },
+  {
+    "id": "documentation-requirements-group",
+    "type": "group",
+    "title": "Documentation Requirements",
+    "description": "Documentation and reporting requirements",
+    "sectionId": "inspection-results-analysis",
+    "order": 5,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "inspection-report-prepared",
+    "type": "radio",
+    "title": "Inspection Report Prepared",
+    "label": "Inspection Report Prepared",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "documentation-requirements-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "In Progress", "value": "in-progress"}
+    ]
+  },
+  {
+    "id": "report-distribution",
+    "type": "tags-input",
+    "title": "Report Distribution",
+    "label": "Report Distribution",
+    "placeholder": "Add recipient for report distribution",
+    "size": 6,
+    "watchField": "inspection-report-prepared",
+    "showWhen": "yes",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "documentation-requirements-group"
+  },
+  {
+    "id": "additional-documentation",
+    "type": "textarea",
+    "title": "Additional Documentation Required",
+    "label": "Additional Documentation Required",
+    "placeholder": "Describe any additional documentation requirements",
+    "size": 12,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "documentation-requirements-group"
+  },
+  {
+    "id": "final-approval-group",
+    "type": "group",
+    "title": "Final Approval & Return to Service",
+    "description": "Final approval and return to service authorization",
+    "sectionId": "inspection-results-analysis",
+    "order": 6,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "inspection-completed",
+    "type": "radio",
+    "title": "Inspection Completed",
+    "label": "Inspection Completed",
+    "required": true,
+    "size": 6,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "final-approval-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Partial", "value": "partial"}
+    ]
+  },
+  {
+    "id": "return-to-service-approved",
+    "type": "select",
+    "title": "Return to Service Approved",
+    "label": "Return to Service Approved",
+    "placeholder": "Select approval status",
+    "required": true,
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "final-approval-group",
+    "options": [
+      {"label": "Approved", "value": "approved"},
+      {"label": "Conditional", "value": "conditional"},
+      {"label": "Not Approved", "value": "not-approved"}
+    ]
+  },
+  {
+    "id": "return-to-service-conditions",
+    "type": "textarea",
+    "title": "Return to Service Conditions",
+    "label": "Return to Service Conditions",
+    "placeholder": "Describe any conditions for return to service",
+    "size": 6,
+    "watchField": "return-to-service-approved",
+    "showWhen": "conditional",
+    "sectionId": "inspection-results-analysis",
+    "groupId": "final-approval-group"
+  },
+  {
+    "id": "inspection-date-completed",
+    "type": "date",
+    "title": "Inspection Date Completed",
+    "label": "Inspection Date Completed",
+    "required": true,
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "final-approval-group"
+  },
+  {
+    "id": "inspector-signature",
+    "type": "text",
+    "title": "Inspector Signature",
+    "label": "Inspector Signature",
+    "placeholder": "Enter inspector name",
+    "required": true,
+    "size": 6,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "final-approval-group"
+  },
+  {
+    "id": "final-notes-group",
+    "type": "group",
+    "title": "Final Notes & Summary",
+    "description": "Final notes and summary of inspection",
+    "sectionId": "inspection-results-analysis",
+    "order": 7,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "inspection-summary",
+    "type": "textarea",
+    "title": "Inspection Summary",
+    "label": "Inspection Summary",
+    "placeholder": "Provide a summary of the inspection findings and conclusions",
+    "size": 12,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "final-notes-group"
+  },
+  {
+    "id": "special-considerations",
+    "type": "textarea",
+    "title": "Special Considerations",
+    "label": "Special Considerations",
+    "placeholder": "Any special considerations or recommendations",
+    "size": 12,
+    "sectionId": "inspection-results-analysis",
+    "groupId": "final-notes-group"
+  }
+] 

@@ -1,0 +1,441 @@
+{
+  "id": "tenant-document",
+  "title": "Tenant Configuration",
+  "description": "Comprehensive tenant creation and management",
+  "layout": "dashboard",
+  "settings": {
+    "density": "comfortable",
+    "theme": "light",
+    "showHeader": true,
+    "showBreadcrumb": true
+  },
+  "gadgets": [
+    {
+      "id": "tenant-form",
+      "type": "document-form-gadget",
+      "title": "Tenant Information",
+      "description": "Create and manage tenant configurations including subscription plans, modules, admin users, and trial settings",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "fitContent": false,
+        "fullHeight": true,
+        "title": "Tenant Configuration",
+        "description": "Create and manage tenant with subscription plan, modules, and admin user setup",
+        "showSaveButton": true,
+        "showResetButton": true,
+        "showCancelButton": true,
+        "headerActions": {
+          "showClose": true,
+          "showMaximize": true,
+          "showMinimize": false
+        },
+        "dataUrl": "/api/multi-tenant/tenants/{id}",
+        "submitUrl": "/api/tenants/create-with-admin",
+        "updateUrl": "/api/multi-tenant/tenants/{id}",
+        "deleteUrl": "/api/multi-tenant/tenants/{id}",
+        "layout": "vertical",
+        "size": "large",
+        "mode": "form",
+        "onSaveSuccess": {
+          "message": "Tenant saved successfully!",
+          "action": "navigate",
+          "target": "back"
+        },
+        "onCancel": {
+          "action": "close"
+        },
+        "gadgetOptions": [
+          {
+            "id": "basic-info",
+            "title": "Basic Information",
+            "type": "section",
+            "size": 24,
+            "icon": "InfoCircleOutlined",
+            "order": 1
+          },
+          {
+            "sectionId": "basic-info",
+            "id": "basic-fields",
+            "title": "Tenant Details",
+            "type": "group",
+            "size": 24,
+            "icon": "FormOutlined"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "name",
+            "title": "Tenant Name",
+            "type": "text",
+            "label": "Tenant Name",
+            "placeholder": "e.g., Acme Corporation",
+            "required": true,
+            "size": 12,
+            "description": "Full business name of the tenant"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "slug",
+            "title": "Tenant Slug",
+            "type": "text",
+            "label": "Slug (URL-friendly)",
+            "placeholder": "e.g., acme-corp",
+            "required": true,
+            "size": 12,
+            "description": "Lowercase, no spaces (used in URLs)"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "orgId",
+            "title": "Organization",
+            "type": "select",
+            "label": "Parent Organization",
+            "placeholder": "Select organization",
+            "required": false,
+            "size": 12,
+            "optionsUrl": "/api/multi-tenant/organizations?format=options"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "status",
+            "title": "Status",
+            "type": "select",
+            "label": "Tenant Status",
+            "required": true,
+            "size": 12,
+            "options": [
+              { "label": "Active", "value": "active" },
+              { "label": "Suspended", "value": "suspended" },
+              { "label": "Inactive", "value": "inactive" }
+            ]
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "notes",
+            "title": "Notes",
+            "type": "textarea",
+            "label": "Internal Notes",
+            "placeholder": "Add any internal notes about this tenant",
+            "size": 24,
+            "rows": 3
+          },
+          {
+            "id": "plan-config",
+            "title": "Plan & Configuration",
+            "type": "section",
+            "size": 24,
+            "icon": "SettingOutlined",
+            "order": 2
+          },
+          {
+            "sectionId": "plan-config",
+            "id": "plan-fields",
+            "title": "Subscription Plan",
+            "type": "group",
+            "size": 12
+          },
+          {
+            "sectionId": "plan-config",
+            "groupId": "plan-fields",
+            "id": "plan",
+            "title": "Plan",
+            "type": "select",
+            "label": "Subscription Plan",
+            "required": true,
+            "size": 24,
+            "options": [
+              { "label": "IntelliFlex", "value": "IntelliFlex" },
+              { "label": "IntelliEnterprise", "value": "IntelliEnterprise" }
+            ]
+          },
+          {
+            "sectionId": "plan-config",
+            "groupId": "plan-fields",
+            "id": "tenantType",
+            "title": "Tenant Type",
+            "type": "select",
+            "label": "Tenant Type",
+            "required": true,
+            "size": 24,
+            "description": "Determines pricing model",
+            "options": [
+              { "label": "User-Based", "value": "user-based" },
+              { "label": "Facility-Based", "value": "facility-based" },
+              { "label": "Enterprise (Unlimited)", "value": "enterprise" }
+            ]
+          },
+          {
+            "sectionId": "plan-config",
+            "id": "limits-fields",
+            "title": "Usage Limits",
+            "type": "group",
+            "size": 12
+          },
+          {
+            "sectionId": "plan-config",
+            "groupId": "limits-fields",
+            "id": "maxUsers",
+            "title": "Max Users",
+            "type": "number",
+            "label": "Maximum Users",
+            "placeholder": "e.g., 50",
+            "size": 24,
+            "watchField": "tenantType",
+            "showWhen": "user-based",
+            "description": "Maximum number of users allowed"
+          },
+          {
+            "sectionId": "plan-config",
+            "groupId": "limits-fields",
+            "id": "maxFacilities",
+            "title": "Max Facilities",
+            "type": "number",
+            "label": "Maximum Facilities",
+            "placeholder": "e.g., 10",
+            "size": 24,
+            "watchField": "tenantType",
+            "showWhen": "facility-based",
+            "description": "Maximum number of facilities/sites"
+          },
+          {
+            "id": "trial-settings",
+            "title": "Trial Settings",
+            "type": "section",
+            "size": 24,
+            "icon": "ClockCircleOutlined",
+            "order": 3
+          },
+          {
+            "sectionId": "trial-settings",
+            "id": "trial-config",
+            "title": "Trial Configuration",
+            "type": "group",
+            "size": 24
+          },
+          {
+            "sectionId": "trial-settings",
+            "groupId": "trial-config",
+            "id": "trial.enabled",
+            "title": "Enable Trial",
+            "type": "switch",
+            "label": "Enable Trial Period",
+            "size": 12
+          },
+          {
+            "sectionId": "trial-settings",
+            "groupId": "trial-config",
+            "id": "trial.trialDays",
+            "title": "Trial Days",
+            "type": "number",
+            "label": "Trial Period (Days)",
+            "placeholder": "e.g., 30",
+            "size": 12,
+            "watchField": "trial.enabled",
+            "showWhen": true
+          },
+          {
+            "sectionId": "trial-settings",
+            "groupId": "trial-config",
+            "id": "trial.startMode",
+            "title": "Start Mode",
+            "type": "select",
+            "label": "Trial Start Mode",
+            "size": 12,
+            "watchField": "trial.enabled",
+            "showWhen": true,
+            "options": [
+              { "label": "Auto Start", "value": "auto" },
+              { "label": "Manual Start", "value": "manual" }
+            ]
+          },
+          {
+            "sectionId": "trial-settings",
+            "groupId": "trial-config",
+            "id": "trial.gracePeriodDays",
+            "title": "Grace Period",
+            "type": "number",
+            "label": "Grace Period (Days)",
+            "placeholder": "e.g., 7",
+            "size": 12,
+            "watchField": "trial.enabled",
+            "showWhen": true
+          },
+          {
+            "id": "module-selection",
+            "title": "Module Selection",
+            "type": "section",
+            "size": 24,
+            "icon": "AppstoreOutlined",
+            "order": 4
+          },
+          {
+            "sectionId": "module-selection",
+            "id": "module-list",
+            "title": "Active Modules",
+            "type": "group",
+            "size": 24
+          },
+          {
+            "sectionId": "module-selection",
+            "groupId": "module-list",
+            "id": "activeModules",
+            "title": "Modules",
+            "type": "checkbox_group",
+            "label": "Select Active Modules",
+            "size": 24,
+            "required": true,
+            "description": "Choose which modules this tenant can access",
+            "optionsUrl": "/api/multi-tenant/modules?format=options",
+            "labelField": "label",
+            "valueField": "value"
+          },
+          {
+            "id": "admin-user",
+            "title": "Tenant Admin User",
+            "type": "section",
+            "size": 24,
+            "icon": "UserOutlined",
+            "order": 5
+          },
+          {
+            "sectionId": "admin-user",
+            "id": "user-management",
+            "title": "Manage Tenant Users",
+            "type": "group",
+            "size": 24,
+            "collapsible": false,
+            "description": "Add, remove, and change user roles. Multiple users can have Tenant Admin role."
+          },
+          {
+            "sectionId": "admin-user",
+            "groupId": "user-management",
+            "id": "userMemberships",
+            "title": "Tenant User Management",
+            "type": "editable-grid",
+            "label": "Manage Tenant Users & Roles",
+            "size": 24,
+            "description": "Add, remove, and manage user roles for this tenant. Click 'Add' to add new users, 'Edit' to change roles, 'Delete' to remove access.",
+            "widgetProps": {
+              "columnsMeta": [
+                {
+                  "key": "userId",
+                  "title": "Select User",
+                  "type": "select",
+                  "editable": true,
+                  "width": 250,
+                  "optionsUrl": "/api/multi-tenant/users?format=options&tenantId={id}&excludeAssigned=true",
+                  "labelField": "label",
+                  "valueField": "value",
+                  "autoPopulate": {
+                    "userName": "name",
+                    "userEmail": "email"
+                  }
+                },
+                {
+                  "key": "userName",
+                  "title": "Name",
+                  "editable": false,
+                  "width": 200
+                },
+                {
+                  "key": "userEmail",
+                  "title": "Email",
+                  "editable": false,
+                  "width": 250
+                },
+                {
+                  "key": "role",
+                  "title": "Role",
+                  "type": "select",
+                  "editable": true,
+                  "width": 180,
+                  "options": [
+                    { "label": "👤 Tenant Admin", "value": "Tenant Admin" },
+                    { "label": "👨‍💼 Manager", "value": "Manager" },
+                    { "label": "👷 User", "value": "User" },
+                    { "label": "👁️ Viewer", "value": "Viewer" }
+                  ]
+                },
+                {
+                  "key": "createdAt",
+                  "title": "Added On",
+                  "editable": false,
+                  "width": 150
+                }
+              ],
+              "features": {
+                "enableSorting": true,
+                "enableFiltering": true,
+                "enablePagination": true,
+                "enableSelection": true,
+                "pageSizeOptions": [5, 10, 20],
+                "readOnly": false,
+                "bordered": true
+              }
+            }
+          },
+          {
+            "id": "subscription",
+            "title": "Subscription Details",
+            "type": "section",
+            "size": 24,
+            "icon": "CalendarOutlined",
+            "order": 6
+          },
+          {
+            "sectionId": "subscription",
+            "id": "subscription-term",
+            "title": "Subscription Term",
+            "type": "group",
+            "size": 24
+          },
+          {
+            "sectionId": "subscription",
+            "groupId": "subscription-term",
+            "id": "subscription.termStartAt",
+            "title": "Start Date",
+            "type": "date",
+            "label": "Subscription Start Date",
+            "required": true,
+            "size": 12
+          },
+          {
+            "sectionId": "subscription",
+            "groupId": "subscription-term",
+            "id": "subscription.termEndAt",
+            "title": "End Date",
+            "type": "date",
+            "label": "Subscription End Date",
+            "required": true,
+            "size": 12
+          },
+          {
+            "sectionId": "subscription",
+            "groupId": "subscription-term",
+            "id": "subscription.autoRenew",
+            "title": "Auto Renew",
+            "type": "switch",
+            "label": "Automatically Renew Subscription",
+            "size": 12
+          },
+          {
+            "sectionId": "subscription",
+            "groupId": "subscription-term",
+            "id": "subscription.gracePeriodDays",
+            "title": "Grace Period",
+            "type": "number",
+            "label": "Grace Period (Days)",
+            "placeholder": "e.g., 7",
+            "size": 12,
+            "description": "Days after expiry before access is cut off"
+          }
+        ]
+      }
+    }
+  ]
+}

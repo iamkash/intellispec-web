@@ -1,0 +1,55 @@
+{
+  "id": "intelliSCAFF-calculators",
+  "type": "dashboard",
+  "title": "Scaffolding Calculators",
+  "description": "Browse and access scaffolding calculation tools",
+  "icon": "CalculatorOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": []
+  },
+  "gadgets": [
+    {
+      "id": "calculators-mega-menu",
+      "type": "mega-menu-gadget",
+      "title": "Scaffolding Calculators",
+      "description": "Browse and access scaffolding calculation tools",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "dataUrl": "/api/calculators?module=scaffolding",
+        "dataPath": "calculators",
+        "title": "Scaffolding Calculators",
+        "itemType": "calculators",
+        "modulePath": "intelliSCAFF",
+        "workspacePath": "calculators",
+        "showDescriptions": true,
+        "enableSearch": true,
+        "enableCategoryFilter": true,
+        "enableTagFilter": true,
+        "enableFavorites": true,
+        "enableSorting": true,
+        "enableViewToggle": true,
+        "searchFields": ["label", "description", "tags"],
+        "cardSize": "medium"
+      }
+    }
+  ],
+  "smartDefaults": {
+    "calculators-mega-menu": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": true
+    }
+  }
+}
+
+
+
+
+
+

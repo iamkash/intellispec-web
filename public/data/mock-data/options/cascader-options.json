@@ -1,0 +1,40 @@
+{
+  "options": [
+    {
+      "label": "Level 1 - A",
+      "value": "level1_a",
+      "children": [
+        {
+          "label": "Level 2 - A1",
+          "value": "level2_a1",
+          "children": [
+            { "label": "Level 3 - A1a", "value": "level3_a1a" },
+            { "label": "Level 3 - A1b", "value": "level3_a1b" }
+          ]
+        },
+        {
+          "label": "Level 2 - A2",
+          "value": "level2_a2",
+          "children": [
+            { "label": "Level 3 - A2a", "value": "level3_a2a" },
+            { "label": "Level 3 - A2b", "value": "level3_a2b" }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "Level 1 - B",
+      "value": "level1_b",
+      "children": [
+        {
+          "label": "Level 2 - B1",
+          "value": "level2_b1",
+          "children": [
+            { "label": "Level 3 - B1a", "value": "level3_b1a" },
+            { "label": "Level 3 - B1b", "value": "level3_b1b" }
+          ]
+        }
+      ]
+    }
+  ]
+} 

@@ -1,0 +1,270 @@
+{
+  "total": 23,
+  "passed": 2,
+  "failed": 21,
+  "categories": {
+    "basic_counts": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "tests": [
+        {
+          "passed": false,
+          "response": "There are 9 companies.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "There are 15 sites (facilities) available in the data.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "There are 51 paintInvoice documents. If you mean paint types, the data only shows paint invoices and paint specifications; no explicit count of distinct paint types is provided.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "There are 51 paintInvoices.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        }
+      ]
+    },
+    "identification": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "tests": [
+        {
+          "passed": false,
+          "response": "I don’t have the data needed to determine which company has the most facilities. Please provide the dataset or specify the file/database to analyze.",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have the data needed to determine which paint has the highest VOC content. Please provide the dataset or specify the relevant records.",
+          "expectedPattern": "/^[A-Za-z0-9\\s\\-]+$/",
+          "description": "Should return product name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z0-9\\s\\-]+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have the dataset loaded. Please provide the relevant data showing facility paint consumption, or upload a table/report.",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-]+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have the data needed to determine who used the most paint. Please provide the dataset or specify the records to analyze.",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/"
+          ]
+        }
+      ]
+    },
+    "quantitative": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "tests": [
+        {
+          "passed": false,
+          "response": "I don’t have the data needed to answer that. Please provide the relevant dataset or context showing paint usage by Sherwin-Williams (company and facility) and the quantity.",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(gallons?|units?|liters?)?$/",
+          "description": "Should return quantity with optional unit",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+[\\d,]*(\\.\\d+)?\\s*(gallons?|units?|liters?)?$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have VOC content data in the provided documents. If you can share the VOC values from the paint specifications or related records, I can total them.",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(g\\/L|ppm|%)?$/",
+          "description": "Should return total VOC value",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+[\\d,]*(\\.\\d+)?\\s*(g\\/L|ppm|%)?$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have per-facility invoice counts in the provided data. You’ve got 51 paintInvoice documents overall, but no breakdown by company or facility. If you can share a subset with Berkeley Steel Mill or provide a facility-level count, I can compute it.",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Should return count for specific facility",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        }
+      ]
+    },
+    "temporal": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "I don’t have any data to determine the last paint purchase. Please provide the dataset or file containing purchase records.",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{4}-\\d{2}-\\d{2})/",
+          "description": "Should return a date",
+          "issues": [
+            "Response doesn't match expected pattern: /(January|February|March|April|May|June|July|August|September|October|November|December|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{4}-\\d{2}-\\d{2})/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have the data needed to determine paint consumption by month. Please provide the dataset or specify the source table with monthly paint consumption.",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December)/",
+          "description": "Should return month name",
+          "issues": [
+            "Response doesn't match expected pattern: /(January|February|March|April|May|June|July|August|September|October|November|December)/"
+          ]
+        }
+      ]
+    },
+    "comparative": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "I don’t have VOC data for Nova-Plate or Zinc Clad in the provided dataset. Please share the VOC values or the relevant data table.",
+          "expectedPattern": "/^(Nova-Plate|Zinc Clad)/",
+          "description": "Should return one of the compared products",
+          "issues": [
+            "Response doesn't match expected pattern: /^(Nova-Plate|Zinc Clad)/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have data to determine who spent more on paint between Sherwin-Williams and PPG. If you can provide the relevant expenditure figures or a dataset, I can compute it.",
+          "expectedPattern": "/^(Sherwin-Williams|PPG)/",
+          "description": "Should return one of the compared companies",
+          "issues": [
+            "Response doesn't match expected pattern: /^(Sherwin-Williams|PPG)/"
+          ]
+        }
+      ]
+    },
+    "complex_analysis": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "tests": [
+        {
+          "passed": false,
+          "response": "I don’t have the data needed to determine which facility has the highest average VOC per invoice. Please provide the dataset or specify the relevant tables/values (facilities, VOC per invoice, and invoice amounts/dates).",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name after complex calculation",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-]+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have enough data here to determine the percentage of total paint consumption that is high-VOC. The available data only lists document counts by type (asset, asset_group, company, paintInvoice, paint_specifications, site) and some sample document identifiers, but no consumption or VOC-specific metrics.\n\nIf you can provide:\n- A dataset showing total paint consumption quantities, and\n- A field indicating VOC level",
+          "expectedPattern": "/^\\d+(\\.\\d+)?%?$/",
+          "description": "Should return percentage",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+(\\.\\d+)?%?$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have enough data to determine which company has the most diverse paint portfolio. Please provide the dataset or specify the companies and their product portfolios.",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name after diversity analysis",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/"
+          ]
+        }
+      ]
+    },
+    "aggregation": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "I don’t have consumption data by company in the provided documents. The data catalog only lists document counts by type (e.g., paint invoices, paint specifications, etc.) and sample document IDs, not consumption figures. If you can provide the relevant metrics or documents containing consumption figures, I can summarize by company.",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return company breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "I don’t have the data needed to compute average VOC content by manufacturer. Please provide the dataset or specify the records (manufacturer, VOC content) to calculate the average.",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return manufacturer breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/"
+          ]
+        }
+      ]
+    },
+    "edge_cases": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "tests": [
+        {
+          "passed": true,
+          "response": "I don’t have any document IDs available in the current data. If you provide a dataset or specify the source, I can extract and list the document IDs.",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT contain any doc_ IDs",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "I don’t have a system ID for Sherwin-Williams in the provided data. If you provide the dataset or specify the source, I can look it up.",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT expose system IDs",
+          "issues": []
+        },
+        {
+          "passed": false,
+          "response": "I don’t have any data for a paint brand named XYZ123. If you have a specific dataset or file, please share details (company name, facility, product, and date) and I’ll extract the exact answers.",
+          "expectedPattern": "/^(No data|Not found|0|None|No data available)/",
+          "description": "Should handle non-existent data gracefully",
+          "issues": [
+            "Response doesn't match expected pattern: /^(No data|Not found|0|None|No data available)/"
+          ]
+        }
+      ]
+    }
+  }
+}

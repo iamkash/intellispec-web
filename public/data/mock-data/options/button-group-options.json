@@ -1,0 +1,7 @@
+{
+  "options": [
+    { "label": "Button 1", "value": "button1" },
+    { "label": "Button 2", "value": "button2" },
+    { "label": "Button 3", "value": "button3" }
+  ]
+} 

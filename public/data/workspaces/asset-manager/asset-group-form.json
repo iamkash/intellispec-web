@@ -1,0 +1,587 @@
+{
+  "id": "asset-group-form-workspace",
+  "title": "Asset Group Management",
+  "description": "Process unit/asset group management with classification and capacity details",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "asset-group-form-gadget",
+      "type": "document-form-gadget",
+      "title": "Asset Group Information",
+      "description": "Process unit/area classification with operational and risk parameters",
+      "position": 24,
+      "config": {
+        "title": "Asset Group Information",
+        "description": "Process unit/area classification with operational and risk parameters",
+        "documentType": "asset_group",
+        "dataUrl": "/api/documents/{id}?type=asset_group",
+        "submitUrl": "/api/documents",
+        "submitMethod": "POST",
+        "updateUrl": "/api/documents/{id}",
+        "updateMethod": "PUT",
+        "deleteUrl": "/api/documents/{id}",
+        "deleteMethod": "DELETE",
+        "layout": "vertical",
+        "size": "large",
+        "enableValidation": true,
+        "showSaveButton": true,
+        "showResetButton": true,
+        "showCancelButton": true,
+        "headerActions": {
+          "showClose": true,
+          "showMaximize": true,
+          "showMinimize": false
+        },
+        "fitContent": false,
+        "fullHeight": true,
+        "autoSave": false,
+        "mode": "form",
+        "onSaveSuccess": {
+          "action": "navigate",
+          "target": "asset-manager/asset-management",
+          "message": "Asset Group saved successfully!"
+        },
+        "onSaveError": {
+          "message": "Failed to save asset group. Please try again."
+        },
+        "onCancel": {
+          "action": "close"
+        },
+        "gadgetOptions": [
+          {
+            "id": "basic_info_section",
+            "type": "section",
+            "title": "Basic Information",
+            "description": "Asset group identification and site assignment",
+            "icon": "AppstoreOutlined",
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "basic_info_section",
+            "id": "basic_details_group",
+            "type": "group",
+            "title": "Asset Group Details",
+            "size": 24,
+            "order": 1,
+            "collapsible": false
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "site_id",
+            "type": "select",
+            "title": "Site",
+            "label": "Site/Facility",
+            "placeholder": "Select site",
+            "required": true,
+            "size": 24,
+            "order": 1,
+            "optionsUrl": "/api/documents?type=site",
+            "optionsPath": "data",
+            "optionsValueField": "id",
+            "optionsLabelField": "name",
+            "disableWhenPrePopulated": true,
+            "prePopulatedFieldType": "text",
+            "prePopulatedLabel": "Site (Pre-selected)",
+            "prePopulatedDisplayField": "_site_id_name",
+            "fetchDisplayName": {
+              "url": "/api/documents/{id}?type=site",
+              "displayField": "name",
+              "storeAs": "_site_id_name"
+            }
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "name",
+            "type": "text",
+            "title": "Asset Group Name",
+            "label": "Asset Group Name",
+            "placeholder": "Enter asset group/unit name",
+            "required": true,
+            "size": 12,
+            "order": 2
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "code",
+            "type": "text",
+            "title": "Asset Group Code",
+            "label": "Asset Group Code",
+            "placeholder": "e.g., CRUDE01",
+            "required": true,
+            "size": 12,
+            "order": 3,
+            "description": "Unique unit identifier (SAP Functional Location)"
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "group_type",
+            "type": "select",
+            "title": "Group Type",
+            "label": "Asset Group Type",
+            "placeholder": "Select group type",
+            "required": false,
+            "size": 8,
+            "order": 4,
+            "dependsOn": "site_id",
+            "dependentOptionsUrl": "/api/reference-data/list-options/asset_group_types_by_site/{parentValue}",
+            "optionsValueField": "value",
+            "optionsLabelField": "label",
+            "options": []
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "status",
+            "type": "select",
+            "title": "Status",
+            "label": "Status",
+            "placeholder": "Select status",
+            "required": true,
+            "size": 8,
+            "order": 5,
+            "defaultValue": "active",
+            "optionsUrl": "/api/reference-data/list-options/general_status",
+            "optionsPath": "data",
+            "optionsValueField": "value",
+            "optionsLabelField": "label",
+            "options": []
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "criticality",
+            "type": "select",
+            "title": "Criticality",
+            "label": "Business Criticality",
+            "placeholder": "Select criticality",
+            "required": false,
+            "size": 8,
+            "order": 6,
+            "options": [
+              { "value": "critical", "label": "Critical" },
+              { "value": "high", "label": "High" },
+              { "value": "medium", "label": "Medium" },
+              { "value": "low", "label": "Low" }
+            ]
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "description",
+            "type": "textarea",
+            "title": "Description",
+            "label": "Description",
+            "placeholder": "Enter asset group description",
+            "required": false,
+            "size": 24,
+            "order": 7,
+            "props": {
+              "rows": 3,
+              "showCount": true,
+              "maxLength": 1000
+            }
+          },
+          {
+            "id": "classification_section",
+            "type": "section",
+            "title": "Classification & Risk",
+            "description": "Process classification and risk assessment",
+            "icon": "ClusterOutlined",
+            "size": 24,
+            "order": 2
+          },
+          {
+            "sectionId": "classification_section",
+            "id": "classification_group",
+            "type": "group",
+            "title": "Process Classification",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "process_type",
+            "type": "select",
+            "title": "Process Type",
+            "label": "Process Type",
+            "placeholder": "Select process type",
+            "required": false,
+            "size": 12,
+            "order": 1,
+            "options": [
+              { "value": "production", "label": "Production" },
+              { "value": "processing", "label": "Processing" },
+              { "value": "storage", "label": "Storage" },
+              { "value": "utilities", "label": "Utilities" },
+              { "value": "support", "label": "Support" },
+              { "value": "safety", "label": "Safety Systems" },
+              { "value": "environmental", "label": "Environmental" }
+            ]
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "process_category",
+            "type": "select",
+            "title": "Process Category",
+            "label": "Process Category",
+            "placeholder": "Select category",
+            "required": false,
+            "size": 12,
+            "order": 2,
+            "options": [
+              { "value": "continuous", "label": "Continuous" },
+              { "value": "batch", "label": "Batch" },
+              { "value": "semi_continuous", "label": "Semi-Continuous" },
+              { "value": "intermittent", "label": "Intermittent" }
+            ]
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "risk_level",
+            "type": "select",
+            "title": "Risk Level",
+            "label": "Risk Level",
+            "placeholder": "Select risk level",
+            "required": false,
+            "size": 8,
+            "order": 3,
+            "options": [
+              { "value": "very_high", "label": "Very High" },
+              { "value": "high", "label": "High" },
+              { "value": "medium", "label": "Medium" },
+              { "value": "low", "label": "Low" },
+              { "value": "very_low", "label": "Very Low" }
+            ],
+            "description": "Based on PSM/RMP assessment"
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "hazardous_material",
+            "type": "switch",
+            "title": "Hazardous Material",
+            "label": "Contains Hazardous Material",
+            "required": false,
+            "size": 8,
+            "order": 4,
+            "defaultValue": false
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "high_pressure",
+            "type": "switch",
+            "title": "High Pressure",
+            "label": "High Pressure Process",
+            "required": false,
+            "size": 8,
+            "order": 5,
+            "defaultValue": false,
+            "description": "> 150 PSI"
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "high_temperature",
+            "type": "switch",
+            "title": "High Temperature",
+            "label": "High Temperature Process",
+            "required": false,
+            "size": 8,
+            "order": 6,
+            "defaultValue": false,
+            "description": "> 300°F"
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "confined_space",
+            "type": "switch",
+            "title": "Confined Space",
+            "label": "Confined Space Entry Required",
+            "required": false,
+            "size": 8,
+            "order": 7,
+            "defaultValue": false
+          },
+          {
+            "sectionId": "classification_section",
+            "groupId": "classification_group",
+            "id": "hot_work_permit",
+            "type": "switch",
+            "title": "Hot Work Permit",
+            "label": "Hot Work Permit Required",
+            "required": false,
+            "size": 8,
+            "order": 8,
+            "defaultValue": false
+          },
+          {
+            "id": "capacity_section",
+            "type": "section",
+            "title": "Capacity & Performance",
+            "description": "Operational capacity and performance metrics",
+            "icon": "DashboardOutlined",
+            "size": 24,
+            "order": 3
+          },
+          {
+            "sectionId": "capacity_section",
+            "id": "capacity_group",
+            "type": "group",
+            "title": "Capacity Information",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "capacity_section",
+            "groupId": "capacity_group",
+            "id": "design_capacity",
+            "type": "number",
+            "title": "Design Capacity",
+            "label": "Design Capacity",
+            "placeholder": "Enter design capacity",
+            "required": false,
+            "size": 8,
+            "order": 1,
+            "description": "Nameplate capacity"
+          },
+          {
+            "sectionId": "capacity_section",
+            "groupId": "capacity_group",
+            "id": "current_capacity",
+            "type": "number",
+            "title": "Current Capacity",
+            "label": "Current Operating Capacity",
+            "placeholder": "Enter current capacity",
+            "required": false,
+            "size": 8,
+            "order": 2
+          },
+          {
+            "sectionId": "capacity_section",
+            "groupId": "capacity_group",
+            "id": "capacity_unit",
+            "type": "text",
+            "title": "Capacity Unit",
+            "label": "Capacity Unit",
+            "placeholder": "e.g., BPD, tons/day, MMSCFD",
+            "required": false,
+            "size": 8,
+            "order": 3
+          },
+          {
+            "sectionId": "capacity_section",
+            "groupId": "capacity_group",
+            "id": "utilization",
+            "type": "number",
+            "title": "Utilization",
+            "label": "Current Utilization (%)",
+            "placeholder": "0-100",
+            "required": false,
+            "size": 8,
+            "order": 4,
+            "props": {
+              "min": 0,
+              "max": 100,
+              "precision": 1
+            }
+          },
+          {
+            "sectionId": "capacity_section",
+            "groupId": "capacity_group",
+            "id": "availability_target",
+            "type": "number",
+            "title": "Availability Target",
+            "label": "Target Availability (%)",
+            "placeholder": "e.g., 95",
+            "required": false,
+            "size": 8,
+            "order": 5,
+            "props": {
+              "min": 0,
+              "max": 100,
+              "precision": 1
+            },
+            "description": "Uptime target %"
+          },
+          {
+            "sectionId": "capacity_section",
+            "groupId": "capacity_group",
+            "id": "reliability_target",
+            "type": "number",
+            "title": "Reliability Target",
+            "label": "Target Reliability (%)",
+            "placeholder": "e.g., 98",
+            "required": false,
+            "size": 8,
+            "order": 6,
+            "props": {
+              "min": 0,
+              "max": 100,
+              "precision": 1
+            }
+          },
+          {
+            "id": "maintenance_section",
+            "type": "section",
+            "title": "Maintenance & Inspection",
+            "description": "Maintenance strategy and inspection requirements",
+            "icon": "ToolOutlined",
+            "size": 24,
+            "order": 4
+          },
+          {
+            "sectionId": "maintenance_section",
+            "id": "maintenance_group",
+            "type": "group",
+            "title": "Maintenance Strategy",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "maintenance_section",
+            "groupId": "maintenance_group",
+            "id": "maintenance_strategy",
+            "type": "select",
+            "title": "Maintenance Strategy",
+            "label": "Maintenance Strategy",
+            "placeholder": "Select strategy",
+            "required": false,
+            "size": 12,
+            "order": 1,
+            "options": [
+              { "value": "reactive", "label": "Reactive (Run-to-Failure)" },
+              { "value": "preventive", "label": "Preventive (Time-Based)" },
+              { "value": "predictive", "label": "Predictive (Condition-Based)" },
+              { "value": "reliability_centered", "label": "Reliability Centered (RCM)" },
+              { "value": "total_productive", "label": "Total Productive Maintenance (TPM)" }
+            ]
+          },
+          {
+            "sectionId": "maintenance_section",
+            "groupId": "maintenance_group",
+            "id": "inspection_frequency",
+            "type": "select",
+            "title": "Inspection Frequency",
+            "label": "Inspection Frequency",
+            "placeholder": "Select frequency",
+            "required": false,
+            "size": 12,
+            "order": 2,
+            "options": [
+              { "value": "daily", "label": "Daily" },
+              { "value": "weekly", "label": "Weekly" },
+              { "value": "monthly", "label": "Monthly" },
+              { "value": "quarterly", "label": "Quarterly" },
+              { "value": "semi_annual", "label": "Semi-Annual" },
+              { "value": "annual", "label": "Annual" },
+              { "value": "biennial", "label": "Biennial (2 years)" },
+              { "value": "custom", "label": "Custom" }
+            ]
+          },
+          {
+            "sectionId": "maintenance_section",
+            "groupId": "maintenance_group",
+            "id": "turnaround_frequency",
+            "type": "number",
+            "title": "Turnaround Frequency",
+            "label": "Turnaround Frequency (years)",
+            "placeholder": "e.g., 4",
+            "required": false,
+            "size": 8,
+            "order": 3,
+            "description": "Major turnaround cycle"
+          },
+          {
+            "sectionId": "maintenance_section",
+            "groupId": "maintenance_group",
+            "id": "last_turnaround_date",
+            "type": "date",
+            "title": "Last Turnaround",
+            "label": "Last Turnaround Date",
+            "placeholder": "Select date",
+            "required": false,
+            "size": 8,
+            "order": 4
+          },
+          {
+            "sectionId": "maintenance_section",
+            "groupId": "maintenance_group",
+            "id": "next_turnaround_date",
+            "type": "date",
+            "title": "Next Turnaround",
+            "label": "Next Turnaround Date",
+            "placeholder": "Select date",
+            "required": false,
+            "size": 8,
+            "order": 5
+          },
+          {
+            "id": "additional_section",
+            "type": "section",
+            "title": "Additional Information",
+            "description": "Tags and supplementary data",
+            "icon": "TagsOutlined",
+            "size": 24,
+            "order": 5
+          },
+          {
+            "sectionId": "additional_section",
+            "id": "additional_group",
+            "type": "group",
+            "title": "Tags & Notes",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "additional_section",
+            "groupId": "additional_group",
+            "id": "tags",
+            "type": "tags",
+            "title": "Tags",
+            "label": "Tags",
+            "placeholder": "Add tags (press Enter)",
+            "required": false,
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "additional_section",
+            "groupId": "additional_group",
+            "id": "notes",
+            "type": "textarea",
+            "title": "Internal Notes",
+            "label": "Internal Notes",
+            "placeholder": "Internal administrative notes",
+            "required": false,
+            "size": 24,
+            "order": 2,
+            "props": {
+              "rows": 4,
+              "showCount": true,
+              "maxLength": 2000
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
+}

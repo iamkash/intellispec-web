@@ -1,0 +1,201 @@
+{
+  "id": "home",
+  "title": "Project Management Dashboard",
+  "description": "Comprehensive project management dashboard with quick actions, KPIs, and project overview",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "quick-actions",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "config": {
+        "dataUrl": "/data/mock-data/home/quick-actions.json",
+        "dataPath": "actions",
+        "layout": "horizontal",
+        "maxItems": 5,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "large",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "create-project",
+            "label": "Create Project",
+            "icon": "PlusOutlined",
+            "type": "primary",
+            "route": "/projects/create"
+          },
+          {
+            "key": "add-task",
+            "label": "Add Task",
+            "icon": "CheckSquareOutlined",
+            "type": "default",
+            "route": "/tasks/create"
+          },
+          {
+            "key": "log-hours",
+            "label": "Log Hours",
+            "icon": "ClockCircleOutlined",
+            "type": "default",
+            "route": "/timesheet/log"
+          },
+          {
+            "key": "report-issue",
+            "label": "Report Issue",
+            "icon": "ExclamationCircleOutlined",
+            "type": "default",
+            "route": "/issues/report"
+          },
+          {
+            "key": "request-approval",
+            "label": "Request Approval",
+            "icon": "CheckCircleOutlined",
+            "type": "default",
+            "route": "/approvals/request"
+          }
+        ]
+      },
+      "position": 24
+    },
+    {
+      "id": "kpi-summary",
+      "type": "kpi-gadget",
+      "title": "KPI Summary",
+      "config": {
+        "dataUrl": "/data/mock-data/home/kpi-summary.json",
+        "dataPath": "kpis",
+        "maxItems": 4,
+        "autoRefresh": true,
+        "refreshInterval": 300000
+      },
+      "position": 24
+    },
+    {
+      "id": "active-projects",
+      "type": "card-selector-gadget",
+      "title": "Active Projects",
+      "config": {
+        "dataUrl": "/data/mock-data/home/my-projects.json",
+        "dataPath": "projects",
+        "maxItems": 8,
+        "showSearch": true,
+        "showFilters": true,
+        "searchPlaceholder": "Search projects...",
+        "cardLayout": "grid",
+        "showActionButtons": true,
+        "actionButtons": [
+          {
+            "key": "view-all",
+            "label": "View All Projects",
+            "type": "link",
+            "route": "/projects"
+          },
+          {
+            "key": "create-new",
+            "label": "Create New Project",
+            "type": "primary",
+            "route": "/projects/create"
+          }
+        ],
+        "cardConfig": {
+          "showImage": false,
+          "showStatus": true,
+          "showProgress": true,
+          "showClient": true,
+          "showIndustry": true,
+          "showDueDate": true,
+          "showTags": true,
+          "showOwner": true,
+          "showOpenTasks": true
+        }
+      },
+      "position": 24
+    },
+    
+    {
+      "id": "workload-snapshot",
+      "type": "stats-gadget",
+      "title": "Resource Utilization",
+      "config": {
+        "dataUrl": "/data/mock-data/home/workload-snapshot.json",
+        "dataPath": "workload",
+        "maxItems": 4,
+        "layout": "grid",
+        "showTrends": true,
+        "showIcons": true,
+        "size": "medium"
+      },
+      "position": 24
+    },
+    {
+      "id": "recent-activity",
+      "type": "activity-feed-gadget",
+      "title": "Recent Activity",
+      "config": {
+        "dataUrl": "/data/mock-data/home/recent-activity.json",
+        "dataPath": "activities",
+        "maxItems": 8,
+        "showTimestamp": true,
+        "showAvatar": true,
+        "showTags": true,
+        "enableSearch": false,
+        "enableFilters": false,
+        "maxHeight": 350,
+        "compact": true
+      },
+      "position": 24
+    },
+    {
+      "id": "risks-issues",
+      "type": "activity-feed-gadget",
+      "title": "Risks & Issues",
+      "config": {
+        "dataUrl": "/data/mock-data/home/risks-issues.json",
+        "dataPath": "issues",
+        "maxItems": 6,
+        "showTimestamp": true,
+        "showAvatar": false,
+        "showTags": true,
+        "enableSearch": false,
+        "enableFilters": true,
+        "maxHeight": 350,
+        "compact": true,
+        "showSeverity": true
+      },
+      "position": 24
+    },{
+      "id": "upcoming-milestones",
+      "type": "activity-feed-gadget",
+      "title": "Upcoming Milestones",
+      "config": {
+        "dataUrl": "/data/mock-data/home/upcoming-milestones.json",
+        "dataPath": "milestones",
+        "maxItems": 6,
+        "showTimestamp": true,
+        "showAvatar": false,
+        "showTags": true,
+        "enableSearch": false,
+        "enableFilters": true,
+        "maxHeight": 300,
+        "compact": true,
+        "showCalendar": true
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": false,
+    "enablePrint": false
+  },
+  "metadata": {
+    "created": "2024-01-15T10:00:00Z",
+    "version": "2.0.0",
+    "tags": ["home", "dashboard", "project-management", "kpis", "milestones"],
+    "description": "Comprehensive project management dashboard with quick actions, KPI summary, active projects, milestones, workload, and activity tracking."
+  }
+} 

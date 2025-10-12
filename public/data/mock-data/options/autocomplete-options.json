@@ -1,0 +1,9 @@
+{
+  "options": [
+    { "label": "Auto Option 1", "value": "auto1" },
+    { "label": "Auto Option 2", "value": "auto2" },
+    { "label": "Auto Option 3", "value": "auto3" },
+    { "label": "Auto Option 4", "value": "auto4" },
+    { "label": "Auto Option 5", "value": "auto5" }
+  ]
+} 

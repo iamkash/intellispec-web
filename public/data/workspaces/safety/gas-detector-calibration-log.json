@@ -1,0 +1,26 @@
+{
+  "id": "gas-detector-calibration-log",
+  "title": "Gas Detector Calibration Log",
+  "description": "Record calibration events for gas detectors.",
+  "gadgets": [
+    {
+      "id": "gas-detector-calibration-log-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Calibration Log",
+      "config": {
+        "sections": [
+          { "id": "cal_events", "title": "Calibration Events", "includeInPdf": true, "grid": { "title": "Events", "dataKey": "events", "columns": [ { "key": "deviceId", "title": "Device ID", "editable": true }, { "key": "date", "title": "Date", "editable": true }, { "key": "gas", "title": "Calibration Gas", "editable": true }, { "key": "pass", "title": "Pass (Yes/No)", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "eventsPopulate", "btnLabel": "Populate from AI" } },
+          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+        ],
+        "groups": [ { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
+        "fields": [ { "id": "technician", "label": "Technician", "type": "text", "groupId": "signoff_group", "lgSpan": 12 }, { "id": "date", "label": "Date", "type": "date", "groupId": "signoff_group", "lgSpan": 12 } ],
+        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Calibration Log", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
+        "prompts": { "eventsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 600, "temperature": 0.3 }, "promptConfig": { "systemPrompt": "Draft calibration events from transcript (if provided). JSON array only.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"deviceId\": \"string\", \"date\": \"YYYY-MM-DD\", \"gas\": \"string\", \"pass\": \"Yes|No\", \"notes\": \"string\" } ]" } } }
+      },
+      "position": 24
+    }
+  ]
+}
+
+
+

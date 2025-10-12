@@ -1,0 +1,112 @@
+{
+  "asset_hierarchy_reference": {
+    "description": "Quick reference for industry-specific asset management",
+    "hierarchy_levels": [
+      "Company (Root)",
+      "Site (Facility/Location)",
+      "Asset Group (Logical Grouping)",
+      "Asset (Individual Equipment/Item)"
+    ],
+    
+    "industries_supported": {
+      "oil_gas": {
+        "site_types": ["refinery", "drilling_platform", "pipeline_station", "tank_farm", "gas_plant", "petrochemical_complex"],
+        "key_asset_groups": ["drilling_equipment", "processing_units", "pipeline_systems", "safety_systems", "compressors"],
+        "compliance_standards": ["API", "ANSI", "ATEX", "SIL"],
+        "example_assets": ["drilling_rig", "pump", "compressor", "valve", "pressure_vessel", "heat_exchanger"]
+      },
+      
+      "power_generation": {
+        "site_types": ["power_plant", "substation", "wind_farm", "solar_farm", "hydroelectric_dam", "nuclear_facility"],
+        "key_asset_groups": ["generators", "turbines", "transformers", "switchgear", "control_systems"],
+        "compliance_standards": ["IEEE", "NEMA", "Arc Flash"],
+        "example_assets": ["generator", "turbine", "transformer", "switchgear", "motor", "boiler"]
+      },
+      
+      "chemicals": {
+        "site_types": ["chemical_plant", "reactor_facility", "distillation_unit", "storage_terminal", "blending_facility"],
+        "key_asset_groups": ["reactors", "distillation_columns", "mixers", "crystallizers", "filtration_systems"],
+        "compliance_standards": ["ATEX", "Material Compatibility"],
+        "example_assets": ["reactor", "distillation_column", "mixer", "crystallizer", "filter", "centrifuge"]
+      },
+      
+      "manufacturing": {
+        "site_types": ["assembly_plant", "fabrication_shop", "machining_center", "quality_lab", "distribution_center"],
+        "key_asset_groups": ["production_lines", "machining_centers", "assembly_stations", "quality_control", "robotics"],
+        "compliance_standards": ["ISO 9001", "Lean Manufacturing"],
+        "example_assets": ["cnc_machine", "lathe", "mill", "press", "robot", "conveyor_belt"]
+      },
+      
+      "pharmaceutical": {
+        "site_types": ["pharmaceutical_plant", "research_lab", "clean_room_facility", "packaging_facility", "clinical_site"],
+        "key_asset_groups": ["bioreactors", "clean_room_equipment", "sterilization_systems", "tablet_presses", "analytical_instruments"],
+        "compliance_standards": ["GMP", "FDA", "ISO 14644"],
+        "example_assets": ["bioreactor", "tablet_press", "capsule_filler", "sterilizer", "chromatograph"]
+      },
+      
+      "maritime": {
+        "site_types": ["shipyard", "port_terminal", "dry_dock", "marine_base", "offshore_platform", "vessel"],
+        "key_asset_groups": ["propulsion_systems", "navigation_equipment", "cargo_handling", "deck_machinery", "life_safety"],
+        "compliance_standards": ["IMO", "Class Society", "MARPOL"],
+        "example_assets": ["engine", "propeller", "rudder", "anchor", "winch", "crane", "radar"]
+      },
+      
+      "paint_manufacturing": {
+        "site_types": ["paint_factory", "mixing_facility", "color_lab", "coating_plant", "resin_production"],
+        "key_asset_groups": ["mixing_equipment", "grinding_mills", "dispersers", "filling_lines", "quality_testing"],
+        "compliance_standards": ["VOC", "REACH"],
+        "example_assets": ["ball_mill", "sand_mill", "high_speed_disperser", "filling_machine", "color_matcher"]
+      },
+      
+      "scaffolding_services": {
+        "site_types": ["scaffolding_yard", "equipment_depot", "training_center", "project_site"],
+        "key_asset_groups": ["scaffolding_components", "access_equipment", "safety_equipment", "lifting_equipment"],
+        "compliance_standards": ["BS EN", "Load Capacity", "Fall Protection"],
+        "example_assets": ["scaffold_tube", "scaffold_board", "coupler", "ladder", "safety_harness"]
+      }
+    },
+    
+    "enhanced_features": {
+      "compliance_tracking": {
+        "fields": ["api_rating", "pressure_rating", "explosion_proof", "sil_rating", "ieee_standard", "nema_rating", "gmp_qualified", "fda_approved", "imo_certified", "voc_compliant", "bs_en_standard"],
+        "description": "Industry-specific compliance and certification tracking"
+      },
+      
+      "safety_management": {
+        "fields": ["hazard_classification", "safety_procedures", "ppe_required", "emergency_contacts", "msds_reference", "inspection_dates"],
+        "description": "Comprehensive safety and risk management"
+      },
+      
+      "operational_parameters": {
+        "fields": ["operating_temperature", "operating_pressure", "capacity", "efficiency_rating", "energy_consumption"],
+        "description": "Real-time operational monitoring and optimization"
+      },
+      
+      "maintenance_tracking": {
+        "fields": ["maintenance_type", "criticality", "downtime_cost_per_hour", "service_intervals"],
+        "description": "Advanced maintenance planning and cost tracking"
+      },
+      
+      "regulatory_compliance": {
+        "site_level": ["environmental_permits", "operating_licenses", "safety_certifications", "inspection_schedules"],
+        "description": "Site-level regulatory and environmental compliance"
+      }
+    },
+    
+    "example_hierarchy": {
+      "company": "ACME Industrial Corp",
+      "site": "Houston Refinery (refinery)",
+      "asset_groups": [
+        "Crude Distillation Unit (processing_units)",
+        "Compressor Station (compressors)",
+        "Tank Farm (storage_tanks)"
+      ],
+      "assets": [
+        "CDU-001 Atmospheric Tower (distillation_column)",
+        "P-101 Crude Charge Pump (pump)",
+        "C-201 Recycle Gas Compressor (compressor)",
+        "T-301 Crude Storage Tank (tank)"
+      ]
+    }
+  }
+}

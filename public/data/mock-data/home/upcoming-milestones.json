@@ -1,0 +1,82 @@
+{
+  "milestones": [
+    {
+      "id": "milestone-001",
+      "title": "Dow Chemical - Level 4 Installation Complete",
+      "description": "Complete scaffolding installation for maintenance access",
+      "project": "Dow Chemical Plant Scaffolding",
+      "dueDate": "2024-01-20",
+      "status": "upcoming",
+      "priority": "high",
+      "assignedTo": "John Doe",
+      "type": "installation",
+      "tags": ["Scaffolding", "Installation", "Chemical Plant"],
+      "timestamp": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "milestone-002",
+      "title": "ExxonMobil - Safety Inspection",
+      "description": "Conduct safety inspection for refinery tower access",
+      "project": "ExxonMobil Refinery Tower Access",
+      "dueDate": "2024-01-22",
+      "status": "upcoming",
+      "priority": "high",
+      "assignedTo": "John Doe",
+      "type": "inspection",
+      "tags": ["Safety", "Inspection", "Refinery"],
+      "timestamp": "2024-01-15T09:15:00Z"
+    },
+    {
+      "id": "milestone-003",
+      "title": "Shell Pipeline - Bridge Installation",
+      "description": "Begin bridge scaffolding installation for pipeline maintenance",
+      "project": "Shell Pipeline Bridge Scaffolding",
+      "dueDate": "2024-01-25",
+      "status": "upcoming",
+      "priority": "medium",
+      "assignedTo": "John Doe",
+      "type": "installation",
+      "tags": ["Pipeline", "Bridge", "Installation"],
+      "timestamp": "2024-01-15T08:45:00Z"
+    },
+    {
+      "id": "milestone-004",
+      "title": "BASF - Safety Permits Approval",
+      "description": "Obtain safety permits for plant maintenance operations",
+      "project": "BASF Plant Maintenance Scaffolding",
+      "dueDate": "2024-01-28",
+      "status": "pending",
+      "priority": "high",
+      "assignedTo": "John Doe",
+      "type": "approval",
+      "tags": ["Permits", "Safety", "Approval"],
+      "timestamp": "2024-01-15T07:30:00Z"
+    },
+    {
+      "id": "milestone-005",
+      "title": "Marathon Petroleum - Level 3 Complete",
+      "description": "Complete Level 3 scaffolding for catalytic cracking unit",
+      "project": "Marathon Petroleum Unit Scaffolding",
+      "dueDate": "2024-01-30",
+      "status": "in-progress",
+      "priority": "medium",
+      "assignedTo": "John Doe",
+      "type": "installation",
+      "tags": ["Catalytic Cracking", "Installation", "Refinery"],
+      "timestamp": "2024-01-15T06:20:00Z"
+    },
+    {
+      "id": "milestone-006",
+      "title": "Chevron - Final Documentation",
+      "description": "Complete project documentation and handover",
+      "project": "Chevron Storage Tank Scaffolding",
+      "dueDate": "2024-02-01",
+      "status": "upcoming",
+      "priority": "medium",
+      "assignedTo": "John Doe",
+      "type": "documentation",
+      "tags": ["Documentation", "Handover", "Completion"],
+      "timestamp": "2024-01-15T05:10:00Z"
+    }
+  ]
+} 

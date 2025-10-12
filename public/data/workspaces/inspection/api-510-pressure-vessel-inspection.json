@@ -1,0 +1,152 @@
+{
+  "id": "api-510-pressure-vessel-inspection",
+  "type": "wizard",
+  "title": "API 510 Pressure Vessel Inspection",
+  "description": "Comprehensive API 510 pressure vessel inspection wizard with all required sections and workflows",
+  "icon": "SafetyCertificateOutlined",
+  "mode": "wizard",
+  "layout": "form",
+  "gadgets": [
+    {
+      "id": "api-510-wizard-gadget",
+      "type": "document-form-gadget",
+      "title": "API 510 Pressure Vessel Inspection",
+      "description": "Complete the API 510 pressure vessel inspection process step by step",
+      "position": 24,
+      "config": {
+        "dataUrl": "/data/mock-data/forms/api-510-inspection-data.json",
+        "mode": "wizard",
+        "showStepper": true,
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "validateOnStepChange": true,
+        "autoSave": false,
+        "autoSaveInterval": 30000,
+        "showStepNumbers": true,
+        "showStepDescriptions": true,
+        "allowBackNavigation": true,
+        "stepperPosition": "top",
+        "stepperSize": "default",
+        "gadgetOptions": [
+          {
+            "id": "vessel-identification-planning",
+            "type": "section",
+            "title": "Vessel Identification & Planning",
+            "description": "Basic vessel information, inspection planning, safety requirements, and equipment verification",
+            "icon": "DatabaseOutlined",
+            "order": 1,
+            "size": 12,
+            "sectionOptionsUrl": "vessel-identification-planning.json"
+          },
+          {
+            "id": "safety-preparation",
+            "type": "section",
+            "title": "Safety Preparation",
+            "description": "Safety procedures, permits, and pre-inspection safety checks",
+            "icon": "SafetyCertificateOutlined",
+            "order": 2,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/safety-preparation.json"
+          },
+          {
+            "id": "operating-conditions-history",
+            "type": "section",
+            "title": "Operating Conditions & History",
+            "description": "Service conditions, operating history, maintenance records, and previous inspection findings",
+            "icon": "HistoryOutlined",
+            "order": 3,
+            "size": 12,
+            "sectionOptionsUrl": "operating-conditions-history.json"
+          },
+          {
+            "id": "visual-examination",
+            "type": "section",
+            "title": "Visual Examination",
+            "description": "General condition assessment, component-specific inspection, anomaly documentation, and photographic documentation",
+            "icon": "EyeOutlined",
+            "order": 4,
+            "size": 12,
+            "sectionOptionsUrl": "visual-examination.json"
+          },
+          {
+            "id": "thickness-measurements",
+            "type": "section",
+            "title": "Thickness Measurements",
+            "description": "Ultrasonic thickness measurements, measurement locations, data analysis, and thickness mapping",
+            "icon": "RulerOutlined",
+            "order": 5,
+            "size": 12,
+            "sectionOptionsUrl": "thickness-measurements.json"
+          },
+          {
+            "id": "nde-requirements-results",
+            "type": "section",
+            "title": "NDE Requirements & Results",
+            "description": "Non-destructive examination requirements, methods, results, and analysis",
+            "icon": "ScanOutlined",
+            "order": 6,
+            "size": 12,
+            "sectionOptionsUrl": "nde-requirements-results.json"
+          },
+          {
+            "id": "inspection-results-analysis",
+            "type": "section",
+            "title": "Inspection Results & Analysis",
+            "description": "Assessment results, remaining life calculations, recommendations, compliance verification, and final approval",
+            "icon": "BarChartOutlined",
+            "order": 7,
+            "size": 12,
+            "sectionOptionsUrl": "inspection-results-analysis.json"
+          },
+          {
+            "id": "repairs-modifications",
+            "type": "section",
+            "title": "Repairs & Modifications",
+            "description": "Repair requirements, modification details, weld procedures, and post-repair inspection",
+            "icon": "ToolOutlined",
+            "order": 8,
+            "size": 12,
+            "sectionOptionsUrl": "repairs-modifications.json"
+          },
+          {
+            "id": "final-documentation-attachments",
+            "type": "section",
+            "title": "Final Documentation & Attachments",
+            "description": "Inspection photographs, technical drawings, supporting documents, digital signatures, report generation, and final verification",
+            "icon": "FileTextOutlined",
+            "order": 9,
+            "size": 12,
+            "sectionOptionsUrl": "final-documentation-attachments.json"
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "inspection-results-analysis": {
+      "overall-assessment": "good",
+      "vessel-condition": "fit-for-service",
+      "critical-findings": "no",
+      "safety-concerns": "no",
+      "immediate-actions": "no",
+      "repair-recommendations": "no",
+      "monitoring-recommendations": "no",
+      "api-510-compliance": "compliant",
+      "asme-compliance": "compliant",
+      "regulatory-compliance": "compliant",
+      "inspection-report-required": "yes",
+      "photographic-documentation-required": "yes",
+      "inspection-approval": "approved"
+    },
+    "final-documentation-attachments": {
+      "photographs-taken": "yes",
+      "photograph-quality": "good",
+      "drawings-created": "yes",
+      "supporting-documents": "yes",
+      "report-format": "pdf",
+      "report-template": "api-510-standard",
+      "report-verification": "verified",
+      "report-submission": "submitted"
+    }
+  }
+} 

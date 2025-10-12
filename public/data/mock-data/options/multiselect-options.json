@@ -1,0 +1,8 @@
+{
+  "options": [
+    { "label": "Choice A", "value": "choice_a" },
+    { "label": "Choice B", "value": "choice_b" },
+    { "label": "Choice C", "value": "choice_c" },
+    { "label": "Choice D", "value": "choice_d" }
+  ]
+} 

@@ -1,0 +1,62 @@
+module.exports = {
+  id: 'scaff-fall-clearance',
+  name: 'Fall Clearance Calculator',
+  description: 'Calculates fall clearance for PPE',
+  category: 'Safety',
+  module: 'scaffolding',
+  icon: 'ArrowDownOutlined',
+  tags: ['fall', 'clearance', 'harness', 'safety'],
+  uiDefinition: [
+    { id: 'input-card', type: 'section', title: 'Input Parameters', description: 'Lanyard and worker height', icon: 'FormOutlined', order: 1, size: 24 },
+    { id: 'inputs', type: 'group', title: 'Inputs', description: 'Provide inputs', sectionId: 'input-card', order: 1, size: 24 },
+    { id: 'lanyard_length_m', type: 'number', title: 'Lanyard length (m)', label: 'Lanyard length (m)', sectionId: 'input-card', groupId: 'inputs', size: 8 },
+    { id: 'harness_deployment_m', type: 'number', title: 'Harness deployment (m)', label: 'Harness deployment (m)', sectionId: 'input-card', groupId: 'inputs', size: 8 },
+    { id: 'worker_height_m', type: 'number', title: 'Worker height (m)', label: 'Worker height (m)', sectionId: 'input-card', groupId: 'inputs', size: 8 },
+    { id: 'units', type: 'group', title: 'Units', description: 'Select distance units', sectionId: 'input-card', order: 2, size: 24, collapsible: true },
+    { id: 'distance_unit', type: 'select', title: 'Distance unit', label: 'Distance unit', sectionId: 'input-card', groupId: 'units', size: 8, options: [
+      { label: 'm', value: 'm' },
+      { label: 'ft', value: 'ft' }
+    ], defaultValue: 'm' }
+  ],
+  aiPrompt: [
+    'You are a fall protection analyst.',
+    '',
+    'Compute required fall clearance using lanyard length, harness deployment, and worker height. Provide a conservative clearance with a simple additive model unless more detail is provided.',
+    '',
+    'Use:',
+    '- Clearance (m) ≈ lanyard_length + harness_deployment + (worker_height × 0.5) + safety_margin (0.5 m). If distance_unit is ft, convert (1 m = 3.28084 ft).',
+    '- Recommend PPE/anchor configuration to achieve margin ≥ 0.5 m.',
+    '',
+    'Guidelines:',
+    '- If any term missing, mark clearance Unknown and explain.',
+    '',
+    'Output ONLY:',
+    '# Fall Clearance Calculator',
+    '## Report Summary',
+    'One sentence summarizing clearance requirement and assumptions.',
+    '## Key outputs',
+    '| Key outputs | Value |',
+    '| --- | --- |',
+    '- Clearance distance (selected unit) | <value or Unknown>',
+    '- Safety margin (m) | 0.5',
+    '## Recommendations',
+    '3–5 steps to meet margin (anchor height, SRL, lanyard length).',
+    '## Alternatives & Trade-offs',
+    '| Option | Clearance | Risk/Comfort | Notes |',
+    '| --- | --- | --- | --- |',
+    '## Calculations',
+    '- Clearance formula:',
+    '- Unit conversion:',
+    '## Assumptions and Uncertainty',
+    'Confidence and sensitivity to harness deployment.',
+    '## Escalation Criteria',
+    'When to stop work due to insufficient clearance.',
+    '## Rationale',
+    'Short notes on inputs and conservative assumptions.',
+    '## References and Standards',
+    '',
+    'END OF REPORT'
+  ].join('\n')
+};
+
+

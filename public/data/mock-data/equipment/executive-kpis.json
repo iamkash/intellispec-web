@@ -1,0 +1,115 @@
+{
+  "kpis": [
+    {
+      "id": "total-revenue",
+      "title": "Total Revenue",
+      "value": "$2,847,320",
+      "icon": "DollarOutlined",
+      "trend": {
+        "value": "+12.8%",
+        "direction": "up"
+      },
+      "description": "Monthly revenue from equipment rentals",
+      "category": "financial",
+      "priority": 1
+    },
+    {
+      "id": "profit-margin",
+      "title": "Profit Margin",
+      "value": "34.2%",
+      "icon": "RiseOutlined",
+      "trend": {
+        "value": "+2.1%",
+        "direction": "up"
+      },
+      "description": "Overall profit margin across all equipment",
+      "category": "financial",
+      "priority": 2
+    },
+    {
+      "id": "fleet-utilization",
+      "title": "Fleet Utilization",
+      "value": "78.5%",
+      "icon": "CarOutlined",
+      "trend": {
+        "value": "+5.3%",
+        "direction": "up"
+      },
+      "description": "Percentage of fleet currently in use",
+      "category": "operations",
+      "priority": 3
+    },
+    {
+      "id": "active-contracts",
+      "title": "Active Contracts",
+      "value": "1,247",
+      "icon": "FileTextOutlined",
+      "trend": {
+        "value": "+89",
+        "direction": "up"
+      },
+      "description": "Number of active rental contracts",
+      "category": "operations",
+      "priority": 4
+    },
+    {
+      "id": "customer-satisfaction",
+      "title": "Customer Satisfaction",
+      "value": "4.8/5",
+      "icon": "StarOutlined",
+      "trend": {
+        "value": "+0.2",
+        "direction": "up"
+      },
+      "description": "Average customer satisfaction rating",
+      "category": "customer",
+      "priority": 5
+    },
+    {
+      "id": "equipment-availability",
+      "title": "Equipment Availability",
+      "value": "92.3%",
+      "icon": "CheckCircleOutlined",
+      "trend": {
+        "value": "-1.2%",
+        "direction": "down"
+      },
+      "description": "Percentage of equipment ready for rental",
+      "category": "operations",
+      "priority": 6
+    },
+    {
+      "id": "maintenance-costs",
+      "title": "Maintenance Costs",
+      "value": "$127,450",
+      "icon": "ToolOutlined",
+      "trend": {
+        "value": "-8.5%",
+        "direction": "down"
+      },
+      "description": "Monthly maintenance and repair costs",
+      "category": "financial",
+      "priority": 7
+    },
+    {
+      "id": "new-customers",
+      "title": "New Customers",
+      "value": "156",
+      "icon": "UserAddOutlined",
+      "trend": {
+        "value": "+23",
+        "direction": "up"
+      },
+      "description": "New customers acquired this month",
+      "category": "customer",
+      "priority": 8
+    }
+  ],
+  "summary": {
+    "totalKPIs": 8,
+    "positiveKPIs": 6,
+    "negativeKPIs": 2,
+    "overallPerformance": "excellent",
+    "lastUpdated": "2024-01-15T14:30:00Z"
+  }
+} 

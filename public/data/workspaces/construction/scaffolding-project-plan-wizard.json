@@ -1,0 +1,117 @@
+{
+  "id": "scaffolding-project-plan-wizard",
+  "title": "Scaffolding Project Plan Wizard",
+  "description": "Capture site notes and images, then generate a comprehensive scaffolding project plan (BOM, labor, schedule, risks, quotation).",
+  "gadgets": [
+    {
+      "id": "scaffolding-project-plan-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Scaffolding Project Plan",
+      "description": "Wizard that creates a detailed scaffolding project plan from voice notes and site images.",
+      "config": {
+        "sections": [
+          { "id": "voice_capture", "title": "Voice Capture", "description": "Record site notes, constraints, and objectives.", "sectionType": "voice", "includeInPdf": false },
+          { "id": "site_images", "title": "Site Images", "description": "Upload site photos, elevations, access, obstructions, overhead lines.", "sectionType": "image", "includeInPdf": false },
+          {
+            "id": "image_analysis",
+            "title": "Scaffolding Plan Analysis",
+            "description": "AI analyzes images and notes to propose a complete scaffolding project plan in Markdown.",
+            "imageAnalysisPromptRef": "scaffoldPlanAnalysis",
+            "imageAnalysisPrompt": {
+              "modelConfig": { "model": "gpt-5-mini", "maxCompletionTokens": 7000, "temperature": 0.2 },
+              "promptConfig": {
+                "systemPrompt": "ROLE: You are a senior scaffolding planner. GOAL: Produce a complete, professional scaffolding project plan in Markdown from IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Permits and Safety, ## Equipment and Tools, ## Materials and Consumables (BOM), ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation, ## Design & Compliance. TABLES (required formats): - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials/BOM: | Component | Spec | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - WBS: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CONTENT GUIDANCE: Include typical scaffold elements (standards, ledgers, transoms, braces, couplers, base plates, sole boards, boards/decks, stairs, toeboards, guardrails, ties/anchors, netting/mesh). Cover erection/dismantle sequencing, access, working platforms, edge protection, tie patterns, allowable loads, and exclusion zones. CALCULATIONS: Compute Extended and totals; include Labor Subtotal and Grand Total with USD formatting (e.g., $12,345). COMPLIANCE: Reference relevant standards (OSHA 1926 Subpart L and/or EN 12811) and note design criteria/load class if inferable. RULES: No duplicate headings; concise, actionable, field‑ready; prefer tables where possible.",
+                "userPrompt": "Context (transcript and notes):\n{text}\n\nUsing the images and transcript above, generate the scaffolding project plan using the specified headings and table formats. Include a domain‑appropriate BOM and compute Extended (Qty × Hours × Rate) and totals (Labor Subtotal and Grand Total) with USD formatting. Return Markdown only."
+              },
+              "streaming": { "enabled": true, "showProgress": true, "updateInterval": 100 }
+            },
+            "promptSourceIds": ["site_images", "voice_capture"],
+            "includeInPdf": false,
+            "analysisWidget": "simple",
+            "pdf": { "includeOverview": false, "includeImages": true, "imagesDataPath": "sections[site_images].images", "widthPercent": 1, "fit": "contain", "align": "center" }
+          },
+
+          { "id": "objectives", "title": "Objectives", "description": "Project objectives and success criteria.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Objectives", "promptRef": "objectivesPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "scope", "title": "Scope", "description": "Scope of work and inclusions/exclusions.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Scope", "promptRef": "scopePlanPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "assumptions", "title": "Assumptions", "description": "Key planning assumptions.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Assumptions", "promptRef": "assumptionsPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "site_conditions", "title": "Site Conditions", "description": "Access, ground/soil, obstructions, overhead lines.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Site Conditions", "promptRef": "siteConditionsPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "permits_safety", "title": "Permits and Safety", "description": "Permitting and safety requirements (tags, fall protection).", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Permits & Safety", "promptRef": "permitsSafetyPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+
+          { "id": "equipment_tools", "title": "Equipment and Tools", "description": "Required installation tools and equipment.", "includeInPdf": true, "grid": { "title": "Equipment and Tools", "dataKey": "equipmentTools", "columns": [ { "key": "item", "title": "Item", "editable": true }, { "key": "category", "title": "Category", "editable": true }, { "key": "qty", "title": "Qty", "editable": true, "summary": "sum" }, { "key": "unitRateUSD", "title": "Unit Rate (USD)", "editable": true, "summary": "sum", "format": "currency" }, { "key": "notes", "title": "Notes", "editable": true } ], "btnLabel": "Populate Equipment", "promptRef": "equipmentToolsPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+
+          { "id": "materials_consumables", "title": "Materials and Consumables (BOM)", "description": "Bill of Materials for scaffolding components.", "includeInPdf": true, "grid": { "title": "Materials/BOM", "dataKey": "materialsConsumables", "columns": [ { "key": "component", "title": "Component", "editable": true }, { "key": "spec", "title": "Spec", "editable": true }, { "key": "qty", "title": "Qty", "editable": true, "summary": "sum" }, { "key": "unitRateUSD", "title": "Unit Rate (USD)", "editable": true, "summary": "sum", "format": "currency" }, { "key": "extendedUSD", "title": "Extended (USD)", "editable": true, "summary": "sum", "format": "currency" }, { "key": "notes", "title": "Notes", "editable": true } ], "btnLabel": "Populate BOM", "promptRef": "materialsConsumablesPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+
+          { "id": "team_roles", "title": "Team and Roles", "description": "Crew composition and labor estimates.", "includeInPdf": true, "grid": { "title": "Team and Roles", "dataKey": "teamRoles", "columns": [ { "key": "role", "title": "Role", "editable": true }, { "key": "qtyPersons", "title": "Qty (persons)", "editable": true, "summary": "sum" }, { "key": "hours", "title": "Hours", "editable": true, "summary": "sum" }, { "key": "hourlyRateUSD", "title": "Hourly Rate (USD)", "editable": true, "format": "currency" }, { "key": "extendedUSD", "title": "Extended (USD)", "editable": true, "summary": "sum", "format": "currency" } ], "btnLabel": "Populate Team & Roles", "promptRef": "teamRolesPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+
+          { "id": "wbs", "title": "Work Breakdown Structure and Estimates", "description": "Work packages with estimates.", "includeInPdf": true, "grid": { "title": "WBS", "dataKey": "wbs", "columns": [ { "key": "task", "title": "Task", "editable": true }, { "key": "duration", "title": "Duration", "editable": true }, { "key": "laborHours", "title": "Labor Hours", "editable": true }, { "key": "roles", "title": "Roles", "editable": true }, { "key": "dependencies", "title": "Dependencies", "editable": true } ], "btnLabel": "Populate WBS", "promptRef": "wbsPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+
+          { "id": "schedule", "title": "Schedule", "description": "Timeline and dependencies.", "includeInPdf": true, "grid": { "title": "Schedule", "dataKey": "schedule", "columns": [ { "key": "task", "title": "Task", "editable": true }, { "key": "start", "title": "Start", "editable": true }, { "key": "finish", "title": "Finish", "editable": true }, { "key": "duration", "title": "Duration", "editable": true }, { "key": "predecessors", "title": "Predecessors", "editable": true }, { "key": "critical", "title": "Critical", "editable": true } ], "btnLabel": "Populate Schedule", "promptRef": "schedulePopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+
+          { "id": "risks", "title": "Risks and Mitigations", "description": "Key risks and mitigations.", "includeInPdf": true, "grid": { "title": "Risks and Mitigations", "dataKey": "risks", "columns": [ { "key": "risk", "title": "Risk", "editable": true }, { "key": "likelihood", "title": "Likelihood", "editable": true }, { "key": "impact", "title": "Impact", "editable": true }, { "key": "mitigation", "title": "Mitigation", "editable": true }, { "key": "owner", "title": "Owner", "editable": true } ], "btnLabel": "Populate Risks", "promptRef": "risksPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] },
+
+          { "id": "deliverables", "title": "Deliverables", "description": "Expected deliverables.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Deliverables", "promptRef": "deliverablesPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "acceptance_criteria", "title": "Acceptance Criteria", "description": "Completion/acceptance criteria.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" }, "btnLabel": "Populate Acceptance Criteria", "promptRef": "acceptanceCriteriaPopulate", "promptSourceIds": ["image_analysis","voice_capture"], "includeInPdf": true },
+          { "id": "quotation", "title": "Quotation", "description": "Cost summary and totals.", "includeInPdf": true, "grid": { "title": "Quotation", "dataKey": "quotation", "columns": [ { "key": "item", "title": "Item", "editable": true }, { "key": "amountUSD", "title": "Amount (USD)", "editable": true, "summary": "sum", "format": "currency" }, { "key": "notes", "title": "Notes", "editable": true } ], "btnLabel": "Populate Quotation", "promptRef": "quotationPopulate" }, "promptSourceIds": ["image_analysis","voice_capture"] }
+        ],
+
+        "groups": [
+          { "id": "objectives_group", "title": "Objectives", "sectionId": "objectives", "lgSpan": 24 },
+          { "id": "scope_group", "title": "Scope", "sectionId": "scope", "lgSpan": 24 },
+          { "id": "assumptions_group", "title": "Assumptions", "sectionId": "assumptions", "lgSpan": 24 },
+          { "id": "site_conditions_group", "title": "Site Conditions", "sectionId": "site_conditions", "lgSpan": 24 },
+          { "id": "permits_safety_group", "title": "Permits & Safety", "sectionId": "permits_safety", "lgSpan": 24 },
+          { "id": "deliverables_group", "title": "Deliverables", "sectionId": "deliverables", "lgSpan": 24 },
+          { "id": "acceptance_criteria_group", "title": "Acceptance Criteria", "sectionId": "acceptance_criteria", "lgSpan": 24 }
+        ],
+
+        "fields": [
+          { "id": "objectives_text", "label": "Objectives (Markdown)", "type": "textarea", "groupId": "objectives_group", "lgSpan": 24 },
+          { "id": "scope_text", "label": "Scope (Markdown)", "type": "textarea", "groupId": "scope_group", "lgSpan": 24 },
+          { "id": "assumptions_text", "label": "Assumptions (Markdown)", "type": "textarea", "groupId": "assumptions_group", "lgSpan": 24 },
+          { "id": "site_conditions_text", "label": "Site Conditions (Markdown)", "type": "textarea", "groupId": "site_conditions_group", "lgSpan": 24 },
+          { "id": "permits_safety_text", "label": "Permits & Safety (Markdown)", "type": "textarea", "groupId": "permits_safety_group", "lgSpan": 24 },
+          { "id": "deliverables_text", "label": "Deliverables (Markdown)", "type": "textarea", "groupId": "deliverables_group", "lgSpan": 24 },
+          { "id": "acceptance_criteria_text", "label": "Acceptance Criteria (Markdown)", "type": "textarea", "groupId": "acceptance_criteria_group", "lgSpan": 24 }
+        ],
+
+        "pdfStyling": {
+          "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "Scaffolding Project Plan", "companyAddress": "" },
+          "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Scaffolding Plan", "centerText": "Confidential", "rightText": "Page {page} of {pages}" },
+          "sections": { "headerFontSize": 10, "contentFontSize": 8, "lineSpacing": 3.5, "margins": { "left": 15, "right": 195 } },
+          "tables": { "headerBackground": [2,6,23], "headerTextColor": [255,255,255], "headerFontSize": 8, "contentFontSize": 7, "cellPadding": 3 },
+          "images": { "dpi": 400, "format": "JPEG", "quality": 0.92, "fit": "contain", "align": "center", "widthPercent": 1 }
+        },
+
+        "prompts": {
+          "scaffoldPlanAnalysis": {
+            "modelConfig": { "model": "gpt-5-mini", "maxCompletionTokens": 7000, "temperature": 0.2 },
+            "promptConfig": {
+              "systemPrompt": "ROLE: You are a senior scaffolding planner. GOAL: Produce a complete, professional scaffolding project plan in Markdown from IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Permits and Safety, ## Equipment and Tools, ## Materials and Consumables (BOM), ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation, ## Design & Compliance. TABLES (required formats): - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials/BOM: | Component | Spec | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - WBS: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CONTENT: include scaffold elements (standards, ledgers, transoms, braces, couplers, base plates, sole boards, boards, stairs, toeboards, guardrails, ties/anchors, mesh). CALCULATIONS: Compute Extended and totals; include Labor Subtotal and Grand Total (USD). COMPLIANCE: reference OSHA 1926 Subpart L/EN 12811 if inferable. RULES: No duplicate headings; concise; prefer tables.",
+              "userPrompt": "Context (transcript and notes):\n{text}\n\nGenerate the scaffolding project plan using the specified headings and table formats. Include a realistic BOM and compute Extended and totals with USD formatting. Return Markdown only."
+            },
+            "streaming": { "enabled": true, "showProgress": true, "updateInterval": 100 }
+          },
+
+          "objectivesPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 800, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON with objectives_text (Markdown bullets) based on analysis and notes." } },
+          "scopePlanPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1000, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON with scope_text (Markdown) including inclusions/exclusions where clear." } },
+          "assumptionsPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 600, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON with assumptions_text (Markdown bullets)." } },
+          "siteConditionsPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 800, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON with site_conditions_text (Markdown bullets: access, ground/soil, obstructions, overhead lines)." } },
+          "permitsSafetyPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 800, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON with permits_safety_text (Markdown bullets: permits/tags, fall protection, exclusion zones)." } },
+
+          "equipmentToolsPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1200, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON array for equipmentTools with fields: item, category, qty, unitRateUSD, notes (domain: scaffolding installation)." }, "autoPrompt": true },
+          "materialsConsumablesPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1400, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON array for materialsConsumables with fields: component, spec, qty, unitRateUSD, extendedUSD, notes. Include typical scaffolding components." }, "autoPrompt": true },
+          "teamRolesPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1200, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON array for teamRoles with fields: role, qtyPersons, hours, hourlyRateUSD, extendedUSD (= qtyPersons * hours * hourlyRateUSD)." }, "autoPrompt": true },
+          "wbsPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1600, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON array for wbs with fields: task, duration, laborHours, roles, dependencies (domain: scaffold foundations, base plates, standards, ledgers, transoms, bracing, decking, toeboards, guardrails, ties, inspections, handover)." }, "autoPrompt": true },
+          "schedulePopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1400, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON array for schedule with fields: task, start, finish, duration, predecessors, critical." }, "autoPrompt": true },
+          "risksPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1000, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON array for risks with fields: risk, likelihood, impact, mitigation, owner (consider falls, collapse, powerlines, weather, ground failure)." }, "autoPrompt": true },
+          "deliverablesPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 600, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON with deliverables_text (Markdown bullets for drawings, tags, inspections, handover)." } },
+          "acceptanceCriteriaPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 600, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON with acceptance_criteria_text (Markdown bullets for completion/inspection/hand‑back)." } },
+          "quotationPopulate": { "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1000, "temperature": 0.2 }, "promptConfig": { "systemPrompt": "Return ONLY JSON array for quotation with fields: item, amountUSD, notes. Include Labor Subtotal, Equipment and Tools, Materials/BOM, Mobilization, Taxes/Overhead, Grand Total." }, "autoPrompt": true }
+        }
+      },
+      "position": 24
+    }
+  ]
+}
+
+

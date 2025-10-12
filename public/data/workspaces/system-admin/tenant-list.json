@@ -1,0 +1,372 @@
+{
+  "id": "tenant-list",
+  "title": "Tenant Management",
+  "description": "Comprehensive tenant management with full CRUD operations, status management, and detailed views",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "tenant-actions",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Quick access to tenant creation",
+      "position": 24,
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 1,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "actions": [
+          {
+            "key": "create-tenant",
+            "label": "Create New Tenant",
+            "icon": "PlusOutlined",
+            "workspace": "system-admin/tenant-document",
+            "params": {
+              "mode": "create"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "tenant-stats",
+      "type": "generic-kpi-gadget",
+      "title": "Tenant Overview",
+      "description": "Key metrics displaying total tenants, active/suspended counts, expiring subscriptions, and total users/organizations",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/admin/tenants/stats",
+        "kpis": [
+          {
+            "id": "total-tenants",
+            "title": "Total Tenants",
+            "description": "All tenants",
+            "icon": "FaUsers",
+            "iconColor": "hsl(var(--chart-1))",
+            "format": "number"
+          },
+          {
+            "id": "active-tenants",
+            "title": "Active Tenants",
+            "description": "Active status",
+            "icon": "FaCheckCircle",
+            "iconColor": "hsl(var(--chart-2))",
+            "format": "number"
+          },
+          {
+            "id": "trial-tenants",
+            "title": "Trial Tenants",
+            "description": "Trial period",
+            "icon": "FaClock",
+            "iconColor": "hsl(var(--chart-3))",
+            "format": "number"
+          },
+          {
+            "id": "total-users",
+            "title": "Total Users",
+            "description": "All users",
+            "icon": "FaUser",
+            "iconColor": "hsl(var(--chart-4))",
+            "format": "number"
+          }
+        ],
+        "kpiLayout": "grid",
+        "columns": 4,
+        "showTrends": false,
+        "showTargets": false,
+        "autoRefresh": true
+      }
+    },
+    {
+      "id": "tenant-data-grid",
+      "type": "sgrid-search-gadget",
+      "title": "Tenant Management",
+      "description": "Comprehensive tenant grid with inline editing, search filters, and bulk operations support",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/multi-tenant/tenants",
+        "hideCreateButton": true,
+        "columns": [
+          {
+            "key": "name",
+            "title": "Tenant Name",
+            "width": 180,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": true,
+              "placeholder": "Enter tenant name",
+              "validation": {
+                "min": 2,
+                "max": 100,
+                "message": "Tenant name must be between 2-100 characters"
+              }
+            }
+          },
+          {
+            "key": "slug",
+            "title": "Slug",
+            "width": 140,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": true,
+              "placeholder": "company-name",
+              "validation": {
+                "pattern": "^[a-z0-9-]+$",
+                "message": "Slug must contain only lowercase letters, numbers, and hyphens"
+              }
+            }
+          },
+          {
+            "key": "organization.name",
+            "title": "Organization",
+            "width": 150,
+            "sortable": true,
+            "field": {
+              "type": "select",
+              "required": false,
+              "optionsUrl": "/api/multi-tenant/organizations?format=options",
+              "placeholder": "Select organization"
+            }
+          },
+          {
+            "key": "status",
+            "title": "Status",
+            "width": 100,
+            "sortable": true,
+            "field": {
+              "type": "select",
+              "required": true,
+              "options": [
+                { "value": "active", "label": "Active", "color": "green" },
+                { "value": "suspended", "label": "Suspended", "color": "red" },
+                { "value": "archived", "label": "Archived", "color": "gray" }
+              ]
+            }
+          },
+          {
+            "key": "subscription.lifecycleStatus",
+            "title": "Lifecycle",
+            "width": 110,
+            "sortable": true,
+            "field": {
+              "type": "select",
+              "required": false,
+              "options": [
+                { "value": "trialing", "label": "Trialing", "color": "blue" },
+                { "value": "active", "label": "Active", "color": "green" },
+                { "value": "grace", "label": "Grace", "color": "orange" },
+                { "value": "expired", "label": "Expired", "color": "red" },
+                { "value": "suspended", "label": "Suspended", "color": "red" }
+              ]
+            }
+          },
+          {
+            "key": "entitlements.sitesAllowed",
+            "title": "Sites",
+            "width": 80,
+            "sortable": true,
+            "field": {
+              "type": "number",
+              "required": true,
+              "min": 1,
+              "placeholder": "1"
+            }
+          },
+          {
+            "key": "entitlements.moduleCount",
+            "title": "Modules",
+            "width": 90,
+            "sortable": true,
+            "field": {
+              "type": "number",
+              "required": false,
+              "placeholder": "Module count"
+            }
+          },
+          {
+            "key": "subscription.termEndAt",
+            "title": "Term End",
+            "width": 120,
+            "sortable": true,
+            "field": {
+              "type": "date",
+              "required": false
+            }
+          },
+          {
+            "key": "subscription.daysRemaining",
+            "title": "Days Left",
+            "width": 90,
+            "sortable": true,
+            "field": {
+              "type": "number",
+              "required": false
+            }
+          },
+          {
+            "key": "userCount",
+            "title": "Users",
+            "width": 80,
+            "sortable": true,
+            "field": {
+              "type": "number",
+              "required": false
+            }
+          }
+        ],
+        "rowActions": [
+          {
+            "key": "edit",
+            "label": "Edit",
+            "icon": "EditOutlined",
+            "type": "primary",
+            "workspace": "system-admin/tenant-document",
+            "params": {
+              "mode": "edit",
+              "id": "{id}"
+            }
+          },
+          {
+            "key": "activate",
+            "label": "Activate",
+            "icon": "PlayCircleOutlined",
+            "type": "default",
+            "action": "api",
+            "apiConfig": {
+              "method": "POST",
+              "endpoint": "/api/admin/tenants/{id}/activate",
+              "confirmMessage": "Are you sure you want to activate this tenant?",
+              "successMessage": "Tenant activated successfully",
+              "refreshOnSuccess": true
+            },
+            "showWhen": {
+              "field": "status",
+              "values": ["suspended", "inactive"]
+            }
+          },
+          {
+            "key": "suspend",
+            "label": "Suspend",
+            "icon": "PauseCircleOutlined",
+            "type": "default",
+            "action": "api",
+            "apiConfig": {
+              "method": "POST",
+              "endpoint": "/api/admin/tenants/{id}/suspend",
+              "confirmMessage": "Are you sure you want to suspend this tenant? Users will not be able to access the system.",
+              "promptForReason": true,
+              "reasonLabel": "Suspension Reason",
+              "successMessage": "Tenant suspended successfully",
+              "refreshOnSuccess": true
+            },
+            "showWhen": {
+              "field": "status",
+              "values": ["active"]
+            }
+          },
+          {
+            "key": "deactivate",
+            "label": "Deactivate",
+            "icon": "StopOutlined",
+            "type": "danger",
+            "action": "api",
+            "apiConfig": {
+              "method": "POST",
+              "endpoint": "/api/admin/tenants/{id}/deactivate",
+              "confirmMessage": "Are you sure you want to deactivate this tenant? This will terminate their subscription.",
+              "promptForReason": true,
+              "reasonLabel": "Deactivation Reason",
+              "successMessage": "Tenant deactivated successfully",
+              "refreshOnSuccess": true
+            },
+            "showWhen": {
+              "field": "status",
+              "values": ["active", "suspended"]
+            }
+          }
+        ],
+        "search": {
+          "placeholder": "Search tenants by name, slug, organization, or lifecycle status...",
+          "filters": [
+            {
+              "key": "status",
+              "label": "Status",
+              "type": "select",
+              "options": [
+                { "value": "active", "label": "Active" },
+                { "value": "suspended", "label": "Suspended" },
+                { "value": "archived", "label": "Archived" }
+              ]
+            },
+            {
+              "key": "lifecycleStatus",
+              "label": "Lifecycle",
+              "type": "select",
+              "options": [
+                { "value": "trialing", "label": "Trialing" },
+                { "value": "active", "label": "Active" },
+                { "value": "grace", "label": "Grace Period" },
+                { "value": "expired", "label": "Expired" },
+                { "value": "suspended", "label": "Suspended" }
+              ]
+            },
+            {
+              "key": "organization",
+              "label": "Organization",
+              "type": "select",
+              "optionsUrl": "/api/multi-tenant/organizations?format=options"
+            }
+          ]
+        },
+        "pagination": {
+          "pageSize": 15,
+          "showSizeChanger": true,
+          "showQuickJumper": true
+        },
+        "toolbar": {
+          "enableCreate": false
+        }
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": true,
+    "enablePrint": false,
+    "requireSuperAdmin": true,
+    "auditAllActions": true,
+    "tenantScoped": false
+  },
+  "metadata": {
+    "created": "2025-01-24T04:35:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "tenant", "management", "crud"],
+    "description": "Dedicated workspace for comprehensive tenant management operations",
+    "features": [
+      "Full tenant CRUD operations",
+      "Advanced search and filtering",
+      "Bulk operations",
+      "Status management",
+      "Navigation to detailed views"
+    ],
+    "permissions": {
+      "required": ["super_admin"],
+      "actions": [
+        "tenant:create",
+        "tenant:read",
+        "tenant:update",
+        "tenant:archive",
+        "tenant:suspend",
+        "tenant:impersonate"
+      ]
+    }
+  }
+}

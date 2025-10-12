@@ -1,0 +1,32 @@
+{
+    "formData": {
+      "badge_scanner": "",
+      "ocr_card_capture": "",
+      "timestamp": "",
+      "company_name": "",
+      "company_contact": "",
+      "company_email": "",
+      "contractor_receiving": "",
+      "contractor_receiving_phone": "",
+      "supervisor_name": "",
+      "supervisor_contact": "",
+      "contractor_returning": "",
+      "equipment_list": [],
+      "location": "",
+      "fit_test_upload": [],
+      "damage_photo": [],
+      "notes": ""
+    },
+    "metadata": {
+      "title": "Equipment Checkout Form",
+      "description": "Form for tracking contractor equipment checkouts and returns.",
+      "version": "1.0.0",
+      "created": "2025-07-16T00:00:00Z",
+      "lastModified": "2025-07-16T00:00:00Z"
+    },
+    "settings": {
+      "autoSave": true,
+      "validation": true,
+      "readOnly": false
+    }
+  }

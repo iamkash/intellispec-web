@@ -1,0 +1,461 @@
+{
+  "id": "test_1757079016657",
+  "name": "AI-Powered Piping Inspection Workflow",
+  "description": "Complete piping inspection workflow with AI analysis, OCR, and engineering calculations",
+  "version": 1,
+  "metadata": {
+    "id": "piping_inspection_workflow",
+    "name": "AI-Powered Piping Inspection Workflow",
+    "description": "Complete piping inspection workflow with AI analysis, OCR, and engineering calculations",
+    "version": 1,
+    "agents": [
+      {
+        "id": "voice_analyzer",
+        "type": "VoiceTranscriptAnalyzer",
+        "config": {
+          "model": "whisper-large-v3",
+          "language": "en",
+          "extract_patterns": [
+            "equipment_tag",
+            "damage_description",
+            "urgency_level",
+            "location_details"
+          ],
+          "confidence_threshold": 0.8
+        },
+        "inputs": [
+          "audio_file"
+        ],
+        "outputs": [
+          "transcript",
+          "extracted_data",
+          "confidence_score"
+        ]
+      },
+      {
+        "id": "ocr_processor",
+        "type": "ImageOCRProcessor",
+        "config": {
+          "model": "paddlepaddle",
+          "languages": [
+            "en"
+          ],
+          "extract_patterns": [
+            "tag_number",
+            "manufacturer",
+            "serial_number",
+            "model_number",
+            "installation_date"
+          ],
+          "confidence_threshold": 0.7
+        },
+        "inputs": [
+          "image_files"
+        ],
+        "outputs": [
+          "ocr_text",
+          "extracted_fields",
+          "bounding_boxes"
+        ]
+      },
+      {
+        "id": "visual_analyzer",
+        "type": "VisualConditionAnalyzer",
+        "config": {
+          "model": "resnet50",
+          "damage_types": [
+            "corrosion",
+            "cracks",
+            "deformation",
+            "leaks",
+            "paint_damage"
+          ],
+          "severity_levels": [
+            "minor",
+            "moderate",
+            "severe",
+            "critical"
+          ],
+          "confidence_threshold": 0.75
+        },
+        "inputs": [
+          "image_files"
+        ],
+        "outputs": [
+          "damage_assessment",
+          "severity_scores",
+          "recommended_actions"
+        ]
+      },
+      {
+        "id": "data_aggregator",
+        "type": "DataAggregatorAgent",
+        "config": {
+          "output_format": "structured",
+          "required_sources": [
+            "voice_analyzer",
+            "ocr_processor"
+          ],
+          "merge_strategy": "confidence_weighted"
+        },
+        "inputs": [
+          "voice_data",
+          "ocr_data",
+          "visual_data"
+        ],
+        "outputs": [
+          "aggregated_data",
+          "data_quality_score",
+          "missing_fields"
+        ]
+      },
+      {
+        "id": "corrosion_analyzer",
+        "type": "CorrosionAssessmentAgent",
+        "config": {
+          "standards": [
+            "API_570",
+            "ASME_B31_3"
+          ],
+          "corrosion_models": [
+            "linear",
+            "power_law",
+            "parabolic"
+          ],
+          "environmental_factors": true,
+          "remaining_life_calculation": true,
+          "confidence_threshold": 0.8
+        },
+        "inputs": [
+          "thickness_measurements",
+          "material_data",
+          "environmental_data"
+        ],
+        "outputs": [
+          "corrosion_rate",
+          "remaining_life",
+          "risk_assessment",
+          "mitigation_recommendations"
+        ]
+      },
+      {
+        "id": "structural_integrity",
+        "type": "StructuralAnalysisAgent",
+        "config": {
+          "standards": [
+            "API_579",
+            "ASME_VIII"
+          ],
+          "analysis_types": [
+            "FFS_Level_1",
+            "stress_analysis",
+            "fatigue_analysis"
+          ],
+          "safety_factors": {
+            "corrosion": 1.5,
+            "stress": 2,
+            "fatigue": 3
+          }
+        },
+        "inputs": [
+          "corrosion_data",
+          "stress_data",
+          "material_properties"
+        ],
+        "outputs": [
+          "mawp_calculation",
+          "remaining_strength",
+          "inspection_intervals"
+        ]
+      },
+      {
+        "id": "work_order_generator",
+        "type": "WorkOrderGeneratorAgent",
+        "config": {
+          "priority_matrix": {
+            "critical": [
+              "immediate_repair",
+              "shutdown_required"
+            ],
+            "high": [
+              "schedule_repair",
+              "monitor_closely"
+            ],
+            "medium": [
+              "plan_maintenance",
+              "increase_monitoring"
+            ],
+            "low": [
+              "document_only",
+              "normal_monitoring"
+            ]
+          },
+          "cmms_integration": {
+            "system": "maximo",
+            "auto_create": true,
+            "assign_departments": true
+          }
+        },
+        "inputs": [
+          "assessment_results",
+          "risk_analysis",
+          "maintenance_history"
+        ],
+        "outputs": [
+          "work_orders",
+          "maintenance_schedule",
+          "cost_estimates"
+        ]
+      },
+      {
+        "id": "report_compiler",
+        "type": "ReportCompilerAgent",
+        "config": {
+          "templates": [
+            "piping_inspection",
+            "corrosion_assessment",
+            "work_order_summary"
+          ],
+          "formats": [
+            "pdf",
+            "json",
+            "xml"
+          ],
+          "distribution_rules": {
+            "asset_owner": "always",
+            "maintenance_manager": "high_priority_only",
+            "regulatory": "compliance_issues_only"
+          }
+        },
+        "inputs": [
+          "all_assessment_data",
+          "work_orders",
+          "recommendations"
+        ],
+        "outputs": [
+          "inspection_report",
+          "distribution_list",
+          "follow_up_schedule"
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "from": "voice_analyzer",
+        "to": "data_aggregator",
+        "data_mapping": {
+          "source": "voice_analyzer.extracted_data",
+          "target": "data_aggregator.voice_data"
+        }
+      },
+      {
+        "from": "ocr_processor",
+        "to": "data_aggregator",
+        "data_mapping": {
+          "source": "ocr_processor.extracted_fields",
+          "target": "data_aggregator.ocr_data"
+        }
+      },
+      {
+        "from": "visual_analyzer",
+        "to": "data_aggregator",
+        "data_mapping": {
+          "source": "visual_analyzer.damage_assessment",
+          "target": "data_aggregator.visual_data"
+        }
+      },
+      {
+        "from": "data_aggregator",
+        "to": "corrosion_analyzer",
+        "condition": "data_aggregator.data_quality_score > 0.7",
+        "data_mapping": {
+          "source": "data_aggregator.aggregated_data",
+          "target": "corrosion_analyzer.input_data"
+        }
+      },
+      {
+        "from": "corrosion_analyzer",
+        "to": "structural_integrity",
+        "data_mapping": {
+          "source": "corrosion_analyzer.assessment_results",
+          "target": "structural_integrity.corrosion_data"
+        }
+      },
+      {
+        "from": "structural_integrity",
+        "to": "work_order_generator",
+        "data_mapping": {
+          "source": "structural_integrity.analysis_results",
+          "target": "work_order_generator.structural_data"
+        }
+      },
+      {
+        "from": "work_order_generator",
+        "to": "report_compiler",
+        "data_mapping": {
+          "source": "work_order_generator.work_orders",
+          "target": "report_compiler.work_order_data"
+        }
+      },
+      {
+        "from": "data_aggregator",
+        "to": "human_review",
+        "condition": "data_aggregator.data_quality_score <= 0.7",
+        "data_mapping": {
+          "source": "data_aggregator.aggregated_data",
+          "target": "human_review.review_data"
+        }
+      },
+      {
+        "from": "corrosion_analyzer",
+        "to": "human_review",
+        "condition": "corrosion_analyzer.confidence < 0.8",
+        "data_mapping": {
+          "source": "corrosion_analyzer.assessment_results",
+          "target": "human_review.corrosion_review"
+        }
+      }
+    ],
+    "execution": {
+      "strategy": "hybrid",
+      "parallel_groups": [
+        [
+          "voice_analyzer",
+          "ocr_processor",
+          "visual_analyzer"
+        ],
+        [
+          "corrosion_analyzer",
+          "structural_integrity"
+        ]
+      ],
+      "sequential_chains": [
+        [
+          "data_aggregator",
+          "corrosion_analyzer",
+          "structural_integrity",
+          "work_order_generator",
+          "report_compiler"
+        ]
+      ],
+      "entry_point": "data_aggregator",
+      "finish_point": "report_compiler"
+    },
+    "humanGates": [
+      {
+        "id": "data_quality_review",
+        "trigger": "data_aggregator.data_quality_score <= 0.7",
+        "reviewType": "data_validation",
+        "fields": [
+          {
+            "field": "voice_transcript",
+            "type": "textarea",
+            "label": "Review Voice Transcript",
+            "required": true
+          },
+          {
+            "field": "ocr_accuracy",
+            "type": "radio",
+            "label": "OCR Accuracy",
+            "options": [
+              {
+                "label": "Accurate",
+                "value": "accurate"
+              },
+              {
+                "label": "Needs Correction",
+                "value": "needs_correction"
+              },
+              {
+                "label": "Unreadable",
+                "value": "unreadable"
+              }
+            ],
+            "required": true
+          },
+          {
+            "field": "comments",
+            "type": "textarea",
+            "label": "Review Comments",
+            "placeholder": "Additional notes about data quality..."
+          }
+        ],
+        "timeout": "2h",
+        "escalation": "supervisor"
+      },
+      {
+        "id": "corrosion_expert_review",
+        "trigger": "corrosion_analyzer.confidence < 0.8",
+        "reviewType": "expert_validation",
+        "fields": [
+          {
+            "field": "corrosion_rate_override",
+            "type": "number",
+            "label": "Override Corrosion Rate (mm/year)",
+            "min": 0,
+            "max": 10,
+            "step": 0.01
+          },
+          {
+            "field": "expert_assessment",
+            "type": "textarea",
+            "label": "Expert Assessment",
+            "required": true,
+            "placeholder": "Provide corrosion engineering assessment..."
+          },
+          {
+            "field": "recommendations",
+            "type": "textarea",
+            "label": "Additional Recommendations"
+          }
+        ],
+        "timeout": "24h",
+        "escalation": "corrosion_engineer"
+      }
+    ],
+    "error_handling": {
+      "retry_policy": {
+        "max_attempts": 3,
+        "backoff_strategy": "exponential",
+        "base_delay": 5000
+      },
+      "fallback_agents": {
+        "VoiceTranscriptAnalyzer": "ManualDataEntryAgent",
+        "ImageOCRProcessor": "ManualOCRInputAgent",
+        "CorrosionAssessmentAgent": "SimplifiedCorrosionAgent"
+      },
+      "circuit_breakers": {
+        "open_threshold": 5,
+        "recovery_timeout": 60000
+      }
+    },
+    "monitoring": {
+      "metrics": [
+        "execution_time",
+        "agent_success_rate",
+        "human_intervention_rate",
+        "data_quality_score",
+        "cost_per_inspection"
+      ],
+      "alerts": [
+        {
+          "condition": "execution_time > 300000",
+          "message": "Workflow execution taking too long",
+          "severity": "warning"
+        },
+        {
+          "condition": "agent_success_rate < 0.8",
+          "message": "Agent success rate below threshold",
+          "severity": "error"
+        }
+      ]
+    }
+  },
+  "status": "active",
+  "tags": [
+    "piping",
+    "inspection",
+    "ai",
+    "langgraph"
+  ]
+}

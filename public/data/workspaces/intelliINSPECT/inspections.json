@@ -1,0 +1,739 @@
+{
+  "id": "intelliINSPECT/inspections",
+  "title": "Inspection Management Dashboard", 
+  "description": "Comprehensive inspection tracking, analytics, and management system",
+  "layout": "dashboard", 
+  "version": "1.0.3",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": [
+      {
+        "id": "company_id",
+        "type": "multiselect",
+        "label": "Company",
+        "placeholder": "Select companies...",
+        "optionsUrl": "/api/options/companies",
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true
+      },
+      {
+        "id": "site_id", 
+        "type": "multiselect",
+        "label": "Facility/Site",
+        "placeholder": "Select facilities...",
+        "optionsUrl": "/api/options/sites",
+        "dependsOn": "company_id",
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true
+      },
+      {
+        "id": "asset_group_id",
+        "type": "select",
+        "label": "Asset Group",
+        "placeholder": "Select asset group...",
+        "optionsUrl": "/api/options/asset-groups",
+        "dependsOn": "site_id",
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true
+      },
+          {
+            "id": "asset_id",
+            "type": "select",
+            "label": "Asset",
+            "placeholder": "Select asset...",
+            "optionsUrl": "/api/options/assets",
+            "dependsOn": ["company_id", "site_id", "asset_group_id"],
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          },
+      {
+        "id": "inspection_type",
+        "type": "multiselect",
+        "label": "Inspection Type",
+        "placeholder": "Select inspection types...",
+        "options": [
+          { "value": "External", "label": "External" },
+          { "value": "Internal", "label": "Internal" },
+          { "value": "Internal & External", "label": "Internal & External" },
+          { "value": "On-stream", "label": "On-stream" },
+          { "value": "RBI", "label": "RBI" },
+          { "value": "Turnaround", "label": "Turnaround" },
+          { "value": "Post-repair", "label": "Post-repair" },
+          { "value": "Post-alteration", "label": "Post-alteration" },
+          { "value": "Pre-service", "label": "Pre-service" }
+        ],
+        "refreshTrigger": true
+      },
+      {
+        "id": "status",
+        "type": "multiselect",
+        "label": "Status",
+        "placeholder": "Select status...",
+        "options": [
+          { "value": "draft", "label": "Draft" },
+          { "value": "in_progress", "label": "In Progress" },
+          { "value": "completed", "label": "Completed" },
+          { "value": "approved", "label": "Approved" },
+          { "value": "archived", "label": "Archived" }
+        ],
+        "refreshTrigger": true
+      },
+      {
+        "id": "date_range",
+        "type": "daterange",
+        "label": "Date Range",
+        "placeholder": "Select date range...",
+        "presets": ["MTD", "QTD", "YTD", "Last 6 Months", "Last Year"],
+        "refreshTrigger": true
+      },
+      {
+        "id": "inspector",
+        "type": "text",
+        "label": "Inspector Name",
+        "placeholder": "Search by inspector...",
+        "refreshTrigger": true
+      }
+    ]
+  },
+  "gadgets": [
+    {
+      "id": "inspection-actions",
+      "type": "action-panel-gadget",
+      "title": "Inspection Management",
+      "description": "Quick navigation panel for inspection operations and analytics",
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 6,
+        "showIcons": true,
+        "showLabels": false,
+        "cardSize": "large",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "home",
+            "label": "Home",
+            "description": "Return to IntelliINSPECT home",
+            "icon": "HomeOutlined",
+            "type": "default",
+            "workspace": "intelliINSPECT/home"
+          },
+          {
+            "key": "pressure-vessel-wizard",
+            "label": "Pressure Vessel & Tank Wizard",
+            "description": "Launch pressure vessel and tank inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/pressure-vessel-tank-wizard"
+          },
+          {
+            "key": "pipework-wizard",
+            "label": "Pipework Inspection Wizard",
+            "description": "Launch piping system inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/pipework-inspection-wizard"
+          },
+          {
+            "key": "rotating-equipment-wizard",
+            "label": "Rotating Equipment Wizard",
+            "description": "Launch rotating equipment inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/rotating-equipment-wizard"
+          },
+          {
+            "key": "heat-exchanger-wizard",
+            "label": "Heat Exchanger & Boiler Wizard",
+            "description": "Launch heat transfer equipment inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/heat-exchanger-boiler-wizard"
+          },
+          {
+            "key": "asset-management",
+            "label": "Asset Management",
+            "description": "Manage sites, assets and equipment",
+            "icon": "ApartmentOutlined",
+            "type": "default",
+            "workspace": "asset-manager/asset-management"
+          }
+        ]
+      },
+      "position": 24
+    },
+    {
+      "id": "inspection-filters",
+      "type": "workspace-filter-gadget",
+      "title": "Inspection Filters",
+      "description": "Interactive filter controls for refining inspection data",
+      "config": {
+        "filterDefinitions": [
+          {
+            "id": "company_id",
+            "type": "multiselect",
+            "label": "Company",
+            "placeholder": "Select companies...",
+            "optionsUrl": "/api/options/companies",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          },
+          {
+            "id": "site_id", 
+            "type": "multiselect",
+            "label": "Facility/Site",
+            "placeholder": "Select facilities...",
+            "optionsUrl": "/api/options/sites",
+            "dependsOn": "company_id",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          },
+          {
+            "id": "asset_group_id",
+            "type": "select",
+            "label": "Asset Group",
+            "placeholder": "Select asset group...",
+            "optionsUrl": "/api/options/asset-groups",
+            "dependsOn": "site_id",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          },
+          {
+            "id": "asset_id",
+            "type": "select",
+            "label": "Asset",
+            "placeholder": "Select asset...",
+            "optionsUrl": "/api/options/assets",
+            "dependsOn": ["company_id", "site_id", "asset_group_id"],
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          },
+          {
+            "id": "inspection_type",
+            "type": "multiselect",
+            "label": "Inspection Type",
+            "placeholder": "Select inspection types...",
+            "options": [
+              { "value": "External", "label": "External" },
+              { "value": "Internal", "label": "Internal" },
+              { "value": "Internal & External", "label": "Internal & External" },
+              { "value": "On-stream", "label": "On-stream" },
+              { "value": "RBI", "label": "RBI" },
+              { "value": "Turnaround", "label": "Turnaround" },
+              { "value": "Post-repair", "label": "Post-repair" },
+              { "value": "Post-alteration", "label": "Post-alteration" },
+              { "value": "Pre-service", "label": "Pre-service" }
+            ],
+            "refreshTrigger": true
+          },
+          {
+            "id": "status",
+            "type": "multiselect",
+            "label": "Status",
+            "placeholder": "Select status...",
+            "options": [
+              { "value": "draft", "label": "Draft" },
+              { "value": "in_progress", "label": "In Progress" },
+              { "value": "completed", "label": "Completed" },
+              { "value": "approved", "label": "Approved" },
+              { "value": "archived", "label": "Archived" }
+            ],
+            "refreshTrigger": true
+          },
+          {
+            "id": "date_range",
+            "type": "daterange",
+            "label": "Date Range",
+            "placeholder": "Select date range...",
+            "presets": ["MTD", "QTD", "YTD", "Last 6 Months", "Last Year"],
+            "refreshTrigger": true
+          },
+          {
+            "id": "inspector",
+            "type": "text",
+            "label": "Inspector Name",
+            "placeholder": "Search by inspector...",
+            "refreshTrigger": true
+          }
+        ],
+        "filterLayout": "horizontal",
+        "showClearAll": true,
+        "showFilterCount": true
+      },
+      "position": 24
+    },
+    {
+      "id": "inspection-kpis",
+      "type": "generic-kpi-gadget",
+      "title": "Inspection Key Performance Indicators",
+      "description": "Essential inspection metrics and compliance indicators",
+      "config": {
+        "kpis": [
+          {
+            "id": "total-inspections",
+            "title": "Inspections",
+            "description": "Total count",
+            "icon": "FaClipboardCheck",
+            "iconColor": "hsl(var(--primary))",
+            "unit": "",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "Total Inspections",
+              "collection": "documents",
+              "baseFilter": { "type": "inspection" },
+              "fieldMappings": {
+                "date_range": "inspectionDate",
+                "inspection_type": "inspectionType",
+                "status": "status"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "total": { "expression": { "$sum": 1 } }
+                }
+              }
+            },
+            "dataPath": "data.0.total"
+          },
+          {
+            "id": "completed-inspections",
+            "title": "Completed",
+            "description": "Finished inspections",
+            "icon": "FaCheckCircle",
+            "iconColor": "hsl(var(--chart-2))",
+            "unit": "",
+            "format": "number",
+            "status": "success",
+            "aggregationConfig": {
+              "name": "Completed Inspections",
+              "collection": "documents",
+              "baseFilter": { "type": "inspection" },
+              "fieldMappings": {
+                "date_range": "inspectionDate",
+                "inspection_type": "inspectionType",
+                "status": "status"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "completed": {
+                    "expression": {
+                      "$sum": { "$cond": [{ "$eq": ["$status", "completed"] }, 1, 0] }
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.completed"
+          },
+          {
+            "id": "in-progress-inspections",
+            "title": "In Progress",
+            "description": "Active inspections",
+            "icon": "FaSpinner",
+            "iconColor": "hsl(var(--chart-3))",
+            "unit": "",
+            "format": "number",
+            "status": "warning",
+            "aggregationConfig": {
+              "name": "In Progress Inspections",
+              "collection": "documents",
+              "baseFilter": { "type": "inspection" },
+              "fieldMappings": {
+                "date_range": "inspectionDate",
+                "inspection_type": "inspectionType",
+                "status": "status"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "inProgress": {
+                    "expression": {
+                      "$sum": { "$cond": [{ "$eq": ["$status", "in_progress"] }, 1, 0] }
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.inProgress"
+          },
+          {
+            "id": "avg-progress",
+            "title": "Avg Progress",
+            "description": "Completion rate",
+            "icon": "FaChartLine",
+            "iconColor": "hsl(var(--chart-4))",
+            "unit": "%",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "Average Progress",
+              "collection": "documents",
+              "baseFilter": { "type": "inspection" },
+              "fieldMappings": {
+                "date_range": "inspectionDate",
+                "inspection_type": "inspectionType",
+                "status": "status"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "avgProgress": { "expression": { "$avg": "$progress" } }
+                }
+              }
+            },
+            "dataPath": "data.0.avgProgress",
+            "target": {
+              "value": 75,
+              "comparison": "gte"
+            }
+          },
+          {
+            "id": "compliance-rate",
+            "title": "Compliance",
+            "description": "Pass rate",
+            "icon": "FaShieldAlt",
+            "iconColor": "hsl(var(--success))",
+            "unit": "%",
+            "format": "percentage",
+            "status": "success",
+            "aggregationConfig": {
+              "name": "Compliance Rate",
+              "collection": "documents",
+              "baseFilter": { "type": "inspection" },
+              "fieldMappings": {
+                "date_range": "inspectionDate",
+                "inspection_type": "inspectionType",
+                "status": "status"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "total": { "expression": { "$sum": 1 } },
+                  "compliant": {
+                    "expression": {
+                      "$sum": {
+                        "$cond": [
+                          { "$or": [{ "$eq": ["$status", "completed"] }, { "$eq": ["$status", "approved"] }] },
+                          1,
+                          0
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "pipeline": [
+                {
+                  "$project": {
+                    "complianceRate": {
+                      "$cond": [
+                        { "$gt": ["$total", 0] },
+                        { "$multiply": [{ "$divide": ["$compliant", "$total"] }, 100] },
+                        0
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            "dataPath": "data.0.complianceRate"
+          },
+          {
+            "id": "overdue-inspections",
+            "title": "Overdue",
+            "description": "Requires attention",
+            "icon": "FaExclamationTriangle",
+            "iconColor": "hsl(var(--destructive))",
+            "unit": "",
+            "format": "number",
+            "status": "danger",
+            "aggregationConfig": {
+              "name": "Overdue Inspections",
+              "collection": "documents",
+              "baseFilter": { "type": "inspection" },
+              "fieldMappings": {
+                "date_range": "inspectionDate",
+                "inspection_type": "inspectionType",
+                "status": "status"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "overdue": {
+                    "expression": {
+                      "$sum": {
+                        "$cond": [
+                          {
+                            "$and": [
+                              { "$ne": ["$status", "completed"] },
+                              { "$ne": ["$status", "approved"] },
+                              { "$lt": ["$progress", 100] },
+                              { "$lt": ["$inspectionDate", "$$NOW"] }
+                            ]
+                          },
+                          1,
+                          0
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.overdue"
+          }
+        ],
+        "layout": "grid",
+        "columns": 6,
+        "showTrends": true,
+        "showTargets": true,
+        "autoRefresh": true
+      },
+      "position": 24
+    },
+    {
+      "id": "inspection-status-chart",
+      "type": "generic-chart-gadget",
+      "title": "Inspection Status Distribution",
+      "description": "Visual breakdown of inspection statuses",
+      "config": {
+        "height": 300,
+        "charts": [
+          {
+            "id": "status-distribution-pie",
+            "title": "Status Distribution",
+            "description": "Current inspection status breakdown",
+            "chartType": "pie",
+            "dataPath": "data",
+            "categoryField": "_id",
+            "valueField": "count",
+            "nameField": "_id",
+            "seriesName": "Count",
+            "showLegend": true,
+            "showLabels": true,
+            "height": 250,
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Status Distribution",
+                  "collection": "documents",
+                  "baseFilter": { "type": "inspection" },
+                  "fieldMappings": {
+                    "date_range": "inspectionDate",
+                    "inspection_type": "inspectionType",
+                    "status": "status"
+                  },
+                  "groupBy": {
+                    "_id": "$status",
+                    "fields": {
+                      "count": { "expression": { "$sum": 1 } }
+                    }
+                  },
+                  "sort": { "count": -1 }
+                }
+              }
+            },
+            "dataPath": "data",
+            "colorMap": {
+              "draft": "#8c8c8c",
+              "in_progress": "#faad14",
+              "completed": "#52c41a",
+              "approved": "#1890ff",
+              "archived": "#595959"
+            }
+          }
+        ]
+      },
+      "position": 12
+    },
+    {
+      "id": "inspection-type-chart",
+      "type": "generic-chart-gadget",
+      "title": "Inspections by Type",
+      "description": "Distribution across inspection categories",
+      "config": {
+        "height": 300,
+        "charts": [
+          {
+            "id": "type-distribution-bar",
+            "title": "Inspection Type Breakdown",
+            "description": "Number of inspections by type",
+            "chartType": "bar",
+            "dataPath": "data",
+            "xField": "_id",
+            "yField": "count",
+            "categoryField": "_id",
+            "valueField": "count",
+            "nameField": "_id",
+            "xLabel": "Inspection Type",
+            "yLabel": "Count",
+            "seriesName": "Inspections",
+            "showLegend": false,
+            "showLabels": true,
+            "height": 250,
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Type Distribution",
+                  "collection": "documents",
+                  "baseFilter": { "type": "inspection" },
+                  "fieldMappings": {
+                    "date_range": "inspectionDate",
+                    "inspection_type": "inspectionType",
+                    "status": "status"
+                  },
+                  "groupBy": {
+                    "_id": "$inspectionType",
+                    "fields": {
+                      "count": { "expression": { "$sum": 1 } }
+                    }
+                  },
+                  "sort": { "count": -1 }
+                }
+              }
+            },
+            "dataPath": "data"
+          }
+        ]
+      },
+      "position": 12
+    },
+    {
+      "id": "inspection-search-grid",
+      "type": "sgrid-search-gadget",
+      "title": "Inspection Records",
+      "description": "Search and manage inspection documents",
+      "config": {
+        "dataUrl": "/api/inspections",
+        "hideCreateButton": true,
+        "fieldMappings": {
+          "company_id": "company_id",
+          "site_id": "site_id",
+          "asset_group_id": "asset_group_id",
+          "asset_id": "asset_id",
+          "inspection_type": "inspectionType",
+          "equipment_type": "equipmentType",
+          "status": "status",
+          "date_range": "inspectionDate",
+          "inspector": "inspectorName"
+        },
+        "search": {
+          "placeholder": "Search inspections...",
+          "enableColumnFilters": true
+        },
+        "toolbar": {
+          "enableCreate": false,
+          "enableBulkDelete": true,
+          "bulkDeleteText": "Delete Selected",
+          "bulkDeleteConfirmText": "Are you sure you want to delete the selected inspections?"
+        },
+        "pagination": {
+          "pageSize": 20
+        },
+        "columns": [
+          {
+            "key": "inspectionType",
+            "title": "Inspection Type",
+            "width": "140"
+          },
+          {
+            "key": "status",
+            "title": "Status",
+            "width": "100"
+          },
+          {
+            "key": "progress",
+            "title": "Progress",
+            "width": "100"
+          },
+          {
+            "key": "facilityName",
+            "title": "Facility",
+            "width": "130"
+          },
+          {
+            "key": "assetGroupName",
+            "title": "Asset Group",
+            "width": "130"
+          },
+          {
+            "key": "assetName",
+            "title": "Asset",
+            "width": "130"
+          },
+          {
+            "key": "equipmentType",
+            "title": "Asset Type",
+            "width": "140"
+          },
+          {
+            "key": "inspectionDate",
+            "title": "Inspection Date",
+            "width": "120"
+          },
+          {
+            "key": "inspectorName",
+            "title": "Inspector",
+            "width": "150"
+          },
+          {
+            "key": "created_date",
+            "title": "Created",
+            "width": "120"
+          }
+        ],
+        "rowActions": [
+          {
+            "key": "launch_wizard",
+            "label": "Launch Wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "conditional": {
+              "field": "inspectionType",
+              "workspaceMapping": {
+                "pressure_vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
+                "piping": "intelliINSPECT/pipework-inspection-wizard"
+              }
+            },
+            "params": {
+              "inspectionId": "{id}",
+              "mode": "continue"
+            }
+          },
+          {
+            "key": "delete",
+            "label": "Delete",
+            "icon": "DeleteOutlined",
+            "confirmText": "Are you sure you want to delete this inspection?"
+          }
+        ]
+      },
+      "position": 24
+    }
+  ],
+  "smartDefaults": {
+    "inspection-search-grid": {
+      "defaultSort": { "field": "created_date", "order": "desc" },
+      "defaultFilters": { "status": ["completed", "approved", "in_progress"] },
+      "autoRefresh": true,
+      "refreshInterval": 30000
+    }
+  },
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable"
+  }
+}

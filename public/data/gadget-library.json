@@ -1,0 +1,308 @@
+{
+  "version": "1.0.0",
+  "categories": [
+    {
+      "id": "analytics",
+      "name": "Analytics & BI",
+      "description": "Business intelligence and analytics gadgets",
+      "icon": "BarChartOutlined"
+    },
+    {
+      "id": "data",
+      "name": "Data Management",
+      "description": "Data grids, tables, and management tools",
+      "icon": "DatabaseOutlined"
+    },
+    {
+      "id": "document",
+      "name": "Document Management",
+      "description": "Document viewing, editing, and management",
+      "icon": "FileTextOutlined"
+    },
+    {
+      "id": "reporting",
+      "name": "Reporting",
+      "description": "Report generation and viewing tools",
+      "icon": "FilePdfOutlined"
+    }
+  ],
+  "gadgets": [
+    {
+      "id": "chart-grid-gadget",
+      "name": "Chart & Grid Analytics",
+      "description": "Interactive chart with data grid and filtering capabilities",
+      "category": "analytics",
+      "gadgetType": "chart-grid-gadget",
+      "previewImage": "/images/gadgets/chart-grid-preview.png",
+      "tags": ["chart", "grid", "filter", "analytics", "interactive"],
+      "schema": {
+        "id": "chart-grid-gadget",
+        "type": "chart-grid-gadget",
+        "widgets": ["chart", "grid", "filter"],
+        "properties": {
+          "chartType": {
+            "type": "select",
+            "options": ["line", "bar", "pie", "area", "scatter"],
+            "default": "line",
+            "label": "Chart Type"
+          },
+          "dataSource": {
+            "type": "string",
+            "required": true,
+            "label": "Data Source URL"
+          },
+          "xAxis": {
+            "type": "string",
+            "required": true,
+            "label": "X-Axis Field"
+          },
+          "yAxis": {
+            "type": "string",
+            "required": true,
+            "label": "Y-Axis Field"
+          },
+          "chartTitle": {
+            "type": "string",
+            "label": "Chart Title"
+          },
+          "columns": {
+            "type": "array",
+            "required": true,
+            "label": "Grid Columns",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": { "type": "string", "required": true },
+                "title": { "type": "string", "required": true },
+                "dataIndex": { "type": "string", "required": true },
+                "sortable": { "type": "boolean", "default": false },
+                "filterable": { "type": "boolean", "default": false }
+              }
+            }
+          },
+          "filters": {
+            "type": "array",
+            "label": "Available Filters",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": { "type": "string", "required": true },
+                "label": { "type": "string", "required": true },
+                "type": { "type": "select", "options": ["text", "select", "date", "range", "boolean"] },
+                "options": { "type": "array", "optional": true }
+              }
+            }
+          },
+          "syncData": {
+            "type": "boolean",
+            "default": true,
+            "label": "Sync Chart and Grid Data"
+          },
+          "showChart": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Chart"
+          },
+          "showGrid": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Grid"
+          },
+          "showFilters": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Filters"
+          },
+          "layout": {
+            "type": "select",
+            "options": ["vertical", "horizontal", "tabs"],
+            "default": "vertical",
+            "label": "Layout Style"
+          }
+        },
+        "required": ["dataSource", "columns", "chartType", "xAxis", "yAxis"]
+      }
+    },
+    {
+      "id": "stats-gadget",
+      "name": "Statistics Dashboard",
+      "description": "Key performance indicators and statistics display",
+      "category": "analytics",
+      "gadgetType": "stats-gadget",
+      "previewImage": "/images/gadgets/stats-preview.png",
+      "tags": ["kpi", "statistics", "dashboard", "metrics"],
+      "schema": {
+        "id": "stats-gadget",
+        "type": "stats-gadget",
+        "widgets": [],
+        "properties": {
+          "stats": {
+            "type": "array",
+            "required": true,
+            "label": "Statistics",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": { "type": "string", "required": true },
+                "value": { "type": "string", "required": true },
+                "change": { "type": "string", "optional": true },
+                "changeType": { "type": "select", "options": ["increase", "decrease", "neutral"] },
+                "icon": { "type": "string", "optional": true }
+              }
+            }
+          },
+          "layout": {
+            "type": "select",
+            "options": ["grid", "row", "column"],
+            "default": "grid",
+            "label": "Layout Style"
+          },
+          "columns": {
+            "type": "number",
+            "default": 4,
+            "min": 1,
+            "max": 8,
+            "label": "Grid Columns"
+          },
+          "showTrends": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Trend Indicators"
+          },
+          "showIcons": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Icons"
+          }
+        },
+        "required": ["stats"]
+      }
+    },
+    {
+      "id": "document-viewer-gadget",
+      "name": "Document Viewer",
+      "description": "View documents in various formats",
+      "category": "document",
+      "gadgetType": "document-viewer-gadget",
+      "previewImage": "/images/gadgets/document-viewer-preview.png",
+      "tags": ["document", "viewer", "pdf", "office"],
+      "schema": {
+        "id": "document-viewer-gadget",
+        "type": "document-viewer-gadget",
+        "widgets": ["document-viewer"],
+        "properties": {
+          "documentUrl": {
+            "type": "string",
+            "required": true,
+            "label": "Document URL"
+          },
+          "viewerType": {
+            "type": "select",
+            "options": ["auto", "pdf", "office", "image", "text"],
+            "default": "auto",
+            "label": "Viewer Type"
+          },
+          "showToolbar": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Toolbar"
+          },
+          "enableZoom": {
+            "type": "boolean",
+            "default": true,
+            "label": "Enable Zoom"
+          },
+          "enableSearch": {
+            "type": "boolean",
+            "default": true,
+            "label": "Enable Search"
+          },
+          "enableAnnotations": {
+            "type": "boolean",
+            "default": false,
+            "label": "Enable Annotations"
+          },
+          "fitToWidth": {
+            "type": "boolean",
+            "default": true,
+            "label": "Fit to Width"
+          }
+        },
+        "required": ["documentUrl"]
+      }
+    },
+    {
+      "id": "document-metadata-gadget",
+      "name": "Document Metadata",
+      "description": "Display document properties and metadata",
+      "category": "document",
+      "gadgetType": "document-metadata-gadget",
+      "previewImage": "/images/gadgets/document-metadata-preview.png",
+      "tags": ["document", "metadata", "properties", "info"],
+      "schema": {
+        "id": "document-metadata-gadget",
+        "type": "document-metadata-gadget",
+        "widgets": ["metadata-panel"],
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "required": true,
+            "label": "Document ID"
+          },
+          "showFileInfo": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show File Information"
+          },
+          "showVersionHistory": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Version History"
+          },
+          "showTags": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Tags"
+          },
+          "showComments": {
+            "type": "boolean",
+            "default": true,
+            "label": "Show Comments"
+          },
+          "collapsible": {
+            "type": "boolean",
+            "default": true,
+            "label": "Collapsible Sections"
+          }
+        },
+        "required": ["documentId"]
+      }
+    }
+  ],
+  "workspaceTemplates": [
+    {
+      "id": "bi-analytics-template",
+      "name": "BI Analytics Dashboard",
+      "description": "Comprehensive business intelligence dashboard template",
+      "category": "analytics",
+      "workspaceType": "bi",
+      "previewImage": "/images/templates/bi-analytics-preview.png",
+      "tags": ["bi", "analytics", "dashboard", "template"],
+      "definition": {
+        "reference": "/data/workspaces/bi-analytics-dashboard.json"
+      }
+    },
+    {
+      "id": "document-viewer-template",
+      "name": "Document Viewer",
+      "description": "Document viewing and management template",
+      "category": "document",
+      "workspaceType": "document",
+      "previewImage": "/images/templates/document-viewer-preview.png",
+      "tags": ["document", "viewer", "template"],
+      "definition": {
+        "reference": "/data/workspaces/document-viewer.json"
+      }
+    }
+  ]
+} 

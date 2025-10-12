@@ -1,0 +1,44 @@
+{
+  "stats": [
+    {
+      "id": "active-projects",
+      "title": "Active Projects",
+      "value": "6",
+      "description": "Scaffolding projects in progress",
+      "icon": "ProjectOutlined",
+      "trend": "+2",
+      "trendDirection": "up",
+      "color": "#1890ff"
+    },
+    {
+      "id": "pending-tasks",
+      "title": "Pending Tasks",
+      "value": "8",
+      "description": "Tasks to complete",
+      "icon": "CheckSquareOutlined",
+      "trend": "-3",
+      "trendDirection": "down",
+      "color": "#52c41a"
+    },
+    {
+      "id": "overdue-items",
+      "title": "Overdue Items",
+      "value": "2",
+      "description": "Items past due",
+      "icon": "ExclamationCircleOutlined",
+      "trend": "+1",
+      "trendDirection": "up",
+      "color": "#ff4d4f"
+    },
+    {
+      "id": "completion-rate",
+      "title": "Completion Rate",
+      "value": "87%",
+      "description": "This month",
+      "icon": "TrophyOutlined",
+      "trend": "+5%",
+      "trendDirection": "up",
+      "color": "#faad14"
+    }
+  ]
+} 

@@ -1,0 +1,51 @@
+{
+  "id": "intelliNDT-home",
+  "type": "dashboard",
+  "title": "IntelliNDT Home",
+  "description": "Welcome to IntelliNDT - NDT AI Assistant",
+  "icon": "DeploymentUnitOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "gadgets": [
+    {
+      "id": "quick-actions-gadget",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Quick access to NDT tools and workflows",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "title": "NDT Tools",
+        "dataUrl": "/data/mock-data/forms/inspection-quicklinks-data.json",
+        "dataPath": "quicklinks",
+        "columns": 1,
+        "size": "medium",
+        "layout": "grid",
+        "maxItems": 30,
+        "actions": [
+          {
+            "id": "ndt-ai-assistant",
+            "label": "IntelliNDT Assistant",
+            "description": "AI-powered NDT assistant",
+            "icon": "RobotOutlined",
+            "type": "workspace",
+            "workspace": "inspection/ai-inspection-assistant",
+            "category": "ai",
+            "tags": ["ai", "ndt"]
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "quick-actions-gadget": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": false
+    }
+  }
+}
+
+

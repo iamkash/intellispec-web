@@ -1,0 +1,77 @@
+{
+  "id": "intelliINSPECT-home",
+  "type": "dashboard",
+  "title": "intelliINSPECT Home",
+  "description": "Welcome to intelliINSPECT - Advanced intelligent inspection platform",
+  "icon": "EyeOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "gadgets": [
+    {
+      "id": "quick-actions-gadget",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Quick access to inspection tools and workflows",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "title": "Inspection Tools",
+        "columns": 1,
+        "size": "medium",
+        "layout": "grid",
+        "maxItems": 30,
+        "actions": [
+          {
+            "id": "inspection-plan-dashboard",
+            "label": "Inspection Plan Intelligence",
+            "description": "AI-powered dashboard for inspection planning and optimization",
+            "icon": "RocketOutlined",
+            "type": "workspace",
+            "workspace": "intelliINSPECT/inspection-plan/dashboard",
+            "category": "dashboard",
+            "tags": ["ai", "planning", "dashboard"]
+          },
+          {
+            "id": "asset-management-dashboard",
+            "label": "Asset Management",
+            "description": "Manage sites, asset groups, and view asset hierarchy",
+            "icon": "ApartmentOutlined",
+            "type": "workspace",
+            "workspace": "asset-manager/asset-management",
+            "category": "assets",
+            "tags": ["assets", "hierarchy", "management"]
+          },
+          {
+            "id": "inspections-list",
+            "label": "Inspections",
+            "description": "View and manage all inspections",
+            "icon": "SearchOutlined",
+            "type": "workspace",
+            "workspace": "intelliINSPECT/inspections",
+            "category": "inspections",
+            "tags": ["inspections", "list", "manage"]
+          },
+          {
+            "id": "calculators-dashboard",
+            "label": "Calculators",
+            "description": "Access engineering and inspection calculators",
+            "icon": "CalculatorOutlined",
+            "type": "workspace",
+            "workspace": "intelliINSPECT/calculators",
+            "category": "tools",
+            "tags": ["calculators", "tools", "engineering"]
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "quick-actions-gadget": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": false
+    }
+  }
+}

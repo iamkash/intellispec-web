@@ -1,0 +1,52 @@
+{
+  "menu_items": [
+    {
+      "key": "workforce-dashboard",
+      "icon": "DashboardOutlined",
+      "label": "Workforce Dashboard",
+      "license_id": "LIC_WORKFORCE",
+      "auth_id": "AUTH_HR_MANAGER",
+      "enabled": true,
+      "order": 1,
+      "route": "/workforce/dashboard",
+      "type": "item",
+      "permissions": ["workforce.view"]
+    },
+    {
+      "key": "employees",
+      "icon": "TeamOutlined",
+      "label": "Employees",
+      "license_id": "LIC_WORKFORCE",
+      "auth_id": "AUTH_HR_MANAGER",
+      "enabled": true,
+      "order": 2,
+      "route": "/workforce/employees",
+      "type": "item",
+      "permissions": ["workforce.employees"]
+    },
+    {
+      "key": "scheduling",
+      "icon": "CalendarOutlined",
+      "label": "Scheduling",
+      "license_id": "LIC_WORKFORCE",
+      "auth_id": "AUTH_HR_MANAGER",
+      "enabled": true,
+      "order": 3,
+      "route": "/workforce/scheduling",
+      "type": "item",
+      "permissions": ["workforce.scheduling"]
+    },
+    {
+      "key": "training",
+      "icon": "BookOutlined",
+      "label": "Training",
+      "license_id": "LIC_WORKFORCE",
+      "auth_id": "AUTH_HR_MANAGER",
+      "enabled": true,
+      "order": 4,
+      "route": "/workforce/training",
+      "type": "item",
+      "permissions": ["workforce.training"]
+    }
+  ]
+} 

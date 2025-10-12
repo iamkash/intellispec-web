@@ -1,0 +1,16 @@
+# IntelliQuote Fireproofing Calculators
+
+Module: quote
+
+All calculators follow the flat uiDefinition schema and the vision conventions in scripts/calculators/README.md. Use `vision` tag when images are accepted.
+
+## Status Table (Fireproofing Estimation)
+
+| Calculator | Detailed description | Parameters to pass | Image or media input | Key outputs | Standard or ref | QA checks and notes | Formula |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| PFP System Estimator | Passive Fire Protection system estimation with material thickness and coverage calculations | substrate_type, fire_rating_hours, system_type, surface_area, environmental_conditions, application_method | Structural drawings or photos | material_quantity, thickness_required, coverage_sqft, labor_hours, total_cost | ASTM E119, UL standards | Verify fire rating requirements; check substrate compatibility | Coverage = Area × Thickness × Waste_Factor |
+| Intumescent Coating Calculator | Epoxy-based intumescent fireproofing estimation for structural steel | steel_type, fire_scenario, protection_hours, surface_area, primer_required, environmental_exposure | Steel structure photos | coating_thickness, material_volume, application_time, cure_time, cost_estimate | NASA specs, Petrochemical standards | Validate fire scenario requirements; check primer compatibility | Volume = Area × DFT × (1 + Waste%) |
+| Cementitious Fireproofing Estimator | Cementitious material estimation with mechanical attachment requirements | steel_sections, fire_rating, attachment_method, surface_prep_level, access_difficulty | Structural plans or site photos | material_quantity, lath_requirements, fastener_count, labor_hours, scaffolding_needs | ASTM C739, Building codes | Check attachment spacing; verify surface prep requirements | Material = Area × Thickness × Density × Safety_Factor |
+| Scaffolding & Access Estimator | Scaffolding requirements for fireproofing application with safety considerations | structure_height, access_points, work_duration, safety_requirements, environmental_conditions, crew_size | Site layout drawings | scaffolding_type, setup_time, rental_duration, safety_equipment, total_cost | OSHA standards, Pin-lock specs | Verify load requirements; check safety clearances | Cost = (Setup + Rental × Days + Dismantling) × Safety_Factor |
+| Industrial Coatings Estimator | Tank linings and specialty coatings estimation for chemical protection | substrate_material, chemical_exposure, temperature_range, coating_system, surface_area, application_environment | Tank/vessel drawings | coating_thickness, material_quantity, surface_prep_cost, application_time, curing_requirements | NACE standards, API specs | Validate chemical compatibility; check temperature limits | Material = Area × DFT × Solids% × (1 + Waste%) |
+| Insulation System Calculator | Industrial insulation estimation for piping, vessels, and equipment | insulation_type, temperature_range, pipe_diameter, equipment_size, jacketing_type, vapor_barrier_required | Equipment drawings or photos | insulation_thickness, material_quantity, jacketing_area, labor_hours, energy_savings | ASTM C680, Energy codes | Check thermal performance; verify vapor barrier requirements | Thickness = f(ΔT, k_value, heat_loss_target) |

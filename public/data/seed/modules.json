@@ -1,0 +1,205 @@
+{
+  "modules": [
+    {
+      "id": "system-001",
+      "key": "system",
+      "name": "System Admin",
+      "status": "active",
+      "category": "Admin",
+      "defaultIncludedInFlex": true,
+      "icon": "Settings",
+      "description": "Core system administration module - always included for every tenant",
+      "isSystemModule": true,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0",
+        "readonly": true,
+        "alwaysIncluded": true
+      }
+    },
+    {
+      "id": "inspect-001",
+      "key": "inspect",
+      "name": "IntelliInspect",
+      "status": "active",
+      "category": "Inspection",
+      "defaultIncludedInFlex": false,
+      "icon": "Search",
+      "description": "Comprehensive inspection management and reporting",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "ndt-001",
+      "key": "ndt",
+      "name": "IntelliNDT",
+      "status": "active",
+      "category": "Inspection",
+      "defaultIncludedInFlex": false,
+      "icon": "Radio",
+      "description": "Non-destructive testing and analysis tools",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "integrity-001",
+      "key": "integrity",
+      "name": "IntelliIntegrity",
+      "status": "active",
+      "category": "Compliance",
+      "defaultIncludedInFlex": false,
+      "icon": "Shield",
+      "description": "Asset integrity management and compliance tracking",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "track-001",
+      "key": "track",
+      "name": "IntelliTrack",
+      "status": "active",
+      "category": "Operations",
+      "defaultIncludedInFlex": true,
+      "icon": "MapPin",
+      "description": "Asset tracking and location management",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "comply-001",
+      "key": "comply",
+      "name": "IntelliComply",
+      "status": "active",
+      "category": "Compliance",
+      "defaultIncludedInFlex": false,
+      "icon": "ShieldCheck",
+      "description": "Regulatory compliance and audit management",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "command-001",
+      "key": "command",
+      "name": "IntelliCommand",
+      "status": "active",
+      "category": "Operations",
+      "defaultIncludedInFlex": false,
+      "icon": "LayoutDashboard",
+      "description": "Operations command center and control dashboard",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "work-001",
+      "key": "work",
+      "name": "IntelliWork",
+      "status": "active",
+      "category": "Operations",
+      "defaultIncludedInFlex": false,
+      "icon": "ClipboardList",
+      "description": "Work order management and task scheduling",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "turn-001",
+      "key": "turn",
+      "name": "IntelliTurn",
+      "status": "active",
+      "category": "Operations",
+      "defaultIncludedInFlex": false,
+      "icon": "Timer",
+      "description": "Turnaround and maintenance scheduling",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "vault-001",
+      "key": "vault",
+      "name": "IntelliVault",
+      "status": "active",
+      "category": "Documents",
+      "defaultIncludedInFlex": false,
+      "icon": "Archive",
+      "description": "Document management and digital vault",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "vision-001",
+      "key": "vision",
+      "name": "IntelliVision",
+      "status": "active",
+      "category": "AI",
+      "defaultIncludedInFlex": false,
+      "icon": "Camera",
+      "description": "AI-powered visual analysis and computer vision",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    },
+    {
+      "id": "quote-001",
+      "key": "quote",
+      "name": "IntelliQuote",
+      "status": "active",
+      "category": "Commercial",
+      "defaultIncludedInFlex": false,
+      "icon": "DollarSign",
+      "description": "Intelligent quoting and estimation platform",
+      "isSystemModule": false,
+      "createdAt": "2024-01-01T00:00:00Z",
+      "updatedAt": "2024-01-01T00:00:00Z",
+      "metadata": {
+        "version": "1.0.0"
+      }
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "created": "2024-12-20T10:00:00Z",
+    "description": "Seed data for B2B SaaS modules with left-nav readiness",
+    "totalCount": 12
+  }
+}
+

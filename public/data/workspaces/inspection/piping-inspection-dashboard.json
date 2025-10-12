@@ -1,0 +1,378 @@
+{
+  "id": "piping-inspection-dashboard",
+  "title": "Piping Inspection Dashboard",
+  "description": "Dashboard for managing piping inspections with search, KPIs, and quick actions",
+  "icon": "ExperimentOutlined",
+  "type": "dashboard",
+  "mode": "dashboard",
+  "layout": "grid",
+  "gadgets": [
+    {
+      "id": "piping-actions",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Quick access to piping inspection actions",
+      "position": 12,
+      "size": 12,
+      "config": {
+        "title": "Quick Actions",
+        "actions": [
+          {
+            "id": "create-visual-inspection",
+            "label": "Create Visual Inspection",
+            "description": "Start a new visual-only piping inspection",
+            "icon": "EyeOutlined",
+            "type": "workspace",
+            "workspace": "inspection/piping-visual-inspection-wizard",
+            "category": "create",
+            "color": "primary"
+          },
+          {
+            "id": "create-comprehensive-inspection",
+            "label": "Create Comprehensive Inspection",
+            "description": "Start a full AI-powered piping inspection with NDT methods",
+            "icon": "ExperimentOutlined",
+            "type": "workspace",
+            "workspace": "inspection/piping-inspection-wizard",
+            "category": "create",
+            "color": "default"
+          },
+          {
+            "id": "back-to-inspection-home",
+            "label": "Back to Inspection Home",
+            "description": "Return to the main inspection dashboard",
+            "icon": "HomeOutlined",
+            "type": "workspace",
+            "workspace": "inspection/inspection-home",
+            "category": "navigation",
+            "color": "default"
+          }
+        ]
+      }
+    },
+    {
+      "id": "piping-kpis",
+      "type": "generic-kpi-gadget",
+      "title": "Piping Inspection KPIs",
+      "description": "Key metrics for piping inspection management",
+      "position": 24,
+      "size": 12,
+      "config": {
+        "kpis": [
+          {
+            "id": "total-inspections",
+            "title": "Total Inspections",
+            "description": "Total number of piping inspections completed",
+            "icon": "FileTextOutlined",
+            "iconColor": "#1890ff",
+            "unit": "inspections",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "total-piping-executions",
+              "collection": "executions",
+              "baseFilter": { "workflowId": "piping-inspection-workflow" },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": { "$sum": 1 }
+                }
+              }
+            },
+            "dataPath": "data.0.count"
+          },
+          {
+            "id": "failed-executions",
+            "title": "Failed Inspections",
+            "description": "Number of inspection workflows that failed",
+            "icon": "WarningOutlined",
+            "iconColor": "#ff4d4f",
+            "unit": "failed",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "failed-executions",
+              "collection": "executions",
+              "baseFilter": {
+                "workflowId": "piping-inspection-workflow",
+                "status": "failed"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": { "$sum": 1 }
+                }
+              }
+            },
+            "dataPath": "data.0.count",
+            "target": {
+              "value": 5,
+              "comparison": "lte"
+            }
+          },
+          {
+            "id": "running-executions",
+            "title": "Active Inspections",
+            "description": "Number of currently running inspection workflows",
+            "icon": "ClockCircleOutlined",
+            "iconColor": "#faad14",
+            "unit": "active",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "running-executions",
+              "collection": "executions",
+              "baseFilter": {
+                "workflowId": "piping-inspection-workflow",
+                "status": "running"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": { "$sum": 1 }
+                }
+              }
+            },
+            "dataPath": "data.0.count",
+            "target": {
+              "value": 10,
+              "comparison": "lte"
+            }
+          },
+          {
+            "id": "completed-this-month",
+            "title": "Completed This Month",
+            "description": "Number of inspections completed this month",
+            "icon": "CalendarOutlined",
+            "iconColor": "#1890ff",
+            "unit": "completed",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "completed-this-month",
+              "collection": "executions",
+              "baseFilter": {
+                "workflowId": "piping-inspection-workflow",
+                "status": "completed",
+                "completedAt": {
+                  "$gte": { "$date": "2024-01-01T00:00:00.000Z" },
+                  "$lt": { "$date": "2024-12-31T23:59:59.999Z" }
+                }
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": { "$sum": 1 }
+                }
+              }
+            },
+            "dataPath": "data.0.count"
+          },
+          {
+            "id": "success-rate",
+            "title": "Success Rate",
+            "description": "Percentage of inspection workflows completed successfully",
+            "icon": "CheckCircleOutlined",
+            "iconColor": "#52c41a",
+            "unit": "%",
+            "format": "percentage",
+            "aggregationConfig": {
+              "name": "success-rate",
+              "collection": "executions",
+              "baseFilter": { "workflowId": "piping-inspection-workflow" },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "total": { "$sum": 1 },
+                  "successful": { "$sum": { "$cond": [{ "$eq": ["$status", "completed"] }, 1, 0] } },
+                  "rate": {
+                    "$multiply": [
+                      { "$divide": [
+                        { "$sum": { "$cond": [{ "$eq": ["$status", "completed"] }, 1, 0] } },
+                        { "$sum": 1 }
+                      ] },
+                      100
+                    ]
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.rate",
+            "target": {
+              "value": 95,
+              "comparison": "gte"
+            }
+          },
+          {
+            "id": "avg-execution-time",
+            "title": "Avg Execution Time",
+            "description": "Average time to complete inspection workflows",
+            "icon": "AlertOutlined",
+            "iconColor": "#f5222d",
+            "unit": "minutes",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "avg-execution-time",
+              "collection": "executions",
+              "baseFilter": {
+                "workflowId": "piping-inspection-workflow",
+                "status": "completed",
+                "duration": { "$exists": true }
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "avgDuration": { "$avg": "$duration" },
+                  "avgMinutes": { "$avg": { "$divide": ["$duration", 60000] } }
+                }
+              }
+            },
+            "dataPath": "data.0.avgMinutes",
+            "target": {
+              "value": 30,
+              "comparison": "lte"
+            }
+          }
+        ],
+        "kpiLayout": "grid",
+        "columns": 2,
+        "showTrends": true,
+        "showTargets": true,
+        "autoRefresh": true,
+        "refreshInterval": 300000,
+        "size": "medium"
+      }
+    },
+    {
+      "id": "piping-search-grid",
+      "type": "sgrid-search-gadget",
+      "title": "Piping Inspection Records",
+      "description": "Search and manage existing piping inspection documents",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "dataUrl": "/api/executions?workflowId=piping-inspection-workflow,piping-visual-inspection-workflow",
+        "columns": [
+          {
+            "key": "executionId",
+            "title": "Execution ID",
+            "field": {
+              "type": "text",
+              "required": true
+            }
+          },
+          {
+            "key": "workflowId",
+            "title": "Workflow Type",
+            "field": {
+              "type": "select",
+              "required": true,
+              "options": [
+                {"label": "Visual Inspection", "value": "piping-visual-inspection-workflow"},
+                {"label": "Comprehensive Inspection", "value": "piping-inspection-workflow"}
+              ]
+            }
+          },
+          {
+            "key": "status",
+            "title": "Status",
+            "field": {
+              "type": "select",
+              "required": true,
+              "options": [
+                "pending",
+                "running",
+                "paused",
+                "completed",
+                "failed",
+                "cancelled"
+              ]
+            }
+          },
+          {
+            "key": "createdAt",
+            "title": "Started",
+            "field": {
+              "type": "date",
+              "required": true
+            }
+          },
+          {
+            "key": "completedAt",
+            "title": "Completed",
+            "field": {
+              "type": "date",
+              "required": false
+            }
+          },
+          {
+            "key": "duration",
+            "title": "Duration (ms)",
+            "field": {
+              "type": "number",
+              "required": false
+            }
+          },
+          {
+            "key": "metrics.totalNodes",
+            "title": "Total Nodes",
+            "field": {
+              "type": "number",
+              "required": false
+            }
+          },
+          {
+            "key": "initiatedBy",
+            "title": "Initiated By",
+            "field": {
+              "type": "text",
+              "required": true
+            }
+          }
+        ],
+        "search": {
+          "placeholder": "Search inspections...",
+          "enableColumnFilters": true
+        },
+        "toolbar": {
+          "enableCreate": false,
+          "enableBulkDelete": false
+        },
+        "pagination": {
+          "pageSize": 10
+        },
+        "rowActions": [
+          {
+            "key": "view",
+            "label": "View",
+            "type": "default"
+          },
+          {
+            "key": "edit",
+            "label": "Edit",
+            "type": "default"
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "piping-kpis": {
+      "corrosionRate": 5,
+      "designPressure": 150,
+      "designTemperature": 300,
+      "nominalThickness": 0.25,
+      "corrosionAllowance": 0.125,
+      "inspectionInterval": 5,
+      "nextInspectionDue": "2024-12-31"
+    },
+    "piping-actions": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false
+    },
+    "piping-search-grid": {
+      "defaultSort": { "field": "createdAt", "order": "desc" },
+      "defaultFilters": { "status": ["completed", "approved"] },
+      "autoRefresh": true,
+      "refreshInterval": 30000
+    }
+  }
+}

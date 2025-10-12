@@ -1,0 +1,303 @@
+{
+  "id": "thickness-measurements",
+  "type": "section",
+  "title": "Thickness Measurements",
+  "description": "Measurement planning, execution, critical areas, corrosion rate, and remaining life",
+  "icon": "ColumnHeightOutlined",
+  "order": 5,
+  "size": 12,
+  "groups": [
+    {
+      "id": "measurement-planning-group",
+      "type": "group",
+      "title": "Measurement Planning",
+      "description": "Plan for thickness measurements and locations",
+      "order": 1,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "measurement-plan",
+          "type": "textarea",
+          "title": "Measurement Plan",
+          "label": "Measurement Plan",
+          "placeholder": "Describe the measurement plan and methodology",
+          "size": 12,
+          "required": true
+        },
+        {
+          "id": "measurement-locations",
+          "type": "tags-input",
+          "title": "Measurement Locations",
+          "label": "Measurement Locations",
+          "placeholder": "Add measurement location (e.g., 'Shell - 3 o'clock position, 2 feet from bottom')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Location",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all measurement locations?"
+        },
+        {
+          "id": "measurement-method",
+          "type": "select",
+          "title": "Measurement Method",
+          "label": "Measurement Method",
+          "placeholder": "Select measurement method",
+          "size": 6,
+          "required": true,
+          "options": [
+            {"label": "Ultrasonic Testing (UT)", "value": "ut"},
+            {"label": "Radiographic Testing (RT)", "value": "rt"},
+            {"label": "Manual Caliper", "value": "manual-caliper"},
+            {"label": "Digital Caliper", "value": "digital-caliper"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "measurement-coverage",
+          "type": "select",
+          "title": "Measurement Coverage",
+          "label": "Measurement Coverage",
+          "placeholder": "Select coverage",
+          "size": 6,
+          "required": true,
+          "options": [
+            {"label": "100% Coverage", "value": "100"},
+            {"label": "Spot Check", "value": "spot"},
+            {"label": "Representative Sample", "value": "representative"},
+            {"label": "Critical Areas Only", "value": "critical"},
+            {"label": "As Required", "value": "as-required"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "measurement-execution-group",
+      "type": "group",
+      "title": "Measurement Execution",
+      "description": "Execution details for thickness measurements",
+      "order": 2,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "measurement-date",
+          "type": "date",
+          "title": "Measurement Date",
+          "label": "Measurement Date",
+          "required": true,
+          "size": 6
+        },
+        {
+          "id": "measurement-inspector",
+          "type": "text",
+          "title": "Inspector",
+          "label": "Inspector",
+          "placeholder": "Enter inspector name",
+          "required": true,
+          "size": 6
+        },
+        {
+          "id": "instrument-used",
+          "type": "select",
+          "title": "Instrument Used",
+          "label": "Instrument Used",
+          "placeholder": "Select instrument",
+          "required": true,
+          "size": 6,
+          "options": [
+            {"label": "UT Gauge", "value": "ut-gauge"},
+            {"label": "Digital Caliper", "value": "digital-caliper"},
+            {"label": "Manual Caliper", "value": "manual-caliper"},
+            {"label": "Micrometer", "value": "micrometer"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "instrument-calibration",
+          "type": "date",
+          "title": "Instrument Calibration Due",
+          "label": "Instrument Calibration Due",
+          "size": 6
+        },
+        {
+          "id": "measurement-conditions",
+          "type": "textarea",
+          "title": "Measurement Conditions",
+          "label": "Measurement Conditions",
+          "placeholder": "Describe environmental conditions during measurement",
+          "size": 12
+        }
+      ]
+    },
+    {
+      "id": "critical-areas-group",
+      "type": "group",
+      "title": "Critical Areas Assessment",
+      "description": "Critical areas identified for measurement",
+      "order": 3,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "critical-areas-identified",
+          "type": "tags-input",
+          "title": "Critical Areas Identified",
+          "label": "Critical Areas Identified",
+          "placeholder": "Add critical area (e.g., 'Shell - 6 o'clock position, high corrosion area')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Area",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all critical areas?"
+        },
+        {
+          "id": "minimum-measured-thickness",
+          "type": "number",
+          "title": "Minimum Measured Thickness (inches)",
+          "label": "Minimum Measured Thickness (inches)",
+          "placeholder": "Enter minimum thickness",
+          "required": true,
+          "size": 6
+        },
+        {
+          "id": "design-thickness-critical",
+          "type": "number",
+          "title": "Design Thickness (inches)",
+          "label": "Design Thickness (inches)",
+          "placeholder": "Enter design thickness",
+          "required": true,
+          "size": 6
+        },
+        {
+          "id": "thickness-reduction",
+          "type": "number",
+          "title": "Thickness Reduction (%)",
+          "label": "Thickness Reduction (%)",
+          "placeholder": "Calculate thickness reduction",
+          "size": 6
+        },
+        {
+          "id": "critical-area-notes",
+          "type": "textarea",
+          "title": "Critical Area Notes",
+          "label": "Critical Area Notes",
+          "placeholder": "Additional notes about critical areas",
+          "size": 6
+        }
+      ]
+    },
+    {
+      "id": "corrosion-life-group",
+      "type": "group",
+      "title": "Corrosion Rate Analysis",
+      "description": "Corrosion rate and remaining life calculations",
+      "order": 4,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "corrosion-rate-measured",
+          "type": "number",
+          "title": "Corrosion Rate (mpy)",
+          "label": "Corrosion Rate (mpy)",
+          "placeholder": "Enter corrosion rate",
+          "size": 4
+        },
+        {
+          "id": "corrosion-allowance-remaining",
+          "type": "number",
+          "title": "Remaining Corrosion Allowance (inches)",
+          "label": "Remaining Corrosion Allowance (inches)",
+          "placeholder": "Enter remaining allowance",
+          "size": 4
+        },
+        {
+          "id": "remaining-life-calculation",
+          "type": "number",
+          "title": "Calculated Remaining Life (years)",
+          "label": "Calculated Remaining Life (years)",
+          "placeholder": "Enter remaining life",
+          "size": 4
+        },
+        {
+          "id": "calculation-method",
+          "type": "select",
+          "title": "Calculation Method",
+          "label": "Calculation Method",
+          "placeholder": "Select method",
+          "size": 6,
+          "options": [
+            {"label": "API 510 Standard", "value": "api-510"},
+            {"label": "ASME Code", "value": "asme"},
+            {"label": "Custom Calculation", "value": "custom"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "calculation-notes",
+          "type": "textarea",
+          "title": "Calculation Notes",
+          "label": "Calculation Notes",
+          "placeholder": "Notes on calculation methodology and assumptions",
+          "size": 12
+        }
+      ]
+    },
+    {
+      "id": "measurement-results-group",
+      "type": "group",
+      "title": "Measurement Results & Documentation",
+      "description": "Results and attachments for thickness measurements",
+      "order": 5,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "measurement-results-table",
+          "type": "file-upload",
+          "title": "Measurement Results Table",
+          "label": "Measurement Results Table",
+          "placeholder": "Upload results table (CSV, XLSX, etc.)",
+          "size": 6
+        },
+        {
+          "id": "measurement-sheet-attachment",
+          "type": "file-upload",
+          "title": "Measurement Sheet",
+          "label": "Measurement Sheet",
+          "placeholder": "Upload measurement sheet",
+          "size": 6
+        },
+        {
+          "id": "measurement-photographs",
+          "type": "file-upload",
+          "title": "Measurement Photographs",
+          "label": "Measurement Photographs",
+          "placeholder": "Upload measurement photographs",
+          "size": 6
+        },
+        {
+          "id": "measurement-sketches",
+          "type": "file-upload",
+          "title": "Measurement Sketches",
+          "label": "Measurement Sketches",
+          "placeholder": "Upload measurement sketches",
+          "size": 6
+        },
+        {
+          "id": "measurement-summary",
+          "type": "textarea",
+          "title": "Measurement Summary",
+          "label": "Measurement Summary",
+          "placeholder": "Summary of measurement results and findings",
+          "size": 12
+        }
+      ]
+    }
+  ]
+} 

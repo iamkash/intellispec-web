@@ -1,0 +1,54 @@
+{
+  "workload": [
+    {
+      "id": "team-001",
+      "title": "Scaffolding Team A",
+      "value": "85%",
+      "description": "8 members, 3 projects",
+      "icon": "TeamOutlined",
+      "trend": "+5%",
+      "trendDirection": "up",
+      "color": "#ff4d4f"
+    },
+    {
+      "id": "team-002",
+      "title": "Scaffolding Team B",
+      "value": "70%",
+      "description": "6 members, 2 projects",
+      "icon": "TeamOutlined",
+      "trend": "-2%",
+      "trendDirection": "down",
+      "color": "#52c41a"
+    },
+    {
+      "id": "team-003",
+      "title": "Safety Team",
+      "value": "45%",
+      "description": "4 members, 4 projects",
+      "icon": "SafetyCertificateOutlined",
+      "trend": "0%",
+      "trendDirection": "stable",
+      "color": "#1890ff"
+    },
+    {
+      "id": "team-004",
+      "title": "Quality Control",
+      "value": "60%",
+      "description": "3 members, 3 projects",
+      "icon": "CheckCircleOutlined",
+      "trend": "+3%",
+      "trendDirection": "up",
+      "color": "#faad14"
+    },
+    {
+      "id": "team-005",
+      "title": "Project Management",
+      "value": "95%",
+      "description": "2 members, 6 projects",
+      "icon": "ProjectOutlined",
+      "trend": "+2%",
+      "trendDirection": "up",
+      "color": "#ff4d4f"
+    }
+  ]
+} 

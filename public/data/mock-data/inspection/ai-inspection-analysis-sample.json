@@ -1,0 +1,94 @@
+{
+  "overview": "Externally, the vessel exhibits widespread coating failure and severe corrosion localized at stiffening rings, flanges, and small-bore nozzles. One small nozzle shows through‑wall perforation. Internals appear fair from limited views. The unit is stored on cribbing with corroded lifting lugs; reconditioning and code re‑evaluation are required prior to service.",
+  "nameplateData": {
+    "manufacturer": "Wyatt Industries, Inc.",
+    "model": "Vessel #24V-383",
+    "serialNumber": "C-2651-64",
+    "yearBuilt": "1964",
+    "designPressure": "25 psi (Full Vacuum at 400°F)",
+    "designTemperature": "400°F",
+    "capacity": "96 in I.D. x 11 ft length",
+    "material": "Carbon steel (illegible on plate)",
+    "code": "ASME U-stamp",
+    "otherData": "Weight ~6700 lb; plate weathered"
+  },
+  "equipmentType": "pressure_vessel",
+  "overallCondition": "critical",
+  "detailedAnalysis": [
+    {
+      "component": "Shell exterior",
+      "condition": "heavily corroded",
+      "observations": ["coating failed", "groove/crevice at ring weld toes"],
+      "severity": "severe",
+      "measurements": "TBD via UT mapping"
+    },
+    {
+      "component": "Stiffening rings",
+      "condition": "severe corrosion",
+      "observations": ["pack rust", "water traps present"],
+      "severity": "severe"
+    },
+    {
+      "component": "Small nozzle N16",
+      "condition": "perforated",
+      "observations": ["through-wall", "pad wasted"],
+      "severity": "critical"
+    }
+  ],
+  "corrosionAssessment": {
+    "type": "uniform",
+    "severity": "severe",
+    "location": ["shell", "stiffening ring crevices", "nozzles"],
+    "estimatedDepth": ">= wall at N16 (through-wall)"
+  },
+  "coatingCondition": {
+    "type": "exterior paint",
+    "condition": "failed",
+    "coverage": "<20%",
+    "defects": ["peeling", "blistering", "underfilm corrosion"]
+  },
+  "structuralIntegrity": {
+    "deformation": "none",
+    "cracks": "suspected",
+    "alignment": "good",
+    "supports": "cribbing; original support not visible"
+  },
+  "safetyFeatures": [
+    { "feature": "ASME nameplate", "present": true, "condition": "weathered, legible" },
+    { "feature": "Relief device", "present": false, "condition": "not installed" }
+  ],
+  "recommendedActions": [
+    { "action": "Abrasive blast exterior and perform UT mapping", "priority": "High" },
+    { "action": "MT/PT ring-to-shell and nozzle welds after cleaning", "priority": "High" },
+    { "action": "Replace perforated nozzle and degraded flanges/bolting", "priority": "High" },
+    { "action": "Internal cleaning and visual; spot UT and hardness checks", "priority": "Medium" },
+    { "action": "Hydrotest and re-rate per code after repairs", "priority": "High" },
+    { "action": "Apply new protective coating; add weep holes at rings", "priority": "Medium" }
+  ],
+  "recommendations": [
+    {
+      "id": "rec-1",
+      "label": "UT mapping and weld NDE",
+      "summary": "Map thickness and examine ring/nozzle welds post-cleaning",
+      "priority": "high",
+      "actions": ["UT grid on shell/heads", "MT/PT welds at rings and nozzles"]
+    },
+    {
+      "id": "rec-2",
+      "label": "Replace failed small nozzle",
+      "summary": "Remove and replace perforated nozzle and pad",
+      "priority": "high",
+      "actions": ["Isolate/fit up", "WPS/PQR per code", "Reinspect"]
+    },
+    {
+      "id": "rec-3",
+      "label": "Recoat and add drainage",
+      "summary": "Exterior coating system with ring weeps to avoid water traps",
+      "priority": "medium",
+      "actions": ["Surface prep SSPC-SP10", "Coating per spec", "Drill weep holes"]
+    }
+  ],
+  "additionalNotes": "Mock dataset for UI validation of analysis rendering and downstream population."
+}
+
+

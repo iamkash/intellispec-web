@@ -1,0 +1,130 @@
+{
+  "id": "generic/generic-data-workspace",
+  "title": "Generic Data Workspace",
+  "description": "TRULY generic workspace - NO HARDCODED BUSINESS LOGIC - works with ANY data domain",
+  "layout": "dashboard",
+
+  "filterContext": {
+    "enabled": true,
+    "filters": [
+      {
+        "id": "tenant_id",
+        "type": "text",
+        "label": "Tenant ID",
+        "placeholder": "Enter tenant ID...",
+        "refreshTrigger": true,
+        "required": true
+      },
+      {
+        "id": "date_range",
+        "type": "daterange",
+        "label": "Date Range",
+        "placeholder": "Select date range...",
+        "presets": ["MTD", "QTD", "YTD", "Last 6 Months", "Last Year"],
+        "refreshTrigger": true
+      }
+    ]
+  },
+
+  "gadgets": [
+    {
+      "id": "generic-chatbot",
+      "type": "rag-chatbot-gadget",
+      "title": "AI Assistant",
+      "description": "TRULY generic AI assistant - NO hardcoded business logic",
+      "config": {
+        "welcomeMessage": "Hello! I'm your AI assistant. Ask me anything about your data.",
+        "placeholder": "Ask me anything about your data...",
+        "maxHeight": "400px",
+        "theme": "minimal",
+
+        "rag": {
+          "enabled": true,
+          "vectorStore": "mongodb_atlas",
+          "embeddingModel": "text-embedding-3-small",
+          "searchIndex": "generic_vector_search",
+          "collection": "documents",
+          "embeddingDimensions": 1536,
+          "maxResults": 100,
+
+          "configurableFieldMappings": {
+            "tenant_id": "tenantId",
+            "date_range": "created_date"
+          },
+
+          "documentTypes": ["documents"],
+          "filterFields": ["tenantId"],
+
+          "queryIntelligence": {
+            "relationshipKeywords": ["related", "connected", "linked", "associated", "used", "belongs"],
+            "analysisKeywords": ["highest", "lowest", "most", "least", "maximum", "minimum", "top", "bottom", "best", "worst"],
+            "documentTypeMappings": [
+              {
+                "name": "generic data",
+                "keywords": ["data", "records", "documents", "items"],
+                "documentTypes": ["documents"]
+              }
+            ],
+            "relationshipDocumentTypes": ["documents"]
+          },
+
+          "contextEnhancement": {
+            "analysisFields": ["name", "title", "description", "content", "value", "amount"],
+            "contextualFields": {
+              "documents": ["name", "title", "description", "type"]
+            }
+          },
+
+          "aggregateQueries": {
+            "totalCount": {
+              "description": "Count total items of a type",
+              "collection": "documents",
+              "baseFilter": {},
+              "operation": "count",
+              "responseTemplate": "{value} total items found"
+            },
+            "totalValue": {
+              "description": "Sum values from items",
+              "collection": "documents",
+              "baseFilter": {},
+              "sumField": "value",
+              "responseTemplate": "Total value: {value}"
+            }
+          },
+
+          "entityMappings": {
+            "documents": {
+              "searchFields": ["name", "title", "description", "content"],
+              "displayField": "name",
+              "idField": "id",
+              "extractionPatterns": [
+                /about\s+(.+?)(?:\?|$|\s+total|\s+count|\s+sum)/i,
+                /for\s+(.+?)(?:\?|$|\s+total|\s+count|\s+sum)/i,
+                /(.+?)(?:\s+total|\s+count|\s+sum)/i
+              ]
+            }
+          },
+
+          "semanticFields": {
+            "fields": ["name", "title", "description", "content", "value", "type"]
+          }
+        },
+
+        "ai": {
+          "model": "gpt-4",
+          "temperature": 0.3,
+          "maxTokens": 500,
+          "systemPrompt": "You are a helpful AI assistant for data analysis. Answer questions based on the provided context and be direct and concise.",
+          "contextPrompt": "Available data: {context}. Answer the user's question directly."
+        }
+      }
+    }
+  ],
+
+  "settings": {
+    "autoRefresh": false,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable"
+  }
+}

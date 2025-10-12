@@ -1,0 +1,26 @@
+{
+  "id": "ladder-scaffold-inspection",
+  "title": "Ladder/Scaffold Inspection Checklist",
+  "description": "Inspection checklist for ladders and scaffolds.",
+  "gadgets": [
+    {
+      "id": "ladder-scaffold-inspection-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Ladder/Scaffold Inspection",
+      "config": {
+        "sections": [
+          { "id": "inspection_items", "title": "Inspection Items", "includeInPdf": true, "grid": { "title": "Checklist", "dataKey": "items", "columns": [ { "key": "item", "title": "Item", "editable": true }, { "key": "status", "title": "Status", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "itemsPopulate", "btnLabel": "Populate from AI" } },
+          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+        ],
+        "groups": [ { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
+        "fields": [ { "id": "inspector", "label": "Inspector", "type": "text", "groupId": "signoff_group", "lgSpan": 12 }, { "id": "date", "label": "Date", "type": "date", "groupId": "signoff_group", "lgSpan": 12 } ],
+        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Ladder/Scaffold", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
+        "prompts": { "itemsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 700, "temperature": 0.3 }, "promptConfig": { "systemPrompt": "Generate a ladder/scaffold checklist.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"item\": \"string\", \"status\": \"OK|Repair|N/A\", \"notes\": \"string\" } ]" } } }
+      },
+      "position": 24
+    }
+  ]
+}
+
+
+

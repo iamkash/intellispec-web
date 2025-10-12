@@ -1,0 +1,219 @@
+{
+  "id": "reference-data-management",
+  "title": "Reference Data Management",
+  "description": "Manage reference data lists and options - the single source of truth for all dropdown/select options",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "reference-data-management",
+      "type": "reference-data-management-gadget",
+      "title": "Reference Data Management",
+      "description": "Manage reference data lists and their options - create, edit, and organize dropdown values used throughout the application",
+      "position": 24,
+      "config": {
+        "listTypesConfig": {
+          "dataUrl": "/api/reference-data/list-types",
+          "searchPlaceholder": "Search list types...",
+          "showCategories": true,
+          "showCreateButton": true,
+          "createButtonText": "New List Type",
+          "requiredFields": {
+            "displayName": {
+              "required": true,
+              "minLength": 2,
+              "maxLength": 100
+            },
+            "name": {
+              "required": true,
+              "pattern": "^[a-z0-9_]+$",
+              "description": "Only lowercase letters, numbers, and underscores allowed"
+            },
+            "category": {
+              "required": true,
+              "options": [
+                { "value": "general", "label": "General", "icon": "AppstoreOutlined" },
+                { "value": "user", "label": "User Management", "icon": "TeamOutlined" },
+                { "value": "system", "label": "System", "icon": "ToolOutlined" },
+                { "value": "business", "label": "Business", "icon": "ShoppingOutlined" },
+                { "value": "workflow", "label": "Workflow", "icon": "BranchesOutlined" }
+              ]
+            },
+            "description": {
+              "required": false,
+              "maxLength": 200
+            },
+            "sortBy": {
+              "required": true,
+              "default": "label",
+              "options": [
+                { "value": "label", "label": "By Label (A-Z)", "icon": "SortAscendingOutlined" },
+                { "value": "value", "label": "By Value", "icon": "TagOutlined" },
+                { "value": "order", "label": "By Sort Order", "icon": "DatabaseOutlined" }
+              ]
+            },
+            "allowCustom": {
+              "required": true,
+              "default": false,
+              "options": [
+                { "value": false, "label": "No - Fixed list only", "icon": "LockOutlined" },
+                { "value": true, "label": "Yes - Users can add custom values", "icon": "UnlockOutlined" }
+              ]
+            }
+          }
+        },
+        "optionsConfig": {
+          "dataUrl": "/api/reference-data/options",
+          "showAIGenerate": true,
+          "aiGenerateButtonText": "AI Generate Options"
+        }
+      }
+    }
+  ],
+  "actions": [
+    {
+      "id": "create-list-type",
+      "type": "modal",
+      "title": "Create New List Type",
+      "trigger": "list-type-selector.create",
+      "form": {
+        "fields": [
+          {
+            "name": "displayName",
+            "label": "Display Name",
+            "type": "text",
+            "required": true,
+            "placeholder": "e.g., User Status, Priority Levels"
+          },
+          {
+            "name": "name",
+            "label": "Internal Name",
+            "type": "text",
+            "required": true,
+            "placeholder": "e.g., user_status, priority_levels",
+            "description": "Lowercase, no spaces. Used in API calls."
+          },
+          {
+            "name": "category",
+            "label": "Category",
+            "type": "select",
+            "required": true,
+            "options": [
+              { "value": "general", "label": "General" },
+              { "value": "user", "label": "User Management" },
+              { "value": "system", "label": "System" },
+              { "value": "business", "label": "Business" },
+              { "value": "workflow", "label": "Workflow" }
+            ]
+          },
+          {
+            "name": "description",
+            "label": "Description",
+            "type": "textarea",
+            "required": false,
+            "placeholder": "Brief description of what this list is used for"
+          },
+          {
+            "name": "sortBy",
+            "label": "Default Sort Order",
+            "type": "select",
+            "required": true,
+            "options": [
+              { "value": "label", "label": "By Label (A-Z)" },
+              { "value": "value", "label": "By Value" },
+              { "value": "order", "label": "By Sort Order" }
+            ]
+          },
+          {
+            "name": "allowCustom",
+            "label": "Allow Custom Values",
+            "type": "select",
+            "required": true,
+            "options": [
+              { "value": false, "label": "No - Fixed list only" },
+              { "value": true, "label": "Yes - Users can add custom values" }
+            ]
+          }
+        ]
+      },
+      "api": {
+        "method": "POST",
+        "url": "/api/reference-data/list-types"
+      }
+    },
+    {
+      "id": "ai-generate-options",
+      "type": "modal",
+      "title": "🤖 AI Generate Options",
+      "trigger": "options-management-grid.ai-generate",
+      "form": {
+        "fields": [
+          {
+            "name": "prompt",
+            "label": "Additional Requirements",
+            "type": "textarea",
+            "required": false,
+            "placeholder": "e.g., Include international options, focus on technology industry, add common abbreviations...",
+            "description": "Provide additional context or requirements for the AI to generate better options"
+          },
+          {
+            "name": "count",
+            "label": "Number of Options",
+            "type": "number",
+            "required": true,
+            "defaultValue": 10,
+            "min": 1,
+            "max": 50
+          },
+          {
+            "name": "replaceExisting",
+            "label": "Replace Existing Options",
+            "type": "select",
+            "required": true,
+            "defaultValue": false,
+            "options": [
+              { "value": false, "label": "No - Add to existing options" },
+              { "value": true, "label": "Yes - Replace all existing options" }
+            ],
+            "description": "⚠️ Warning: Selecting 'Yes' will delete all current options for this list type"
+          }
+        ]
+      },
+      "api": {
+        "method": "POST",
+        "url": "/api/reference-data/ai-generate/{selectedListTypeId}"
+      },
+      "aiConfig": {
+        "useCase": "referenceDataGeneration",
+        "model": "gpt-5-nano",
+        "maxCompletionTokens": 2000,
+        "systemPrompt": "You are a helpful assistant specialized in generating business reference data. You create realistic, commonly-used options for dropdown lists and reference data systems. Always respond with valid JSON only.",
+        "userPromptTemplate": "Generate {{count}} realistic and commonly-used options for a \"{{displayName}}\" dropdown list.\n\nContext Information:\n- List Type: {{displayName}}\n- Category: {{category}}\n- Description: {{description}}\n- Internal Name: {{name}}\n- Sort Preference: {{sortBy}}\n- Allows Custom Values: {{allowCustom}}\n\n{{#userPrompt}}Additional Requirements: {{userPrompt}}\n\n{{/userPrompt}}Instructions:\n- Generate practical, real-world options that users would commonly need\n- Each option should have a clear, user-friendly label\n- Values must be unique, URL-safe (lowercase, no spaces, use hyphens/underscores)\n- Include brief descriptions that explain when to use each option\n- Consider the category \"{{category}}\" when generating options\n- Make options relevant to business/enterprise applications\n- Ensure consistent formatting and naming conventions\n\nReturn a JSON object with this exact structure:\n{\n  \"options\": [\n    {\n      \"label\": \"Display Name\",\n      \"value\": \"unique_value\",\n      \"description\": \"Brief explanation of when to use this option\"\n    }\n  ]\n}\n\nRequirements:\n- Return only valid JSON, no additional text or formatting\n- Ensure all values are unique within the list\n- Labels should be professional and clear\n- Descriptions should be concise but informative\n- CRITICAL: Your response must be valid JSON that starts with { and ends with }"
+      }
+    }
+  ],
+  "permissions": {
+    "view": ["admin", "super_admin"],
+    "create": ["admin", "super_admin"],
+    "edit": ["admin", "super_admin"],
+    "delete": ["super_admin"],
+    "ai_generate": ["admin", "super_admin"]
+  },
+  "help": {
+    "overview": "This dashboard manages all reference data lists used throughout the application. Create list types (like 'User Status', 'Priority Levels') and their options (like 'Active', 'Inactive'). All dropdown menus in forms will pull from these centralized lists.",
+    "features": [
+      "🔍 Search and filter list types by name or category",
+      "➕ Create new list types with custom sorting and validation rules",
+      "✏️ Add, edit, and delete individual options for each list type",
+      "🤖 AI-powered option generation based on list type and context",
+      "🔄 Bulk operations for activating/deactivating multiple options",
+      "📊 Real-time option counts and last updated timestamps"
+    ],
+    "tips": [
+      "Use clear, descriptive names for list types (e.g., 'User Status' not 'Status')",
+      "Keep option values URL-safe (lowercase, no spaces, use hyphens/underscores)",
+      "Use the AI generation feature to quickly populate common list types",
+      "Set appropriate sort orders for options that have a natural sequence",
+      "Deactivate options instead of deleting them to preserve data integrity"
+    ]
+  }
+}

@@ -1,0 +1,247 @@
+{
+  "id": "membership-list",
+  "title": "User Membership Management",
+  "description": "Manage user access and roles across all tenants in the multi-tenant platform",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "membership-data-grid",
+      "type": "sgrid-search-gadget",
+      "title": "User Memberships",
+      "config": {
+        "dataUrl": "/api/multi-tenant/memberships",
+        "createUrl": "/api/multi-tenant/memberships",
+        "updateUrl": "/api/multi-tenant/memberships",
+        "columns": [
+          {
+            "key": "user.email",
+            "title": "User Email",
+            "width": 200,
+            "sortable": true,
+            "field": {
+              "type": "email",
+              "required": true,
+              "placeholder": "user@example.com"
+            }
+          },
+          {
+            "key": "user.name",
+            "title": "User Name",
+            "width": 150,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": false,
+              "placeholder": "Full name"
+            }
+          },
+          {
+            "key": "tenant.name",
+            "title": "Tenant",
+            "width": 150,
+            "sortable": true,
+            "field": {
+              "type": "select",
+              "required": true,
+              "optionsUrl": "/api/multi-tenant/tenants?format=options",
+              "placeholder": "Select tenant"
+            }
+          },
+          {
+            "key": "role",
+            "title": "Role",
+            "width": 120,
+            "sortable": true,
+            "field": {
+              "type": "select",
+              "required": true,
+              "options": [
+                { "value": "tenant_admin", "label": "Tenant Admin", "color": "red" },
+                { "value": "user", "label": "User", "color": "blue" },
+                { "value": "viewer", "label": "Viewer", "color": "gray" },
+                { "value": "custom", "label": "Custom", "color": "purple" }
+              ]
+            }
+          },
+          {
+            "key": "user.status",
+            "title": "Status",
+            "width": 100,
+            "sortable": true,
+            "field": {
+              "type": "select",
+              "required": true,
+              "options": [
+                { "value": "active", "label": "Active", "color": "green" },
+                { "value": "invited", "label": "Invited", "color": "orange" },
+                { "value": "disabled", "label": "Disabled", "color": "red" }
+              ]
+            }
+          },
+          {
+            "key": "user.lastLoginAt",
+            "title": "Last Login",
+            "width": 120,
+            "sortable": true,
+            "field": {
+              "type": "datetime",
+              "required": false
+            }
+          },
+          {
+            "key": "createdAt",
+            "title": "Added",
+            "width": 120,
+            "sortable": true,
+            "field": {
+              "type": "date",
+              "required": false
+            }
+          }
+        ],
+        "rowActions": [
+          {
+            "key": "edit",
+            "label": "Edit Membership",
+            "icon": "EditOutlined",
+            "type": "primary",
+            "action": "editMembership"
+          },
+          {
+            "key": "view-user",
+            "label": "View User Profile",
+            "icon": "UserOutlined",
+            "type": "default",
+            "workspace": "system-admin/user-profile"
+          },
+          {
+            "key": "impersonate",
+            "label": "Impersonate User",
+            "icon": "SwapOutlined",
+            "type": "default",
+            "confirmText": "Impersonate this user? All actions will be audited.",
+            "action": "impersonateUser"
+          },
+          {
+            "key": "resend-invite",
+            "label": "Resend Invite",
+            "icon": "MailOutlined",
+            "type": "default",
+            "condition": "user.status === 'invited'",
+            "action": "resendInvite"
+          },
+          {
+            "key": "disable",
+            "label": "Disable User",
+            "icon": "StopOutlined",
+            "type": "danger",
+            "confirmText": "Disable this user's access?",
+            "condition": "user.status !== 'disabled'",
+            "action": "disableUser"
+          },
+          {
+            "key": "remove",
+            "label": "Remove Membership",
+            "icon": "DeleteOutlined",
+            "type": "danger",
+            "confirmText": "Remove this user's access to the tenant?",
+            "action": "removeMembership"
+          }
+        ],
+        "search": {
+          "placeholder": "Search by user email, name, or tenant...",
+          "filters": [
+            {
+              "key": "tenant",
+              "label": "Tenant",
+              "type": "select",
+              "optionsUrl": "/api/multi-tenant/tenants?format=options"
+            },
+            {
+              "key": "role",
+              "label": "Role",
+              "type": "select",
+              "options": [
+                { "value": "tenant_admin", "label": "Tenant Admin" },
+                { "value": "user", "label": "User" },
+                { "value": "viewer", "label": "Viewer" },
+                { "value": "custom", "label": "Custom" }
+              ]
+            },
+            {
+              "key": "status",
+              "label": "Status",
+              "type": "select",
+              "options": [
+                { "value": "active", "label": "Active" },
+                { "value": "invited", "label": "Invited" },
+                { "value": "disabled", "label": "Disabled" }
+              ]
+            }
+          ]
+        },
+        "pagination": {
+          "pageSize": 15,
+          "showSizeChanger": true
+        },
+        "toolbar": {
+          "showRefresh": true,
+          "showExport": true,
+          "customActions": [
+            {
+              "key": "invite-user",
+              "label": "Invite New User",
+              "icon": "UserAddOutlined",
+              "type": "primary",
+              "workspace": "system-admin/user-invitation"
+            },
+            {
+              "key": "bulk-invite",
+              "label": "Bulk Invite",
+              "icon": "UsergroupAddOutlined",
+              "type": "default",
+              "workspace": "system-admin/bulk-user-invitation"
+            }
+          ]
+        }
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": true,
+    "enablePrint": false,
+    "requireSuperAdmin": true,
+    "auditAllActions": true,
+    "tenantScoped": false
+  },
+  "metadata": {
+    "created": "2025-01-24T04:35:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "membership", "users", "roles"],
+    "description": "Dedicated workspace for managing user memberships and access across tenants",
+    "features": [
+      "User membership management",
+      "Role assignment and modification",
+      "User invitation and onboarding",
+      "Bulk operations",
+      "User impersonation with audit"
+    ],
+    "permissions": {
+      "required": ["super_admin"],
+      "actions": [
+        "membership:create",
+        "membership:read",
+        "membership:update",
+        "membership:delete",
+        "user:invite",
+        "user:impersonate"
+      ]
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "name": "AI Models Configuration",
+  "description": "Global AI model configurations for different use cases",
+  "version": "1.0.0",
+  
+  "models": {
+    "gpt-4": {
+      "name": "GPT-4",
+      "provider": "openai",
+      "maxTokens": 4096,
+      "supportedFeatures": ["chat", "json_mode", "function_calling"],
+      "costPerToken": 0.00003,
+      "description": "Most capable model for complex tasks"
+    },
+    
+    "gpt-4-turbo": {
+      "name": "GPT-4 Turbo",
+      "provider": "openai", 
+      "maxTokens": 4096,
+      "supportedFeatures": ["chat", "json_mode", "function_calling", "vision"],
+      "costPerToken": 0.00001,
+      "description": "Faster and cheaper GPT-4 variant"
+    },
+    
+    "gpt-3.5-turbo": {
+      "name": "GPT-3.5 Turbo",
+      "provider": "openai",
+      "maxTokens": 4096,
+      "supportedFeatures": ["chat", "json_mode", "function_calling"],
+      "costPerToken": 0.000002,
+      "description": "Fast and cost-effective for simpler tasks"
+    },
+    
+    "gpt-5-nano": {
+      "name": "GPT-5 Nano",
+      "provider": "openai",
+      "maxCompletionTokens": 2048,
+      "supportedFeatures": ["chat", "reasoning"],
+      "costPerToken": 0.000001,
+      "description": "Compact reasoning model optimized for efficiency",
+      "specialHandling": {
+        "usesMaxCompletionTokens": true,
+        "temperatureSupport": false,
+        "reasoningEnabled": true
+      }
+    }
+  },
+  
+  "presets": {
+    "creative": {
+      "temperature": 0.9,
+      "topP": 0.9,
+      "description": "High creativity for brainstorming and ideation"
+    },
+    
+    "balanced": {
+      "temperature": 0.7,
+      "topP": 0.8,
+      "description": "Balanced creativity and consistency"
+    },
+    
+    "precise": {
+      "temperature": 0.3,
+      "topP": 0.5,
+      "description": "Low creativity for factual and consistent responses"
+    },
+    
+    "deterministic": {
+      "temperature": 0.0,
+      "topP": 0.1,
+      "description": "Most consistent and predictable responses"
+    }
+  },
+  
+  "useCases": {
+    "referenceDataGeneration": {
+      "recommendedModel": "gpt-4",
+      "preset": "balanced",
+      "maxTokens": 2000,
+      "responseFormat": { "type": "json_object" }
+    },
+    
+    "contentGeneration": {
+      "recommendedModel": "gpt-4",
+      "preset": "creative", 
+      "maxTokens": 3000
+    },
+    
+    "dataAnalysis": {
+      "recommendedModel": "gpt-4",
+      "preset": "precise",
+      "maxTokens": 4000
+    },
+    
+    "codeGeneration": {
+      "recommendedModel": "gpt-4",
+      "preset": "precise",
+      "maxTokens": 4000
+    }
+  }
+}

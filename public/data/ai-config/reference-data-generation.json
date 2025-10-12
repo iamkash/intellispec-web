@@ -1,0 +1,178 @@
+{
+  "name": "Reference Data Generation",
+  "description": "AI configuration for generating reference data options",
+  "version": "1.0.0",
+  
+  "aiGeneration": {
+    "model": "gpt-4",
+    "temperature": 0.7,
+    "maxTokens": 2000,
+    "responseFormat": { "type": "json_object" },
+    
+    "systemPrompt": "You are a helpful assistant that generates structured data for business applications. You specialize in creating realistic, commonly-used options for dropdown lists and reference data. Always respond with valid JSON only.",
+    
+    "userPromptTemplate": "Generate {{count}} realistic and commonly-used options for a \"{{displayName}}\" dropdown list.\n\nContext Information:\n- List Type: {{displayName}}\n- Category: {{category}}\n- Description: {{description}}\n- Internal Name: {{name}}\n- Sort Preference: {{sortBy}}\n- Allows Custom Values: {{allowCustom}}\n\n{{#userPrompt}}Additional Requirements: {{userPrompt}}\n{{/userPrompt}}\n\nInstructions:\n- Generate practical, real-world options that users would commonly need\n- Each option should have a clear, user-friendly label\n- Values must be unique, URL-safe (lowercase, no spaces, use hyphens/underscores)\n- Include brief descriptions that explain when to use each option\n- Consider the category \"{{category}}\" when generating options\n- Make options relevant to business/enterprise applications\n- Ensure consistent formatting and naming conventions\n\nReturn a JSON object with this exact structure:\n{\n  \"options\": [\n    {\n      \"label\": \"Display Name\",\n      \"value\": \"unique_value\",\n      \"description\": \"Brief explanation of when to use this option\"\n    }\n  ]\n}\n\nRequirements:\n- Return only valid JSON, no additional text or formatting\n- Ensure all values are unique within the list\n- Labels should be professional and clear\n- Descriptions should be concise but informative"
+  },
+  
+  "fallbackGeneration": {
+    "defaultPattern": "generic",
+    
+    "patterns": {
+      "status": {
+        "keywords": ["status", "state", "condition"],
+        "options": [
+          {
+            "label": "Active",
+            "value": "active",
+            "description": "Currently active and operational"
+          },
+          {
+            "label": "Inactive",
+            "value": "inactive", 
+            "description": "Not currently active"
+          },
+          {
+            "label": "Pending",
+            "value": "pending",
+            "description": "Awaiting approval or processing"
+          },
+          {
+            "label": "Suspended",
+            "value": "suspended",
+            "description": "Temporarily suspended"
+          },
+          {
+            "label": "Archived",
+            "value": "archived",
+            "description": "Archived for historical reference"
+          }
+        ]
+      },
+      
+      "priority": {
+        "keywords": ["priority", "urgency", "importance"],
+        "options": [
+          {
+            "label": "Critical",
+            "value": "critical",
+            "description": "Requires immediate attention"
+          },
+          {
+            "label": "High",
+            "value": "high",
+            "description": "High priority, address soon"
+          },
+          {
+            "label": "Medium",
+            "value": "medium",
+            "description": "Normal priority"
+          },
+          {
+            "label": "Low",
+            "value": "low",
+            "description": "Low priority, can be deferred"
+          }
+        ]
+      },
+      
+      "department": {
+        "keywords": ["department", "division", "team", "unit"],
+        "options": [
+          {
+            "label": "Human Resources",
+            "value": "human_resources",
+            "description": "HR and personnel management"
+          },
+          {
+            "label": "Information Technology",
+            "value": "information_technology",
+            "description": "IT and technical services"
+          },
+          {
+            "label": "Finance",
+            "value": "finance",
+            "description": "Financial operations and accounting"
+          },
+          {
+            "label": "Operations",
+            "value": "operations",
+            "description": "Daily operations and logistics"
+          },
+          {
+            "label": "Sales",
+            "value": "sales",
+            "description": "Sales and customer acquisition"
+          },
+          {
+            "label": "Marketing",
+            "value": "marketing",
+            "description": "Marketing and communications"
+          }
+        ]
+      },
+      
+      "category": {
+        "keywords": ["category", "type", "classification"],
+        "options": [
+          {
+            "label": "General",
+            "value": "general",
+            "description": "General category"
+          },
+          {
+            "label": "Administrative",
+            "value": "administrative",
+            "description": "Administrative functions"
+          },
+          {
+            "label": "Technical",
+            "value": "technical",
+            "description": "Technical operations"
+          },
+          {
+            "label": "Business",
+            "value": "business",
+            "description": "Business operations"
+          },
+          {
+            "label": "Support",
+            "value": "support",
+            "description": "Support services"
+          }
+        ]
+      },
+      
+      "generic": {
+        "keywords": [],
+        "options": [
+          {
+            "label": "Option 1",
+            "value": "option_1",
+            "description": "First option"
+          },
+          {
+            "label": "Option 2", 
+            "value": "option_2",
+            "description": "Second option"
+          },
+          {
+            "label": "Option 3",
+            "value": "option_3", 
+            "description": "Third option"
+          },
+          {
+            "label": "Option 4",
+            "value": "option_4",
+            "description": "Fourth option"
+          },
+          {
+            "label": "Option 5",
+            "value": "option_5",
+            "description": "Fifth option"
+          }
+        ]
+      }
+    }
+  }
+}
+

@@ -1,0 +1,43 @@
+{
+  "menu_items": [
+    {
+      "key": "home",
+      "icon": "HomeOutlined",
+      "label": "Home",
+      "license_id": "LIC_INTELLI_SCAFF",
+      "auth_id": "AUTH_SCAFF_TECH",
+      "enabled": true,
+      "order": 1,
+      "route": "/intelliSCAFF/home",
+      "type": "item",
+      "permissions": ["inspection.view"],
+      "workspace": "intelliSCAFF/home",
+      "is_default": true
+    },
+    {
+      "key": "calculators",
+      "icon": "CalculatorOutlined",
+      "label": "Calculators",
+      "license_id": "LIC_INTELLI_SCAFF",
+      "auth_id": "AUTH_SCAFF_TECH",
+      "enabled": true,
+      "order": 2,
+      "route": "/intelliSCAFF/calculators",
+      "type": "item",
+      "permissions": ["inspection.view"],
+      "workspace": "intelliSCAFF/calculators"
+    }
+  ]
+}
+
+
+
+
+
+
+
+
+
+
+
+

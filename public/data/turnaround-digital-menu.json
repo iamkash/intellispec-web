@@ -1,0 +1,52 @@
+{
+  "menu_items": [
+    {
+      "key": "turnaround-dashboard",
+      "icon": "DashboardOutlined",
+      "label": "Turnaround Dashboard",
+      "license_id": "LIC_TURN_DIG",
+      "auth_id": "AUTH_PLANNER",
+      "enabled": true,
+      "order": 1,
+      "route": "/turnaround/dashboard",
+      "type": "item",
+      "permissions": ["turnaround.view"]
+    },
+    {
+      "key": "planning",
+      "icon": "CalendarOutlined",
+      "label": "Planning",
+      "license_id": "LIC_TURN_DIG",
+      "auth_id": "AUTH_PLANNER",
+      "enabled": true,
+      "order": 2,
+      "route": "/turnaround/planning",
+      "type": "item",
+      "permissions": ["turnaround.planning"]
+    },
+    {
+      "key": "execution",
+      "icon": "PlayCircleOutlined",
+      "label": "Execution",
+      "license_id": "LIC_TURN_DIG",
+      "auth_id": "AUTH_PLANNER",
+      "enabled": true,
+      "order": 3,
+      "route": "/turnaround/execution",
+      "type": "item",
+      "permissions": ["turnaround.execution"]
+    },
+    {
+      "key": "progress-tracking",
+      "icon": "ProgressOutlined",
+      "label": "Progress Tracking",
+      "license_id": "LIC_TURN_DIG",
+      "auth_id": "AUTH_PLANNER",
+      "enabled": true,
+      "order": 4,
+      "route": "/turnaround/progress",
+      "type": "item",
+      "permissions": ["turnaround.tracking"]
+    }
+  ]
+} 

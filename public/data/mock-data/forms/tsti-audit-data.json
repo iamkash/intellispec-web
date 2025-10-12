@@ -1,0 +1,32 @@
+{
+  "formData": {
+    "site": "Main Production Facility",
+    "date": "2024-01-15",
+    "jobAudited": "Equipment maintenance and calibration procedures",
+    "auditorName": "John Smith",
+    "auditorTitle": "Senior Safety Auditor",
+    "q1": "yes",
+    "q1_reason": "",
+    "q2": "3",
+    "q3": "2",
+    "q4": "3",
+    "q5": "no",
+    "q5_reason": "TSTI was not updated when scope changed from calibration to maintenance",
+    "q6": "yes",
+    "q6_reason": "",
+    "q7": "yes",
+    "q7_reason": "",
+    "q8": "yes",
+    "q8_reason": "",
+    "q9": "yes",
+    "q9_reason": "",
+    "q10": "na",
+    "q11": "yes",
+    "totalYes": 7,
+    "totalNo": 1,
+    "totalNA": 1,
+    "score": 8,
+    "comments": "Overall good compliance with TSTI procedures. Minor issue with scope change documentation needs improvement.",
+    "nextSteps": "Update TSTI documentation process for scope changes and retrain FLS on proper procedures."
+  }
+} 

@@ -1,0 +1,26 @@
+{
+  "id": "ppe-inspection-log",
+  "title": "PPE Inspection Log",
+  "description": "Track PPE inspections; AI can suggest categories and items.",
+  "gadgets": [
+    {
+      "id": "ppe-inspection-log-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "PPE Inspection Log",
+      "config": {
+        "sections": [
+          { "id": "inspection_items", "title": "PPE Items", "includeInPdf": true, "grid": { "title": "Items", "dataKey": "items", "columns": [ { "key": "category", "title": "Category", "editable": true }, { "key": "item", "title": "Item", "editable": true }, { "key": "status", "title": "Status", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "itemsPopulate", "btnLabel": "Populate from AI" } },
+          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+        ],
+        "groups": [ { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
+        "fields": [ { "id": "inspector", "label": "Inspector", "type": "text", "groupId": "signoff_group", "lgSpan": 12 }, { "id": "inspection_date", "label": "Date", "type": "date", "groupId": "signoff_group", "lgSpan": 12 } ],
+        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "PPE Log", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
+        "prompts": { "itemsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800, "temperature": 0.3 }, "promptConfig": { "systemPrompt": "Propose PPE inspection items with statuses. JSON array only.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"category\": \"string\", \"item\": \"string\", \"status\": \"OK|Replace|Clean|N/A\", \"notes\": \"string\" } ]" } } }
+      },
+      "position": 24
+    }
+  ]
+}
+
+
+

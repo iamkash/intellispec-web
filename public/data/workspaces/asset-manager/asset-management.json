@@ -1,0 +1,185 @@
+{
+  "id": "asset-manager/asset-management",
+  "title": "Asset Management",
+  "description": "Hierarchical asset management with sites, asset groups, and assets",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "asset-navigation",
+      "type": "action-panel-gadget",
+      "title": "Navigation & Actions",
+      "description": "Action panel providing navigation to related workspaces and asset management actions",
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 5,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "voc-dashboard",
+            "label": "← VOC Dashboard",
+            "description": "Return to VOC workspace",
+            "icon": "DashboardOutlined",
+            "type": "default",
+            "workspace": "compliance-manager/voc-workspace"
+          },
+          {
+            "key": "import-export",
+            "label": "Import/Export",
+            "description": "Import and export asset data",
+            "icon": "ImportOutlined",
+            "type": "primary",
+            "workspace": "asset-manager/asset-import-export"
+          },
+          {
+            "key": "paint-specs",
+            "label": "Paint Specs",
+            "description": "Paint specifications management",
+            "icon": "ExperimentOutlined",
+            "type": "default",
+            "workspace": "asset-manager/paint-specs-dashboard"
+          }
+        ]
+      },
+      "position": 24
+    },
+    {
+      "id": "asset-tree-panel",
+      "type": "split-panel-gadget",
+      "title": "Asset Hierarchy Management",
+      "description": "Split panel displaying hierarchical asset tree on left and asset dashboard with KPIs on right",
+      "config": {
+        "orientation": "horizontal",
+        "defaultSizes": [30, 70],
+        "minSizes": [250, 400],
+        "resizerStyle": "line",
+        "panels": [
+          {
+            "id": "resource-tree",
+            "title": "Asset Tree",
+            "gadget": {
+              "type": "resource-tree-gadget",
+              "config": {
+                "title": "Company Assets",
+                "rootLabel": "Company",
+                "showSearch": true,
+                "searchPlaceholder": "Search sites, groups, assets...",
+                "allowDragDrop": true,
+                "showIcons": true,
+                "expandOnSelect": true,
+                "multiSelect": false,
+                "treeData": {
+                  "dataUrl": "/api/documents",
+                  "endpoints": {
+                    "companies": "?type=company",
+                    "sites": "?type=site",
+                    "assetGroups": "?type=asset_group",
+                    "assets": "?type=asset"
+                  }
+                },
+                "nodeTypes": [
+                  {
+                    "type": "company",
+                    "icon": "BankOutlined",
+                    "color": "#fa8c16",
+                    "actions": ["view", "edit", "add_site", "delete", "restore"]
+                  },
+                  {
+                    "type": "site",
+                    "icon": "ApartmentOutlined",
+                    "color": "#1890ff",
+                    "actions": ["view", "edit", "add_group", "delete", "restore"]
+                  },
+                  {
+                    "type": "asset_group",
+                    "icon": "AppstoreOutlined", 
+                    "color": "#52c41a",
+                    "actions": ["view", "edit", "add_asset", "add_subgroup", "delete", "restore"]
+                  },
+                  {
+                    "type": "asset",
+                    "icon": "DatabaseOutlined",
+                    "color": "#722ed1",
+                    "actions": ["view", "edit", "delete", "restore", "maintenance"]
+                  }
+                ],
+                "contextMenu": {
+                  "enabled": true,
+                  "items": [
+                    { "key": "view", "label": "View Details", "icon": "EyeOutlined" },
+                    { "key": "edit", "label": "Edit", "icon": "EditOutlined" },
+                    { "key": "add_company", "label": "Add Company", "icon": "BankOutlined" },
+                    { "key": "add_site", "label": "Add Site", "icon": "PlusCircleOutlined" },
+                    { "key": "add_group", "label": "Add Asset Group", "icon": "AppstoreAddOutlined" },
+                    { "key": "add_asset", "label": "Add Asset", "icon": "PlusOutlined" },
+                    { "key": "delete", "label": "Delete", "icon": "DeleteOutlined", "danger": true },
+                    { "key": "restore", "label": "Restore", "icon": "UndoOutlined", "showForDeleted": true }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "id": "asset-dashboard",
+            "title": "Asset Dashboard",
+            "gadget": {
+              "type": "asset-dashboard-gadget",
+              "config": {
+                "title": "Asset Details & KPIs",
+                "showPlaceholder": true,
+                "placeholderText": "Select an item from the tree to view details and KPIs",
+                "placeholderIcon": "SelectOutlined",
+                "sections": [
+                  {
+                    "id": "basic-info",
+                    "title": "Basic Information",
+                    "type": "info-cards",
+                    "columns": 2
+                  },
+                  {
+                    "id": "kpis",
+                    "title": "Key Performance Indicators",
+                    "type": "kpi-grid",
+                    "columns": 4
+                  },
+                  {
+                    "id": "charts",
+                    "title": "Analytics",
+                    "type": "chart-grid",
+                    "columns": 2
+                  },
+                  {
+                    "id": "actions",
+                    "title": "Quick Actions",
+                    "type": "action-buttons",
+                    "columns": 3
+                  }
+                ],
+                "autoRefresh": true,
+                "refreshInterval": 60000
+              }
+            }
+          }
+        ]
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": true,
+    "enablePrint": true
+  },
+  "metadata": {
+    "created": "2024-01-15T00:00:00Z",
+    "version": "1.0.0",
+    "tags": ["assets", "management", "hierarchy", "sites", "equipment"],
+    "description": "Comprehensive hierarchical asset management with tree view and live dashboards."
+  }
+}

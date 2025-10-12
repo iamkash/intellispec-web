@@ -1,0 +1,70 @@
+/* Theme-aware modal styles */
+.theme-aware-modal .ant-modal-content {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.theme-aware-modal .ant-modal-header {
+  background-color: hsl(var(--background)) !important;
+  border-bottom: none !important;
+}
+
+.theme-aware-modal .ant-modal-body {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.theme-aware-modal .ant-modal-footer {
+  background-color: hsl(var(--background)) !important;
+  border-top: 1px solid hsl(var(--border)) !important;
+}
+
+.theme-aware-modal .ant-form-item-label > label {
+  color: hsl(var(--foreground)) !important;
+}
+
+.theme-aware-modal .ant-form-item-extra {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.theme-aware-modal .ant-select-selector {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.theme-aware-modal .ant-input {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.theme-aware-modal .ant-input-number {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.theme-aware-modal .ant-input-number-input {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Dropdown options */
+.ant-select-dropdown {
+  background-color: hsl(var(--background)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+
+.ant-select-item {
+  color: hsl(var(--foreground)) !important;
+}
+
+.ant-select-item-option-selected {
+  background-color: hsl(var(--primary) / 0.1) !important;
+}
+
+.ant-select-item-option-active {
+  background-color: hsl(var(--muted) / 0.5) !important;
+}
+

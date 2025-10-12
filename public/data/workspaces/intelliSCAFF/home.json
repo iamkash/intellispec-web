@@ -1,0 +1,55 @@
+{
+  "id": "intelliSCAFF-home",
+  "type": "dashboard",
+  "title": "IntelliSCAFF Home",
+  "description": "Welcome to IntelliSCAFF - Scaffolding AI Assistant",
+  "icon": "BuildOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "gadgets": [
+    {
+      "id": "quick-actions-gadget",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Quick access to scaffolding tools and workflows",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "title": "Scaffolding Tools",
+        "dataUrl": "/data/mock-data/home/quick-actions.json",
+        "dataPath": "quicklinks",
+        "columns": 1,
+        "size": "medium",
+        "layout": "grid",
+        "maxItems": 30,
+        "actions": [
+          {
+            "id": "scaff-project-planner",
+            "label": "Scaffolding Project Planner",
+            "description": "Plan scaffolding scope and resources",
+            "icon": "ProjectOutlined",
+            "type": "workspace",
+            "workspace": "construction/scaffolding-project-plan-wizard",
+            "category": "planning",
+            "tags": ["scaffolding", "planning"]
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "quick-actions-gadget": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": false
+    }
+  }
+}
+
+
+
+
+
+

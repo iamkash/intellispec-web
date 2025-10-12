@@ -1,0 +1,139 @@
+{
+  "activities": [
+    {
+      "id": "activity-001",
+      "title": "Equipment Check-Out",
+      "description": "Excavator CAT320 checked out to Johnson Construction",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "icon": "SwapOutlined",
+      "type": "checkout",
+      "equipmentId": "EQ-CAT320-001",
+      "customerId": "CUST-JOHNSON-001",
+      "userId": "USR-OPERATOR-001",
+      "priority": "normal",
+      "status": "completed"
+    },
+    {
+      "id": "activity-002",
+      "title": "Maintenance Completed",
+      "description": "Crane TCM-500 maintenance completed by Service Team",
+      "timestamp": "2024-01-15T09:15:00Z",
+      "icon": "ToolOutlined",
+      "type": "maintenance",
+      "equipmentId": "EQ-TCM500-002",
+      "customerId": null,
+      "userId": "USR-TECH-001",
+      "priority": "high",
+      "status": "completed"
+    },
+    {
+      "id": "activity-003",
+      "title": "Equipment Check-In",
+      "description": "Bulldozer D6T returned from Metro Projects",
+      "timestamp": "2024-01-15T08:45:00Z",
+      "icon": "SwapOutlined",
+      "type": "checkin",
+      "equipmentId": "EQ-D6T-003",
+      "customerId": "CUST-METRO-001",
+      "userId": "USR-OPERATOR-002",
+      "priority": "normal",
+      "status": "completed"
+    },
+    {
+      "id": "activity-004",
+      "title": "Damage Inspection",
+      "description": "Minor damage reported on Loader 950M - inspection scheduled",
+      "timestamp": "2024-01-15T07:20:00Z",
+      "icon": "SearchOutlined",
+      "type": "inspection",
+      "equipmentId": "EQ-950M-004",
+      "customerId": "CUST-BUILDER-001",
+      "userId": "USR-INSPECTOR-001",
+      "priority": "medium",
+      "status": "pending"
+    },
+    {
+      "id": "activity-005",
+      "title": "Fleet Dispatch",
+      "description": "3 units dispatched to Downtown Construction Site",
+      "timestamp": "2024-01-15T06:00:00Z",
+      "icon": "SendOutlined",
+      "type": "dispatch",
+      "equipmentId": "FLEET-DOWNTOWN-001",
+      "customerId": "CUST-DOWNTOWN-001",
+      "userId": "USR-DISPATCH-001",
+      "priority": "high",
+      "status": "in-progress"
+    },
+    {
+      "id": "activity-006",
+      "title": "Contract Signed",
+      "description": "New rental contract signed with ABC Construction",
+      "timestamp": "2024-01-14T16:30:00Z",
+      "icon": "FileTextOutlined",
+      "type": "contract",
+      "equipmentId": null,
+      "customerId": "CUST-ABC-001",
+      "userId": "USR-SALES-001",
+      "priority": "normal",
+      "status": "active"
+    },
+    {
+      "id": "activity-007",
+      "title": "Preventive Maintenance",
+      "description": "Scheduled maintenance due for Forklift FL-200",
+      "timestamp": "2024-01-14T14:15:00Z",
+      "icon": "ScheduleOutlined",
+      "type": "maintenance-scheduled",
+      "equipmentId": "EQ-FL200-005",
+      "customerId": null,
+      "userId": "USR-SCHEDULER-001",
+      "priority": "medium",
+      "status": "scheduled"
+    },
+    {
+      "id": "activity-008",
+      "title": "Payment Processed",
+      "description": "Invoice #INV-2024-001 paid by XYZ Corp",
+      "timestamp": "2024-01-14T11:45:00Z",
+      "icon": "DollarOutlined",
+      "type": "payment",
+      "equipmentId": null,
+      "customerId": "CUST-XYZ-001",
+      "userId": "USR-BILLING-001",
+      "priority": "normal",
+      "status": "completed"
+    },
+    {
+      "id": "activity-009",
+      "title": "GPS Alert",
+      "description": "Equipment moved outside designated area - Excavator EX-400",
+      "timestamp": "2024-01-14T09:30:00Z",
+      "icon": "EnvironmentOutlined",
+      "type": "gps-alert",
+      "equipmentId": "EQ-EX400-006",
+      "customerId": "CUST-SITE-001",
+      "userId": "USR-MONITOR-001",
+      "priority": "high",
+      "status": "investigating"
+    },
+    {
+      "id": "activity-010",
+      "title": "Customer Portal Access",
+      "description": "New customer registered and accessed portal",
+      "timestamp": "2024-01-14T08:00:00Z",
+      "icon": "UserOutlined",
+      "type": "customer-access",
+      "equipmentId": null,
+      "customerId": "CUST-NEWCO-001",
+      "userId": "USR-PORTAL-001",
+      "priority": "low",
+      "status": "active"
+    }
+  ],
+  "metadata": {
+    "totalCount": 10,
+    "lastUpdated": "2024-01-15T14:30:00Z",
+    "refreshInterval": 30000
+  }
+} 

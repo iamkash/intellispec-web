@@ -1,0 +1,35 @@
+{
+  "id": "confined-space-rescue-briefing",
+  "title": "Confined Space Rescue Briefing",
+  "description": "Assemble a concise pre‑entry briefing from notes and image analysis.",
+  "gadgets": [
+    {
+      "id": "confined-space-rescue-briefing-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Rescue Briefing",
+      "description": "Voice/text notes, image analysis, team and steps, export PDF.",
+      "config": {
+        "sections": [
+          { "id": "voice_capture", "title": "Voice Capture", "sectionType": "voice", "includeInPdf": false },
+          { "id": "image_capture", "title": "Image Capture", "sectionType": "image", "includeInPdf": false },
+          { "id": "image_analysis", "title": "Scene Analysis", "imageAnalysisPromptRef": "deepImageAnalysis", "promptSourceIds": ["image_capture"], "includeInPdf": true, "pdf": { "includeOverview": true, "includeImages": false } },
+          { "id": "team", "title": "Team Assignments", "includeInPdf": true, "grid": { "title": "Team", "dataKey": "team", "columns": [ { "key": "role", "title": "Role", "editable": true }, { "key": "name", "title": "Name", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "personnelPopulate", "btnLabel": "Populate from AI" } },
+          { "id": "brief_steps", "title": "Briefing Steps", "includeInPdf": true, "grid": { "title": "Steps", "dataKey": "steps", "columns": [ { "key": "stepNo", "title": "#", "editable": true }, { "key": "step", "title": "Step", "editable": true }, { "key": "actions", "title": "Actions", "editable": true } ], "promptRef": "actionPlanPopulate", "btnLabel": "Populate from AI" } },
+          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+        ],
+        "groups": [ { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
+        "fields": [ { "id": "supervisor_name", "label": "Supervisor Name", "type": "text", "required": true, "groupId": "signoff_group", "lgSpan": 12 }, { "id": "signoff_date", "label": "Date", "type": "date", "required": true, "groupId": "signoff_group", "lgSpan": 12 } ],
+        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Rescue Briefing", "centerText": "Confidential", "rightText": "Page {page} of {pages}" }, "sections": { "headerFontSize": 10, "contentFontSize": 8, "lineSpacing": 3.5, "margins": { "left": 15, "right": 195 } }, "tables": { "headerBackground": [2,6,23], "headerTextColor": [255,255,255], "headerFontSize": 8, "contentFontSize": 7, "cellPadding": 3 } },
+        "prompts": {
+          "deepImageAnalysis": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1200 }, "promptConfig": { "systemPrompt": "Analyze images for briefing-relevant risks and positioning. Output JSON only.", "userPrompt": "JSON only" } },
+          "personnelPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "Assemble realistic team roles and names from context. JSON only.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn { team: [ { role, name, notes } ] } or just an array. JSON only." } },
+          "actionPlanPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000 }, "promptConfig": { "systemPrompt": "Derive concise briefing steps. JSON array only.", "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"stepNo\": \"string|number\", \"step\": \"string\", \"actions\": \"string\" } ]" } }
+        }
+      },
+      "position": 24
+    }
+  ]
+}
+
+
+

@@ -1,0 +1,1111 @@
+{
+  "id": "inspection-plan-dashboard",
+  "title": "Inspection Plan Intelligence",
+  "description": "An AI-powered command center for optimizing inspection planning, providing predictive insights and actionable intelligence.",
+  "layout": "dashboard",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": [
+      {
+        "id": "company_id",
+        "type": "multiselect",
+        "label": "Company",
+        "placeholder": "Select companies...",
+        "optionsUrl": "/api/options/companies",
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true,
+        "autoSelectSingle": true
+      },
+      {
+        "id": "site_id",
+        "type": "multiselect",
+        "label": "Facility/Site",
+        "placeholder": "Select facilities...",
+        "optionsUrl": "/api/options/sites",
+        "dependsOn": "company_id",
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true,
+        "autoSelectSingle": true
+      },
+      {
+        "id": "asset_type",
+        "type": "multiselect",
+        "label": "Asset Type",
+        "placeholder": "Select asset types...",
+        "optionsUrl": "/api/options/asset-types",
+        "dependsOn": "site_id",
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true
+      },
+      {
+        "id": "asset_id",
+        "type": "multiselect",
+        "label": "Asset",
+        "placeholder": "Select assets...",
+        "optionsUrl": "/api/options/assets",
+        "dependsOn": "asset_type",
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true
+      },
+      {
+        "id": "date_range",
+        "type": "daterange",
+        "label": "Inspection Due Date",
+        "presets": ["Overdue", "Today", "This Week", "This Month", "Next 90 Days"],
+        "refreshTrigger": true
+      }
+    ]
+  },
+  "gadgets": [
+    {
+      "id": "inspection-quicklinks",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Quick access to inspection tools and workflows",
+      "position": 24,
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 8,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "home",
+            "label": "Home",
+            "description": "Return to IntelliINSPECT home",
+            "icon": "HomeOutlined",
+            "type": "default",
+            "workspace": "intelliINSPECT/home"
+          },
+          {
+            "key": "asset-management",
+            "label": "Asset Management",
+            "description": "Manage sites, asset groups, and hierarchy",
+            "icon": "ApartmentOutlined",
+            "type": "default",
+            "workspace": "asset-manager/asset-management"
+          },
+          {
+            "key": "inspections-list",
+            "label": "All Inspections",
+            "description": "View and manage all inspections",
+            "icon": "SearchOutlined",
+            "type": "default",
+            "workspace": "intelliINSPECT/inspections"
+          },
+          {
+            "key": "pressure-vessel-wizard",
+            "label": "Pressure Vessel & Tank Wizard",
+            "description": "Launch pressure vessel and tank inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/pressure-vessel-tank-wizard"
+          },
+          {
+            "key": "pipework-wizard",
+            "label": "Pipework Inspection Wizard",
+            "description": "Launch piping system inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/pipework-inspection-wizard"
+          },
+          {
+            "key": "rotating-equipment-wizard",
+            "label": "Rotating Equipment Wizard",
+            "description": "Launch rotating equipment inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/rotating-equipment-wizard"
+          },
+          {
+            "key": "heat-exchanger-wizard",
+            "label": "Heat Exchanger & Boiler Wizard",
+            "description": "Launch heat transfer equipment inspection wizard",
+            "icon": "RobotOutlined",
+            "type": "primary",
+            "workspace": "intelliINSPECT/heat-exchanger-boiler-wizard"
+          },
+          {
+            "key": "calculators",
+            "label": "Calculators",
+            "description": "Engineering and inspection calculators",
+            "icon": "CalculatorOutlined",
+            "type": "default",
+            "workspace": "intelliINSPECT/calculators"
+          }
+        ]
+      }
+    },
+    {
+      "id": "workspace-filters",
+      "type": "workspace-filter-gadget",
+      "title": "Filters",
+      "description": "Filter inspection data by company, site, asset type, and date range",
+      "position": 24,
+      "config": {
+        "filterDefinitions": [
+          {
+            "id": "company_id",
+            "type": "multiselect",
+            "label": "Company",
+            "placeholder": "Select companies...",
+            "optionsUrl": "/api/options/companies",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true,
+            "autoSelectSingle": true
+          },
+          {
+            "id": "site_id",
+            "type": "multiselect",
+            "label": "Facility/Site",
+            "placeholder": "Select facilities...",
+            "optionsUrl": "/api/options/sites",
+            "dependsOn": "company_id",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true,
+            "autoSelectSingle": true
+          },
+          {
+            "id": "asset_type",
+            "type": "multiselect",
+            "label": "Asset Type",
+            "placeholder": "Select asset types...",
+            "optionsUrl": "/api/options/asset-types",
+            "dependsOn": "site_id",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          },
+          {
+            "id": "asset_id",
+            "type": "multiselect",
+            "label": "Asset",
+            "placeholder": "Select assets...",
+            "optionsUrl": "/api/options/assets",
+            "dependsOn": "asset_type",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          },
+          {
+            "id": "date_range",
+            "type": "daterange",
+            "label": "Inspection Due Date",
+            "presets": ["Overdue", "Today", "This Week", "This Month", "Next 90 Days"],
+            "refreshTrigger": true
+          }
+        ],
+        "filterLayout": "horizontal",
+        "showClearAll": true,
+        "showFilterCount": true
+      }
+    },
+    {
+      "id": "inspection-plan-kpis",
+      "type": "generic-kpi-gadget",
+      "title": "Inspection Plan KPIs",
+      "description": "Key metrics for monitoring inspection planning and compliance.",
+      "position": 24,
+      "config": {
+        "layout": "grid",
+        "columns": 6,
+        "kpis": [
+          {
+            "id": "compliance_score",
+            "title": "Compliance Score",
+            "widget": "ScoreGaugeWidget",
+            "icon": "FaShieldAlt",
+            "description": "On-time vs. overdue",
+            "aggregationConfig": {
+              "name": "inspectionCompliance",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "asset",
+                "inspection.next_inspection_date": {
+                  "$exists": true,
+                  "$ne": null
+                }
+              },
+              "fieldMappings": {
+                "company_id": "company_id",
+                "site_id": "site_id",
+                "date_range": "inspection.next_inspection_date"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "totalInspections": {
+                    "expression": {
+                      "$sum": 1
+                    }
+                  },
+                  "onTimeInspections": {
+                    "expression": {
+                      "$sum": {
+                        "$cond": [
+                          {
+                            "$gte": [
+                              {
+                                "$dateFromString": {
+                                  "dateString": "$inspection.next_inspection_date"
+                                }
+                              },
+                              "$$NOW"
+                            ]
+                          },
+                          1,
+                          0
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "calculation": {
+                "expression": "return data.totalInspections > 0 ? (data.onTimeInspections / data.totalInspections) * 100 : 100",
+                "variables": [
+                  "onTimeInspections",
+                  "totalInspections"
+                ]
+              }
+            },
+            "dataPath": "data.result",
+            "widgetProps": {
+              "unit": "%",
+              "thresholds": { "good": 95, "warn": 85, "bad": 0 }
+            }
+          },
+          {
+            "id": "inspections_in_progress",
+            "title": "Inspections in Progress",
+            "widget": "StatCardWidget",
+            "icon": "FaCog",
+            "description": "Currently being worked on",
+            "aggregationConfig": {
+              "name": "inspectionsInProgress",
+              "collection": "documents",
+              "baseFilter": { 
+                "type": "inspection",
+                "status": "in_progress"
+              },
+               "fieldMappings": {
+                "date_range": "formData.inspectionDate",
+                "company_id": "formData.companyId",
+                "site_id": "formData.siteId"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": {
+                    "expression": { "$sum": 1 }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.count",
+             "widgetProps": {
+              "unit": "Inspections",
+              "color": "blue"
+            }
+          },
+          {
+            "id": "overdue_count",
+            "title": "Critical Overdue",
+            "widget": "StatCardWidget",
+            "icon": "FaExclamationTriangle",
+            "description": "Currently overdue",
+            "aggregationConfig": {
+              "name": "overdueCount",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "asset",
+                "inspection.next_inspection_date": {
+                  "$exists": true,
+                  "$ne": null
+                }
+              },
+               "fieldMappings": {
+                "company_id": "company_id",
+                "site_id": "site_id",
+                "date_range": "inspection.next_inspection_date"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": {
+                    "expression": {
+                      "$sum": {
+                        "$cond": [
+                          {
+                            "$lt": [
+                              {
+                                "$dateFromString": {
+                                  "dateString": "$inspection.next_inspection_date"
+                                }
+                              },
+                              "$$NOW"
+                            ]
+                          },
+                          1,
+                          0
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.count",
+            "widgetProps": {
+              "unit": "Inspections",
+              "color": "red"
+            }
+          },
+          {
+            "id": "weekly_productivity_rate",
+            "title": "Weekly Productivity",
+            "widget": "StatCardWidget",
+            "icon": "FaChartLine",
+            "description": "Avg inspections / inspector / week",
+            "aggregationConfig": {
+              "name": "weeklyProductivity",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "inspection",
+                "status": "completed"
+              },
+              "fieldMappings": {
+                "date_range": "formData.inspectionDate",
+                "inspector": "formData.inspectorName"
+              },
+              "groupBy": {
+                "_id": "$formData.inspectorName",
+                "fields": {
+                  "inspectionCount": {
+                    "expression": {
+                      "$sum": 1
+                    }
+                  }
+                }
+              },
+              "postProcessing": [
+                {
+                  "type": "calculation",
+                  "expression": "const totalInspections = data.reduce((sum, item) => sum + item.inspectionCount, 0); const uniqueInspectors = data.length; const daysInRange = (filterContext.date_range.end - filterContext.date_range.start) / (1000 * 60 * 60 * 24); const weeksInRange = daysInRange / 7; return uniqueInspectors > 0 && weeksInRange > 0 ? (totalInspections / uniqueInspectors) / weeksInRange : 0;",
+                  "variables": ["data", "filterContext"]
+                }
+              ]
+            },
+            "dataPath": "data.result",
+            "widgetProps": {
+              "unit": "insp/wk",
+              "precision": 1
+            }
+          },
+          {
+            "id": "due_in_30_days_count",
+            "title": "Due in 30 Days",
+            "widget": "StatCardWidget",
+            "icon": "FaCalendarAlt",
+            "description": "Inspections due in the next 30 days",
+            "aggregationConfig": {
+              "name": "dueIn30Days",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "asset",
+                "inspection.next_inspection_date": {
+                  "$exists": true,
+                  "$ne": null
+                }
+              },
+              "fieldMappings": {
+                "company_id": "company_id",
+                "site_id": "site_id",
+                "date_range": "inspection.next_inspection_date"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": {
+                    "expression": {
+                      "$sum": {
+                        "$cond": [
+                          {
+                            "$and": [
+                              {
+                                "$gte": [
+                                  {
+                                    "$dateFromString": {
+                                      "dateString": "$inspection.next_inspection_date"
+                                    }
+                                  },
+                                  "$$NOW"
+                                ]
+                              },
+                              {
+                                "$lte": [
+                                  {
+                                    "$dateFromString": {
+                                      "dateString": "$inspection.next_inspection_date"
+                                    }
+                                  },
+                                  {
+                                    "$add": [
+                                      "$$NOW",
+                                      2592000000
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          1,
+                          0
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.count",
+            "widgetProps": {
+              "unit": "Inspections"
+            }
+          },
+          {
+            "id": "critical_failures_count",
+            "title": "Critical Failures (90 Days)",
+            "widget": "StatCardWidget",
+            "icon": "FaTimesCircle",
+            "description": "In last 90 days",
+            "aggregationConfig": {
+              "name": "criticalFailures",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "inspection",
+                "formData.outcome": "Critical"
+              },
+              "pipeline": [
+                {
+                  "$addFields": {
+                    "inspectionDate": {
+                      "$dateFromString": {
+                        "dateString": "$formData.inspectionDate"
+                      }
+                    }
+                  }
+                },
+                {
+                  "$match": {
+                    "inspectionDate": {
+                      "$gte": {
+                        "$subtract": ["$$NOW", 7776000000]
+                      }
+                    }
+                  }
+                }
+              ],
+              "fieldMappings": {
+                "date_range": "formData.inspectionDate"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": {
+                    "expression": {
+                      "$sum": 1
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.count",
+            "widgetProps": {
+              "unit": "Failures",
+              "color": "orange"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "inspection-workload-grid",
+      "type": "sgrid-search-gadget",
+      "title": "Inspection Workload",
+      "description": "Overdue, upcoming, and future inspection workload based on current filters.",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/documents?type=asset",
+        "fieldMappings": {
+          "company_id": "company_id",
+          "site_id": "site_id",
+          "asset_type": "asset_type",
+          "asset_id": "id",
+          "date_range": "inspection.next_inspection_date"
+        },
+        "assetTypeWizardMapping": {
+          "Air Cooler": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Boiler": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Column": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Pipe": "intelliINSPECT/pipework-inspection-wizard",
+          "Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Pump": "intelliINSPECT/rotating-equipment-wizard",
+          "Compressor": "intelliINSPECT/rotating-equipment-wizard",
+          "Turbine": "intelliINSPECT/rotating-equipment-wizard",
+          "Condenser": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Evaporator": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Fired Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Furnace": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Shell and Tube": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Plate Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
+          "Pressure Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Storage Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Spherical Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Bullet Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Separator": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Knock-out Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Scrubber": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Absorber": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Reactor": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Tower": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "Piping": "intelliINSPECT/pipework-inspection-wizard",
+          "Pipeline": "intelliINSPECT/pipework-inspection-wizard",
+          "Process Pipeline": "intelliINSPECT/pipework-inspection-wizard",
+          "Ducting": "intelliINSPECT/pipework-inspection-wizard",
+          "Centrifugal Pump": "intelliINSPECT/rotating-equipment-wizard",
+          "Positive Displacement Pump": "intelliINSPECT/rotating-equipment-wizard",
+          "Gas Compressor": "intelliINSPECT/rotating-equipment-wizard",
+          "Reciprocating Compressor": "intelliINSPECT/rotating-equipment-wizard",
+          "Steam Turbine": "intelliINSPECT/rotating-equipment-wizard",
+          "Gas Turbine": "intelliINSPECT/rotating-equipment-wizard",
+          "Motor": "intelliINSPECT/rotating-equipment-wizard",
+          "Fan": "intelliINSPECT/rotating-equipment-wizard",
+          "Blower": "intelliINSPECT/rotating-equipment-wizard"
+        },
+        "viewFilters": [
+          {
+            "key": "overdue",
+            "label": "Overdue",
+            "filter": {
+              "inspection.next_inspection_date": {
+                "$exists": true,
+                "$ne": null,
+                "$lt": "now"
+              }
+            }
+          },
+          {
+            "key": "due_30_days",
+            "label": "Due in 30 Days",
+            "filter": {
+              "inspection.next_inspection_date": {
+                "$gte": "now",
+                "$lte": "now+30d"
+              }
+            }
+          },
+          {
+            "key": "due_90_days",
+            "label": "Due in 90 Days",
+            "filter": {
+              "inspection.next_inspection_date": {
+                "$gt": "now+30d",
+                "$lte": "now+90d"
+              }
+            }
+          }
+        ],
+        "columns": [
+          {
+            "key": "asset_tag",
+            "title": "Asset Tag"
+          },
+          {
+            "key": "name",
+            "title": "Asset Name"
+          },
+          {
+            "key": "asset_type",
+            "title": "Asset Type"
+          },
+          {
+            "key": "inspection.next_inspection_date",
+            "title": "Due Date",
+            "type": "date"
+          },
+          {
+            "key": "inspection.status",
+            "title": "Status",
+            "type": "status",
+            "statusConfig": {
+              "draft": { "label": "Draft", "color": "gray" },
+              "in_progress": { "label": "In Progress", "color": "blue" },
+              "completed": { "label": "Completed", "color": "green" },
+              "approved": { "label": "Approved", "color": "green" },
+              "archived": { "label": "Archived", "color": "gray" }
+            }
+          },
+          {
+            "key": "actions",
+            "title": "Actions",
+            "type": "actions",
+            "width": 120,
+            "actions": [
+              {
+                "key": "open_inspection",
+                "label": "Open",
+                "icon": "EditOutlined",
+                "type": "primary",
+                "showWhen": {
+                  "field": "inspection.status",
+                  "operator": "in",
+                  "value": ["in_progress", "draft"]
+                },
+                "onClick": {
+                  "type": "workspace",
+                  "workspace": "intelliINSPECT/inspection-wizard",
+                  "params": {
+                    "asset_id": "{id}",
+                    "asset_type": "{asset_type}",
+                    "asset_name": "{name}",
+                    "inspection_id": "{inspection.id}",
+                    "mode": "edit"
+                  }
+                }
+              },
+              {
+                "key": "create_inspection",
+                "label": "Create",
+                "icon": "PlusOutlined",
+                "type": "default",
+                "showWhen": {
+                  "field": "inspection.status",
+                  "operator": "not_exists"
+                },
+                "onClick": {
+                  "type": "workspace",
+                  "workspace": "{wizard_mapping}",
+                  "params": {
+                    "asset_id": "{id}",
+                    "asset_type": "{asset_type}",
+                    "asset_name": "{name}",
+                    "mode": "create"
+                  }
+                }
+              },
+              {
+                "key": "view_inspection",
+                "label": "View",
+                "icon": "EyeOutlined",
+                "type": "default",
+                "showWhen": {
+                  "field": "inspection.status",
+                  "operator": "in",
+                  "value": ["completed", "approved", "archived"]
+                },
+                "onClick": {
+                  "type": "workspace",
+                  "workspace": "intelliINSPECT/inspection-wizard",
+                  "params": {
+                    "asset_id": "{id}",
+                    "asset_type": "{asset_type}",
+                    "asset_name": "{name}",
+                    "inspection_id": "{inspection.id}",
+                    "mode": "view"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "toolbar": {
+          "enableCreate": false,
+          "enableExport": true,
+          "exportFileName": "inspection-workload",
+          "exportFormats": ["excel", "csv"]
+        },
+        "pagination": {
+          "pageSize": 10
+        },
+        "defaultSort": {
+          "field": "inspection.next_inspection_date",
+          "order": "asc"
+        },
+        "hideCreateButton": true
+      }
+    },
+    {
+      "id": "chart-forecast-type",
+      "type": "generic-chart-gadget",
+      "title": "90-Day Forecast by Month",
+      "description": "Number of inspections due over the next 90 days, grouped by month",
+      "position": 8,
+      "size": 8,
+      "config": {
+        "charts": [
+          {
+            "id": "forecast-by-month-chart",
+            "title": "90-Day Forecast by Type",
+            "description": "Number of inspections due over the next 90 days, grouped by asset type",
+        "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+          "name": "forecastByType",
+          "collection": "documents",
+                  "baseFilter": {
+                    "type": "asset"
+                  },
+           "fieldMappings": {
+            "company_id": "company_id",
+                    "site_id": "site_id",
+                    "asset_type": "asset_type",
+                    "asset_id": "id",
+                    "date_range": "inspection.next_inspection_date"
+                  },
+                  "pipeline": [
+                    {
+                      "$match": {
+                        "inspection.next_inspection_date": {
+                          "$exists": true,
+                          "$ne": null,
+                          "$gte": "now",
+                          "$lte": "now+90d"
+                        }
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "inspectionDateObj": {
+                          "$cond": {
+                            "if": { "$eq": [{ "$type": "$inspection.next_inspection_date" }, "date"] },
+                            "then": "$inspection.next_inspection_date",
+                            "else": { "$toDate": "$inspection.next_inspection_date" }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$group": {
+            "_id": {
+                          "$dateToString": {
+                            "format": "%Y-%m",
+                            "date": "$inspectionDateObj"
+                          }
+                        },
+                        "period": {
+                          "$first": {
+                            "$dateToString": {
+                              "format": "%Y-%m",
+                              "date": "$inspectionDateObj"
+                            }
+                          }
+                        },
+                        "count": { "$sum": 1 }
+                      }
+                    },
+                    {
+                      "$sort": { "_id": 1 }
+                    },
+                    {
+                      "$project": {
+                        "_id": 0,
+                        "period": 1,
+                        "count": 1
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "period",
+              "name": "Month"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Number of Inspections"
+            },
+            "series": [
+              {
+                "name": "Inspections Due",
+                "type": "bar",
+                "dataKey": "count",
+                "color": "hsl(var(--chart-1))",
+                "itemStyle": {
+                  "borderRadius": [4, 4, 0, 0]
+                }
+              }
+            ],
+            "tooltip": {
+              "show": true,
+              "trigger": "axis",
+              "formatter": "{b}: {c} inspections"
+            },
+            "emphasis": {
+              "label": {
+                "show": true,
+                "formatter": "{c} inspections"
+              }
+            },
+            "showZoomBar": true
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 1,
+        "height": 400
+      }
+    },
+    {
+      "id": "chart-forecast-by-asset-type",
+      "type": "generic-chart-gadget",
+      "title": "90-Day Forecast by Asset Type",
+      "description": "Number of inspections due over the next 90 days, grouped by asset type",
+      "position": 8,
+      "size": 8,
+      "config": {
+        "charts": [
+          {
+            "id": "forecast-by-asset-type-chart",
+            "title": "90-Day Forecast by Asset Type",
+            "description": "Breakdown of inspections by asset type with monthly breakdown",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "forecastByAssetType",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "asset"
+                  },
+                  "fieldMappings": {
+                    "company_id": "company_id",
+                    "site_id": "site_id",
+                    "asset_type": "asset_type",
+                    "asset_id": "id",
+                    "date_range": "inspection.next_inspection_date"
+                  },
+                  "pipeline": [
+                    {
+                      "$match": {
+                        "inspection.next_inspection_date": {
+                          "$exists": true,
+                          "$ne": null,
+                          "$gte": "now",
+                          "$lte": "now+90d"
+                        }
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "inspectionDateObj": {
+                          "$cond": {
+                            "if": { "$eq": [{ "$type": "$inspection.next_inspection_date" }, "date"] },
+                            "then": "$inspection.next_inspection_date",
+                            "else": { "$toDate": "$inspection.next_inspection_date" }
+                          }
+        }
+      }
+    },
+    {
+                      "$group": {
+                        "_id": "$asset_type",
+                        "assetType": { "$first": "$asset_type" },
+                        "count": { "$sum": 1 }
+                      }
+                    },
+                    {
+                      "$sort": { "count": -1 }
+                    },
+                    {
+                      "$project": {
+                        "_id": 0,
+                        "assetType": 1,
+                        "count": 1
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "assetType",
+              "name": "Asset Type"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Number of Inspections"
+            },
+            "series": [
+              {
+                "name": "Inspections Due",
+                "type": "bar",
+                "dataKey": "count",
+                "color": "hsl(var(--chart-2))",
+                "itemStyle": {
+                  "borderRadius": [4, 4, 0, 0]
+                }
+              }
+            ],
+            "tooltip": {
+              "show": true,
+              "trigger": "axis",
+              "formatter": "{b} - {a}: {c} inspections"
+            },
+            "emphasis": {
+              "label": {
+                "show": true,
+                "formatter": "{c} inspections"
+              }
+            },
+            "showZoomBar": true
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 1,
+        "height": 400
+      }
+    },
+    {
+      "id": "chart-overdue-vs-planned",
+      "type": "generic-chart-gadget",
+      "title": "Overdue vs Planned Inspections",
+      "description": "Comparison of overdue inspections vs planned inspections in the next 90 days",
+      "position": 8,
+      "size": 8,
+      "config": {
+        "charts": [
+          {
+            "id": "overdue-vs-planned-chart",
+            "title": "Overdue vs Planned",
+            "description": "Status breakdown of inspection workload",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+      "config": {
+                  "name": "overdueVsPlanned",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "asset",
+                    "inspection.next_inspection_date": {
+                      "$exists": true,
+                      "$ne": null
+                    }
+                  },
+                  "fieldMappings": {
+                    "company_id": "company_id",
+                    "site_id": "site_id",
+                    "asset_type": "asset_type",
+                    "asset_id": "id",
+                    "date_range": "inspection.next_inspection_date"
+                  },
+                  "pipeline": [
+                    {
+                      "$addFields": {
+                        "inspectionDateObj": {
+                          "$cond": {
+                            "if": { "$eq": [{ "$type": "$inspection.next_inspection_date" }, "date"] },
+                            "then": "$inspection.next_inspection_date",
+                            "else": { "$toDate": "$inspection.next_inspection_date" }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "status": {
+                          "$cond": {
+                            "if": { "$lt": ["$inspectionDateObj", "$$NOW"] },
+                            "then": "Overdue",
+                            "else": "Planned"
+                          }
+        }
+      }
+    },
+    {
+                      "$group": {
+                        "_id": "$status",
+                        "status": { "$first": "$status" },
+                        "count": { "$sum": 1 }
+                      }
+                    },
+                    {
+                      "$sort": { "_id": 1 }
+                    },
+                    {
+                      "$project": {
+                        "_id": 0,
+                        "status": 1,
+                        "count": 1
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "status",
+              "name": "Status"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Number of Inspections"
+            },
+            "series": [
+              {
+                "name": "Inspections",
+                "type": "bar",
+                "dataKey": "count",
+                "color": "hsl(var(--chart-3))",
+                "itemStyle": {
+                  "borderRadius": [4, 4, 0, 0]
+                }
+              }
+            ],
+            "tooltip": {
+              "show": true,
+              "trigger": "axis",
+              "formatter": "{b}: {c} inspections"
+            },
+            "emphasis": {
+              "label": {
+                "show": true,
+                "formatter": "{c} inspections"
+              }
+            },
+            "showZoomBar": false
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 1,
+        "height": 400
+      }
+    }
+  ]
+}

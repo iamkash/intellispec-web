@@ -1,0 +1,118 @@
+module.exports = {
+  id: 'scaff-cantilever',
+  name: 'Cantilever Scaffold Calculator',
+  description: 'Designs cantilever/overhang scaffolds with counterweight requirements',
+  category: 'Structural Integrity',
+  module: 'scaffolding',
+  icon: 'ProjectOutlined',
+  tags: ['cantilever', 'overhang', 'counterweight', 'moment', 'scaffolding'],
+  uiDefinition: [
+    { id: 'input-card', type: 'section', title: 'Input Parameters', description: 'Cantilever configuration', icon: 'FormOutlined', order: 1, size: 24 },
+    { id: 'geometry', type: 'group', title: 'Cantilever Geometry', description: 'Overhang dimensions', sectionId: 'input-card', order: 1, size: 24 },
+    { id: 'projection_m', type: 'number', title: 'Projection (m)', label: 'Projection distance (m)', sectionId: 'input-card', groupId: 'geometry', size: 6, required: true },
+    { id: 'back_span_m', type: 'number', title: 'Back span (m)', label: 'Back span (m)', sectionId: 'input-card', groupId: 'geometry', size: 6, required: true },
+    { id: 'platform_width_m', type: 'number', title: 'Platform width (m)', label: 'Platform width (m)', sectionId: 'input-card', groupId: 'geometry', size: 6, defaultValue: 1.0 },
+    { id: 'height_above_ground_m', type: 'number', title: 'Height (m)', label: 'Height above ground (m)', sectionId: 'input-card', groupId: 'geometry', size: 6 },
+    { id: 'loading', type: 'group', title: 'Loading Conditions', description: 'Applied loads', sectionId: 'input-card', order: 2, size: 24 },
+    { id: 'live_load_kn_m2', type: 'number', title: 'Live load (kN/m²)', label: 'Live load (kN/m²)', sectionId: 'input-card', groupId: 'loading', size: 6, defaultValue: 2.0 },
+    { id: 'point_load_kn', type: 'number', title: 'Point load (kN)', label: 'Point load at tip (kN)', sectionId: 'input-card', groupId: 'loading', size: 6, defaultValue: 0 },
+    { id: 'duty_class', type: 'select', title: 'Duty class', label: 'Duty class', sectionId: 'input-card', groupId: 'loading', size: 6, options: [
+      { label: 'Class 2 (1.5 kN/m²)', value: 'class2' },
+      { label: 'Class 3 (2.0 kN/m²)', value: 'class3' },
+      { label: 'Class 4 (3.0 kN/m²)', value: 'class4' },
+      { label: 'Class 5 (4.5 kN/m²)', value: 'class5' }
+    ], defaultValue: 'class3' },
+    { id: 'wind_load_kn_m2', type: 'number', title: 'Wind load (kN/m²)', label: 'Wind load (kN/m²)', sectionId: 'input-card', groupId: 'loading', size: 6, defaultValue: 0.2 },
+    { id: 'support', type: 'group', title: 'Support Configuration', description: 'Beam and tie details', sectionId: 'input-card', order: 3, size: 24 },
+    { id: 'beam_type', type: 'select', title: 'Beam type', label: 'Cantilever beam type', sectionId: 'input-card', groupId: 'support', size: 8, options: [
+      { label: 'Single tube', value: 'single' },
+      { label: 'Double tube', value: 'double' },
+      { label: 'Lattice beam', value: 'lattice' },
+      { label: 'Truss beam', value: 'truss' }
+    ] },
+    { id: 'tie_type', type: 'select', title: 'Tie type', label: 'Tie/anchor type', sectionId: 'input-card', groupId: 'support', size: 8, options: [
+      { label: 'Counterweight', value: 'counterweight' },
+      { label: 'Kentledge', value: 'kentledge' },
+      { label: 'Tie to structure', value: 'structural_tie' },
+      { label: 'Ground anchors', value: 'ground_anchor' }
+    ] },
+    { id: 'safety_factor', type: 'number', title: 'Safety factor', label: 'Safety factor', sectionId: 'input-card', groupId: 'support', size: 8, defaultValue: 2.0 }
+  ],
+  aiPrompt: [
+    'You are a cantilever scaffold design specialist.',
+    '',
+    'Calculate cantilever scaffold requirements including counterweight, tie forces, and beam sizing per EN 12811-1 and industry best practices.',
+    '',
+    'Use:',
+    '- Moment equilibrium: ΣM = 0 at fulcrum point',
+    '- Overturning check: Factor of safety ≥ 2.0',
+    '- Beam capacity: Check bending moment and deflection',
+    '- Counterweight calculation: W_counter = (W_cant × L_cant × SF) / L_back',
+    '- Deflection limit: L/180 for cantilever projection',
+    '- Tie forces: Include horizontal and vertical components',
+    '- Wind uplift consideration for exposed cantilevers',
+    '- Back span ratio: Minimum 2:1 (back:projection) preferred',
+    '',
+    'Guidelines:',
+    '- Calculate overturning moment and resisting moment',
+    '- Determine counterweight or tie requirements',
+    '- Check beam stress and deflection',
+    '- Verify connection capacities',
+    '',
+    'Output ONLY:',
+    '# Cantilever Scaffold Calculator',
+    '## Report Summary',
+    'One sentence summarizing cantilever configuration and critical requirements.',
+    '## Key outputs',
+    '| Key outputs | Value |',
+    '| --- | --- |',
+    '| Overturning moment (kN.m) | <value> |',
+    '| Required counterweight (kg) | <value> |',
+    '| Tie force - vertical (kN) | <value> |',
+    '| Tie force - horizontal (kN) | <value> |',
+    '| Max beam stress (N/mm²) | <value> |',
+    '| Predicted deflection (mm) | <value> |',
+    '| Safety factor achieved | <value> |',
+    '| Back:projection ratio | <value> |',
+    '## Recommendations',
+    '1. Optimal counterweight placement and type',
+    '2. Beam reinforcement requirements',
+    '3. Additional safety measures for workers',
+    '## Alternatives & Trade-offs',
+    '| Option | Counterweight | Beam Type | Safety Factor | Cost Impact |',
+    '| --- | --- | --- | --- | --- |',
+    '| Standard | <value> kg | Single | 2.0 | Baseline |',
+    '| Enhanced | <value> kg | Double | 2.5 | +20% |',
+    '| Maximum | <value> kg | Truss | 3.0 | +40% |',
+    '## Calculations',
+    '- Moment calculation: Applied loads × distances',
+    '- Counterweight sizing: Based on moment balance',
+    '- Beam stress check: M/Z ≤ allowable stress',
+    '- Deflection check: Using beam theory',
+    '## Assumptions & Uncertainty',
+    '- Load distribution assumptions',
+    '- Connection rigidity: <value>',
+    '- Confidence level: <value>%',
+    '## Escalation Criteria',
+    '- If projection > 2.5m, specialist design required',
+    '- If height > 20m, wind tunnel data may be needed',
+    '- If safety factor < 2.0, redesign required',
+    '## Rationale',
+    'Explanation of design choices and safety considerations.',
+    '## References and Standards',
+    '- EN 12811-1:2003 Section 9.3 Cantilever scaffolds',
+    '- NASC TG20:21 Cantilever guidance',
+    '- BS 5975:2019 Code of practice for temporary works',
+    '',
+    'END OF REPORT'
+  ].join('\n')
+};
+
+
+
+
+
+
+
+
+

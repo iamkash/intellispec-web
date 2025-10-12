@@ -1,0 +1,25 @@
+{
+  "id": "intelliSCAFF-dynamic-calculator",
+  "type": "form",
+  "title": "Scaffolding Calculator",
+  "description": "Dynamic calculator workspace for scaffolding calculations",
+  "icon": "CalculatorOutlined",
+  "mode": "form",
+  "layout": "dashboard",
+  "filterContext": { "enabled": true, "filterDefinitions": [] },
+  "gadgets": [
+    {
+      "id": "dynamic-calculator-gadget",
+      "type": "dynamic-calculator-gadget",
+      "title": "Calculator",
+      "description": "AI-powered dynamic calculator rendering inputs from metadata and streaming professional report results",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "calculatorId": "{calculatorId}",
+        "dataUrl": "/api/calculators/{calculatorId}/metadata",
+        "mode": "form"
+      }
+    }
+  ]
+}

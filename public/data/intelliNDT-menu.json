@@ -1,0 +1,33 @@
+{
+  "menu_items": [
+    {
+      "key": "home",
+      "icon": "HomeOutlined",
+      "label": "Home",
+      "license_id": "LIC_INTELLI_NDT",
+      "auth_id": "AUTH_NDT_TECH",
+      "enabled": true,
+      "order": 1,
+      "route": "/intelliNDT/home",
+      "type": "item",
+      "permissions": ["inspection.view"],
+      "workspace": "intelliNDT/home",
+      "is_default": true
+    },
+    {
+      "key": "calculators",
+      "icon": "CalculatorOutlined",
+      "label": "Calculators",
+      "license_id": "LIC_INTELLI_NDT",
+      "auth_id": "AUTH_NDT_TECH",
+      "enabled": true,
+      "order": 2,
+      "route": "/intelliNDT/calculators",
+      "type": "item",
+      "permissions": ["inspection.view"],
+      "workspace": "intelliNDT/calculators"
+    }
+  ]
+}
+
+

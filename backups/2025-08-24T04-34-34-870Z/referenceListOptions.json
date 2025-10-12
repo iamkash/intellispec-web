@@ -1,0 +1,90 @@
+[
+  {
+    "_id": "68aa95bf7d1b31b793858f18",
+    "listTypeId": "68aa95bfaba0d502fe6ada50",
+    "label": "Active",
+    "value": "active",
+    "description": "Module is active and available for tenants",
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.496Z",
+    "updatedAt": "2025-08-24T04:31:59.496Z"
+  },
+  {
+    "_id": "68aa95bf7d1b31b793858f19",
+    "listTypeId": "68aa95bfaba0d502fe6ada50",
+    "label": "Hidden",
+    "value": "hidden",
+    "description": "Module is archived/hidden from new tenant setups",
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.496Z",
+    "updatedAt": "2025-08-24T04:31:59.496Z"
+  },
+  {
+    "_id": "68aa95bf7d1b31b793858f1a",
+    "listTypeId": "68aa95bfaba0d502fe6ada53",
+    "label": "Admin",
+    "value": "Admin",
+    "description": "System administration and management modules",
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.714Z",
+    "updatedAt": "2025-08-24T04:31:59.714Z"
+  },
+  {
+    "_id": "68aa95bf7d1b31b793858f1b",
+    "listTypeId": "68aa95bfaba0d502fe6ada53",
+    "label": "AI",
+    "value": "AI",
+    "description": "Artificial intelligence and machine learning modules",
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.714Z",
+    "updatedAt": "2025-08-24T04:31:59.714Z"
+  },
+  {
+    "_id": "68aa95bf7d1b31b793858f1c",
+    "listTypeId": "68aa95bfaba0d502fe6ada53",
+    "label": "Compliance",
+    "value": "Compliance",
+    "description": "Regulatory compliance and audit management modules",
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.714Z",
+    "updatedAt": "2025-08-24T04:31:59.714Z"
+  },
+  {
+    "_id": "68aa95bf7d1b31b793858f1d",
+    "listTypeId": "68aa95bfaba0d502fe6ada53",
+    "label": "Documents",
+    "value": "Documents",
+    "description": "Document management and storage modules",
+    "sortOrder": 4,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.714Z",
+    "updatedAt": "2025-08-24T04:31:59.714Z"
+  },
+  {
+    "_id": "68aa95bf7d1b31b793858f1e",
+    "listTypeId": "68aa95bfaba0d502fe6ada53",
+    "label": "Inspection",
+    "value": "Inspection",
+    "description": "Inspection and testing modules",
+    "sortOrder": 5,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.714Z",
+    "updatedAt": "2025-08-24T04:31:59.714Z"
+  },
+  {
+    "_id": "68aa95bf7d1b31b793858f1f",
+    "listTypeId": "68aa95bfaba0d502fe6ada53",
+    "label": "Operations",
+    "value": "Operations",
+    "description": "Day-to-day operations and workflow modules",
+    "sortOrder": 6,
+    "isActive": true,
+    "createdAt": "2025-08-24T04:31:59.714Z",
+    "updatedAt": "2025-08-24T04:31:59.714Z"
+  }
+]

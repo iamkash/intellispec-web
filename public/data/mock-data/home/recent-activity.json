@@ -1,0 +1,92 @@
+{
+  "activities": [
+    {
+      "id": "act-001",
+      "title": "Project Updated",
+      "description": "Dow Chemical Plant Scaffolding project progress updated to 75%",
+      "user": "John Doe",
+      "avatar": "JD",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "type": "project_update",
+      "tags": ["Project", "Update"],
+      "action": "Completed Level 3 installation"
+    },
+    {
+      "id": "act-002",
+      "title": "Task Completed",
+      "description": "Schedule Team Meeting task marked as completed",
+      "user": "John Doe",
+      "avatar": "JD",
+      "timestamp": "2024-01-15T10:15:00Z",
+      "type": "task_completed",
+      "tags": ["Task", "Completed"],
+      "action": "Meeting scheduled for Jan 20"
+    },
+    {
+      "id": "act-003",
+      "title": "Document Uploaded",
+      "description": "New safety protocol document uploaded to Documents",
+      "user": "Sarah Johnson",
+      "avatar": "SJ",
+      "timestamp": "2024-01-15T09:45:00Z",
+      "type": "document_upload",
+      "tags": ["Document", "Upload"],
+      "action": "Safety Protocol v2.1.pdf"
+    },
+    {
+      "id": "act-004",
+      "title": "Report Generated",
+      "description": "Monthly compliance report generated and sent to management",
+      "user": "John Doe",
+      "avatar": "JD",
+      "timestamp": "2024-01-15T09:30:00Z",
+      "type": "report_generated",
+      "tags": ["Report", "Generated"],
+      "action": "Q4 Compliance Report.pdf"
+    },
+    {
+      "id": "act-005",
+      "title": "Scaffolding Equipment Checked Out",
+      "description": "Scaffolding equipment checked out for Dow Chemical project",
+      "user": "Mike Wilson",
+      "avatar": "MW",
+      "timestamp": "2024-01-15T09:15:00Z",
+      "type": "equipment_checkout",
+      "tags": ["Equipment", "Checkout"],
+      "action": "Scaffolding Set #SC-2024-001"
+    },
+    {
+      "id": "act-006",
+      "title": "Scaffolding Inspection Scheduled",
+      "description": "New scaffolding inspection scheduled for Dow Chemical plant",
+      "user": "John Doe",
+      "avatar": "JD",
+      "timestamp": "2024-01-15T09:00:00Z",
+      "type": "inspection_scheduled",
+      "tags": ["Inspection", "Scheduled"],
+      "action": "Dow Chemical - Scaffolding Inspection"
+    },
+    {
+      "id": "act-007",
+      "title": "Team Member Added",
+      "description": "New team member Alex Chen added to Safety Team",
+      "user": "HR Manager",
+      "avatar": "HR",
+      "timestamp": "2024-01-15T08:45:00Z",
+      "type": "team_member_added",
+      "tags": ["Team", "Member"],
+      "action": "Alex Chen - Safety Inspector"
+    },
+    {
+      "id": "act-008",
+      "title": "System Update",
+      "description": "System maintenance completed successfully",
+      "user": "System",
+      "avatar": "SYS",
+      "timestamp": "2024-01-15T08:30:00Z",
+      "type": "system_update",
+      "tags": ["System", "Update"],
+      "action": "Maintenance window completed"
+    }
+  ]
+} 

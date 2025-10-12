@@ -1,0 +1,189 @@
+{
+  "id": "shell-demo",
+  "title": "Shell Component Demo",
+  "description": "Demonstration of the metadata-driven Shell component with dynamic widgets",
+  "theme": "light",
+  "layout": {
+    "type": "grid",
+    "columns": 12,
+    "gap": "16px",
+    "responsive": true
+  },
+  "widgets": [
+    {
+      "id": "stats-widget-1",
+      "type": "stats-card",
+      "title": "Total Revenue",
+      "position": {
+        "x": 0,
+        "y": 0,
+        "width": 3,
+        "height": 2
+      },
+      "config": {
+        "data": {
+          "title": "Total Revenue",
+          "value": "$127,500",
+          "icon": "DollarOutlined",
+          "color": "success",
+          "trend": {
+            "value": "+12.5%",
+            "direction": "up"
+          }
+        }
+      }
+    },
+    {
+      "id": "stats-widget-2",
+      "type": "stats-card",
+      "title": "Active Users",
+      "position": {
+        "x": 3,
+        "y": 0,
+        "width": 3,
+        "height": 2
+      },
+      "config": {
+        "data": {
+          "title": "Active Users",
+          "value": "8,542",
+          "icon": "UserOutlined",
+          "color": "primary",
+          "trend": {
+            "value": "+8.2%",
+            "direction": "up"
+          }
+        }
+      }
+    },
+    {
+      "id": "stats-widget-3",
+      "type": "stats-card",
+      "title": "Conversion Rate",
+      "position": {
+        "x": 6,
+        "y": 0,
+        "width": 3,
+        "height": 2
+      },
+      "config": {
+        "data": {
+          "title": "Conversion Rate",
+          "value": "3.24%",
+          "icon": "RiseOutlined",
+          "color": "warning",
+          "trend": {
+            "value": "-0.3%",
+            "direction": "down"
+          }
+        }
+      }
+    },
+    {
+      "id": "stats-widget-4",
+      "type": "stats-card",
+      "title": "Customer Satisfaction",
+      "position": {
+        "x": 9,
+        "y": 0,
+        "width": 3,
+        "height": 2
+      },
+      "config": {
+        "data": {
+          "title": "Customer Satisfaction",
+          "value": "94.7%",
+          "icon": "SmileOutlined",
+          "color": "success",
+          "trend": {
+            "value": "+2.1%",
+            "direction": "up"
+          }
+        }
+      }
+    },
+    {
+      "id": "chart-widget-1",
+      "type": "bar-chart",
+      "title": "Monthly Sales",
+      "position": {
+        "x": 0,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "config": {
+        "data": [
+          { "month": "Jan", "sales": 4000, "target": 3500 },
+          { "month": "Feb", "sales": 3000, "target": 3200 },
+          { "month": "Mar", "sales": 5000, "target": 4000 },
+          { "month": "Apr", "sales": 4500, "target": 4200 },
+          { "month": "May", "sales": 6000, "target": 5000 },
+          { "month": "Jun", "sales": 5500, "target": 5200 }
+        ],
+        "bars": [
+          { "dataKey": "sales", "fill": "#8884d8", "name": "Sales" },
+          { "dataKey": "target", "fill": "#82ca9d", "name": "Target" }
+        ],
+        "xAxisKey": "month"
+      }
+    },
+    {
+      "id": "activity-widget-1",
+      "type": "activity-feed",
+      "title": "Recent Activity",
+      "position": {
+        "x": 6,
+        "y": 2,
+        "width": 6,
+        "height": 4
+      },
+      "config": {
+        "data": [
+          {
+            "id": "1",
+            "type": "info",
+            "title": "New user registered",
+            "description": "John Doe joined the platform",
+            "timestamp": "2024-01-15T10:30:00Z",
+            "icon": "UserAddOutlined"
+          },
+          {
+            "id": "2",
+            "type": "success",
+            "title": "Sale completed",
+            "description": "$2,500 revenue generated",
+            "timestamp": "2024-01-15T09:15:00Z",
+            "icon": "DollarOutlined"
+          },
+          {
+            "id": "3",
+            "type": "warning",
+            "title": "System maintenance",
+            "description": "Scheduled maintenance at 2 AM",
+            "timestamp": "2024-01-15T08:00:00Z",
+            "icon": "ToolOutlined"
+          },
+          {
+            "id": "4",
+            "type": "error",
+            "title": "Payment failed",
+            "description": "Transaction #12345 failed",
+            "timestamp": "2024-01-15T07:45:00Z",
+            "icon": "ExclamationCircleOutlined"
+          }
+        ],
+        "maxItems": 10,
+        "showTimestamp": true
+      }
+    }
+  ],
+  "globalConfig": {
+    "apiBaseUrl": "https://api.example.com",
+    "refreshInterval": 30000,
+    "theme": {
+      "primaryColor": "#1890ff",
+      "borderRadius": "6px"
+    }
+  }
+} 

@@ -1,0 +1,390 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* App Layout Styles */
+.app-layout {
+  /* Height is now controlled by inline styles in Layout.tsx */
+  /* This prevents scrollbar issues with fixed header + module bar */
+}
+
+.app-layout-header {
+  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+}
+
+.app-layout-header .app-user:hover {
+  background-color: rgba(0,0,0,0.04);
+}
+
+.module-bar {
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+
+/* Remove unintended gap between sider and content when collapsed */
+.ant-layout.has-sider > .ant-layout,
+.ant-layout .ant-layout-sider + .ant-layout {
+  width: 100%;
+}
+
+.ant-layout-sider {
+  flex: 0 0 auto;
+}
+
+/* Sider styling: compact collapsed, readable expanded */
+.ant-layout-sider .ant-menu-inline-collapsed > .ant-menu-item {
+  padding: 0 12px;
+}
+
+.ant-layout-sider .ant-menu-item,
+.ant-layout-sider .ant-menu-submenu-title {
+  border-radius: 6px;
+  margin: 4px 6px;
+}
+
+.ant-layout-sider .ant-menu-item-selected {
+  background: hsl(var(--primary) / 0.12) !important;
+}
+
+.ant-layout-sider .ant-menu-item .anticon {
+  color: hsl(var(--foreground));
+}
+
+.module-bar::-webkit-scrollbar {
+  height: 4px;
+}
+
+.module-bar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.module-bar::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.2);
+  border-radius: 2px;
+}
+
+.module-bar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.3);
+}
+
+/* Workspace Container Styles */
+.workspace-container {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0; /* Keep zero to avoid double padding; Content controls spacing */
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+/* Darken workspace container slightly in dark mode for contrast */
+html[data-theme="dark"] .workspace-container {
+  background-color: hsl(var(--background));
+  background-image: linear-gradient(rgba(0,0,0,0.10), rgba(0,0,0,0.10));
+}
+
+.workspace-header {
+  margin-bottom: 24px;
+}
+
+.workspace-header h2 {
+  color: hsl(var(--foreground)) !important;
+}
+
+.workspace-header p {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.workspace-content {
+  width: 100%;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Row-based Layout Styles */
+.workspace-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.workspace-row {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
+}
+
+/* Gadget Styles */
+.workspace-gadget {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Ensure full width */
+  box-sizing: border-box; /* Include padding in width calculation */
+  color: hsl(var(--foreground));
+}
+
+.workspace-gadget:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Legacy component support */
+.workspace-component {
+  margin-bottom: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .workspace-container {
+    max-width: none;
+    padding: 0;
+  }
+  
+  .workspace-row {
+    gap: 12px;
+  }
+  
+  .workspace-rows {
+    gap: 16px;
+  }
+}
+
+/* Mobile Styles - Simple responsive logic */
+@media (max-width: 768px) {
+  /* Force mobile layout */
+  .workspace-container {
+    padding: 0 !important; /* Avoid double padding */
+    max-width: none !important;
+  }
+  
+  .workspace-header {
+    margin-bottom: 12px !important;
+    padding: 0 4px !important;
+  }
+  
+  .workspace-header h2 {
+    font-size: 18px !important;
+    margin: 0 !important;
+  }
+  
+  .workspace-header p {
+    font-size: 13px !important;
+    margin: 4px 0 0 0 !important;
+  }
+  
+  .workspace-content {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+  
+  /* Force all rows to be vertical stacks on mobile */
+  .workspace-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  /* Force all gadgets to full width on mobile */
+  .workspace-gadget {
+    flex-basis: 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 200px !important;
+    height: auto !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .workspace-rows {
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure charts are responsive on mobile */
+  .ant-card {
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    min-height: 180px !important;
+    height: auto !important;
+  }
+  
+  /* Using Ant Design defaults for card styling */
+  
+  /* Force chart containers to be responsive */
+  .recharts-wrapper {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 150px !important;
+  }
+  
+  /* Fix for any content that might be too small */
+  .workspace-gadget > * {
+    min-height: 150px !important;
+    width: 100% !important;
+  }
+  
+  /* Ensure text content is visible */
+  .workspace-gadget h1, .workspace-gadget h2, .workspace-gadget h3 {
+    font-size: 16px !important;
+    margin: 8px 0 !important;
+    line-height: 1.4 !important;
+  }
+  
+  .workspace-gadget p, .workspace-gadget span, .workspace-gadget div {
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+  }
+  
+  /* Header mobile fixes */
+  .app-layout-header {
+    padding: 0 12px !important;
+    height: 56px !important;
+  }
+  
+  .app-layout-header .app-title {
+    font-size: 14px !important;
+    max-width: 100px !important;
+  }
+  
+  .app-user {
+    min-width: 60px !important;
+    max-width: 80px !important;
+    padding: 4px 6px !important;
+  }
+  
+  /* Mobile sidebar improvements */
+  .ant-layout-sider {
+    transition: all 0.2s ease-in-out !important;
+  }
+  
+  .ant-layout-sider-collapsed {
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    flex: 0 0 0 !important;
+  }
+  
+  /* Ensure mobile overlay is above everything */
+  .mobile-sidebar-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    z-index: 1001 !important;
+    transition: opacity 0.2s ease-in-out !important;
+  }
+  
+  /* Menu mobile improvements */
+  .ant-menu-item {
+    padding: 14px 16px !important;
+    margin: 2px 0 !important;
+    font-size: 15px !important;
+    min-height: 44px !important;
+  }
+  
+  .ant-menu-submenu-title {
+    padding: 14px 16px !important;
+    font-size: 15px !important;
+    min-height: 44px !important;
+  }
+}
+
+/* Tablet Styles - 2 column layout */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .workspace-container {
+    padding: 16px 12px;
+  }
+  
+  .workspace-row {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  .workspace-gadget {
+    flex-basis: calc(50% - 8px) !important;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}
+
+/* Desktop Styles - Full grid layout */
+@media (min-width: 1025px) {
+  .workspace-container {
+    padding: 0; /* Avoid double padding with Content */
+  }
+  
+  .workspace-row {
+    gap: 16px;
+  }
+  
+  /* Desktop uses the position-based width calculations */
+}
+
+/* Touch-friendly improvements for all mobile devices */
+@media (max-width: 768px) {
+  /* Ensure all clickable elements have minimum 44px touch target */
+  button, .ant-btn, .ant-menu-item, .ant-menu-submenu-title {
+    min-height: 44px !important;
+  }
+  
+  /* Improve button spacing */
+  .ant-btn {
+    padding: 8px 12px !important;
+  }
+  
+  /* Better form controls on mobile */
+  input, select, textarea {
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    padding: 12px !important;
+  }
+  
+  /* Using Ant Design defaults for card spacing and styling */
+}

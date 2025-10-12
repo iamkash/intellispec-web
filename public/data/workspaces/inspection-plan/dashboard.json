@@ -1,0 +1,348 @@
+{
+  "id": "inspection-plan-dashboard",
+  "title": "Inspection Plan Intelligence",
+  "description": "An AI-powered command center for optimizing inspection planning, providing predictive insights and actionable intelligence.",
+  "layout": "dashboard",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": [
+      {
+        "id": "company_id",
+        "type": "multiselect",
+        "label": "Company",
+        "optionsUrl": "/api/options/companies",
+        "refreshTrigger": true,
+        "props": {
+          "labelField": "name",
+          "valueField": "id"
+        }
+      },
+      {
+        "id": "site_id",
+        "type": "multiselect",
+        "label": "Facility/Site",
+        "optionsUrl": "/api/options/sites",
+        "dependsOn": "company_id",
+        "refreshTrigger": true,
+        "props": {
+          "labelField": "name",
+          "valueField": "id"
+        }
+      },
+      {
+        "id": "asset_type",
+        "type": "multiselect",
+        "label": "Asset Type",
+        "optionsUrl": "/api/options/asset-types",
+        "dependsOn": "site_id",
+        "refreshTrigger": true,
+        "props": {
+          "labelField": "name",
+          "valueField": "id"
+        }
+      },
+      {
+        "id": "asset_id",
+        "type": "multiselect",
+        "label": "Asset",
+        "optionsUrl": "/api/options/assets",
+        "dependsOn": "asset_type",
+        "refreshTrigger": true,
+        "props": {
+          "labelField": "name",
+          "valueField": "id"
+        }
+      },
+      {
+        "id": "date_range",
+        "type": "daterange",
+        "label": "Inspection Due Date",
+        "presets": ["Overdue", "Today", "This Week", "This Month", "Next 90 Days"],
+        "refreshTrigger": true
+      }
+    ]
+  },
+  "gadgets": [
+    {
+      "id": "kpi-compliance-score",
+      "type": "generic-kpi-gadget",
+      "title": "Compliance Score",
+      "description": "Real-time percentage of on-time vs. overdue inspections.",
+      "position": { "x": 0, "y": 0, "w": 3, "h": 1 },
+      "config": {
+        "kpis": [
+          {
+            "id": "compliance_score",
+            "title": "Compliance Score",
+            "widget": "ScoreGaugeWidget",
+            "aggregationConfig": {
+              "name": "inspectionCompliance",
+              "collection": "documents",
+              "baseFilter": { "type": "asset" },
+              "fieldMappings": {
+                "date_range": "inspectionDueDate",
+                "company_id": "companyId",
+                "site_id": "siteId",
+                "asset_type": "assetType",
+                "asset_id": "id"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "totalInspections": { "expression": { "$sum": 1 } },
+                  "onTimeInspections": {
+                    "expression": {
+                      "$sum": {
+                        "$cond": [ { "$lte": [ "$inspectionDueDate", "$$NOW" ] }, 1, 0 ]
+                      }
+                    }
+                  }
+                }
+              },
+              "calculation": {
+                "expression": "return (data.onTimeInspections / data.totalInspections) * 100",
+                "variables": ["onTimeInspections", "totalInspections"]
+              }
+            },
+            "dataPath": "data.result",
+            "widgetProps": {
+              "unit": "%",
+              "thresholds": { "good": 95, "warn": 85, "bad": 0 }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "kpi-asset-health",
+      "type": "generic-kpi-gadget",
+      "title": "Average Asset Health",
+      "description": "Aggregated health score from the most recent inspections.",
+      "position": { "x": 3, "y": 0, "w": 3, "h": 1 },
+      "config": {
+        "kpis": [
+          {
+            "id": "avg_asset_health",
+            "title": "Average Asset Health",
+            "widget": "ProgressRingWidget",
+            "aggregationConfig": {
+              "name": "avgAssetHealth",
+              "collection": "documents",
+              "baseFilter": { "type": "inspection" },
+               "fieldMappings": {
+                "date_range": "inspectionDate",
+                "company_id": "companyId",
+                "site_id": "siteId",
+                "asset_type": "assetType",
+                "asset_id": "assetId"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "avgHealth": { "expression": { "$avg": "$assetHealthScore" } }
+                }
+              }
+            },
+            "dataPath": "data.0.avgHealth",
+             "widgetProps": {
+              "unit": "%"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "kpi-overdue-count",
+      "type": "generic-kpi-gadget",
+      "title": "Critical Overdue",
+      "description": "Total count of currently overdue inspections.",
+      "position": { "x": 6, "y": 0, "w": 3, "h": 1 },
+      "config": {
+        "kpis": [
+          {
+            "id": "overdue_count",
+            "title": "Overdue Inspections",
+            "widget": "StatCardWidget",
+            "aggregationConfig": {
+              "name": "overdueCount",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "asset",
+                "inspectionDueDate": { "$lt": "now" }
+              },
+               "fieldMappings": {
+                "company_id": "companyId",
+                "site_id": "siteId",
+                "asset_type": "assetType",
+                "asset_id": "id"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "count": { "expression": { "$sum": 1 } }
+                }
+              }
+            },
+            "dataPath": "data.0.count",
+            "widgetProps": {
+              "unit": "Inspections",
+              "color": "red"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "kpi-inspection-cost",
+      "type": "generic-kpi-gadget",
+      "title": "Projected Monthly Cost",
+      "description": "Projected cost of inspections due in the current month.",
+      "position": { "x": 9, "y": 0, "w": 3, "h": 1 },
+      "config": {
+        "kpis": [
+          {
+            "id": "projected_cost",
+            "title": "Projected Cost",
+            "widget": "StatCardWidget",
+            "aggregationConfig": {
+              "name": "projectedCost",
+              "collection": "documents",
+              "baseFilter": { "type": "asset" },
+               "fieldMappings": {
+                "date_range": "inspectionDueDate",
+                "company_id": "companyId",
+                "site_id": "siteId"
+              },
+              "groupBy": {
+                "_id": "$inspectionType",
+                "fields": {
+                  "count": { "expression": { "$sum": 1 } }
+                }
+              },
+              "postProcessing": [
+                {
+                  "type": "lookup",
+                  "from": "reference_data",
+                  "localField": "_id",
+                  "foreignField": "id",
+                  "as": "inspectionCost",
+                  "filter": {"type": "inspection_costs"}
+                },
+                {
+                    "type": "calculation",
+                    "expression": "return data.reduce((acc, item) => acc + (item.count * item.inspectionCost.cost), 0)",
+                    "variables": ["data"]
+                }
+              ]
+            },
+            "dataPath": "data.result",
+            "widgetProps": {
+              "prefix": "$",
+              "precision": 0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "grid-workload-planner",
+      "type": "InlineEditableGridGadget",
+      "title": "Inspection Workload",
+      "description": "Actionable hub for managing upcoming and overdue inspections.",
+      "position": { "x": 0, "y": 1, "w": 8, "h": 2 },
+      "config": {
+        "dataUrl": "/api/documents?type=asset",
+        "tabs": [
+            {"key": "overdue", "label": "Overdue", "filter": {"inspectionDueDate": {"$lt": "now"}}},
+            {"key": "today", "label": "Due Today", "filter": {"inspectionDueDate": "today"}},
+            {"key": "week", "label": "Due This Week", "filter": {"inspectionDueDate": "this_week"}}
+        ],
+        "columns": [
+            {"key": "id", "title": "Asset ID", "editable": false},
+            {"key": "inspectionType", "title": "Inspection Type", "editable": false},
+            {"key": "inspectionDueDate", "title": "Due Date", "type": "date", "editable": false},
+            {
+                "key": "action", "title": "Action", "type": "action",
+                "actions": [
+                    {
+                        "label": "Start Inspection",
+                        "action": "openWorkspace",
+                        "workspace": "wizards/inspection-wizard",
+                        "params": ["id", "inspectionType"]
+                    }
+                ]
+            }
+        ]
+      }
+    },
+    {
+      "id": "chart-forecast-type",
+      "type": "GenericChartGadget",
+      "title": "90-Day Forecast by Type",
+      "description": "Number of inspections due over the next 90 days, stacked by type.",
+      "position": { "x": 8, "y": 1, "w": 4, "h": 2 },
+      "config": {
+        "chartType": "bar",
+        "chartProps": {
+          "stacked": true
+        },
+        "aggregationConfig": {
+          "name": "forecastByType",
+          "collection": "documents",
+          "baseFilter": { "type": "asset" },
+           "fieldMappings": {
+            "date_range": "inspectionDueDate",
+            "company_id": "companyId",
+            "site_id": "siteId"
+          },
+          "groupBy": {
+            "_id": {
+                "date": { "$dateToString": { "format": "%Y-%m-%d", "date": "$inspectionDueDate" } },
+                "type": "$inspectionType"
+            },
+            "fields": {
+              "count": { "expression": { "$sum": 1 } }
+            }
+          }
+        },
+        "dataPath": "data",
+        "dataMapping": {
+            "xAxis": "_id.date",
+            "yAxis": "count",
+            "category": "_id.type"
+        }
+      }
+    },
+    {
+      "id": "widget-ai-recommendations",
+      "type": "generic-kpi-gadget",
+      "title": "Optimization Advisor",
+      "description": "AI-generated recommendations to improve the inspection plan.",
+      "position": { "x": 0, "y": 3, "w": 6, "h": 2 },
+      "config": {
+        "kpis": [{
+          "id": "ai-recommendations",
+          "widget": "RecommendationsList",
+          "dataUrl": "/api/ai/recommendations",
+          "dataPath": "recommendations",
+          "requestBody": {
+            "type": "inspection_planning",
+            "context": "{{filterContext}}"
+          }
+        }]
+      }
+    },
+    {
+      "id": "rag-chatbot",
+      "type": "GenericRAGChatbotGadget",
+      "title": "Ask IntelliSpec",
+      "description": "Conversational AI to query inspection data in plain English.",
+      "position": { "x": 6, "y": 3, "w": 6, "h": 2 },
+      "config": {
+        "agentId": "inspection-data-agent",
+        "welcomeMessage": "Hello! Ask me anything about your inspection plan.",
+        "placeholder": "e.g., 'Show me all overdue inspections at the Sinclair site.'"
+      }
+    }
+  ]
+}

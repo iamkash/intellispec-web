@@ -1,0 +1,65 @@
+{
+  "menu_items": [
+    {
+      "key": "integrity-dashboard",
+      "icon": "DashboardOutlined",
+      "label": "Integrity Dashboard",
+      "license_id": "LIC_MECH_INT",
+      "auth_id": "AUTH_ENGINEER",
+      "enabled": true,
+      "order": 1,
+      "route": "/integrity/dashboard",
+      "type": "item",
+      "permissions": ["integrity.view"]
+    },
+    {
+      "key": "assessments",
+      "icon": "CheckSquareOutlined",
+      "label": "Assessments",
+      "license_id": "LIC_MECH_INT",
+      "auth_id": "AUTH_ENGINEER",
+      "enabled": true,
+      "order": 2,
+      "route": "/integrity/assessments",
+      "type": "item",
+      "permissions": ["integrity.assessments"]
+    },
+    {
+      "key": "equipment",
+      "icon": "SettingOutlined",
+      "label": "Equipment",
+      "license_id": "LIC_MECH_INT",
+      "auth_id": "AUTH_ENGINEER",
+      "enabled": true,
+      "order": 3,
+      "type": "group",
+      "permissions": ["integrity.equipment"]
+    },
+    {
+      "key": "pressure-vessels",
+      "icon": "ExperimentOutlined",
+      "label": "Pressure Vessels",
+      "license_id": "LIC_MECH_INT",
+      "auth_id": "AUTH_ENGINEER",
+      "enabled": true,
+      "order": 4,
+      "route": "/integrity/equipment/vessels",
+      "parent_key": "equipment",
+      "type": "item",
+      "permissions": ["integrity.equipment.vessels"]
+    },
+    {
+      "key": "piping-systems",
+      "icon": "NodeIndexOutlined",
+      "label": "Piping Systems",
+      "license_id": "LIC_MECH_INT",
+      "auth_id": "AUTH_ENGINEER",
+      "enabled": true,
+      "order": 5,
+      "route": "/integrity/equipment/piping",
+      "parent_key": "equipment",
+      "type": "item",
+      "permissions": ["integrity.equipment.piping"]
+    }
+  ]
+} 

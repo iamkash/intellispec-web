@@ -1,0 +1,406 @@
+{
+  "id": "nde-requirements-results",
+  "type": "section",
+  "title": "NDE Requirements & Results",
+  "description": "Non-destructive examination methods, results, risk assessment, compliance",
+  "icon": "ExperimentOutlined",
+  "order": 6,
+  "size": 12,
+  "groups": [
+    {
+      "id": "nde-methods-group",
+      "type": "group",
+      "title": "NDE Methods",
+      "description": "NDE methods and personnel qualification",
+      "order": 1,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "nde-methods-used",
+          "type": "checkbox",
+          "title": "NDE Methods Used",
+          "label": "NDE Methods Used",
+          "size": 12,
+          "options": [
+            {"label": "Ultrasonic Testing (UT)", "value": "ut"},
+            {"label": "Radiographic Testing (RT)", "value": "rt"},
+            {"label": "Magnetic Particle Testing (MT)", "value": "mt"},
+            {"label": "Liquid Penetrant Testing (PT)", "value": "pt"},
+            {"label": "Eddy Current Testing (ET)", "value": "et"},
+            {"label": "Visual Testing (VT)", "value": "vt"},
+            {"label": "Acoustic Emission (AE)", "value": "ae"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "nde-procedure-reference",
+          "type": "text",
+          "title": "NDE Procedure Reference",
+          "label": "NDE Procedure Reference",
+          "placeholder": "Enter procedure reference number",
+          "size": 6
+        },
+        {
+          "id": "nde-personnel-qualification",
+          "type": "select",
+          "title": "NDE Personnel Qualification",
+          "label": "NDE Personnel Qualification",
+          "placeholder": "Select qualification",
+          "required": true,
+          "size": 6,
+          "options": [
+            {"label": "ASNT Level II", "value": "asnt-ii"},
+            {"label": "ASNT Level III", "value": "asnt-iii"},
+            {"label": "API 510 Certified", "value": "api-510"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "nde-personnel-name",
+          "type": "text",
+          "title": "NDE Personnel Name",
+          "label": "NDE Personnel Name",
+          "placeholder": "Enter NDE personnel name",
+          "required": true,
+          "size": 6
+        },
+        {
+          "id": "nde-equipment-used",
+          "type": "tags-input",
+          "title": "NDE Equipment Used",
+          "label": "NDE Equipment Used",
+          "placeholder": "Add NDE equipment (e.g., 'UT Gauge - Model XYZ')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Equipment",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all NDE equipment?"
+        }
+      ]
+    },
+    {
+      "id": "nde-results-group",
+      "type": "group",
+      "title": "NDE Results",
+      "description": "NDE examination results and findings",
+      "order": 2,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "nde-date",
+          "type": "date",
+          "title": "NDE Date",
+          "label": "NDE Date",
+          "required": true,
+          "size": 6
+        },
+        {
+          "id": "nde-duration",
+          "type": "number",
+          "title": "NDE Duration (hours)",
+          "label": "NDE Duration (hours)",
+          "placeholder": "Enter duration",
+          "size": 6
+        },
+        {
+          "id": "nde-findings",
+          "type": "tags-input",
+          "title": "NDE Findings",
+          "label": "NDE Findings",
+          "placeholder": "Add NDE finding (e.g., 'No defects detected in shell welds')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Finding",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all NDE findings?"
+        },
+        {
+          "id": "nde-anomalies",
+          "type": "tags-input",
+          "title": "NDE Anomalies",
+          "label": "NDE Anomalies",
+          "placeholder": "Add NDE anomaly (e.g., 'Indication at shell-to-head weld')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Anomaly",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all NDE anomalies?"
+        },
+        {
+          "id": "anomaly-locations",
+          "type": "tags-input",
+          "title": "Anomaly Locations",
+          "label": "Anomaly Locations",
+          "placeholder": "Add anomaly location (e.g., 'Shell - 6 o'clock position')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Location",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all anomaly locations?"
+        },
+        {
+          "id": "anomaly-sizes",
+          "type": "tags-input",
+          "title": "Anomaly Sizes",
+          "label": "Anomaly Sizes",
+          "placeholder": "Add anomaly size (e.g., '2 inch long crack')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Size",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all anomaly sizes?"
+        },
+        {
+          "id": "nde-notes",
+          "type": "textarea",
+          "title": "NDE Notes",
+          "label": "NDE Notes",
+          "placeholder": "Additional NDE notes and observations",
+          "size": 12
+        }
+      ]
+    },
+    {
+      "id": "risk-assessment-group",
+      "type": "group",
+      "title": "Risk-Based Inspection Assessment",
+      "description": "Risk assessment and inspection planning",
+      "order": 3,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "rbi-performed",
+          "type": "radio",
+          "title": "RBI Performed",
+          "label": "RBI Performed",
+          "required": true,
+          "size": 6,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "In Progress", "value": "in-progress"}
+          ]
+        },
+        {
+          "id": "rbi-date",
+          "type": "date",
+          "title": "RBI Date",
+          "label": "RBI Date",
+          "size": 6,
+          "watchField": "rbi-performed",
+          "showWhen": "yes"
+        },
+        {
+          "id": "rbi-summary",
+          "type": "textarea",
+          "title": "RBI Summary",
+          "label": "RBI Summary",
+          "placeholder": "Summary of RBI assessment and recommendations",
+          "size": 12,
+          "watchField": "rbi-performed",
+          "showWhen": "yes"
+        },
+        {
+          "id": "risk-level",
+          "type": "select",
+          "title": "Risk Level",
+          "label": "Risk Level",
+          "placeholder": "Select risk level",
+          "required": true,
+          "size": 6,
+          "options": [
+            {"label": "Low", "value": "low"},
+            {"label": "Medium", "value": "medium"},
+            {"label": "High", "value": "high"},
+            {"label": "Critical", "value": "critical"}
+          ]
+        },
+        {
+          "id": "risk-factors",
+          "type": "tags-input",
+          "title": "Risk Factors",
+          "label": "Risk Factors",
+          "placeholder": "Add risk factor (e.g., 'High temperature operation')",
+          "size": 6,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Factor",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all risk factors?"
+        },
+        {
+          "id": "mitigation-measures",
+          "type": "tags-input",
+          "title": "Mitigation Measures",
+          "label": "Mitigation Measures",
+          "placeholder": "Add mitigation measure (e.g., 'Increased monitoring frequency')",
+          "size": 12,
+          "showToolbar": true,
+          "showIndividualControls": true,
+          "showCount": true,
+          "addButtonText": "Add Measure",
+          "removeAllButtonText": "Clear All",
+          "confirmRemoveAllMessage": "Are you sure you want to remove all mitigation measures?"
+        }
+      ]
+    },
+    {
+      "id": "compliance-group",
+      "type": "group",
+      "title": "Compliance Verification",
+      "description": "NDE compliance verification and code requirements",
+      "order": 4,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "nde-compliance",
+          "type": "radio",
+          "title": "NDE Compliance",
+          "label": "NDE Compliance",
+          "required": true,
+          "size": 6,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Compliant", "value": "compliant"},
+            {"label": "Non-Compliant", "value": "non-compliant"},
+            {"label": "Conditional Compliance", "value": "conditional"}
+          ]
+        },
+        {
+          "id": "compliance-notes",
+          "type": "textarea",
+          "title": "Compliance Notes",
+          "label": "Compliance Notes",
+          "placeholder": "Notes on compliance status and requirements",
+          "size": 12,
+          "watchField": "nde-compliance",
+          "showWhen": "non-compliant,conditional"
+        },
+        {
+          "id": "code-requirements",
+          "type": "checkbox",
+          "title": "Code Requirements Met",
+          "label": "Code Requirements Met",
+          "size": 6,
+          "options": [
+            {"label": "ASME Section V", "value": "asme-v"},
+            {"label": "ASME Section VIII", "value": "asme-viii"},
+            {"label": "API 510", "value": "api-510"},
+            {"label": "ASNT SNT-TC-1A", "value": "asnt-snt"},
+            {"label": "Other", "value": "other"}
+          ]
+        },
+        {
+          "id": "acceptance-criteria",
+          "type": "textarea",
+          "title": "Acceptance Criteria",
+          "label": "Acceptance Criteria",
+          "placeholder": "Acceptance criteria used for NDE evaluation",
+          "size": 12
+        },
+        {
+          "id": "nde-report-prepared",
+          "type": "radio",
+          "title": "NDE Report Prepared",
+          "label": "NDE Report Prepared",
+          "required": true,
+          "size": 6,
+          "direction": "horizontal",
+          "buttonStyle": "solid",
+          "options": [
+            {"label": "Yes", "value": "yes"},
+            {"label": "No", "value": "no"},
+            {"label": "In Progress", "value": "in-progress"}
+          ]
+        },
+        {
+          "id": "nde-report-number",
+          "type": "text",
+          "title": "NDE Report Number",
+          "label": "NDE Report Number",
+          "placeholder": "Enter NDE report number",
+          "size": 6,
+          "watchField": "nde-report-prepared",
+          "showWhen": "yes"
+        }
+      ]
+    },
+    {
+      "id": "nde-documentation-group",
+      "type": "group",
+      "title": "NDE Documentation & Attachments",
+      "description": "NDE documentation and supporting files",
+      "order": 5,
+      "size": 12,
+      "collapsible": false,
+      "fields": [
+        {
+          "id": "nde-report-attachment",
+          "type": "file-upload",
+          "title": "NDE Report",
+          "label": "NDE Report",
+          "placeholder": "Upload NDE report",
+          "size": 6
+        },
+        {
+          "id": "nde-photographs",
+          "type": "file-upload",
+          "title": "NDE Photographs",
+          "label": "NDE Photographs",
+          "placeholder": "Upload NDE photographs",
+          "size": 6
+        },
+        {
+          "id": "nde-sketches",
+          "type": "file-upload",
+          "title": "NDE Sketches",
+          "label": "NDE Sketches",
+          "placeholder": "Upload NDE sketches",
+          "size": 6
+        },
+        {
+          "id": "nde-certificates",
+          "type": "file-upload",
+          "title": "NDE Certificates",
+          "label": "NDE Certificates",
+          "placeholder": "Upload NDE certificates",
+          "size": 6
+        },
+        {
+          "id": "nde-procedures",
+          "type": "file-upload",
+          "title": "NDE Procedures",
+          "label": "NDE Procedures",
+          "placeholder": "Upload NDE procedures",
+          "size": 6
+        },
+        {
+          "id": "nde-calibration-records",
+          "type": "file-upload",
+          "title": "NDE Calibration Records",
+          "label": "NDE Calibration Records",
+          "placeholder": "Upload NDE calibration records",
+          "size": 6
+        }
+      ]
+    }
+  ]
+} 

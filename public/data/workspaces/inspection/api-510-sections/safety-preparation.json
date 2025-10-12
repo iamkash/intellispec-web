@@ -1,0 +1,556 @@
+[
+  {
+    "id": "safety-preparation",
+    "type": "section",
+    "title": "Safety Preparation",
+    "description": "Safety procedures, permits, and pre-inspection safety checks",
+    "icon": "SafetyCertificateOutlined",
+    "order": 2,
+    "size": 12
+  },
+  {
+    "id": "inspection-type-group",
+    "type": "group",
+    "title": "Inspection Type & Permits",
+    "description": "Inspection classification and work permits",
+    "sectionId": "safety-preparation",
+    "order": 1,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "inspection-type",
+    "type": "select",
+    "title": "Inspection Type",
+    "label": "Type of Inspection",
+    "placeholder": "Select inspection type",
+    "required": true,
+    "size": 12,
+    "sectionId": "safety-preparation",
+    "groupId": "inspection-type-group",
+    "defaultValue": "",
+    "options": [
+      {"label": "External Inspection", "value": "external"},
+      {"label": "Internal Inspection", "value": "internal"},
+      {"label": "Confined Space Entry", "value": "confined-space"},
+      {"label": "Hot Work Area", "value": "hot-work"},
+      {"label": "Elevated Work", "value": "elevated"},
+      {"label": "Underwater/Submerged", "value": "underwater"},
+      {"label": "High Pressure System", "value": "high-pressure"},
+      {"label": "High Temperature System", "value": "high-temperature"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "work-permit",
+    "type": "text",
+    "title": "Work Permit Number",
+    "label": "Work Permit Number",
+    "placeholder": "Enter work permit number",
+    "required": true,
+    "size": 12,
+    "sectionId": "safety-preparation",
+    "groupId": "inspection-type-group",
+    "defaultValue": ""
+  },
+  {
+    "id": "lockout-tagout-group",
+    "type": "group",
+    "title": "Lockout/Tagout Verification",
+    "description": "Energy isolation and lockout/tagout procedures",
+    "sectionId": "safety-preparation",
+    "order": 2,
+    "size": 12,
+    "collapsible": true
+  },
+  {
+    "id": "lockout-tagout",
+    "type": "radio",
+    "title": "Lockout/Tagout Verified",
+    "label": "Lockout/Tagout procedures completed",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "lockout-tagout-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "lockout-tagout-reason",
+    "type": "textarea",
+    "title": "Reason for No Lockout/Tagout",
+    "label": "Please explain why Lockout/Tagout procedures were not completed",
+    "placeholder": "Enter detailed explanation for not completing Lockout/Tagout procedures",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "lockout-tagout-group",
+    "defaultValue": "",
+    "watchField": "lockout-tagout",
+    "showWhen": "no"
+  },
+  {
+    "id": "lockout-tagout-details",
+    "type": "textarea",
+    "title": "Lockout/Tagout Details",
+    "label": "Please provide details of the Lockout/Tagout procedures completed",
+    "placeholder": "Enter details of energy isolation procedures, equipment locked out, and personnel involved",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "lockout-tagout-group",
+    "defaultValue": "",
+    "watchField": "lockout-tagout",
+    "showWhen": "yes"
+  },
+  {
+    "id": "confined-space-group",
+    "type": "group",
+    "title": "Confined Space Entry",
+    "description": "Confined space entry permit and procedures",
+    "sectionId": "safety-preparation",
+    "order": 3,
+    "size": 12,
+    "collapsible": true,
+    "watchField": "inspection-type",
+    "showWhen": "confined-space,internal,combined"
+  },
+  {
+    "id": "confined-space",
+    "type": "radio",
+    "title": "Confined Space Entry",
+    "label": "Confined space entry permit obtained",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "confined-space-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "confined-space-reason",
+    "type": "textarea",
+    "title": "Reason for No Confined Space Permit",
+    "label": "Please explain why confined space entry permit was not obtained",
+    "placeholder": "Enter detailed explanation for not obtaining confined space entry permit",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "confined-space-group",
+    "defaultValue": "",
+    "watchField": "confined-space",
+    "showWhen": "no"
+  },
+  {
+    "id": "confined-space-details",
+    "type": "textarea",
+    "title": "Confined Space Entry Details",
+    "label": "Please provide details of the confined space entry permit and procedures",
+    "placeholder": "Enter permit number, entry procedures, ventilation details, and rescue plan",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "confined-space-group",
+    "defaultValue": "",
+    "watchField": "confined-space",
+    "showWhen": "yes"
+  },
+  {
+    "id": "hot-work-group",
+    "type": "group",
+    "title": "Hot Work Permit",
+    "description": "Hot work permit and fire safety procedures",
+    "sectionId": "safety-preparation",
+    "order": 4,
+    "size": 12,
+    "collapsible": true,
+    "watchField": "inspection-type",
+    "showWhen": "hot-work,high-temperature,combined"
+  },
+  {
+    "id": "hot-work",
+    "type": "radio",
+    "title": "Hot Work Permit",
+    "label": "Hot work permit obtained if required",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "hot-work-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "hot-work-reason",
+    "type": "textarea",
+    "title": "Reason for No Hot Work Permit",
+    "label": "Please explain why hot work permit was not obtained",
+    "placeholder": "Enter detailed explanation for not obtaining hot work permit",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "hot-work-group",
+    "defaultValue": "",
+    "watchField": "hot-work",
+    "showWhen": "no"
+  },
+  {
+    "id": "hot-work-details",
+    "type": "textarea",
+    "title": "Hot Work Permit Details",
+    "label": "Please provide details of the hot work permit and fire safety measures",
+    "placeholder": "Enter permit number, fire watch details, fire extinguisher locations, and safety measures",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "hot-work-group",
+    "defaultValue": "",
+    "watchField": "hot-work",
+    "showWhen": "yes"
+  },
+  {
+    "id": "elevated-work-group",
+    "type": "group",
+    "title": "Elevated Work Safety",
+    "description": "Fall protection and elevated work procedures",
+    "sectionId": "safety-preparation",
+    "order": 5,
+    "size": 12,
+    "collapsible": true,
+    "watchField": "inspection-type",
+    "showWhen": "elevated,combined"
+  },
+  {
+    "id": "fall-protection",
+    "type": "radio",
+    "title": "Fall Protection Equipment",
+    "label": "Fall protection equipment available and properly fitted",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "elevated-work-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "fall-protection-reason",
+    "type": "textarea",
+    "title": "Reason for No Fall Protection",
+    "label": "Please explain why fall protection equipment is not available",
+    "placeholder": "Enter detailed explanation for missing fall protection equipment",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "elevated-work-group",
+    "defaultValue": "",
+    "watchField": "fall-protection",
+    "showWhen": "no"
+  },
+  {
+    "id": "scaffolding-inspected",
+    "type": "radio",
+    "title": "Scaffolding Inspected",
+    "label": "Scaffolding or access equipment inspected and certified",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "elevated-work-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "scaffolding-inspected-reason",
+    "type": "textarea",
+    "title": "Reason for No Scaffolding Inspection",
+    "label": "Please explain why scaffolding was not inspected",
+    "placeholder": "Enter detailed explanation for not inspecting scaffolding",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "elevated-work-group",
+    "defaultValue": "",
+    "watchField": "scaffolding-inspected",
+    "showWhen": "no"
+  },
+  {
+    "id": "underwater-safety-group",
+    "type": "group",
+    "title": "Underwater Safety",
+    "description": "Diving safety and underwater work procedures",
+    "sectionId": "safety-preparation",
+    "order": 6,
+    "size": 12,
+    "collapsible": true,
+    "watchField": "inspection-type",
+    "showWhen": "underwater,combined"
+  },
+  {
+    "id": "diving-certification",
+    "type": "radio",
+    "title": "Diving Certification",
+    "label": "Diving certification and training verified",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "underwater-safety-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "diving-certification-reason",
+    "type": "textarea",
+    "title": "Reason for No Diving Certification",
+    "label": "Please explain why diving certification was not verified",
+    "placeholder": "Enter detailed explanation for not verifying diving certification",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "underwater-safety-group",
+    "defaultValue": "",
+    "watchField": "diving-certification",
+    "showWhen": "no"
+  },
+  {
+    "id": "diving-equipment",
+    "type": "radio",
+    "title": "Diving Equipment",
+    "label": "Diving equipment inspected and functional",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "underwater-safety-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "diving-equipment-reason",
+    "type": "textarea",
+    "title": "Reason for No Diving Equipment",
+    "label": "Please explain why diving equipment was not inspected",
+    "placeholder": "Enter detailed explanation for not inspecting diving equipment",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "underwater-safety-group",
+    "defaultValue": "",
+    "watchField": "diving-equipment",
+    "showWhen": "no"
+  },
+  {
+    "id": "pressure-safety-group",
+    "type": "group",
+    "title": "High Pressure Safety",
+    "description": "High pressure system safety procedures",
+    "sectionId": "safety-preparation",
+    "order": 7,
+    "size": 12,
+    "collapsible": true,
+    "watchField": "inspection-type",
+    "showWhen": "high-pressure,combined"
+  },
+  {
+    "id": "pressure-relief",
+    "type": "radio",
+    "title": "Pressure Relief Verified",
+    "label": "Pressure relief systems verified and functional",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "pressure-safety-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "pressure-relief-reason",
+    "type": "textarea",
+    "title": "Reason for No Pressure Relief Verification",
+    "label": "Please explain why pressure relief systems were not verified",
+    "placeholder": "Enter detailed explanation for not verifying pressure relief systems",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "pressure-safety-group",
+    "defaultValue": "",
+    "watchField": "pressure-relief",
+    "showWhen": "no"
+  },
+  {
+    "id": "pressure-monitoring",
+    "type": "radio",
+    "title": "Pressure Monitoring",
+    "label": "Pressure monitoring equipment calibrated and functional",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "pressure-safety-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "pressure-monitoring-reason",
+    "type": "textarea",
+    "title": "Reason for No Pressure Monitoring",
+    "label": "Please explain why pressure monitoring equipment was not calibrated",
+    "placeholder": "Enter detailed explanation for not calibrating pressure monitoring equipment",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "pressure-safety-group",
+    "defaultValue": "",
+    "watchField": "pressure-monitoring",
+    "showWhen": "no"
+  },
+  {
+    "id": "temperature-safety-group",
+    "type": "group",
+    "title": "High Temperature Safety",
+    "description": "High temperature system safety procedures",
+    "sectionId": "safety-preparation",
+    "order": 8,
+    "size": 12,
+    "collapsible": true,
+    "watchField": "inspection-type",
+    "showWhen": "high-temperature,combined"
+  },
+  {
+    "id": "temperature-monitoring",
+    "type": "radio",
+    "title": "Temperature Monitoring",
+    "label": "Temperature monitoring equipment calibrated and functional",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "temperature-safety-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "temperature-monitoring-reason",
+    "type": "textarea",
+    "title": "Reason for No Temperature Monitoring",
+    "label": "Please explain why temperature monitoring equipment was not calibrated",
+    "placeholder": "Enter detailed explanation for not calibrating temperature monitoring equipment",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "temperature-safety-group",
+    "defaultValue": "",
+    "watchField": "temperature-monitoring",
+    "showWhen": "no"
+  },
+  {
+    "id": "heat-protection",
+    "type": "radio",
+    "title": "Heat Protection Equipment",
+    "label": "Heat protection equipment available and properly fitted",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "temperature-safety-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "heat-protection-reason",
+    "type": "textarea",
+    "title": "Reason for No Heat Protection",
+    "label": "Please explain why heat protection equipment is not available",
+    "placeholder": "Enter detailed explanation for missing heat protection equipment",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "temperature-safety-group",
+    "defaultValue": "",
+    "watchField": "heat-protection",
+    "showWhen": "no"
+  },
+  {
+    "id": "safety-equipment-group",
+    "type": "group",
+    "title": "Safety Equipment Verification",
+    "description": "Required safety equipment availability and condition",
+    "sectionId": "safety-preparation",
+    "order": 9,
+    "size": 12,
+    "collapsible": true
+  },
+  {
+    "id": "safety-equipment",
+    "type": "radio",
+    "title": "Safety Equipment Available",
+    "label": "Required safety equipment available",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "safety-equipment-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "safety-equipment-reason",
+    "type": "textarea",
+    "title": "Reason for No Safety Equipment",
+    "label": "Please explain why required safety equipment is not available",
+    "placeholder": "Enter detailed explanation for missing safety equipment",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "safety-equipment-group",
+    "defaultValue": "",
+    "watchField": "safety-equipment",
+    "showWhen": "no"
+  },
+  {
+    "id": "emergency-procedures-group",
+    "type": "group",
+    "title": "Emergency Procedures",
+    "description": "Emergency procedures review and communication",
+    "sectionId": "safety-preparation",
+    "order": 10,
+    "size": 12,
+    "collapsible": true
+  },
+  {
+    "id": "emergency-procedures",
+    "type": "radio",
+    "title": "Emergency Procedures Reviewed",
+    "label": "Emergency procedures reviewed with team",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "emergency-procedures-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "emergency-procedures-reason",
+    "type": "textarea",
+    "title": "Reason for No Emergency Procedures Review",
+    "label": "Please explain why emergency procedures were not reviewed",
+    "placeholder": "Enter detailed explanation for not reviewing emergency procedures",
+    "size": 24,
+    "sectionId": "safety-preparation",
+    "groupId": "emergency-procedures-group",
+    "defaultValue": "",
+    "watchField": "emergency-procedures",
+    "showWhen": "no"
+  }
+] 

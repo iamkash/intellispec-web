@@ -1,0 +1,9 @@
+{
+  "options": [
+    { "label": "John Doe", "value": "john_doe", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=john" },
+    { "label": "Jane Smith", "value": "jane_smith", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=jane" },
+    { "label": "Bob Johnson", "value": "bob_johnson", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=bob" },
+    { "label": "Alice Brown", "value": "alice_brown", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=alice" },
+    { "label": "Charlie Wilson", "value": "charlie_wilson", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=charlie" }
+  ]
+} 

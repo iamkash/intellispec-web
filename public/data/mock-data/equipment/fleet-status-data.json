@@ -1,0 +1,67 @@
+{
+  "fleetStatus": [
+    {
+      "id": "rented",
+      "title": "Rented",
+      "name": "Rented",
+      "value": 892,
+      "percentage": 71.6,
+      "description": "Equipment currently rented out to customers",
+      "status": "active",
+      "trend": {
+        "value": "+12.8%",
+        "direction": "up"
+      }
+    },
+    {
+      "id": "available",
+      "title": "Available",
+      "name": "Available",
+      "value": 355,
+      "percentage": 28.5,
+      "description": "Equipment available for rental",
+      "status": "ready",
+      "trend": {
+        "value": "-3.4%",
+        "direction": "down"
+      }
+    },
+    {
+      "id": "maintenance",
+      "title": "In Maintenance",
+      "name": "In Maintenance",
+      "value": 23,
+      "percentage": 1.8,
+      "description": "Equipment currently under maintenance",
+      "status": "unavailable",
+      "trend": {
+        "value": "+2",
+        "direction": "up"
+      }
+    }
+  ],
+  "summary": {
+    "totalEquipment": 1247,
+    "utilizationRate": 71.6,
+    "availabilityRate": 28.5,
+    "maintenanceRate": 1.8,
+    "lastUpdated": "2024-01-15T14:30:00Z"
+  },
+  "trends": {
+    "rentedTrend": {
+      "value": "+12.8%",
+      "direction": "up",
+      "period": "last_month"
+    },
+    "availableTrend": {
+      "value": "-3.4%",
+      "direction": "down",
+      "period": "last_month"
+    },
+    "maintenanceTrend": {
+      "value": "+2",
+      "direction": "up",
+      "period": "last_week"
+    }
+  }
+} 

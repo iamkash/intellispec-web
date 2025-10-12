@@ -1,0 +1,16 @@
+[
+  {
+    "_id": "68aa95cbaba0d502fe6ada5b",
+    "name": "Super Admin",
+    "tenantId": "68aa95caaba0d502fe6ada5a",
+    "allowedRoutes": [
+      "*"
+    ],
+    "description": "Full system access",
+    "isExternalCustomer": false,
+    "isSystemRole": true,
+    "permissions": [
+      "*"
+    ]
+  }
+]

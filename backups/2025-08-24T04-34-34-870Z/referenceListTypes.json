@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "68aa95bfaba0d502fe6ada50",
+    "name": "module_status",
+    "allowCustom": false,
+    "category": "system",
+    "createdAt": "2025-08-24T04:31:59.352Z",
+    "description": "Status options for B2B SaaS modules",
+    "displayName": "Module Status",
+    "isActive": true,
+    "sortBy": "order",
+    "updatedAt": "2025-08-24T04:31:59.352Z"
+  },
+  {
+    "_id": "68aa95bfaba0d502fe6ada53",
+    "name": "module_category",
+    "allowCustom": false,
+    "category": "system",
+    "createdAt": "2025-08-24T04:31:59.621Z",
+    "description": "Categories for organizing B2B SaaS modules",
+    "displayName": "Module Category",
+    "isActive": true,
+    "sortBy": "label",
+    "updatedAt": "2025-08-24T04:31:59.621Z"
+  }
+]

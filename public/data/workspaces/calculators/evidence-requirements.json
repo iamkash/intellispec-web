@@ -1,0 +1,144 @@
+{
+  "id": "calculator-evidence-requirements",
+  "type": "form",
+  "title": "Evidence Photo Requirements",
+  "description": "Calculate required evidence photos based on inspection scope and asset type",
+  "icon": "CameraOutlined",
+  "mode": "form",
+  "layout": "form",
+  "gadgets": [
+    {
+      "id": "calculator-form-gadget",
+      "type": "document-form-gadget",
+      "title": "Evidence Photo Requirements",
+      "config": {
+        "dataUrl": "/api/calculators/evidence-requirements/metadata",
+        "mode": "form",
+        "gadgetOptions": [
+          {
+            "id": "input-section",
+            "type": "section",
+            "title": "Input Parameters",
+            "description": "Enter the required input values",
+            "icon": "FormOutlined",
+            "order": 1,
+            "size": 24
+          },
+          {
+            "id": "input-group",
+            "type": "group",
+            "title": "Parameters",
+            "description": "Input parameters for calculation",
+            "sectionId": "input-section",
+            "order": 1,
+            "size": 24,
+            "collapsible": false
+          },
+          {
+            "id": "input_value",
+            "type": "number",
+            "title": "Input Value",
+            "label": "Input Value",
+            "placeholder": "Enter value",
+            "required": true,
+            "size": 24,
+            "sectionId": "input-section",
+            "groupId": "input-group",
+            "defaultValue": null
+          },
+          {
+            "id": "output-section",
+            "type": "section",
+            "title": "Calculation Results",
+            "description": "Calculated values and results",
+            "icon": "BarChartOutlined",
+            "order": 2,
+            "size": 24
+          },
+          {
+            "id": "calculated_result",
+            "type": "number",
+            "title": "Calculated Result",
+            "label": "Calculated Result",
+            "size": 24,
+            "sectionId": "output-section",
+            "groupId": "output-group",
+            "readonly": true,
+            "calculated": true,
+            "formula": "calculate_result(input_value)"
+          },
+          {
+            "id": "output-group",
+            "type": "group",
+            "title": "Results",
+            "description": "Calculation results",
+            "sectionId": "output-section",
+            "order": 1,
+            "size": 24,
+            "collapsible": false
+          },
+          {
+            "id": "rationale-section",
+            "type": "section",
+            "title": "Rationale & Explanation",
+            "description": "AI-generated explanation of calculations",
+            "icon": "BulbOutlined",
+            "order": 3,
+            "size": 24
+          },
+          {
+            "id": "rationale-group",
+            "type": "group",
+            "title": "Explanation",
+            "description": "Calculation rationale",
+            "sectionId": "rationale-section",
+            "order": 1,
+            "size": 24,
+            "collapsible": false
+          },
+          {
+            "id": "rationale-text",
+            "type": "textarea",
+            "title": "Calculation Rationale",
+            "label": "Calculation Rationale",
+            "size": 24,
+            "sectionId": "rationale-section",
+            "groupId": "rationale-group",
+            "readonly": true,
+            "rows": 6
+          },
+          {
+            "id": "steps-section",
+            "type": "section",
+            "title": "Calculation Steps",
+            "description": "Detailed step-by-step calculation process",
+            "icon": "OrderedListOutlined",
+            "order": 4,
+            "size": 24
+          },
+          {
+            "id": "steps-group",
+            "type": "group",
+            "title": "Steps",
+            "description": "Step-by-step process",
+            "sectionId": "steps-section",
+            "order": 1,
+            "size": 24,
+            "collapsible": false
+          },
+          {
+            "id": "steps-text",
+            "type": "textarea",
+            "title": "Step-by-Step Process",
+            "label": "Step-by-Step Process",
+            "size": 24,
+            "sectionId": "steps-section",
+            "groupId": "steps-group",
+            "readonly": true,
+            "rows": 8
+          }
+        ]
+      }
+    }
+  ]
+}

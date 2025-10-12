@@ -1,0 +1,1170 @@
+[
+  {
+    "id": "safety-access-preparation",
+    "type": "section",
+    "title": "Safety & Access Preparation",
+    "description": "Detailed safety procedures, permits, access requirements, and pre-inspection safety checks",
+    "icon": "SafetyCertificateOutlined",
+    "order": 2,
+    "size": 12
+  },
+  {
+    "id": "safety-procedures-group",
+    "type": "group",
+    "title": "Safety Procedures",
+    "description": "Required safety procedures and protocols",
+    "sectionId": "safety-access-preparation",
+    "order": 1,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "confined-space-procedures",
+    "type": "tags-input",
+    "title": "Confined Space Procedures",
+    "label": "Confined Space Procedures",
+    "placeholder": "Add confined space procedure",
+    "size": 8,
+    "watchField": "confined-space-required",
+    "showWhen": "yes",
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Procedure",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all confined space procedures?",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-procedures-group"
+  },
+  {
+    "id": "lockout-tagout-procedures",
+    "type": "tags-input",
+    "title": "Lockout/Tagout Procedures",
+    "label": "Lockout/Tagout Procedures",
+    "placeholder": "Add LOTO procedure",
+    "size": 8,
+    "watchField": "lockout-tagout-required",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-procedures-group"
+  },
+  {
+    "id": "ventilation-procedures",
+    "type": "tags-input",
+    "title": "Ventilation Procedures",
+    "label": "Ventilation Procedures",
+    "placeholder": "Add ventilation procedure",
+    "size": 8,
+    "watchField": "ventilation-required",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-procedures-group"
+  },
+  {
+    "id": "hot-work-permit",
+    "type": "radio",
+    "title": "Hot Work Permit Required",
+    "label": "Hot Work Permit Required",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-procedures-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  
+  {
+    "id": "confined-space-permit",
+    "type": "radio",
+    "title": "Confined Space Permit Required",
+    "label": "Confined Space Permit Required",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-procedures-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "hot-work-permit-number",
+    "type": "text",
+    "title": "Hot Work Permit Number",
+    "label": "Hot Work Permit Number",
+    "placeholder": "Enter permit number",
+    "size": 12,
+    "watchField": "hot-work-permit",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-procedures-group"
+  },
+  {
+    "id": "confined-space-permit-number",
+    "type": "text",
+    "title": "Confined Space Permit Number",
+    "label": "Confined Space Permit Number",
+    "placeholder": "Enter permit number",
+    "size": 12,
+    "watchField": "confined-space-permit",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-procedures-group"
+  },
+  {
+    "id": "access-requirements-group",
+    "type": "group",
+    "title": "Access Requirements",
+    "description": "Access requirements and preparation",
+    "sectionId": "safety-access-preparation",
+    "order": 2,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "access-method",
+    "type": "select",
+    "title": "Primary Access Method",
+    "label": "Primary Access Method",
+    "placeholder": "Select access method",
+    "required": true,
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "access-requirements-group",
+    "options": [
+      {"label": "Manhole Entry", "value": "manhole"},
+      {"label": "Nozzle Entry", "value": "nozzle"},
+      {"label": "Removable Head", "value": "removable-head"},
+      {"label": "External Access Only", "value": "external"},
+      {"label": "Scaffolding Required", "value": "scaffolding"},
+      {"label": "Crane/Lift Required", "value": "crane-lift"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "entry-size",
+    "type": "number",
+    "title": "Entry Size (inches)",
+    "label": "Entry Size (inches)",
+    "placeholder": "Enter entry size",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "access-requirements-group"
+  },
+  {
+    "id": "entry-depth",
+    "type": "number",
+    "title": "Entry Depth (feet)",
+    "label": "Entry Depth (feet)",
+    "placeholder": "Enter entry depth",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "access-requirements-group"
+  },
+  {
+    "id": "access-restrictions",
+    "type": "textarea",
+    "title": "Access Restrictions or Limitations",
+    "label": "Access Restrictions or Limitations",
+    "placeholder": "Describe any access restrictions, limitations, or special considerations",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "access-requirements-group"
+  },
+  {
+    "id": "access-equipment-group",
+    "type": "group",
+    "title": "Access Equipment Requirements",
+    "description": "Required access equipment and tools",
+    "sectionId": "safety-access-preparation",
+    "order": 3,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "access-equipment",
+    "type": "checkbox",
+    "title": "Access Equipment Required",
+    "label": "Access Equipment Required",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "access-equipment-group",
+    "options": [
+      {"label": "Ladder", "value": "ladder"},
+      {"label": "Scaffolding", "value": "scaffolding"},
+      {"label": "Manlift", "value": "manlift"},
+      {"label": "Crane", "value": "crane"},
+      {"label": "Rope Access", "value": "rope-access"},
+      {"label": "Platform", "value": "platform"},
+      {"label": "Basket", "value": "basket"},
+      {"label": "Safety Harness", "value": "safety-harness"},
+      {"label": "Fall Protection", "value": "fall-protection"},
+      {"label": "Safety Line", "value": "safety-line"},
+      {"label": "Access Platform", "value": "access-platform"},
+      {"label": "Mobile Scaffold", "value": "mobile-scaffold"}
+    ]
+  },
+  {
+    "id": "access-equipment-available",
+    "type": "radio",
+    "title": "All Required Access Equipment Available",
+    "label": "All Required Access Equipment Available",
+    "required": true,
+    "size": 12,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "access-equipment-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Partial", "value": "partial"}
+    ]
+  },
+  {
+    "id": "missing-access-equipment",
+    "type": "tags-input",
+    "title": "Missing Access Equipment",
+    "label": "Missing Access Equipment",
+    "placeholder": "Add missing access equipment",
+    "size": 24,
+    "watchField": "access-equipment-available",
+    "showWhen": ["no", "partial"],
+    "sectionId": "safety-access-preparation",
+    "groupId": "access-equipment-group"
+  },
+  {
+    "id": "atmosphere-ventilation-checks-group",
+    "type": "group",
+    "title": "Atmosphere & Ventilation Checks",
+    "description": "Atmosphere testing and ventilation verification",
+    "sectionId": "safety-access-preparation",
+    "order": 4,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "atmosphere-testing",
+    "type": "radio",
+    "title": "Atmosphere Testing Completed",
+    "label": "Atmosphere Testing Completed",
+    "required": true,
+    "size": 12,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "atmosphere-ventilation-checks-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "atmosphere-test-results",
+    "type": "textarea",
+    "title": "Atmosphere Test Results",
+    "label": "Atmosphere Test Results",
+    "placeholder": "O2%, LEL%, CO, H2S, etc.",
+    "size": 24,
+    "watchField": "atmosphere-testing",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "atmosphere-ventilation-checks-group"
+  },
+  {
+    "id": "atmosphere-test-time",
+    "type": "datetime",
+    "title": "Atmosphere Test Time",
+    "label": "Atmosphere Test Time",
+    "size": 24,
+    "watchField": "atmosphere-testing",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "atmosphere-ventilation-checks-group"
+  },
+  {
+    "id": "ventilation-verified",
+    "type": "radio",
+    "title": "Ventilation Verified",
+    "label": "Ventilation Verified",
+    "size": 12,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "atmosphere-ventilation-checks-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "ventilation-type",
+    "type": "select",
+    "title": "Ventilation Type",
+    "label": "Ventilation Type",
+    "placeholder": "Select ventilation type",
+    "size": 12,
+    "watchField": "ventilation-verified",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "atmosphere-ventilation-checks-group",
+    "options": [
+      {"label": "Natural Ventilation", "value": "natural"},
+      {"label": "Mechanical Ventilation", "value": "mechanical"},
+      {"label": "Forced Air", "value": "forced-air"},
+      {"label": "Exhaust Fan", "value": "exhaust-fan"}
+    ]
+  },
+  {
+    "id": "isolation-communication-checks-group",
+    "type": "group",
+    "title": "Isolation & Communication Checks",
+    "description": "Isolation verification and communication system setup",
+    "sectionId": "safety-access-preparation",
+    "order": 5,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "isolation-verified",
+    "type": "radio",
+    "title": "Isolation Verified",
+    "label": "Isolation Verified",
+    "required": true,
+    "size": 12,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "isolation-communication-checks-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "isolation-method",
+    "type": "tags-input",
+    "title": "Isolation Methods Used",
+    "label": "Isolation Methods Used",
+    "placeholder": "Add isolation method",
+    "size": 24,
+    "watchField": "isolation-verified",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "isolation-communication-checks-group"
+  },
+  {
+    "id": "communication-system",
+    "type": "radio",
+    "title": "Communication System Verified",
+    "label": "Communication System Verified",
+    "required": true,
+    "size": 12,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "isolation-communication-checks-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "communication-method",
+    "type": "select",
+    "title": "Communication Method",
+    "label": "Communication Method",
+    "placeholder": "Select communication method",
+    "size": 12,
+    "watchField": "communication-system",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "isolation-communication-checks-group",
+    "options": [
+      {"label": "Radio", "value": "radio"},
+      {"label": "Phone", "value": "phone"},
+      {"label": "Hand Signals", "value": "hand-signals"},
+      {"label": "Visual Contact", "value": "visual-contact"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "environmental-conditions-checks-group",
+    "type": "group",
+    "title": "Environmental Conditions Checks",
+    "description": "Lighting, temperature, and weather condition verification",
+    "sectionId": "safety-access-preparation",
+    "order": 6,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "lighting-verified",
+    "type": "radio",
+    "title": "Adequate Lighting Verified",
+    "label": "Adequate Lighting Verified",
+    "required": true,
+    "size": 12,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-checks-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Needs Improvement", "value": "needs-improvement"}
+    ]
+  },
+  {
+    "id": "lighting-type",
+    "type": "select",
+    "title": "Lighting Type",
+    "label": "Lighting Type",
+    "placeholder": "Select lighting type",
+    "size": 12,
+    "watchField": "lighting-verified",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-checks-group",
+    "options": [
+      {"label": "Natural Light", "value": "natural"},
+      {"label": "Portable Lights", "value": "portable"},
+      {"label": "Fixed Lighting", "value": "fixed"},
+      {"label": "Headlamps", "value": "headlamps"},
+      {"label": "Spotlights", "value": "spotlights"}
+    ]
+  },
+  {
+    "id": "temperature-check",
+    "type": "radio",
+    "title": "Temperature Conditions Acceptable",
+    "label": "Temperature Conditions Acceptable",
+    "required": true,
+    "size": 12,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-checks-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Marginal", "value": "marginal"}
+    ]
+  },
+  {
+    "id": "temperature-reading",
+    "type": "number",
+    "title": "Temperature Reading (°F)",
+    "label": "Temperature Reading (°F)",
+    "placeholder": "Enter temperature",
+    "size": 12,
+    "watchField": "temperature-check",
+    "showWhen": ["yes", "no", "marginal"],
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-checks-group"
+  },
+  {
+    "id": "weather-conditions",
+    "type": "radio",
+    "title": "Weather Conditions Acceptable",
+    "label": "Weather Conditions Acceptable",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-checks-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Marginal", "value": "marginal"}
+    ]
+  },
+  {
+    "id": "weather-notes",
+    "type": "textarea",
+    "title": "Weather Notes",
+    "label": "Weather Notes",
+    "placeholder": "Describe current weather conditions",
+    "size": 24,
+    "watchField": "weather-conditions",
+    "showWhen": ["yes", "no", "marginal"],
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-checks-group"
+  },
+  {
+    "id": "rescue-equipment-group",
+    "type": "group",
+    "title": "Rescue Equipment & Procedures",
+    "description": "Rescue equipment and emergency procedures",
+    "sectionId": "safety-access-preparation",
+    "order": 7,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "rescue-equipment-available",
+    "type": "radio",
+    "title": "Rescue Equipment Available",
+    "label": "Rescue Equipment Available",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "rescue-equipment-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "rescue-equipment-type",
+    "type": "checkbox",
+    "title": "Rescue Equipment Type",
+    "label": "Rescue Equipment Type",
+    "size": 24,
+    "watchField": "rescue-equipment-available",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "rescue-equipment-group",
+    "options": [
+      {"label": "Tripod & Winch", "value": "tripod-winch"},
+      {"label": "Retrieval Line", "value": "retrieval-line"},
+      {"label": "SCBA", "value": "scba"},
+      {"label": "Emergency Escape", "value": "emergency-escape"},
+      {"label": "Rescue Harness", "value": "rescue-harness"},
+      {"label": "First Aid Kit", "value": "first-aid"},
+      {"label": "AED", "value": "aed"}
+    ]
+  },
+  {
+    "id": "rescue-team-available",
+    "type": "radio",
+    "title": "Rescue Team Available",
+    "label": "Rescue Team Available",
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "rescue-equipment-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "rescue-team-response-time",
+    "type": "number",
+    "title": "Rescue Team Response Time (minutes)",
+    "label": "Rescue Team Response Time (minutes)",
+    "placeholder": "Enter response time",
+    "size": 24,
+    "watchField": "rescue-team-available",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "rescue-equipment-group"
+  },
+  {
+    "id": "safety-briefing-group",
+    "type": "group",
+    "title": "Safety Briefing & Documentation",
+    "description": "Safety briefing and documentation requirements",
+    "sectionId": "safety-access-preparation",
+    "order": 8,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "safety-briefing-completed",
+    "type": "radio",
+    "title": "Safety Briefing Completed",
+    "label": "Safety Briefing Completed",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-briefing-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "briefing-participants",
+    "type": "tags-input",
+    "title": "Briefing Participants",
+    "label": "Briefing Participants",
+    "placeholder": "Add participant name",
+    "size": 24,
+    "watchField": "safety-briefing-completed",
+    "showWhen": "yes",
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-briefing-group"
+  },
+  {
+    "id": "safety-concerns",
+    "type": "textarea",
+    "title": "Safety Concerns or Issues",
+    "label": "Safety Concerns or Issues",
+    "placeholder": "Document any safety concerns or issues identified",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "safety-briefing-group"
+  },
+  {
+    "id": "ppe-verification-group",
+    "type": "group",
+    "title": "PPE Verification & Usage",
+    "description": "Verification that required PPE is available and being used",
+    "sectionId": "safety-access-preparation",
+    "order": 9,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "ppe-available",
+    "type": "radio",
+    "title": "Required PPE Available",
+    "label": "Required PPE Available",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "ppe-verification-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Partial", "value": "partial"}
+    ]
+  },
+  {
+    "id": "ppe-being-worn",
+    "type": "radio",
+    "title": "Required PPE Being Worn",
+    "label": "Required PPE Being Worn",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "ppe-verification-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Partial", "value": "partial"}
+    ]
+  },
+  {
+    "id": "missing-ppe",
+    "type": "tags-input",
+    "title": "Missing PPE Items",
+    "label": "Missing PPE Items",
+    "placeholder": "Add missing PPE item",
+    "size": 24,
+    "watchField": "ppe-available",
+    "showWhen": ["no", "partial"],
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Item",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all missing PPE items?",
+    "sectionId": "safety-access-preparation",
+    "groupId": "ppe-verification-group"
+  },
+  {
+    "id": "emergency-response-group",
+    "type": "group",
+    "title": "Emergency Response Plan",
+    "description": "Specific emergency procedures for this vessel inspection",
+    "sectionId": "safety-access-preparation",
+    "order": 10,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "emergency-response-plan",
+    "type": "textarea",
+    "title": "Emergency Response Plan",
+    "label": "Emergency Response Plan",
+    "placeholder": "Describe specific emergency procedures for this vessel inspection",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "emergency-response-group"
+  },
+  {
+    "id": "emergency-exit-routes",
+    "type": "tags-input",
+    "title": "Emergency Exit Routes",
+    "label": "Emergency Exit Routes",
+    "placeholder": "Add emergency exit route",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "emergency-response-group"
+  },
+  {
+    "id": "emergency-assembly-point",
+    "type": "text",
+    "title": "Emergency Assembly Point",
+    "label": "Emergency Assembly Point",
+    "placeholder": "Enter emergency assembly point location",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "emergency-response-group"
+  },
+  {
+    "id": "work-area-preparation-group",
+    "type": "group",
+    "title": "Work Area Preparation",
+    "description": "Verification of work area setup and conditions",
+    "sectionId": "safety-access-preparation",
+    "order": 11,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "work-area-illumination",
+    "type": "radio",
+    "title": "Work Area Adequately Illuminated",
+    "label": "Work Area Adequately Illuminated",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "work-area-preparation-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Needs Improvement", "value": "needs-improvement"}
+    ]
+  },
+  {
+    "id": "work-area-ventilation",
+    "type": "radio",
+    "title": "Work Area Adequately Ventilated",
+    "label": "Work Area Adequately Ventilated",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "work-area-preparation-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Needs Improvement", "value": "needs-improvement"}
+    ]
+  },
+  {
+    "id": "work-area-cleanliness",
+    "type": "radio",
+    "title": "Work Area Clean and Organized",
+    "label": "Work Area Clean and Organized",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "work-area-preparation-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Needs Improvement", "value": "needs-improvement"}
+    ]
+  },
+  {
+    "id": "work-area-barriers",
+    "type": "radio",
+    "title": "Work Area Properly Barricaded",
+    "label": "Work Area Properly Barricaded",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "work-area-preparation-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "tool-equipment-safety-group",
+    "type": "group",
+    "title": "Tool & Equipment Safety",
+    "description": "Verification that tools and equipment are safe to use",
+    "sectionId": "safety-access-preparation",
+    "order": 13,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "tools-inspected",
+    "type": "radio",
+    "title": "Tools Inspected for Safety",
+    "label": "Tools Inspected for Safety",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "tool-equipment-safety-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "electrical-equipment-safe",
+    "type": "radio",
+    "title": "Electrical Equipment Safe",
+    "label": "Electrical Equipment Safe",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "tool-equipment-safety-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Required", "value": "not-required"}
+    ]
+  },
+  {
+    "id": "defective-tools",
+    "type": "tags-input",
+    "title": "Defective Tools/Equipment",
+    "label": "Defective Tools/Equipment",
+    "placeholder": "Add defective tool or equipment",
+    "size": 24,
+    "watchField": "tools-inspected",
+    "showWhen": "no",
+    "sectionId": "safety-access-preparation",
+    "groupId": "tool-equipment-safety-group"
+  },
+  {
+    "id": "final-safety-verification-group",
+    "type": "group",
+    "title": "Final Safety Verification",
+    "description": "Final safety checks before proceeding with inspection",
+    "sectionId": "safety-access-preparation",
+    "order": 14,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "all-safety-requirements-met",
+    "type": "radio",
+    "title": "All Safety Requirements Met",
+    "label": "All Safety Requirements Met",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "final-safety-verification-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Conditional", "value": "conditional"}
+    ]
+  },
+  {
+    "id": "safety-issues-resolved",
+    "type": "radio",
+    "title": "All Safety Issues Resolved",
+    "label": "All Safety Issues Resolved",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "final-safety-verification-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"},
+      {"label": "Not Applicable", "value": "not-applicable"}
+    ]
+  },
+  {
+    "id": "final-safety-notes",
+    "type": "textarea",
+    "title": "Final Safety Notes",
+    "label": "Final Safety Notes",
+    "placeholder": "Any additional safety notes or concerns before proceeding",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "final-safety-verification-group"
+  },
+  {
+    "id": "equipment-used-group",
+    "type": "group",
+    "title": "Equipment Used",
+    "description": "Inspection equipment selection",
+    "sectionId": "safety-access-preparation",
+    "order": 15,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "equipment-used",
+    "type": "checkbox",
+    "title": "Equipment Used",
+    "label": "Equipment Used",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-used-group",
+    "options": [
+      {"label": "UT Thickness Gauge", "value": "ut-gauge"},
+      {"label": "Digital Camera", "value": "digital-camera"},
+      {"label": "Flashlight", "value": "flashlight"},
+      {"label": "Measuring Tape", "value": "measuring-tape"},
+      {"label": "Caliper", "value": "caliper"},
+      {"label": "Magnetic Particle Equipment", "value": "mt-equipment"},
+      {"label": "Liquid Penetrant Kit", "value": "pt-kit"},
+      {"label": "Radiographic Equipment", "value": "rt-equipment"},
+      {"label": "Thermal Imaging Camera", "value": "thermal-camera"},
+      {"label": "Vibration Analyzer", "value": "vibration-analyzer"}
+    ]
+  },
+  {
+    "id": "equipment-calibration-group",
+    "type": "group",
+    "title": "Equipment Calibration Due Dates",
+    "description": "Calibration due dates for selected equipment",
+    "sectionId": "safety-access-preparation",
+    "order": 16,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "ut-gauge-calibration",
+    "type": "date",
+    "title": "UT Gauge Calibration Due",
+    "label": "UT Gauge Calibration Due",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "ut-gauge",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "mt-equipment-calibration",
+    "type": "date",
+    "title": "MT Equipment Calibration Due",
+    "label": "MT Equipment Calibration Due",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "mt-equipment",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "pt-kit-expiry",
+    "type": "date",
+    "title": "PT Kit Expiry Date",
+    "label": "PT Kit Expiry Date",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "pt-kit",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "rt-equipment-calibration",
+    "type": "date",
+    "title": "RT Equipment Calibration Due",
+    "label": "RT Equipment Calibration Due",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "rt-equipment",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "camera-calibration",
+    "type": "date",
+    "title": "Camera Calibration Due",
+    "label": "Camera Calibration Due",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "digital-camera",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "measuring-tools-calibration",
+    "type": "date",
+    "title": "Measuring Tools Calibration Due",
+    "label": "Measuring Tools Calibration Due",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "measuring-tape,caliper",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "thermal-camera-calibration",
+    "type": "date",
+    "title": "Thermal Camera Calibration Due",
+    "label": "Thermal Camera Calibration Due",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "thermal-camera",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "vibration-analyzer-calibration",
+    "type": "date",
+    "title": "Vibration Analyzer Calibration Due",
+    "label": "Vibration Analyzer Calibration Due",
+    "size": 4,
+    "watchField": "equipment-used",
+    "showWhen": "vibration-analyzer",
+    "sectionId": "safety-access-preparation",
+    "groupId": "equipment-calibration-group"
+  },
+  {
+    "id": "environmental-conditions-group",
+    "type": "group",
+    "title": "Environmental Conditions",
+    "description": "Environmental conditions during inspection",
+    "sectionId": "safety-access-preparation",
+    "order": 17,
+    "size": 8,
+    "collapsible": false
+  },
+  {
+    "id": "temperature",
+    "type": "number",
+    "title": "Temperature (°F)",
+    "label": "Temperature (°F)",
+    "placeholder": "Enter temperature",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-group"
+  },
+  {
+    "id": "humidity",
+    "type": "number",
+    "title": "Humidity (%)",
+    "label": "Humidity (%)",
+    "placeholder": "Enter humidity",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-group"
+  },
+  {
+    "id": "lighting-conditions",
+    "type": "select",
+    "title": "Lighting Conditions",
+    "label": "Lighting Conditions",
+    "placeholder": "Select lighting",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-group",
+    "options": [
+      {"label": "Natural Light", "value": "natural"},
+      {"label": "Artificial Light", "value": "artificial"},
+      {"label": "Mixed Lighting", "value": "mixed"},
+      {"label": "Poor Lighting", "value": "poor"}
+    ]
+  },
+  {
+    "id": "weather-conditions",
+    "type": "select",
+    "title": "Weather Conditions",
+    "label": "Weather Conditions",
+    "placeholder": "Select weather",
+    "size": 24,
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-group",
+    "options": [
+      {"label": "Clear", "value": "clear"},
+      {"label": "Cloudy", "value": "cloudy"},
+      {"label": "Rainy", "value": "rainy"},
+      {"label": "Snowy", "value": "snowy"},
+      {"label": "Windy", "value": "windy"},
+      {"label": "Indoor", "value": "indoor"}
+    ]
+  },
+  {
+    "id": "visibility",
+    "type": "select",
+    "title": "Visibility",
+    "label": "Visibility",
+    "placeholder": "Select visibility",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-group",
+    "options": [
+      {"label": "Excellent", "value": "excellent"},
+      {"label": "Good", "value": "good"},
+      {"label": "Fair", "value": "fair"},
+      {"label": "Poor", "value": "poor"}
+    ]
+  },
+  {
+    "id": "air-quality",
+    "type": "select",
+    "title": "Air Quality",
+    "label": "Air Quality",
+    "placeholder": "Select air quality",
+    "size": 12,
+    "sectionId": "safety-access-preparation",
+    "groupId": "environmental-conditions-group",
+    "options": [
+      {"label": "Good", "value": "good"},
+      {"label": "Moderate", "value": "moderate"},
+      {"label": "Poor", "value": "poor"},
+      {"label": "Hazardous", "value": "hazardous"}
+    ]
+  },
+  {
+    "id": "pre-inspection-approval-group",
+    "type": "group",
+    "title": "Pre-Inspection Safety Approval",
+    "description": "Final safety approval before proceeding with inspection",
+    "sectionId": "safety-access-preparation",
+    "order": 18,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "pre-inspection-approval",
+    "type": "radio",
+    "title": "Pre-Inspection Safety Approval",
+    "label": "Pre-Inspection Safety Approval",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "safety-access-preparation",
+    "groupId": "pre-inspection-approval-group",
+    "options": [
+      {"label": "Approved - Safe to Proceed", "value": "approved"},
+      {"label": "Conditional Approval", "value": "conditional"},
+      {"label": "Not Approved - Do Not Proceed", "value": "not-approved"}
+    ]
+  }
+] 

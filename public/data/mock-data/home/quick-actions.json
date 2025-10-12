@@ -1,0 +1,49 @@
+{
+  "actions": [
+    {
+      "id": "create-project",
+      "title": "Create Project",
+      "description": "Start a new scaffolding project",
+      "icon": "PlusOutlined",
+      "type": "primary",
+      "route": "/projects/create",
+      "color": "blue"
+    },
+    {
+      "id": "add-task",
+      "title": "Add Task",
+      "description": "Create a new task or milestone",
+      "icon": "CheckSquareOutlined",
+      "type": "default",
+      "route": "/tasks/create",
+      "color": "green"
+    },
+    {
+      "id": "log-hours",
+      "title": "Log Hours",
+      "description": "Record time spent on projects",
+      "icon": "ClockCircleOutlined",
+      "type": "default",
+      "route": "/timesheet/log",
+      "color": "orange"
+    },
+    {
+      "id": "report-issue",
+      "title": "Report Issue",
+      "description": "Report a problem or risk",
+      "icon": "ExclamationCircleOutlined",
+      "type": "default",
+      "route": "/issues/report",
+      "color": "red"
+    },
+    {
+      "id": "request-approval",
+      "title": "Request Approval",
+      "description": "Submit for management review",
+      "icon": "CheckCircleOutlined",
+      "type": "default",
+      "route": "/approvals/request",
+      "color": "purple"
+    }
+  ]
+} 

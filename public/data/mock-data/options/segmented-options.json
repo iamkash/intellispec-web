@@ -1,0 +1,7 @@
+{
+  "options": [
+    { "label": "Segment 1", "value": "segment1" },
+    { "label": "Segment 2", "value": "segment2" },
+    { "label": "Segment 3", "value": "segment3" }
+  ]
+} 

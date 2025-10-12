@@ -1,0 +1,254 @@
+{
+  "total": 23,
+  "passed": 8,
+  "failed": 15,
+  "categories": {
+    "basic_counts": {
+      "total": 4,
+      "passed": 0,
+      "failed": 4,
+      "tests": [
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        }
+      ]
+    },
+    "identification": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "tests": [
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z0-9\\s\\-]+$/",
+          "description": "Should return product name only",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name only",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": []
+        }
+      ]
+    },
+    "quantitative": {
+      "total": 3,
+      "passed": 0,
+      "failed": 3,
+      "tests": [
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(gallons?|units?|liters?)?$/",
+          "description": "Should return quantity with optional unit",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+[\\d,]*(\\.\\d+)?\\s*(gallons?|units?|liters?)?$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(g\\/L|ppm|%)?$/",
+          "description": "Should return total VOC value",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+[\\d,]*(\\.\\d+)?\\s*(g\\/L|ppm|%)?$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Should return count for specific facility",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+$/"
+          ]
+        }
+      ]
+    },
+    "temporal": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{4}-\\d{2}-\\d{2})/",
+          "description": "Should return a date",
+          "issues": [
+            "Response doesn't match expected pattern: /(January|February|March|April|May|June|July|August|September|October|November|December|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{4}-\\d{2}-\\d{2})/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December)/",
+          "description": "Should return month name",
+          "issues": [
+            "Response doesn't match expected pattern: /(January|February|March|April|May|June|July|August|September|October|November|December)/"
+          ]
+        }
+      ]
+    },
+    "comparative": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^(Nova-Plate|Zinc Clad)/",
+          "description": "Should return one of the compared products",
+          "issues": [
+            "Response doesn't match expected pattern: /^(Nova-Plate|Zinc Clad)/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^(Sherwin-Williams|PPG)/",
+          "description": "Should return one of the compared companies",
+          "issues": [
+            "Response doesn't match expected pattern: /^(Sherwin-Williams|PPG)/"
+          ]
+        }
+      ]
+    },
+    "complex_analysis": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "tests": [
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name after complex calculation",
+          "issues": []
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^\\d+(\\.\\d+)?%?$/",
+          "description": "Should return percentage",
+          "issues": [
+            "Response doesn't match expected pattern: /^\\d+(\\.\\d+)?%?$/"
+          ]
+        },
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name after diversity analysis",
+          "issues": []
+        }
+      ]
+    },
+    "aggregation": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return company breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return manufacturer breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/"
+          ]
+        }
+      ]
+    },
+    "edge_cases": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "tests": [
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT contain any doc_ IDs",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "No response",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT expose system IDs",
+          "issues": []
+        },
+        {
+          "passed": false,
+          "response": "No response",
+          "expectedPattern": "/^(No data|Not found|0|None)/",
+          "description": "Should handle non-existent data gracefully",
+          "issues": [
+            "Response doesn't match expected pattern: /^(No data|Not found|0|None)/"
+          ]
+        }
+      ]
+    }
+  }
+}

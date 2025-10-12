@@ -1,0 +1,95 @@
+{
+  "name": "Validated Workspace Template",
+  "description": "Creates a new workspace with built-in validation",
+  "variables": {
+    "workspaceId": "Workspace ID (kebab-case)",
+    "title": "Workspace Title",
+    "description": "Workspace Description",
+    "documentType": "Primary Document Type (paintInvoice|company|site|paint_specifications)"
+  },
+  "template": {
+    "id": "{{workspaceId}}",
+    "title": "{{title}}",
+    "description": "{{description}}",
+    "layout": "dashboard",
+    "filterContext": {
+      "enabled": true,
+      "filterDefinitions": [
+        {
+          "id": "company_id",
+          "type": "multiselect",
+          "label": "Company",
+          "optionsUrl": "/api/options/companies",
+          "placeholder": "Select companies...",
+          "refreshTrigger": true
+        },
+        {
+          "id": "site_id",
+          "type": "multiselect", 
+          "label": "Facility/Site",
+          "optionsUrl": "/api/options/sites",
+          "placeholder": "Select facilities...",
+          "dependsOn": "company_id",
+          "refreshTrigger": true
+        },
+        {
+          "id": "date_range",
+          "type": "daterange",
+          "label": "Date Range",
+          "placeholder": "Select date range...",
+          "presets": ["MTD", "QTD", "YTD", "Last 6 Months", "Last Year"],
+          "refreshTrigger": true
+        }
+      ]
+    },
+    "gadgets": [
+    {
+      "id": "sample-filters",
+      "type": "workspace-filter-gadget",
+      "title": "Filters",
+      "description": "Interactive filters to refine data by company, facility, and date range",
+      "config": {
+        "filterDefinitions": [
+          {
+            "id": "company_id",
+            "type": "multiselect",
+            "label": "Company",
+            "optionsUrl": "/api/options/companies",
+            "labelField": "label",
+            "valueField": "value",
+            "refreshTrigger": true
+          }
+        ],
+        "filterLayout": "horizontal",
+        "showClearAll": true
+      },
+      "position": 24
+    }
+  ],
+    "settings": {
+      "autoRefresh": true,
+      "refreshInterval": 300000,
+      "theme": "light",
+      "density": "comfortable",
+      "showLastUpdated": true,
+      "enableExport": false,
+      "enablePrint": true
+    },
+    "metadata": {
+      "created": "{{currentDateTime}}",
+      "version": "1.0.0",
+      "tags": ["{{documentType}}", "analytics", "dashboard"],
+      "description": "{{description}}"
+    }
+  },
+  "validation": {
+    "required": true,
+    "schema": "src/schemas/WorkspaceValidation.ts",
+    "fieldMappings": "src/models/DocumentSchemas.ts"
+  },
+  "postCreate": [
+    "Import validation: import { validateWorkspaceConfig } from '../schemas/WorkspaceValidation';",
+    "Validate config: const result = validateWorkspaceConfig(workspace);",
+    "Add validation UI: <ValidationAlert validation={useDevWorkspaceValidation(workspace)} />"
+  ]
+}

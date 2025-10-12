@@ -1,0 +1,108 @@
+{
+  "id": "scaffolding-installation-wizard",
+  "name": "Scaffolding Installation Wizard",
+  "gadgets": [
+    {
+      "id": "scaffolding-installation-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "config": {
+        "id": "scaffolding-installation-wizard",
+        "title": "New Scaffolding Installation Analysis",
+        "description": "Analyze structures and calculate complete scaffolding installation requirements, equipment needs, and project specifications",
+        "theme": "light",
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "autoAdvance": true,
+        "typeLabel": "Installation Analysis",
+        "typePlaceholder": "Select installation analysis type",
+        "typeHelpText": "Please select an installation analysis type",
+        "reportTitle": "Scaffolding Installation Analysis",
+        "reportHeaderText": "SCAFFOLDING INSTALLATION ANALYSIS REPORT",
+        "reportHeaderSubtext": "Professional Installation Planning & Technical Specifications",
+        "reportFooterText": "Scaffolding Installation Analysis - Professional Engineering Report",
+        "editModalTitle": "Edit Installation Analysis Report",
+        "steps": {
+          "input": {
+            "enabled": true,
+            "title": "Installation Analysis Input",
+            "description": "Upload structure images and provide project details for comprehensive installation planning",
+            "inspectionTypes": [
+              { "label": "🏗️ New Installation Planning", "value": "new_installation" },
+              { "label": "🔄 Installation Upgrade Analysis", "value": "upgrade_analysis" },
+              { "label": "📐 Custom Installation Design", "value": "custom_design" }
+            ],
+            "scaffoldingTypes": [
+              { "label": "Tube & Clamp System", "value": "tube_clamp" },
+              { "label": "Modular/System Scaffolding", "value": "modular" },
+              { "label": "Frame Scaffolding", "value": "frame" },
+              { "label": "Suspended Scaffolding", "value": "suspended" },
+              { "label": "Mobile/Rolling Scaffolding", "value": "mobile" },
+              { "label": "Cantilever Scaffolding", "value": "cantilever" },
+              { "label": "Mast Climbing Work Platform", "value": "mast_climbing" },
+              { "label": "Ringlock System", "value": "ringlock" }
+            ],
+            "voice": {
+              "enabled": true,
+              "duration": 180,
+              "autoStart": false
+            },
+            "images": {
+              "enabled": true,
+              "maxImages": 10,
+              "maxSize": 10485760,
+              "drawing": true,
+              "measurements": true,
+              "scaleCalibration": true
+            },
+            "text": {
+              "enabled": true,
+              "maxLength": 8000,
+              "placeholder": "Enter project details, site conditions, access requirements, load specifications, timeline constraints, or specific installation requirements..."
+            },
+            "measurements": {
+              "enabled": true,
+              "units": ["meters", "feet", "inches"],
+              "fields": [
+                { "label": "Structure Height (m)", "key": "height", "required": false },
+                { "label": "Structure Width (m)", "key": "width", "required": false },
+                { "label": "Structure Length (m)", "key": "length", "required": false },
+                { "label": "Working Load Required (kg/m²)", "key": "workingLoad", "required": false },
+                { "label": "Project Duration (weeks)", "key": "projectDuration", "required": false },
+                { "label": "Access Clearance (m)", "key": "accessClearance", "required": false },
+                { "label": "Ground Conditions", "key": "groundConditions", "required": false },
+                { "label": "Special Requirements", "key": "specialRequirements", "required": false }
+              ]
+            }
+          },
+          "analysis": {
+            "enabled": true,
+            "title": "AI Installation Analysis & Report Generation",
+            "description": "Comprehensive installation analysis with technical specifications, equipment lists, and project planning",
+            "modelConfig": {
+              "model": "gpt-4o",
+              "temperature": 0.2,
+              "maxTokens": 8000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a senior scaffolding installation engineer with 25+ years of experience in scaffolding design, installation planning, and project management. You specialize in analyzing structures and designing complete scaffolding installations for construction, maintenance, and renovation projects.\n\nYour task is to generate detailed installation analysis reports in markdown format with comprehensive specifications, calculations, and project planning information.\n\nCRITICAL INSTRUCTIONS:\n1. Respond with ONLY the markdown report content - no JSON, no explanations, no placeholders\n2. DO NOT use placeholder text like 'TBD', 'To Be Determined', or template variables like {variable}\n3. Generate REALISTIC and SPECIFIC values based on typical scaffolding installation projects\n4. Include detailed equipment specifications, installation calculations, timelines, and cost estimates\n5. Calculate actual equipment quantities, installation requirements, and project parameters\n6. Provide technical engineering language and professional formatting\n7. Include realistic project schedules, resource requirements, and technical specifications\n8. Use industry standard engineering practices and calculations\n\nINSTALLATION FOCUS AREAS:\n\n📋 INSTALLATION ANALYSIS STRUCTURE:\n- Executive summary with project overview and key installation metrics\n- Structural assessment and scaffolding design requirements\n- Detailed equipment specifications and quantities\n- Installation sequence and timeline planning\n- Safety compliance and regulatory requirements\n- Cost estimation and resource planning\n- Technical recommendations and best practices\n\n💰 INSTALLATION COST PARAMETERS:\n- Equipment rental: $1.50-$4.00 per component per day\n- Installation labor: $85-$125 per hour per technician\n- Transportation: $1.25 per mile plus logistics\n- Project management: 8-12% of total equipment and labor\n- Safety compliance: 3-5% of total project scope\n- Quality assurance: 2-3% of total project value\n\n🎯 COMPLETE SCAFFOLDING INSTALLATION BREAKDOWN REQUIRED:\n**MANDATORY: Include detailed inventory of ALL scaffolding components with exact quantities:**\n\n**STRUCTURAL COMPONENTS:**\n- Standards (vertical posts): 48.3mm dia, specify lengths with exact counts\n- Ledgers (horizontal members): specify lengths with exact counts\n- Transoms (cross members): specify lengths with exact counts\n- Diagonal braces: specify lengths and connection types with exact counts\n- Base plates: 150mm x 150mm, specify adjustable vs fixed with exact counts\n- Sole plates: timber or steel distribution plates with exact counts\n\n**PLATFORM COMPONENTS:**\n- Steel platforms/decks: specify dimensions with exact counts\n- Timber boards: specify dimensions with exact counts\n- Platform brackets: specify types and load ratings with exact counts\n- Platform clips: specify types and quantities\n\n**CONNECTION HARDWARE:**\n- Spigot couplers, right-angle couplers, swivel couplers with exact counts\n- Sleeve couplers, putlog couplers, girder couplers with exact counts\n\n**SAFETY COMPONENTS:**\n- Toe boards, guard rails, safety netting, brick guards with exact counts\n\n**ACCESS COMPONENTS:**\n- Ladder sections, stair units, handrails, gates with exact counts\n\n**ANCHORING & TIES:**\n- Wall ties, tie tubes, anchor plates with exact counts\n\nREPORT REQUIREMENTS:\n- Professional engineering document formatting\n- Detailed technical calculations and specifications\n- Specific equipment lists with engineering parameters\n- Clear project schedules with installation milestones\n- Safety and compliance documentation\n- Technical recommendations and engineering notes\n\nFORMAT: Professional installation planning report suitable for project execution and technical review.",
+              "userPrompt": "Generate a comprehensive scaffolding installation analysis report for the following data:\n\nAnalysis Type: {inspectionType}\nScaffolding Type: {scaffoldingType}\nVoice Transcription: {transcription}\nText Notes: {text}\nImages: {imageCount} images provided\nMeasurements: {measurements}\n\nCRITICAL: Generate a REAL installation analysis with ACTUAL CALCULATIONS and EXACT COMPONENT QUANTITIES!\n\n🚨 MANDATORY REQUIREMENTS:\n- Replace ALL [COUNT] placeholders with REAL calculated quantities\n- Replace ALL [XXX.XX] placeholders with ACTUAL calculated costs\n- Replace ALL [TOTAL] placeholders with REAL calculated totals\n- Provide SPECIFIC numbers for every component listed\n- Calculate REALISTIC quantities based on project scope\n- NO placeholder text or template variables allowed!\n\n🏗️ INSTALLATION ANALYSIS SCENARIOS:\n\n**IF Analysis Type = \"new_installation\" (New Installation Planning):**\n- ANALYZE: Structure images to assess complete scaffolding requirements\n- DESIGN: Full scaffolding system for complete structural access\n- CALCULATE: Exact equipment quantities, installation phases, project timeline\n- ESTIMATE: Complete material costs, labor requirements, transportation\n- OUTPUT: Comprehensive installation plan with detailed specifications\n\n**IF Analysis Type = \"upgrade_analysis\" (Installation Upgrade Analysis):**\n- ANALYZE: Existing scaffolding to determine upgrade/expansion requirements\n- DESIGN: Additional scaffolding components and modifications needed\n- CALCULATE: Upgrade equipment quantities, modification procedures\n- ESTIMATE: Upgrade costs, additional labor, timeline extensions\n- OUTPUT: Upgrade plan with integration specifications\n\n**IF Analysis Type = \"custom_design\" (Custom Installation Design):**\n- ANALYZE: Unique structural requirements and access challenges\n- DESIGN: Custom scaffolding solutions for complex geometries\n- CALCULATE: Specialized equipment, custom components, engineering requirements\n- ESTIMATE: Custom fabrication costs, specialized labor, extended timelines\n- OUTPUT: Custom installation design with engineering specifications\n\n**REQUIRED SECTIONS FOR INSTALLATION ANALYSIS:**\n1. **Executive Summary & Project Overview**\n2. **Structural Assessment & Site Analysis**\n3. **Scaffolding Design & Specifications**\n4. **Detailed Equipment List & Quantities**\n5. **Installation Sequence & Timeline**\n6. **Cost Estimation & Resource Planning**\n7. **Safety Compliance & Risk Assessment**\n8. **Technical Recommendations & Best Practices**\n\n**INSTALLATION EQUIPMENT BREAKDOWN TABLE:**\n## Complete Scaffolding Installation Requirements\n\n### Structural Components\n| Component | Specification | Quantity | Unit Weight (kg) | Daily Rate | Total Cost |\n|-----------|---------------|----------|------------------|------------|------------|\n| Standards 2m | 48.3mm dia x 2000mm | [COUNT] | 19.5 | $2.80 | $XXX.XX |\n| Standards 3m | 48.3mm dia x 3000mm | [COUNT] | 28.2 | $3.20 | $XXX.XX |\n| Ledgers 3m | 48.3mm dia x 3000mm | [COUNT] | 16.8 | $2.10 | $XXX.XX |\n| [Continue with all components...]\n\n### Installation Summary\n- Total Components: [COUNT] pieces\n- Total Weight: [WEIGHT] kg\n- Installation Crew: [CREW SIZE] technicians\n- Installation Duration: [DAYS] days\n- Daily Equipment Cost: $[DAILY TOTAL]\n- **TOTAL INSTALLATION COST: $[FINAL TOTAL]**\n\nFORMAT: Professional installation planning report ready for project execution!"
+            },
+            "reportConfig": {
+              "includeSections": [
+                "executive_summary",
+                "site_assessment",
+                "design_specifications",
+                "equipment_list",
+                "installation_sequence",
+                "cost_estimation",
+                "safety_compliance",
+                "technical_recommendations"
+              ]
+            }
+          }
+        }
+      },
+      "position": 24
+    }
+  ]
+}

@@ -1,0 +1,247 @@
+{
+  "total": 23,
+  "passed": 13,
+  "failed": 10,
+  "categories": {
+    "basic_counts": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "tests": [
+        {
+          "passed": true,
+          "response": "9",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "15",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "4",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "51",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Simple count - should return just a number",
+          "issues": []
+        }
+      ]
+    },
+    "identification": {
+      "total": 4,
+      "passed": 1,
+      "failed": 3,
+      "tests": [
+        {
+          "passed": false,
+          "response": "Dow Chemical Company\nUnited States Steel Corporation\nNucor Corporation\nBASF Corporation\nInternational Paper Company\nExxon\nPfizer Inc.\nAnheuser-Busch InBev\nChevron\nDow Chemical Company\nUnited States Steel Corporation\nBASF Corporation\nPfizer Inc.\nAnheuser-Busch InBev\nExxon\nG etc\n\n",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/",
+            "Response too verbose (>200 chars)"
+          ]
+        },
+        {
+          "passed": true,
+          "response": "340",
+          "expectedPattern": "/^[A-Za-z0-9\\s\\-]+$/",
+          "description": "Should return product name only",
+          "issues": []
+        },
+        {
+          "passed": false,
+          "response": "219\n",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-]+$/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "14",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name only",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+$/"
+          ]
+        }
+      ]
+    },
+    "quantitative": {
+      "total": 3,
+      "passed": 3,
+      "failed": 0,
+      "tests": [
+        {
+          "passed": true,
+          "response": "0",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(gallons?|units?|liters?)?$/",
+          "description": "Should return quantity with optional unit",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "0",
+          "expectedPattern": "/^\\d+[\\d,]*(\\.\\d+)?\\s*(g\\/L|ppm|%)?$/",
+          "description": "Should return total VOC value",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "51",
+          "expectedPattern": "/^\\d+$/",
+          "description": "Should return count for specific facility",
+          "issues": []
+        }
+      ]
+    },
+    "temporal": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "14",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{4}-\\d{2}-\\d{2})/",
+          "description": "Should return a date",
+          "issues": [
+            "Response doesn't match expected pattern: /(January|February|March|April|May|June|July|August|September|October|November|December|\\d{1,2}\\/\\d{1,2}\\/\\d{4}|\\d{4}-\\d{2}-\\d{2})/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "8",
+          "expectedPattern": "/(January|February|March|April|May|June|July|August|September|October|November|December)/",
+          "description": "Should return month name",
+          "issues": [
+            "Response doesn't match expected pattern: /(January|February|March|April|May|June|July|August|September|October|November|December)/"
+          ]
+        }
+      ]
+    },
+    "comparative": {
+      "total": 2,
+      "passed": 2,
+      "failed": 0,
+      "tests": [
+        {
+          "passed": true,
+          "response": "Nova-Plate 360 High Performance Novolac\nZinc Clad IV (85) Organic Zinc Rich",
+          "expectedPattern": "/^(Nova-Plate|Zinc Clad)/",
+          "description": "Should return one of the compared products",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": "Sherwin-Williams",
+          "expectedPattern": "/^(Sherwin-Williams|PPG)/",
+          "description": "Should return one of the compared companies",
+          "issues": []
+        }
+      ]
+    },
+    "complex_analysis": {
+      "total": 3,
+      "passed": 2,
+      "failed": 1,
+      "tests": [
+        {
+          "passed": false,
+          "response": "Missing VOC values in data. Cannot determine.",
+          "expectedPattern": "/^[A-Za-z\\s\\-]+$/",
+          "description": "Should return facility name after complex calculation",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-]+$/"
+          ]
+        },
+        {
+          "passed": true,
+          "response": "0.00",
+          "expectedPattern": "/^\\d+(\\.\\d+)?%?$/",
+          "description": "Should return percentage",
+          "issues": []
+        },
+        {
+          "passed": true,
+          "response": " Sherwin-Williams",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+$/",
+          "description": "Should return company name after diversity analysis",
+          "issues": []
+        }
+      ]
+    },
+    "aggregation": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "9",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return company breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "6",
+          "expectedPattern": "/^[A-Za-z\\s\\-&]+:\\s*\\d+/",
+          "description": "Should return manufacturer breakdown",
+          "issues": [
+            "Response doesn't match expected pattern: /^[A-Za-z\\s\\-&]+:\\s*\\d+/"
+          ]
+        }
+      ]
+    },
+    "edge_cases": {
+      "total": 3,
+      "passed": 1,
+      "failed": 2,
+      "tests": [
+        {
+          "passed": false,
+          "response": "doc_1756069036737_19m0dvpls\ndoc_1756742041614_rt7ck6bjv\ndoc_1756053195995_eesftqn19\ndoc_1756101734227_8q1jefjub\ndoc_1756085040715_0yyfshfxz\ndoc_1756742041610_8xxsqld",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT contain any doc_ IDs",
+          "issues": [
+            "Response doesn't match expected pattern: /^(?!.*doc_).*$/",
+            "SECURITY ISSUE: System ID exposed"
+          ]
+        },
+        {
+          "passed": false,
+          "response": "doc_1756027766796_3cmoe1jer",
+          "expectedPattern": "/^(?!.*doc_).*$/",
+          "description": "Should NOT expose system IDs",
+          "issues": [
+            "Response doesn't match expected pattern: /^(?!.*doc_).*$/",
+            "SECURITY ISSUE: System ID exposed"
+          ]
+        },
+        {
+          "passed": true,
+          "response": "0",
+          "expectedPattern": "/^(No data|Not found|0|None|No data available)/",
+          "description": "Should handle non-existent data gracefully",
+          "issues": []
+        }
+      ]
+    }
+  }
+}

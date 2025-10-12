@@ -1,0 +1,2507 @@
+{
+  "id": "voc-analytics-workspace",
+  "title": "VOC Analytics Dashboard",
+  "description": "Comprehensive VOC data visualization and analytics workspace",
+  "version": "1.0.0",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": [
+      {
+        "id": "company_id",
+        "type": "multiselect",
+        "label": "Company",
+        "optionsUrl": "/api/options/companies",
+        "placeholder": "Select companies...",
+        "labelField": "label",
+        "valueField": "value"
+      },
+      {
+        "id": "site_id",
+        "type": "multiselect",
+        "label": "Facility/Site",
+        "optionsUrl": "/api/options/sites",
+        "placeholder": "Select sites...",
+        "dependsOn": "company_id",
+        "labelField": "label",
+        "valueField": "value"
+      },
+      {
+        "id": "date_range",
+        "type": "daterange",
+        "label": "Date Range",
+        "presets": [
+          "MTD",
+          "QTD",
+          "YTD",
+          "Last 6 Months",
+          "Last Year"
+        ]
+      },
+      {
+        "id": "paint_spec_id",
+        "type": "multiselect",
+        "label": "Paint Specification",
+        "optionsUrl": "/api/options/paint-specs",
+        "placeholder": "Select paint specs... (optional)",
+        "labelField": "code",
+        "valueField": "value"
+      }
+    ]
+  },
+  "gadgets": [
+    {
+      "id": "voc-analytics-filters",
+      "type": "workspace-filter-gadget",
+      "title": "Analytics Filters",
+      "description": "Interactive filters to refine analytics data by company, site, date range, and paint specifications",
+      "config": {
+        "filterDefinitions": [
+          {
+            "id": "company_id",
+            "type": "multiselect",
+            "label": "Company",
+            "optionsUrl": "/api/options/companies",
+            "placeholder": "Select companies...",
+            "labelField": "label",
+            "valueField": "value"
+          },
+          {
+            "id": "site_id",
+            "type": "multiselect",
+            "label": "Facility/Site",
+            "optionsUrl": "/api/options/sites",
+            "placeholder": "Select sites...",
+            "dependsOn": "company_id",
+            "labelField": "label",
+            "valueField": "value"
+          },
+          {
+            "id": "date_range",
+            "type": "daterange",
+            "label": "Date Range",
+            "presets": [
+              "MTD",
+              "QTD",
+              "YTD",
+              "Last 6 Months",
+              "Last Year"
+            ]
+          },
+          {
+            "id": "paint_spec_id",
+            "type": "multiselect",
+            "label": "Paint Specification",
+            "optionsUrl": "/api/options/paint-specs",
+            "placeholder": "Select paint specs... (optional)",
+            "labelField": "code",
+            "valueField": "value"
+          }
+        ],
+        "filterLayout": "horizontal",
+        "showClearAll": true,
+        "showFilterCount": true
+      },
+      "position": 24
+    },
+    {
+      "id": "voc-analytics-actions",
+      "type": "action-panel-gadget",
+      "title": "Analytics Actions",
+      "description": "Quick action buttons for navigation, data export, and workspace refresh functionality",
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 3,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "back-to-overview",
+            "label": "Back to Overview",
+            "description": "Return to main VOC workspace with KPIs and summary",
+            "icon": "ArrowLeftOutlined",
+            "type": "default",
+            "workspace": "compliance-manager/voc-workspace"
+          },
+          {
+            "key": "export-data",
+            "label": "Export Analytics",
+            "description": "Export current analytics data and charts",
+            "icon": "DownloadOutlined",
+            "type": "default",
+            "action": "export"
+          },
+          {
+            "key": "refresh-data",
+            "label": "Refresh All",
+            "description": "Refresh all charts and data with current filters",
+            "icon": "ReloadOutlined",
+            "type": "primary",
+            "action": "refresh"
+          }
+        ]
+      },
+      "position": 24
+    },
+    {
+      "id": "voc-overview-kpis",
+      "type": "generic-kpi-gadget",
+      "title": "Key Performance Indicators",
+      "description": "Essential VOC metrics including total paint volume, emissions, intensity ratios, and low-VOC adoption rates",
+      "config": {
+        "kpis": [
+          {
+            "id": "total-paint",
+            "title": "Paint",
+            "description": "Total gallons",
+            "icon": "FaPaintBrush",
+            "iconColor": "hsl(var(--chart-1))",
+            "unit": "gal",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "Total Quantity Purchased",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "paintInvoice"
+              },
+              "fieldMappings": {
+                "date_range": "purchaseDate",
+                "company_id": "companyId",
+                "site_id": "facilityId"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "total_quantity": {
+                    "expression": {
+                      "$sum": {
+                        "$reduce": {
+                          "input": "$lineItems",
+                          "initialValue": 0,
+                          "in": {
+                            "$add": [
+                              "$$value",
+                              "$$this.quantityPurchased"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.total_quantity"
+          },
+          {
+            "id": "voc-emissions",
+            "title": "Emissions",
+            "description": "VOC output",
+            "icon": "FaCloud",
+            "iconColor": "hsl(var(--chart-2))",
+            "unit": "lbs",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "Calculated Emissions",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "paintInvoice"
+              },
+              "fieldMappings": {
+                "date_range": "purchaseDate",
+                "company_id": "companyId",
+                "site_id": "facilityId"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "calculated_emissions": {
+                    "expression": {
+                      "$sum": {
+                        "$reduce": {
+                          "input": "$lineItems",
+                          "initialValue": 0,
+                          "in": {
+                            "$add": [
+                              "$$value",
+                              {
+                                "$multiply": [
+                                  "$$this.quantityPurchased",
+                                  0.5
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.calculated_emissions"
+          },
+          {
+            "id": "voc-intensity",
+            "title": "Intensity",
+            "description": "Per 100 gal",
+            "icon": "FaChartLine",
+            "iconColor": "hsl(var(--chart-3))",
+            "unit": "lbs/100gal",
+            "format": "number",
+            "aggregationConfig": {
+              "name": "Emission Intensity",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "paintInvoice"
+              },
+              "fieldMappings": {
+                "date_range": "purchaseDate",
+                "company_id": "companyId",
+                "site_id": "facilityId"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "total_quantity": {
+                    "expression": {
+                      "$sum": {
+                        "$reduce": {
+                          "input": "$lineItems",
+                          "initialValue": 0,
+                          "in": {
+                            "$add": [
+                              "$$value",
+                              "$$this.quantityPurchased"
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "calculated_emissions": {
+                    "expression": {
+                      "$sum": 1
+                    }
+                  }
+                }
+              },
+              "postProcess": {
+                "calculations": {
+                  "intensity_ratio": {
+                    "formula": "($calculated_emissions / $total_quantity) * 100"
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.intensity_ratio"
+          },
+          {
+            "id": "low-voc-adoption",
+            "title": "Low-VOC %",
+            "description": "Adoption rate",
+            "icon": "FaLeaf",
+            "iconColor": "hsl(var(--chart-4))",
+            "unit": "%",
+            "format": "percentage",
+            "aggregationConfig": {
+              "name": "Low Threshold Adoption %",
+              "collection": "documents",
+              "baseFilter": {
+                "type": "paintInvoice"
+              },
+              "fieldMappings": {
+                "date_range": "purchaseDate",
+                "company_id": "companyId",
+                "site_id": "facilityId"
+              },
+              "groupBy": {
+                "_id": null,
+                "fields": {
+                  "total_lines": {
+                    "expression": {
+                      "$sum": {
+                        "$size": "$lineItems"
+                      }
+                    }
+                  },
+                  "low_threshold_lines": {
+                    "expression": {
+                      "$sum": 1
+                    }
+                  }
+                }
+              },
+              "postProcess": {
+                "calculations": {
+                  "adoption_percentage": {
+                    "formula": "($low_threshold_lines / $total_lines) * 100"
+                  }
+                }
+              }
+            },
+            "dataPath": "data.0.adoption_percentage"
+          }
+        ],
+        "kpiLayout": "grid",
+        "columns": 4
+      },
+      "position": 24
+    },
+    {
+      "id": "voc-trend-timeline",
+      "type": "generic-chart-gadget",
+      "title": "Timeline & Trend Analysis",
+      "config": {
+        "charts": [
+          {
+            "id": "voc-monthly-trend",
+            "title": "VOC Emissions Trend by Month",
+            "description": "Monthly VOC emissions showing environmental impact over time",
+            "chartType": "line",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Monthly Trend - Emissions",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    {
+                      "$addFields": {
+                        "month": {
+                          "$dateToString": {
+                            "format": "%Y-%m",
+                            "date": {
+                              "$switch": {
+                                "branches": [
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "string"] },
+                                    "then": {
+                                      "$dateFromString": {
+                                        "dateString": "$purchaseDate",
+                                        "onError": "2025-01-01T00:00:00.000Z"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "date"] },
+                                    "then": "$purchaseDate"
+                                  }
+                                ],
+                                "default": "2025-01-01T00:00:00.000Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$unwind": "$lineItems"
+                    },
+                    {
+                      "$group": {
+                        "_id": "$month",
+                        "calculated_value": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              0.5
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "month": "$_id",
+                        "calculated_value": 1,
+                        "_id": 0
+                      }
+                    },
+                    {
+                      "$sort": {
+                        "month": 1
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "month",
+              "name": "Month"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "VOC Emissions (lbs)"
+            },
+            "series": [
+              {
+                "name": "VOC Emissions",
+                "type": "line",
+                "dataKey": "calculated_value",
+                "smooth": true,
+                "color": "hsl(var(--chart-2))",
+                "areaStyle": {
+                  "opacity": 0.3
+                }
+              }
+            ],
+            "animation": {
+              "enabled": true,
+              "duration": 1500
+            }
+          },
+          {
+            "id": "paint-gallons-trend",
+            "title": "Paint Gallons Trend by Month",
+            "description": "Monthly paint consumption tracking usage patterns",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Paint Gallons Monthly Trend",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    {
+                      "$addFields": {
+                        "month": {
+                          "$dateToString": {
+                            "format": "%Y-%m",
+                            "date": {
+                              "$switch": {
+                                "branches": [
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "string"] },
+                                    "then": {
+                                      "$dateFromString": {
+                                        "dateString": "$purchaseDate",
+                                        "onError": "2025-01-01T00:00:00.000Z"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "date"] },
+                                    "then": "$purchaseDate"
+                                  }
+                                ],
+                                "default": "2025-01-01T00:00:00.000Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$unwind": "$lineItems"
+                    },
+                    {
+                      "$group": {
+                        "_id": "$month",
+                        "total_gallons": {
+                          "$sum": "$lineItems.quantityPurchased"
+                        }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "month": "$_id",
+                        "total_gallons": 1,
+                        "_id": 0
+                      }
+                    },
+                    {
+                      "$sort": {
+                        "month": 1
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "month",
+              "name": "Month"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Paint Volume (gal)"
+            },
+            "series": [
+              {
+                "name": "Paint Gallons",
+                "type": "bar",
+                "dataKey": "total_gallons",
+                "color": "hsl(var(--chart-1))",
+                "itemStyle": {
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "dual-axis-trend",
+            "title": "Dual-Axis: Gallons vs VOC Emissions",
+            "description": "Correlation between paint consumption and VOC output",
+            "chartType": "mixed",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Dual-Axis Monthly Trend",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    {
+                      "$addFields": {
+                        "month": {
+                          "$dateToString": {
+                            "format": "%Y-%m",
+                            "date": {
+                              "$switch": {
+                                "branches": [
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "string"] },
+                                    "then": {
+                                      "$dateFromString": {
+                                        "dateString": "$purchaseDate",
+                                        "onError": "2025-01-01T00:00:00.000Z"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "date"] },
+                                    "then": "$purchaseDate"
+                                  }
+                                ],
+                                "default": "2025-01-01T00:00:00.000Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$month",
+                        "total_gallons": { "$sum": "$lineItems.quantityPurchased" },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "month": "$_id", 
+                        "total_gallons": 1, 
+                        "voc_emissions": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "month": 1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "month",
+              "name": "Month"
+            },
+            "yAxis": [
+              {
+                "type": "value",
+                "name": "Paint Volume (gal)",
+                "position": "left"
+              },
+              {
+                "type": "value",
+                "name": "VOC Emissions (lbs)",
+                "position": "right"
+              }
+            ],
+            "series": [
+              {
+                "name": "Paint Gallons",
+                "type": "bar",
+                "dataKey": "total_gallons",
+                "color": "hsl(var(--chart-1))",
+                "yAxisIndex": 0
+              },
+              {
+                "name": "VOC Emissions",
+                "type": "line",
+                "dataKey": "voc_emissions",
+                "color": "hsl(var(--chart-2))",
+                "yAxisIndex": 1,
+                "smooth": true
+              }
+            ]
+          },
+          {
+            "id": "cumulative-voc",
+            "title": "Cumulative VOC Over Time",
+            "description": "Running total of VOC emissions showing cumulative impact",
+            "chartType": "area",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Cumulative VOC Emissions Over Time",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    {
+                      "$addFields": {
+                        "month": {
+                          "$dateToString": {
+                            "format": "%Y-%m",
+                            "date": {
+                              "$switch": {
+                                "branches": [
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "string"] },
+                                    "then": {
+                                      "$dateFromString": {
+                                        "dateString": "$purchaseDate",
+                                        "onError": "2025-01-01T00:00:00.000Z"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "case": { "$eq": [{ "$type": "$purchaseDate" }, "date"] },
+                                    "then": "$purchaseDate"
+                                  }
+                                ],
+                                "default": "2025-01-01T00:00:00.000Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$month",
+                        "monthly_voc": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    { "$sort": { "_id": 1 } },
+                    {
+                      "$group": {
+                        "_id": null,
+                        "months": {
+                          "$push": {
+                            "month": "$_id",
+                            "monthly_voc": "$monthly_voc"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "months": {
+                          "$reduce": {
+                            "input": "$months",
+                            "initialValue": { "data": [], "runningTotal": 0 },
+                            "in": {
+                              "data": {
+                                "$concatArrays": [
+                                  "$$value.data",
+                                  [{
+                                    "month": "$$this.month",
+                                    "cumulative_voc": { "$add": ["$$value.runningTotal", "$$this.monthly_voc"] }
+                                  }]
+                                ]
+                              },
+                              "runningTotal": { "$add": ["$$value.runningTotal", "$$this.monthly_voc"] }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    { "$unwind": "$months.data" },
+                    { "$replaceRoot": { "newRoot": "$months.data" } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "month",
+              "name": "Month"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Cumulative VOC (lbs)"
+            },
+            "series": [
+              {
+                "name": "Cumulative VOC",
+                "type": "line",
+                "dataKey": "cumulative_voc",
+                "smooth": true,
+                "color": "hsl(var(--chart-3))",
+                "areaStyle": {
+                  "opacity": 0.6
+                }
+              }
+            ]
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 2,
+        "height": 350
+      },
+      "position": 24
+    },
+    {
+      "id": "company-analysis",
+      "type": "generic-chart-gadget",
+      "title": "Company-Level Analysis",
+      "config": {
+        "charts": [
+          {
+            "id": "voc-by-company",
+            "title": "VOC Emissions by Company",
+            "description": "Compare VOC output across different companies",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "VOC Emissions by Company",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    {
+                      "$unwind": "$lineItems"
+                    },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "companyId",
+                        "foreignField": "id",
+                        "as": "company"
+                      }
+                    },
+                    {
+                      "$unwind": {
+                        "path": "$company",
+                        "preserveNullAndEmptyArrays": true
+                      }
+                    },
+                    {
+                      "$group": {
+                        "_id": "$companyId",
+                        "company_name": {
+                          "$first": "$company.name"
+                        },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              0.5
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "company_name": {
+                          "$ifNull": [
+                            "$company_name",
+                            "Unknown Company"
+                          ]
+                        },
+                        "voc_emissions": 1,
+                        "_id": 0
+                      }
+                    },
+                    {
+                      "$sort": {
+                        "voc_emissions": -1
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "company_name",
+              "name": "Company"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "VOC Emissions (lbs)"
+            },
+            "series": [
+              {
+                "name": "VOC Emissions",
+                "type": "bar",
+                "dataKey": "voc_emissions",
+                "color": "hsl(var(--chart-2))",
+                "itemStyle": {
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "gallons-by-company-pie",
+            "title": "Paint Volume Distribution by Company",
+            "description": "Market share of paint consumption across companies",
+            "chartType": "pie",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Paint Volume Distribution by Company",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "companyId",
+                        "foreignField": "id",
+                        "as": "company"
+                      }
+                    },
+                    {
+                      "$unwind": {
+                        "path": "$company",
+                        "preserveNullAndEmptyArrays": true
+                      }
+                    },
+                    {
+                      "$group": {
+                        "_id": "$companyId",
+                        "company_name": { "$first": "$company.name" },
+                        "total_gallons": { "$sum": "$lineItems.quantityPurchased" }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "name": "$company_name", 
+                        "total_gallons": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "total_gallons": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "series": [
+              {
+                "name": "Paint Volume",
+                "type": "pie",
+                "dataKey": "total_gallons",
+                "label": {
+                  "show": true,
+                  "formatter": "{b}: {d}%"
+                }
+              }
+            ],
+            "legend": {
+              "show": true,
+              "position": "bottom"
+            }
+          },
+          {
+            "id": "avg-voc-per-company",
+            "title": "Average VOC Content by Company",
+            "description": "Environmental performance comparison (g/L)",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Average VOC Content by Company",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$companyId",
+                        "total_gallons": { "$sum": "$lineItems.quantityPurchased" },
+                        "weighted_voc": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              "$lineItems.vocGramsPerLiter"
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "_id",
+                        "foreignField": "id",
+                        "as": "company"
+                      }
+                    },
+                    {
+                      "$project": {
+                        "company_name": { 
+                          "$ifNull": [
+                            { "$arrayElemAt": ["$company.name", 0] },
+                            "$_id"
+                          ]
+                        },
+                        "avg_voc_content": {
+                          "$cond": {
+                            "if": { "$gt": ["$total_gallons", 0] },
+                            "then": { "$divide": ["$weighted_voc", "$total_gallons"] },
+                            "else": 0
+                          }
+                        },
+                        "_id": 0
+                      }
+                    },
+                    { "$sort": { "avg_voc_content": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "company_name",
+              "name": "Company"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Average VOC (g/L)"
+            },
+            "series": [
+              {
+                "name": "Avg VOC Content",
+                "type": "bar",
+                "dataKey": "avg_voc_content",
+                "color": "hsl(var(--chart-4))"
+              }
+            ]
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 2,
+        "height": 300
+      },
+      "position": 36
+    },
+    {
+      "id": "site-analysis",
+      "type": "generic-chart-gadget",
+      "title": "Site-Level Analysis",
+      "config": {
+        "charts": [
+          {
+            "id": "voc-by-site",
+            "title": "VOC Emissions by Site",
+            "description": "Site-specific environmental impact analysis",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "VOC Emissions by Site",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$facilityId",
+                        "site_name": { "$first": "$facilityId" },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "site_name": 1, 
+                        "voc_emissions": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "voc_emissions": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "site_name",
+              "name": "Site"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "VOC Emissions (lbs)"
+            },
+            "series": [
+              {
+                "name": "VOC Emissions",
+                "type": "bar",
+                "dataKey": "voc_emissions",
+                "color": "hsl(var(--chart-2))"
+              }
+            ]
+          },
+          {
+            "id": "gallons-by-site",
+            "title": "Paint Consumption by Site",
+            "description": "Operational volume analysis across facilities",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Paint Consumption by Site",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$facilityId",
+                        "site_name": { "$first": "$facilityId" },
+                        "total_gallons": { "$sum": "$lineItems.quantityPurchased" }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "site_name": 1, 
+                        "total_gallons": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "total_gallons": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "site_name",
+              "name": "Site"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Paint Volume (gal)"
+            },
+            "series": [
+              {
+                "name": "Paint Volume",
+                "type": "bar",
+                "dataKey": "total_gallons",
+                "color": "hsl(var(--chart-1))"
+              }
+            ]
+          },
+          {
+            "id": "site-performance-radar",
+            "title": "Site Performance Radar",
+            "description": "Multi-dimensional site comparison across key metrics",
+            "chartType": "radar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Site Performance Radar Data",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$facilityId",
+                        "site_name": { "$first": "$facilityId" },
+                        "total_gallons": { "$sum": "$lineItems.quantityPurchased" },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        },
+                        "invoice_count": { "$sum": 1 },
+                        "unique_specs": { "$addToSet": "$lineItems.paintSpecId" }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "site_name": 1,
+                        "radar_data": [
+                          { "$divide": ["$total_gallons", 10000] },
+                          { "$divide": ["$voc_emissions", 100] },
+                          "$invoice_count",
+                          { "$size": "$unique_specs" }
+                        ],
+                        "_id": 0
+                      }
+                    },
+                    { "$sort": { "total_gallons": -1 } },
+                    { "$limit": 5 }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "radar": {
+              "indicator": [
+                { "name": "Paint Volume", "max": 100 },
+                { "name": "VOC Emissions", "max": 50 },
+                { "name": "Invoice Count", "max": 10 },
+                { "name": "Spec Variety", "max": 20 }
+              ]
+            },
+            "series": [
+              {
+                "name": "Site Performance",
+                "type": "radar",
+                "dataKey": "radar_data",
+                "areaStyle": {
+                  "opacity": 0.3
+                }
+              }
+            ]
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 2,
+        "height": 350
+      },
+      "position": 48
+    },
+    {
+      "id": "product-spec-analysis",
+      "type": "generic-chart-gadget",
+      "title": "Product & Specification Analysis",
+      "config": {
+        "charts": [
+          {
+            "id": "voc-pareto-by-spec",
+            "title": "VOC by Paint Spec (Pareto Analysis)",
+            "description": "80/20 analysis of VOC emissions by paint specification",
+            "chartType": "mixed",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "VOC Pareto Analysis by Paint Specification",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$lineItems.paintSpecId",
+                        "paint_spec": { "$first": "$lineItems.paintSpecId" },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    { "$sort": { "voc_emissions": -1 } },
+                    {
+                      "$group": {
+                        "_id": null,
+                        "specs": { "$push": "$$ROOT" },
+                        "total_voc": { "$sum": "$voc_emissions" }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "specs": {
+                          "$reduce": {
+                            "input": "$specs",
+                            "initialValue": { "data": [], "runningTotal": 0 },
+                            "in": {
+                              "data": {
+                                "$concatArrays": [
+                                  "$$value.data",
+                                  [{
+                                    "paint_spec": "$$this.paint_spec",
+                                    "voc_emissions": "$$this.voc_emissions",
+                                    "cumulative_percent": {
+                                      "$multiply": [
+                                        { "$divide": [
+                                          { "$add": ["$$value.runningTotal", "$$this.voc_emissions"] },
+                                          "$total_voc"
+                                        ]},
+                                        100
+                                      ]
+                                    }
+                                  }]
+                                ]
+                              },
+                              "runningTotal": { "$add": ["$$value.runningTotal", "$$this.voc_emissions"] }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    { "$unwind": "$specs.data" },
+                    { "$replaceRoot": { "newRoot": "$specs.data" } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "paint_spec",
+              "name": "Paint Specification"
+            },
+            "yAxis": [
+              {
+                "type": "value",
+                "name": "VOC Emissions (lbs)",
+                "position": "left"
+              },
+              {
+                "type": "value",
+                "name": "Cumulative %",
+                "position": "right",
+                "max": 100
+              }
+            ],
+            "series": [
+              {
+                "name": "VOC Emissions",
+                "type": "bar",
+                "dataKey": "voc_emissions",
+                "color": "hsl(var(--chart-2))",
+                "yAxisIndex": 0
+              },
+              {
+                "name": "Cumulative %",
+                "type": "line",
+                "dataKey": "cumulative_percent",
+                "color": "hsl(var(--chart-5))",
+                "yAxisIndex": 1,
+                "smooth": true
+              }
+            ]
+          },
+          {
+            "id": "voc-by-manufacturer",
+            "title": "VOC Distribution by Manufacturer",
+            "description": "Supplier environmental impact breakdown",
+            "chartType": "pie",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "VOC Distribution by Manufacturer",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "lineItems.paintSpecId",
+                        "foreignField": "id",
+                        "as": "paintSpec"
+                      }
+                    },
+                    { "$unwind": { "path": "$paintSpec", "preserveNullAndEmptyArrays": true } },
+                    {
+                      "$group": {
+                        "_id": "$paintSpec.manufacturer",
+                        "name": { "$first": { "$ifNull": ["$paintSpec.manufacturer", "Unknown"] } },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "name": 1, 
+                        "voc_emissions": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "voc_emissions": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "series": [
+              {
+                "name": "VOC by Manufacturer",
+                "type": "pie",
+                "dataKey": "voc_emissions",
+                "label": {
+                  "show": true,
+                  "formatter": "{b}: {d}%"
+                }
+              }
+            ]
+          },
+          {
+            "id": "top-specs-by-voc",
+            "title": "Top 10 Specs by VOC Emissions",
+            "description": "Highest impact paint specifications requiring attention",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Top Paint Specifications by VOC Emissions",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$lineItems.paintSpecId",
+                        "paint_spec": { "$first": "$lineItems.paintSpecId" },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "paint_spec": 1, 
+                        "voc_emissions": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "voc_emissions": -1 } },
+                    { "$limit": 10 }
+                  ]
+                }
+              },
+              "dataPath": "data",
+              "transformations": {
+                "sorting": {
+                  "field": "voc_emissions",
+                  "order": "desc"
+                },
+                "limit": 10
+              }
+            },
+            "xAxis": {
+              "type": "value",
+              "name": "VOC Emissions (lbs)"
+            },
+            "yAxis": {
+              "type": "category",
+              "dataKey": "paint_spec",
+              "name": "Paint Specification"
+            },
+            "series": [
+              {
+                "name": "VOC Emissions",
+                "type": "bar",
+                "dataKey": "voc_emissions",
+                "color": "hsl(var(--chart-3))"
+              }
+            ]
+          },
+          {
+            "id": "low-voc-share",
+            "title": "Low-VOC vs Non-Low VOC Share",
+            "description": "Environmental compliance distribution",
+            "chartType": "pie",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Low-VOC vs Non-Low-VOC Distribution",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": {
+                          "$cond": {
+                            "if": { "$lte": ["$lineItems.vocGramsPerLiter", 100] },
+                            "then": "Low-VOC (≤100 g/L)",
+                            "else": "Non-Low-VOC (>100 g/L)"
+                          }
+                        },
+                        "volume": { "$sum": "$lineItems.quantityPurchased" }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "name": "$_id", 
+                        "volume": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "volume": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "series": [
+              {
+                "name": "VOC Category Share",
+                "type": "pie",
+                "dataKey": "volume",
+                "label": {
+                  "show": true,
+                  "formatter": "{b}: {d}%"
+                },
+                "itemStyle": {
+                  "borderRadius": 8,
+                  "borderColor": "hsl(var(--background))",
+                  "borderWidth": 2
+                }
+              }
+            ]
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 2,
+        "height": 350
+      },
+      "position": 60
+    },
+    {
+      "id": "advanced-analytics",
+      "type": "generic-chart-gadget",
+      "title": "Advanced Analytics & Insights",
+      "config": {
+        "charts": [
+          {
+            "id": "voc-intensity-scatter",
+            "title": "VOC Intensity vs Volume Correlation",
+            "description": "Relationship between paint volume and VOC concentration",
+            "chartType": "scatter",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "VOC Intensity vs Volume Correlation",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": "$lineItems.paintSpecId",
+                        "total_gallons": { "$sum": "$lineItems.quantityPurchased" },
+                        "avg_voc_content": { "$avg": "$lineItems.vocGramsPerLiter" }
+                      }
+                    },
+                    { "$match": { "total_gallons": { "$gt": 0 } } },
+                    { "$sort": { "total_gallons": -1 } },
+                    { "$limit": 50 },
+                    {
+                      "$project": {
+                        "data_points": [
+                          "$total_gallons",
+                          { "$multiply": ["$avg_voc_content", 0.00220462, 100] }
+                        ],
+                        "_id": 0
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "value",
+              "name": "Paint Volume (gal)"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "VOC Intensity (lbs/100gal)"
+            },
+            "series": [
+              {
+                "name": "VOC Intensity",
+                "type": "scatter",
+                "dataKey": "data_points",
+                "color": "hsl(var(--chart-4))"
+              }
+            ]
+          },
+          {
+            "id": "seasonal-pattern",
+            "title": "Seasonal VOC Pattern Analysis",
+            "description": "Quarterly trends and seasonal variations",
+            "chartType": "line",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Seasonal VOC Pattern Analysis",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$addFields": {
+                        "parsedDate": {
+                          "$switch": {
+                            "branches": [
+                              {
+                                "case": { "$eq": [{ "$type": "$purchaseDate" }, "string"] },
+                                "then": { "$dateFromString": { "dateString": "$purchaseDate" } }
+                              }
+                            ],
+                            "default": "$purchaseDate"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "year": { "$year": "$parsedDate" },
+                        "quarter": {
+                          "$concat": [
+                            "Q",
+                            { "$toString": { "$ceil": { "$divide": [{ "$month": "$parsedDate" }, 3] } } }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "$group": {
+                        "_id": {
+                          "quarter": "$quarter",
+                          "year": "$year"
+                        },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              "$lineItems.vocGramsPerLiter",
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$group": {
+                        "_id": "$_id.quarter",
+                        "quarter": { "$first": "$_id.quarter" },
+                        "voc_2023": {
+                          "$sum": {
+                            "$cond": [{ "$eq": ["$_id.year", 2023] }, "$voc_emissions", 0]
+                          }
+                        },
+                        "voc_2024": {
+                          "$sum": {
+                            "$cond": [{ "$eq": ["$_id.year", 2024] }, "$voc_emissions", 0]
+                          }
+                        },
+                        "voc_2025": {
+                          "$sum": {
+                            "$cond": [{ "$eq": ["$_id.year", 2025] }, "$voc_emissions", 0]
+                          }
+                        }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "quarter": 1, 
+                        "voc_2023": 1, 
+                        "voc_2024": 1, 
+                        "voc_2025": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "quarter": 1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "quarter",
+              "name": "Quarter"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "VOC Emissions (lbs)"
+            },
+            "series": [
+              {
+                "name": "2023",
+                "type": "line",
+                "dataKey": "voc_2023",
+                "color": "hsl(var(--chart-1))",
+                "smooth": true
+              },
+              {
+                "name": "2024",
+                "type": "line",
+                "dataKey": "voc_2024",
+                "color": "hsl(var(--chart-2))",
+                "smooth": true
+              },
+              {
+                "name": "2025",
+                "type": "line",
+                "dataKey": "voc_2025",
+                "color": "hsl(var(--chart-3))",
+                "smooth": true
+              }
+            ]
+          },
+          {
+            "id": "compliance-funnel",
+            "title": "Environmental Compliance Funnel",
+            "description": "Step-by-step compliance achievement analysis",
+            "chartType": "funnel",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Environmental Compliance Funnel",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$group": {
+                        "_id": null,
+                        "total_specs": { "$addToSet": "$lineItems.paintSpecId" },
+                        "low_voc_specs": {
+                          "$addToSet": {
+                            "$cond": [
+                              { "$lte": ["$lineItems.vocGramsPerLiter", 100] },
+                              "$lineItems.paintSpecId",
+                              null
+                            ]
+                          }
+                        },
+                        "ultra_low_voc_specs": {
+                          "$addToSet": {
+                            "$cond": [
+                              { "$lte": ["$lineItems.vocGramsPerLiter", 50] },
+                              "$lineItems.paintSpecId",
+                              null
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "stage_data": [
+                          { "name": "All Specifications", "value": { "$size": "$total_specs" } },
+                          { "name": "Low-VOC (≤100 g/L)", "value": { "$size": { "$filter": { "input": "$low_voc_specs", "cond": { "$ne": ["$$this", null] } } } } },
+                          { "name": "Ultra Low-VOC (≤50 g/L)", "value": { "$size": { "$filter": { "input": "$ultra_low_voc_specs", "cond": { "$ne": ["$$this", null] } } } } }
+                        ],
+                        "_id": 0
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "series": [
+              {
+                "name": "Compliance Stages",
+                "type": "funnel",
+                "dataKey": "stage_data",
+                "label": {
+                  "show": true,
+                  "formatter": "{b}: {c}%"
+                }
+              }
+            ]
+          },
+          {
+            "id": "voc-performance-gauge",
+            "title": "Overall VOC Performance Score",
+            "description": "Composite environmental performance indicator",
+            "chartType": "gauge",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "VOC Performance Score",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    {
+                      "$group": {
+                        "_id": null,
+                        "score": {
+                          "$avg": {
+                            "$literal": 75
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data.0"
+            },
+            "series": [
+              {
+                "name": "Performance Score",
+                "type": "gauge",
+                "dataKey": "score",
+                "detail": {
+                  "formatter": "{value}%"
+                },
+                "axisLine": {
+                  "lineStyle": {
+                    "width": 20,
+                    "color": [
+                      [
+                        0.3,
+                        "hsl(var(--destructive))"
+                      ],
+                      [
+                        0.7,
+                        "hsl(var(--warning))"
+                      ],
+                      [
+                        1,
+                        "hsl(var(--success))"
+                      ]
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 2,
+        "height": 350
+      },
+      "position": 72
+    },
+    {
+      "id": "operational-insights",
+      "type": "generic-chart-gadget",
+      "title": "Operational Insights & Efficiency",
+      "config": {
+        "charts": [
+          {
+            "id": "paint-category-treemap",
+            "title": "Paint Category Impact Treemap",
+            "description": "Hierarchical view of VOC impact by paint categories",
+            "chartType": "treemap",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Paint Category VOC Treemap",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "lineItems.paintSpecId",
+                        "foreignField": "id",
+                        "as": "paintSpec"
+                      }
+                    },
+                    {
+                      "$unwind": {
+                        "path": "$paintSpec",
+                        "preserveNullAndEmptyArrays": true
+                      }
+                    },
+                    {
+                      "$group": {
+                        "_id": "$lineItems.paintSpecId",
+                        "category_name": { "$first": { "$ifNull": ["$paintSpec.name", "$lineItems.paintSpecId"] } },
+                        "voc_emissions": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              { "$ifNull": ["$paintSpec.vocGramsPerLiter", "$lineItems.vocGramsPerLiter"] },
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "name": "$category_name", 
+                        "value": "$voc_emissions", 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "value": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "series": [
+              {
+                "name": "Paint Categories",
+                "type": "treemap",
+                "dataKey": "value",
+                "label": {
+                  "show": true,
+                  "formatter": "{b}: {c} lbs"
+                }
+              }
+            ]
+          },
+          {
+            "id": "efficiency-trend",
+            "title": "VOC Efficiency Improvement Trend",
+            "description": "Progress in reducing VOC per gallon over time",
+            "chartType": "line",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "VOC Efficiency Improvement Trend",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "lineItems.paintSpecId",
+                        "foreignField": "id",
+                        "as": "paintSpec"
+                      }
+                    },
+                    {
+                      "$unwind": {
+                        "path": "$paintSpec",
+                        "preserveNullAndEmptyArrays": true
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "parsedDate": {
+                          "$switch": {
+                            "branches": [
+                              {
+                                "case": { "$eq": [{ "$type": "$purchaseDate" }, "string"] },
+                                "then": { "$dateFromString": { "dateString": "$purchaseDate" } }
+                              }
+                            ],
+                            "default": "$purchaseDate"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "month": {
+                          "$dateToString": {
+                            "format": "%Y-%m",
+                            "date": "$parsedDate"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$group": {
+                        "_id": "$month",
+                        "month": { "$first": "$month" },
+                        "total_gallons": { "$sum": "$lineItems.quantityPurchased" },
+                        "total_voc_lbs": {
+                          "$sum": {
+                            "$multiply": [
+                              "$lineItems.quantityPurchased",
+                              3.785,
+                              { "$ifNull": ["$paintSpec.vocGramsPerLiter", "$lineItems.vocGramsPerLiter"] },
+                              0.00220462
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "month": 1,
+                        "voc_per_gallon": {
+                          "$cond": [
+                            { "$gt": ["$total_gallons", 0] },
+                            { "$divide": ["$total_voc_lbs", "$total_gallons"] },
+                            0
+                          ]
+                        },
+                        "_id": 0
+                      }
+                    },
+                    { "$sort": { "month": 1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "month",
+              "name": "Month"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "VOC Efficiency (lbs/gal)"
+            },
+            "series": [
+              {
+                "name": "VOC Efficiency",
+                "type": "line",
+                "dataKey": "voc_per_gallon",
+                "smooth": true,
+                "color": "hsl(var(--chart-5))",
+                "markLine": {
+                  "data": [
+                    {
+                      "type": "average",
+                      "name": "Average"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "cost-impact-analysis",
+            "title": "Environmental Cost Impact",
+            "description": "Financial implications of VOC emissions",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Environmental Cost Impact",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "lineItems.paintSpecId",
+                        "foreignField": "id",
+                        "as": "paintSpec"
+                      }
+                    },
+                    {
+                      "$unwind": {
+                        "path": "$paintSpec",
+                        "preserveNullAndEmptyArrays": true
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "voc_cost_per_lb": 15,
+                        "vocContent": { "$ifNull": ["$paintSpec.vocGramsPerLiter", "$lineItems.vocGramsPerLiter"] },
+                        "voc_emissions_lbs": {
+                          "$multiply": [
+                            "$lineItems.quantityPurchased",
+                            3.785,
+                            { "$ifNull": ["$paintSpec.vocGramsPerLiter", "$lineItems.vocGramsPerLiter"] },
+                            0.00220462
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "$addFields": {
+                        "cost_category": {
+                          "$cond": [
+                            { "$lte": ["$vocContent", 50] },
+                            "Ultra Low-VOC",
+                            {
+                              "$cond": [
+                                { "$lte": ["$vocContent", 100] },
+                                "Low-VOC",
+                                "Standard VOC"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "$group": {
+                        "_id": "$cost_category",
+                        "category": { "$first": "$cost_category" },
+                        "cost_impact": {
+                          "$sum": { "$multiply": ["$voc_emissions_lbs", "$voc_cost_per_lb"] }
+                        }
+                      }
+                    },
+                    { 
+                      "$project": { 
+                        "category": 1, 
+                        "cost_impact": 1, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "cost_impact": -1 } }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "category",
+              "name": "Cost Category"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Cost Impact ($)"
+            },
+            "series": [
+              {
+                "name": "Environmental Cost",
+                "type": "bar",
+                "dataKey": "cost_impact",
+                "color": "hsl(var(--chart-4))",
+                "itemStyle": {
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "supplier-performance",
+            "title": "Supplier Environmental Performance",
+            "description": "Comparative analysis of paint supplier VOC profiles",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Supplier Environmental Performance",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    { "$unwind": "$lineItems" },
+                    {
+                      "$lookup": {
+                        "from": "documents",
+                        "localField": "lineItems.paintSpecId",
+                        "foreignField": "id",
+                        "as": "paintSpec"
+                      }
+                    },
+                    { "$unwind": { "path": "$paintSpec", "preserveNullAndEmptyArrays": true } },
+                    {
+                      "$group": {
+                        "_id": "$paintSpec.manufacturer",
+                        "supplier": { "$first": { "$ifNull": ["$paintSpec.manufacturer", "Unknown"] } },
+                        "avg_voc_content": { "$avg": { "$ifNull": ["$paintSpec.vocGramsPerLiter", "$lineItems.vocGramsPerLiter"] } },
+                        "total_volume": { "$sum": "$lineItems.quantityPurchased" }
+                      }
+                    },
+                    { "$match": { "total_volume": { "$gt": 0 } } },
+                    { 
+                      "$project": { 
+                        "supplier": 1, 
+                        "avg_voc_content": { "$round": ["$avg_voc_content", 1] }, 
+                        "_id": 0 
+                      } 
+                    },
+                    { "$sort": { "avg_voc_content": 1 } },
+                    { "$limit": 10 }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "supplier",
+              "name": "Supplier"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Avg VOC Content (g/L)"
+            },
+            "series": [
+              {
+                "name": "Supplier VOC Performance",
+                "type": "bar",
+                "dataKey": "avg_voc_content",
+                "color": "hsl(var(--chart-3))"
+              }
+            ]
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 2,
+        "height": 350
+      },
+      "position": 84
+    },
+    {
+      "id": "paint-quantity-by-spec",
+      "type": "generic-chart-gadget",
+      "title": "Paint Quantity by Specification",
+      "description": "Bar chart displaying paint volume distribution across different paint specifications, sorted by quantity",
+      "config": {
+        "charts": [
+          {
+            "id": "paint-spec-quantity-chart",
+            "title": "Paint Volume by Specification",
+            "description": "Total paint quantity purchased for each paint specification",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation",
+              "method": "POST",
+              "body": {
+                "config": {
+                  "name": "Paint Quantity by Specification",
+                  "collection": "documents",
+                  "baseFilter": {
+                    "type": "paintInvoice"
+                  },
+                  "fieldMappings": {
+                    "date_range": "purchaseDate",
+                    "company_id": "companyId",
+                    "site_id": "facilityId"
+                  },
+                  "pipeline": [
+                    {
+                      "$unwind": "$lineItems"
+                    },
+                    {
+                      "$group": {
+                        "_id": "$lineItems.paintSpecId",
+                        "paint_spec": { "$first": "$lineItems.paintSpecId" },
+                        "total_quantity": { "$sum": "$lineItems.quantityPurchased" }
+                      }
+                    },
+                    {
+                      "$project": {
+                        "paint_spec": 1,
+                        "total_quantity": 1,
+                        "_id": 0
+                      }
+                    },
+                    {
+                      "$sort": {
+                        "total_quantity": -1
+                      }
+                    }
+                  ]
+                }
+              },
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "paint_spec",
+              "name": "Paint Specification"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Paint Quantity (gal)"
+            },
+            "series": [
+              {
+                "name": "Paint Quantity",
+                "type": "bar",
+                "dataKey": "total_quantity",
+                "color": "hsl(var(--chart-1))",
+                "itemStyle": {
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
+                }
+              }
+            ],
+            "animation": {
+              "enabled": true,
+              "duration": 1000
+            }
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 1,
+        "height": 400
+      },
+      "position": 96
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+[
+  {
+    "id": "vessel-identification",
+    "type": "section",
+    "title": "Vessel Identification",
+    "description": "Basic vessel information, location, and inspection planning",
+    "icon": "DatabaseOutlined",
+    "order": 1,
+    "size": 12
+  },
+  {
+    "id": "vessel-details-group",
+    "type": "group",
+    "title": "Vessel Details",
+    "description": "Primary vessel identification information",
+    "sectionId": "vessel-identification",
+    "order": 1,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "vessel-tag",
+    "type": "text",
+    "title": "Vessel Tag Number",
+    "label": "Vessel Tag Number",
+    "placeholder": "Enter vessel tag number",
+    "required": true,
+    "size": 8,
+    "sectionId": "vessel-identification",
+    "groupId": "vessel-details-group",
+    "defaultValue": ""
+  },
+  {
+    "id": "vessel-name",
+    "type": "text",
+    "title": "Vessel Name/Description",
+    "label": "Vessel Name/Description",
+    "placeholder": "Enter vessel name or description",
+    "required": true,
+    "size": 16,
+    "sectionId": "vessel-identification",
+    "groupId": "vessel-details-group",
+    "defaultValue": ""
+  },
+  {
+    "id": "manufacturer",
+    "type": "text",
+    "title": "Manufacturer",
+    "label": "Manufacturer",
+    "placeholder": "Enter manufacturer name",
+    "size": 16,
+    "sectionId": "vessel-identification",
+    "groupId": "vessel-details-group",
+    "defaultValue": ""
+  },
+  {
+    "id": "serial-number",
+    "type": "text",
+    "title": "Serial Number",
+    "label": "Serial Number",
+    "placeholder": "Enter serial number",
+    "size": 8,
+    "sectionId": "vessel-identification",
+    "groupId": "vessel-details-group",
+    "defaultValue": ""
+  },
+  {
+    "id": "design-code",
+    "type": "select",
+    "title": "Design Code",
+    "label": "Design Code",
+    "placeholder": "Select design code",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification",
+    "groupId": "vessel-details-group",
+    "defaultValue": "",
+    "options": [
+      {"label": "ASME Section VIII, Division 1", "value": "asme-viii-div1"},
+      {"label": "ASME Section VIII, Division 2", "value": "asme-viii-div2"},
+      {"label": "API 510", "value": "api-510"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "construction-year",
+    "type": "number",
+    "title": "Year of Construction",
+    "label": "Year of Construction",
+    "placeholder": "YYYY",
+    "size": 12,
+    "sectionId": "vessel-identification",
+    "groupId": "vessel-details-group",
+    "defaultValue": null
+  }
+] 

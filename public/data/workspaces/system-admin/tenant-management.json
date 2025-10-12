@@ -1,0 +1,191 @@
+{
+  "id": "tenant-management",
+  "title": "Multi-Tenant Dashboard",
+  "description": "Overview dashboard for multi-tenant B2B SaaS platform with key metrics and quick actions",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "tenant-overview-stats",
+      "type": "stats-gadget",
+      "title": "Platform Overview",
+      "config": {
+        "dataUrl": "/api/multi-tenant/tenants/stats",
+        "dataPath": "stats",
+        "maxItems": 6,
+        "layout": "grid",
+        "showTrends": true,
+        "showIcons": true,
+        "size": "medium",
+        "autoRefresh": true,
+        "refreshInterval": 300000,
+        "stats": [
+          {
+            "key": "totalTenants",
+            "label": "Total Tenants",
+            "icon": "TeamOutlined",
+            "color": "blue"
+          },
+          {
+            "key": "activeTenants",
+            "label": "Active Tenants",
+            "icon": "CheckCircleOutlined",
+            "color": "green"
+          },
+          {
+            "key": "expiringTenants",
+            "label": "Expiring Soon",
+            "icon": "ClockCircleOutlined",
+            "color": "orange"
+          },
+          {
+            "key": "suspendedTenants",
+            "label": "Suspended",
+            "icon": "StopOutlined",
+            "color": "red"
+          },
+          {
+            "key": "totalUsers",
+            "label": "Total Users",
+            "icon": "UserOutlined",
+            "color": "purple"
+          },
+          {
+            "key": "totalOrganizations",
+            "label": "Organizations",
+            "icon": "BankOutlined",
+            "color": "cyan"
+          }
+        ]
+      },
+      "position": 24
+
+    },
+    {
+      "id": "quick-actions",
+      "type": "action-panel-gadget",
+      "title": "Quick Administrative Actions",
+      "config": {
+        "actionPanelWidget": {
+          "id": "admin-quick-actions",
+          "type": "action-panel",
+          "props": {
+            "actions": [
+              {
+                "key": "manage-tenants",
+                "label": "Manage Tenants",
+                "icon": "TeamOutlined",
+                "type": "primary",
+                "workspace": "system-admin/tenant-list",
+                "description": "View, create, edit, and manage all tenants"
+              },
+              {
+                "key": "manage-organizations",
+                "label": "Manage Organizations",
+                "icon": "BankOutlined",
+                "type": "default",
+                "workspace": "system-admin/organization-list",
+                "description": "View and manage organizations that group tenants"
+              },
+              {
+                "key": "manage-memberships",
+                "label": "User Memberships",
+                "icon": "UserOutlined",
+                "type": "default",
+                "workspace": "system-admin/membership-list",
+                "description": "Manage user access and roles across tenants"
+              },
+              {
+                "key": "create-tenant-wizard",
+                "label": "New Tenant Wizard",
+                "icon": "PlusCircleOutlined",
+                "type": "primary",
+                "workspace": "system-admin/tenant-creation-wizard",
+                "description": "Step-by-step tenant creation with entitlements"
+              },
+              {
+                "key": "subscription-lifecycle",
+                "label": "Subscription Lifecycle",
+                "icon": "CalendarOutlined",
+                "type": "default",
+                "workspace": "system-admin/subscription-management",
+                "description": "Monitor and manage subscription lifecycles"
+              },
+              {
+                "key": "audit-logs",
+                "label": "Audit & Compliance",
+                "icon": "FileSearchOutlined",
+                "type": "default",
+                "workspace": "system-admin/audit-logs",
+                "description": "View audit trails and compliance reports"
+              },
+              {
+                "key": "module-catalog",
+                "label": "Module Catalog",
+                "icon": "AppstoreOutlined",
+                "type": "default",
+                "workspace": "system-admin/module-management",
+                "description": "Manage available modules and features"
+              },
+              {
+                "key": "system-health",
+                "label": "System Health",
+                "icon": "DashboardOutlined",
+                "type": "default",
+                "workspace": "system-admin/system-health",
+                "description": "Monitor platform health and performance"
+              }
+            ],
+            "columns": 4,
+            "size": "medium",
+            "theme": "default"
+          }
+        }
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": true,
+    "enablePrint": false,
+    "requireSuperAdmin": true,
+    "auditAllActions": true,
+    "tenantScoped": false
+  },
+  "metadata": {
+    "created": "2025-01-22T10:00:00Z",
+    "version": "3.0.0",
+    "tags": ["admin", "tenant", "saas", "multi-tenant", "subscription", "entitlements", "lifecycle", "b2b"],
+    "description": "Multi-tenant B2B SaaS management dashboard for super administrators. Manage tenants, organizations, subscriptions, entitlements, and user memberships with full audit trails.",
+    "features": [
+      "Tenant lifecycle management",
+      "Subscription and entitlement tracking",
+      "Organization grouping",
+      "User membership management",
+      "Audit logging",
+      "Impersonation with full audit",
+      "Bulk operations",
+      "Advanced filtering and search"
+    ],
+    "permissions": {
+      "required": ["super_admin"],
+      "actions": [
+        "tenant:create",
+        "tenant:read",
+        "tenant:update",
+        "tenant:archive",
+        "tenant:suspend",
+        "tenant:impersonate",
+        "organization:manage",
+        "membership:manage",
+        "subscription:manage",
+        "entitlements:manage",
+        "audit:read"
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "bulk-operations-workspace",
+  "title": "Bulk Import/Export",
+  "description": "CSV import and export functionality for managing large datasets",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "bulk-operations-panel",
+      "type": "bulk-operations-gadget",
+      "title": "CSV Import/Export",
+      "position": 24,
+      "config": {
+        "allowedTypes": ["company", "site", "asset_group", "asset"],
+        "maxFileSize": 10,
+        "showInstructions": true
+      }
+    },
+    {
+      "id": "bulk-operations-help",
+      "type": "display-gadget",
+      "title": "Import/Export Guide",
+      "position": 24,
+      "config": {
+        "content": {
+          "type": "markdown",
+          "data": "## CSV Import/Export Guide\n\n### Supported Operations\n\n**Export:**\n- Download all existing data as CSV\n- Includes related data (company names, site names, etc.)\n- Perfect for backups or data analysis\n\n**Import:**\n- Upload CSV files to create multiple records at once\n- Validates data before importing\n- Shows detailed results with error reporting\n\n### Import Process\n\n1. **Download Template** - Get the correct CSV format\n2. **Fill Data** - Add your records following the template\n3. **Upload File** - Select and import your CSV\n4. **Review Results** - Check success/error reports\n\n### Data Types\n\n- **Companies** - Create multiple companies with full details\n- **Sites** - Bulk create sites (requires existing companies)\n- **Asset Groups** - Create asset groups (requires existing sites)\n- **Assets** - Create individual assets (requires existing asset groups)\n\n### Best Practices\n\n- Always download and use the template\n- Import in order: Companies → Sites → Asset Groups → Assets\n- Validate parent records exist before importing children\n- Keep CSV files under 10MB\n- Review error reports carefully\n\n### Error Handling\n\n- Missing required fields will be reported\n- Invalid references to parent records will fail\n- Data validation errors show specific issues\n- Partial imports are supported (some succeed, some fail)"
+        }
+      }
+    }
+  ]
+}

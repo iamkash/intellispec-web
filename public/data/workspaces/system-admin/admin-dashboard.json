@@ -1,0 +1,237 @@
+{
+  "id": "admin-dashboard",
+  "title": "Super Admin Dashboard",
+  "description": "Central hub for system administration and multi-tenant management",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "admin-quick-links",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Frequently used administrative actions",
+      "position": 24,
+      "config": {
+        "layout": "grid",
+        "columns": 3,
+        "size": "large",
+        "theme": "modern",
+        "hideWrapper": true,
+        "actions": [
+          {
+            "key": "create-tenant",
+            "label": "Create New Tenant",
+            "description": "Set up a new tenant with complete configuration",
+            "icon": "PlusCircleOutlined",
+            "type": "primary",
+            "workspace": "system-admin/tenant-document",
+            "params": {
+              "mode": "create"
+            }
+          },
+          {
+            "key": "create-organization",
+            "label": "Create Organization",
+            "description": "Add a new parent organization",
+            "icon": "BankOutlined",
+            "type": "default",
+            "workspace": "system-admin/organization-document",
+            "params": {
+              "mode": "create"
+            }
+          },
+          {
+            "key": "manage-tenants",
+            "label": "Manage Tenants",
+            "description": "View and edit all tenants",
+            "icon": "TeamOutlined",
+            "type": "default",
+            "workspace": "system-admin/tenant-list"
+          },
+          {
+            "key": "view-audit-logs",
+            "label": "View Audit Logs",
+            "description": "Review system activity and changes",
+            "icon": "FileSearchOutlined",
+            "type": "default",
+            "workspace": "system-admin/audit-dashboard"
+          },
+          {
+            "key": "manage-organizations",
+            "label": "Manage Organizations",
+            "description": "View and edit organizations",
+            "icon": "ApartmentOutlined",
+            "type": "default",
+            "workspace": "system-admin/organization-list"
+          },
+          {
+            "key": "manage-modules",
+            "label": "Manage Modules",
+            "description": "Configure available system modules",
+            "icon": "AppstoreOutlined",
+            "type": "default",
+            "workspace": "system-admin/module-management"
+          }
+        ]
+      }
+    },
+    {
+      "id": "system-stats",
+      "type": "generic-kpi-gadget",
+      "title": "System Overview",
+      "description": "High-level system statistics",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/admin/system/stats",
+        "kpis": [
+          {
+            "id": "total-tenants",
+            "title": "Total Tenants",
+            "description": "All tenants",
+            "icon": "FaBuilding",
+            "iconColor": "hsl(var(--chart-1))",
+            "format": "number"
+          },
+          {
+            "id": "active-tenants",
+            "title": "Active Tenants",
+            "description": "Currently active",
+            "icon": "FaCheckCircle",
+            "iconColor": "hsl(var(--chart-2))",
+            "format": "number"
+          },
+          {
+            "id": "total-users",
+            "title": "Total Users",
+            "description": "All system users",
+            "icon": "FaUsers",
+            "iconColor": "hsl(var(--chart-3))",
+            "format": "number"
+          },
+          {
+            "id": "total-organizations",
+            "title": "Organizations",
+            "description": "Parent organizations",
+            "icon": "FaSitemap",
+            "iconColor": "hsl(var(--chart-4))",
+            "format": "number"
+          },
+          {
+            "id": "active-subscriptions",
+            "title": "Active Subscriptions",
+            "description": "Current active subs",
+            "icon": "FaCalendarCheck",
+            "iconColor": "hsl(var(--chart-5))",
+            "format": "number"
+          },
+          {
+            "id": "expiring-soon",
+            "title": "Expiring Soon",
+            "description": "Within 30 days",
+            "icon": "FaClock",
+            "iconColor": "hsl(var(--chart-6))",
+            "format": "number"
+          }
+        ],
+        "kpiLayout": "grid",
+        "columns": 6,
+        "showTrends": false,
+        "showTargets": false,
+        "autoRefresh": true
+      }
+    },
+    {
+      "id": "recent-activity",
+      "type": "sgrid-search-gadget",
+      "title": "Recent Activity",
+      "description": "Latest administrative actions across the system",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/audit-logs?limit=10",
+        "hideCreateButton": true,
+        "columns": [
+          {
+            "key": "createdAt",
+            "title": "Time",
+            "width": 150,
+            "sortable": true
+          },
+          {
+            "key": "action",
+            "title": "Action",
+            "width": 180,
+            "sortable": true
+          },
+          {
+            "key": "entityName",
+            "title": "Entity",
+            "width": 200,
+            "sortable": true
+          },
+          {
+            "key": "performedByName",
+            "title": "User",
+            "width": 150,
+            "sortable": true
+          }
+        ],
+        "rowActions": [
+          {
+            "key": "view-details",
+            "label": "View Details",
+            "icon": "EyeOutlined",
+            "type": "default"
+          }
+        ],
+        "search": {
+          "placeholder": "Search recent activity..."
+        },
+        "pagination": {
+          "pageSize": 10,
+          "showSizeChanger": false,
+          "showQuickJumper": false
+        },
+        "toolbar": {
+          "enableCreate": false,
+          "customActions": [
+            {
+              "key": "view-all-logs",
+              "label": "View All Audit Logs",
+              "icon": "FileSearchOutlined",
+              "type": "default",
+              "workspace": "system-admin/audit-dashboard"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 60000,
+    "theme": "light",
+    "density": "comfortable",
+    "requireSuperAdmin": true,
+    "showLastUpdated": true
+  },
+  "metadata": {
+    "created": "2025-01-24T12:00:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "dashboard", "overview"],
+    "description": "Super Admin central dashboard with quick actions and system overview",
+    "features": [
+      "Quick action buttons for common tasks",
+      "System-wide statistics",
+      "Recent activity feed",
+      "Direct navigation to key admin areas"
+    ],
+    "permissions": {
+      "required": ["super_admin"],
+      "actions": [
+        "admin:view_dashboard",
+        "admin:view_stats",
+        "admin:view_activity"
+      ]
+    }
+  }
+}
+

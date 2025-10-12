@@ -1,0 +1,698 @@
+{
+  "id": "site-form-workspace",
+  "title": "Site Management",
+  "description": "Enterprise facility/plant management with operational and safety details",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "site-form-gadget",
+      "type": "document-form-gadget",
+      "title": "Site Information",
+      "description": "Complete facility profile with operational, safety, and compliance details",
+      "position": 24,
+      "config": {
+        "title": "Site Information",
+        "description": "Complete facility profile with operational, safety, and compliance details",
+        "documentType": "site",
+        "dataUrl": "/api/documents/{id}?type=site",
+        "submitUrl": "/api/documents",
+        "submitMethod": "POST",
+        "updateUrl": "/api/documents/{id}",
+        "updateMethod": "PUT",
+        "deleteUrl": "/api/documents/{id}",
+        "deleteMethod": "DELETE",
+        "layout": "vertical",
+        "size": "large",
+        "enableValidation": true,
+        "showSaveButton": true,
+        "showResetButton": true,
+        "showCancelButton": true,
+        "headerActions": {
+          "showClose": true,
+          "showMaximize": true,
+          "showMinimize": false
+        },
+        "fitContent": false,
+        "fullHeight": true,
+        "autoSave": false,
+        "mode": "form",
+        "onSaveSuccess": {
+          "action": "navigate",
+          "target": "asset-manager/asset-management",
+          "message": "Site saved successfully!"
+        },
+        "onSaveError": {
+          "message": "Failed to save site. Please try again."
+        },
+        "onCancel": {
+          "action": "close"
+        },
+        "gadgetOptions": [
+          {
+            "id": "basic_info_section",
+            "type": "section",
+            "title": "Basic Information",
+            "description": "Site identification and company assignment",
+            "icon": "HomeOutlined",
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "basic_info_section",
+            "id": "basic_details_group",
+            "type": "group",
+            "title": "Site Details",
+            "size": 24,
+            "order": 1,
+            "collapsible": false
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "company_id",
+            "type": "select",
+            "title": "Company",
+            "label": "Company",
+            "placeholder": "Select company",
+            "required": true,
+            "size": 24,
+            "order": 1,
+            "optionsUrl": "/api/documents?type=company",
+            "optionsPath": "data",
+            "optionsValueField": "id",
+            "optionsLabelField": "name",
+            "disableWhenPrePopulated": true,
+            "prePopulatedFieldType": "text",
+            "prePopulatedLabel": "Company (Pre-selected)",
+            "prePopulatedDisplayField": "_company_id_name",
+            "fetchDisplayName": {
+              "url": "/api/documents/{id}?type=company",
+              "displayField": "name",
+              "storeAs": "_company_id_name"
+            }
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "name",
+            "type": "text",
+            "title": "Site Name",
+            "label": "Site Name",
+            "placeholder": "Enter site/facility name",
+            "required": true,
+            "size": 12,
+            "order": 2
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "code",
+            "type": "text",
+            "title": "Site Code",
+            "label": "Site Code",
+            "placeholder": "e.g., BAY001",
+            "required": true,
+            "size": 12,
+            "order": 3,
+            "description": "Unique site identifier (SAP Plant Code)"
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "site_type",
+            "type": "select",
+            "title": "Site Type",
+            "label": "Site Type",
+            "placeholder": "Select site type",
+            "required": false,
+            "size": 8,
+            "order": 4,
+            "dependsOn": "company_id",
+            "dependentOptionsUrl": "/api/reference-data/list-options/site_types_by_company/{parentValue}",
+            "optionsValueField": "value",
+            "optionsLabelField": "label",
+            "options": []
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "status",
+            "type": "select",
+            "title": "Status",
+            "label": "Status",
+            "placeholder": "Select status",
+            "required": true,
+            "size": 8,
+            "order": 5,
+            "defaultValue": "active",
+            "optionsUrl": "/api/reference-data/list-options/site_status",
+            "optionsPath": "data",
+            "optionsValueField": "value",
+            "optionsLabelField": "label",
+            "options": []
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "criticality",
+            "type": "select",
+            "title": "Criticality",
+            "label": "Business Criticality",
+            "placeholder": "Select criticality",
+            "required": false,
+            "size": 8,
+            "order": 6,
+            "options": [
+              { "value": "critical", "label": "Critical" },
+              { "value": "high", "label": "High" },
+              { "value": "medium", "label": "Medium" },
+              { "value": "low", "label": "Low" }
+            ]
+          },
+          {
+            "sectionId": "basic_info_section",
+            "groupId": "basic_details_group",
+            "id": "description",
+            "type": "textarea",
+            "title": "Description",
+            "label": "Description",
+            "placeholder": "Enter site description",
+            "required": false,
+            "size": 24,
+            "order": 7,
+            "props": {
+              "rows": 3,
+              "showCount": true,
+              "maxLength": 1000
+            }
+          },
+          {
+            "id": "location_section",
+            "type": "section",
+            "title": "Location & Address",
+            "description": "Physical location and geographic coordinates",
+            "icon": "EnvironmentOutlined",
+            "size": 24,
+            "order": 2
+          },
+          {
+            "sectionId": "location_section",
+            "id": "address_group",
+            "type": "group",
+            "title": "Physical Address",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "location_section",
+            "groupId": "address_group",
+            "id": "address.street",
+            "type": "text",
+            "title": "Street Address",
+            "label": "Street Address",
+            "placeholder": "Enter street address",
+            "required": false,
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "location_section",
+            "groupId": "address_group",
+            "id": "address.city",
+            "type": "text",
+            "title": "City",
+            "label": "City",
+            "placeholder": "Enter city",
+            "required": false,
+            "size": 8,
+            "order": 2
+          },
+          {
+            "sectionId": "location_section",
+            "groupId": "address_group",
+            "id": "address.state",
+            "type": "text",
+            "title": "State",
+            "label": "State/Province",
+            "placeholder": "Enter state",
+            "required": false,
+            "size": 8,
+            "order": 3
+          },
+          {
+            "sectionId": "location_section",
+            "groupId": "address_group",
+            "id": "address.zip",
+            "type": "text",
+            "title": "ZIP Code",
+            "label": "ZIP/Postal Code",
+            "placeholder": "Enter ZIP code",
+            "required": false,
+            "size": 8,
+            "order": 4
+          },
+          {
+            "sectionId": "location_section",
+            "groupId": "address_group",
+            "id": "address.country",
+            "type": "text",
+            "title": "Country",
+            "label": "Country",
+            "placeholder": "Enter country",
+            "required": false,
+            "size": 12,
+            "order": 5,
+            "defaultValue": "USA"
+          },
+          {
+            "sectionId": "location_section",
+            "groupId": "address_group",
+            "id": "latitude",
+            "type": "number",
+            "title": "Latitude",
+            "label": "Latitude",
+            "placeholder": "e.g., 29.7604",
+            "required": false,
+            "size": 6,
+            "order": 6,
+            "props": {
+              "step": 0.000001,
+              "precision": 6
+            }
+          },
+          {
+            "sectionId": "location_section",
+            "groupId": "address_group",
+            "id": "longitude",
+            "type": "number",
+            "title": "Longitude",
+            "label": "Longitude",
+            "placeholder": "e.g., -95.3698",
+            "required": false,
+            "size": 6,
+            "order": 7,
+            "props": {
+              "step": 0.000001,
+              "precision": 6
+            }
+          },
+          {
+            "id": "contact_section",
+            "type": "section",
+            "title": "Contact Information",
+            "description": "Site management and emergency contacts",
+            "icon": "ContactsOutlined",
+            "size": 24,
+            "order": 3
+          },
+          {
+            "sectionId": "contact_section",
+            "id": "primary_contact_group",
+            "type": "group",
+            "title": "Primary Contacts",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "contact_section",
+            "groupId": "primary_contact_group",
+            "id": "contact.manager",
+            "type": "text",
+            "title": "Site Manager",
+            "label": "Site Manager",
+            "placeholder": "Enter manager name",
+            "required": false,
+            "size": 12,
+            "order": 1
+          },
+          {
+            "sectionId": "contact_section",
+            "groupId": "primary_contact_group",
+            "id": "contact.operations_manager",
+            "type": "text",
+            "title": "Operations Manager",
+            "label": "Operations Manager",
+            "placeholder": "Enter operations manager name",
+            "required": false,
+            "size": 12,
+            "order": 2
+          },
+          {
+            "sectionId": "contact_section",
+            "groupId": "primary_contact_group",
+            "id": "contact.phone",
+            "type": "text",
+            "title": "Phone",
+            "label": "Phone Number",
+            "placeholder": "+1-xxx-xxx-xxxx",
+            "required": false,
+            "size": 8,
+            "order": 3
+          },
+          {
+            "sectionId": "contact_section",
+            "groupId": "primary_contact_group",
+            "id": "contact.fax",
+            "type": "text",
+            "title": "Fax",
+            "label": "Fax Number",
+            "placeholder": "+1-xxx-xxx-xxxx",
+            "required": false,
+            "size": 8,
+            "order": 4
+          },
+          {
+            "sectionId": "contact_section",
+            "groupId": "primary_contact_group",
+            "id": "contact.emergency",
+            "type": "text",
+            "title": "Emergency",
+            "label": "Emergency Contact",
+            "placeholder": "Emergency phone number",
+            "required": false,
+            "size": 8,
+            "order": 5,
+            "description": "24/7 Emergency contact"
+          },
+          {
+            "sectionId": "contact_section",
+            "groupId": "primary_contact_group",
+            "id": "contact.email",
+            "type": "email",
+            "title": "Email",
+            "label": "Email Address",
+            "placeholder": "manager@site.com",
+            "required": false,
+            "size": 12,
+            "order": 6
+          },
+          {
+            "id": "operations_section",
+            "type": "section",
+            "title": "Operations & Capacity",
+            "description": "Operational parameters and facility capacity",
+            "icon": "ControlOutlined",
+            "size": 24,
+            "order": 4
+          },
+          {
+            "sectionId": "operations_section",
+            "id": "operations_group",
+            "type": "group",
+            "title": "Operational Details",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "operating_hours",
+            "type": "text",
+            "title": "Operating Hours",
+            "label": "Operating Hours",
+            "placeholder": "e.g., 24/7, 6am-6pm Mon-Fri",
+            "required": false,
+            "size": 8,
+            "order": 1
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "timezone",
+            "type": "select",
+            "title": "Timezone",
+            "label": "Timezone",
+            "placeholder": "Select timezone",
+            "required": false,
+            "size": 8,
+            "order": 2,
+            "options": [
+              { "value": "America/New_York", "label": "Eastern (ET)" },
+              { "value": "America/Chicago", "label": "Central (CT)" },
+              { "value": "America/Denver", "label": "Mountain (MT)" },
+              { "value": "America/Los_Angeles", "label": "Pacific (PT)" },
+              { "value": "America/Anchorage", "label": "Alaska (AKT)" },
+              { "value": "Pacific/Honolulu", "label": "Hawaii (HT)" }
+            ]
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "shift_pattern",
+            "type": "select",
+            "title": "Shift Pattern",
+            "label": "Shift Pattern",
+            "placeholder": "Select shift pattern",
+            "required": false,
+            "size": 8,
+            "order": 3,
+            "options": [
+              { "value": "continuous", "label": "Continuous (24/7)" },
+              { "value": "3_shift", "label": "3-Shift (24 hrs)" },
+              { "value": "2_shift", "label": "2-Shift (16 hrs)" },
+              { "value": "day_shift", "label": "Day Shift Only" },
+              { "value": "custom", "label": "Custom" }
+            ]
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "design_capacity",
+            "type": "number",
+            "title": "Design Capacity",
+            "label": "Design Capacity",
+            "placeholder": "Enter design capacity",
+            "required": false,
+            "size": 8,
+            "order": 4,
+            "description": "Nameplate capacity"
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "capacity_unit",
+            "type": "text",
+            "title": "Capacity Unit",
+            "label": "Capacity Unit",
+            "placeholder": "e.g., BPD, tons/day",
+            "required": false,
+            "size": 8,
+            "order": 5
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "area_size",
+            "type": "number",
+            "title": "Area Size",
+            "label": "Site Area (sq ft)",
+            "placeholder": "Enter area in square feet",
+            "required": false,
+            "size": 8,
+            "order": 6
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "building_count",
+            "type": "number",
+            "title": "Building Count",
+            "label": "Number of Buildings",
+            "placeholder": "Enter building count",
+            "required": false,
+            "size": 6,
+            "order": 7
+          },
+          {
+            "sectionId": "operations_section",
+            "groupId": "operations_group",
+            "id": "employee_count",
+            "type": "number",
+            "title": "Employee Count",
+            "label": "On-Site Employees",
+            "placeholder": "Enter employee count",
+            "required": false,
+            "size": 6,
+            "order": 8
+          },
+          {
+            "id": "compliance_section",
+            "type": "section",
+            "title": "Compliance & Safety",
+            "description": "Permits, licenses, and safety certifications",
+            "icon": "SafetyCertificateOutlined",
+            "size": 24,
+            "order": 5
+          },
+          {
+            "sectionId": "compliance_section",
+            "id": "permits_group",
+            "type": "group",
+            "title": "Permits & Licenses",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "operating_permit",
+            "type": "text",
+            "title": "Operating Permit",
+            "label": "Operating Permit Number",
+            "placeholder": "Enter permit number",
+            "required": false,
+            "size": 8,
+            "order": 1
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "environmental_permit",
+            "type": "text",
+            "title": "Environmental Permit",
+            "label": "Environmental Permit",
+            "placeholder": "Enter permit number",
+            "required": false,
+            "size": 8,
+            "order": 2
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "fire_permit",
+            "type": "text",
+            "title": "Fire Permit",
+            "label": "Fire Safety Permit",
+            "placeholder": "Enter permit number",
+            "required": false,
+            "size": 8,
+            "order": 3
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "osha_compliant",
+            "type": "switch",
+            "title": "OSHA Compliant",
+            "label": "OSHA Compliant",
+            "required": false,
+            "size": 6,
+            "order": 4,
+            "defaultValue": false
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "epa_regulated",
+            "type": "switch",
+            "title": "EPA Regulated",
+            "label": "EPA Regulated",
+            "required": false,
+            "size": 6,
+            "order": 5,
+            "defaultValue": false
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "psr_covered",
+            "type": "switch",
+            "title": "PSM Covered",
+            "label": "Process Safety Management",
+            "required": false,
+            "size": 6,
+            "order": 6,
+            "defaultValue": false,
+            "description": "OSHA PSM 1910.119"
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "rmp_covered",
+            "type": "switch",
+            "title": "RMP Covered",
+            "label": "Risk Management Plan",
+            "required": false,
+            "size": 6,
+            "order": 7,
+            "defaultValue": false,
+            "description": "EPA RMP 40 CFR Part 68"
+          },
+          {
+            "sectionId": "compliance_section",
+            "groupId": "permits_group",
+            "id": "certifications",
+            "type": "textarea",
+            "title": "Certifications",
+            "label": "Site Certifications",
+            "placeholder": "List certifications (one per line)",
+            "required": false,
+            "size": 24,
+            "order": 8,
+            "props": {
+              "rows": 4,
+              "showCount": true,
+              "maxLength": 1000
+            }
+          },
+          {
+            "id": "additional_section",
+            "type": "section",
+            "title": "Additional Information",
+            "description": "Tags and supplementary data",
+            "icon": "TagsOutlined",
+            "size": 24,
+            "order": 6
+          },
+          {
+            "sectionId": "additional_section",
+            "id": "additional_group",
+            "type": "group",
+            "title": "Tags & Notes",
+            "size": 24,
+            "order": 1,
+            "collapsible": true
+          },
+          {
+            "sectionId": "additional_section",
+            "groupId": "additional_group",
+            "id": "tags",
+            "type": "tags",
+            "title": "Tags",
+            "label": "Tags",
+            "placeholder": "Add tags (press Enter)",
+            "required": false,
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "additional_section",
+            "groupId": "additional_group",
+            "id": "notes",
+            "type": "textarea",
+            "title": "Internal Notes",
+            "label": "Internal Notes",
+            "placeholder": "Internal administrative notes",
+            "required": false,
+            "size": 24,
+            "order": 2,
+            "props": {
+              "rows": 4,
+              "showCount": true,
+              "maxLength": 2000
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
+}

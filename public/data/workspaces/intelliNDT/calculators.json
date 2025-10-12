@@ -1,0 +1,48 @@
+{
+  "id": "intelliNDT-calculators",
+  "type": "dashboard",
+  "title": "NDT Calculators",
+  "description": "Browse and access NDT calculation tools",
+  "icon": "CalculatorOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "filterContext": { "enabled": true, "filterDefinitions": [] },
+  "gadgets": [
+    {
+      "id": "calculators-mega-menu",
+      "type": "mega-menu-gadget",
+      "title": "NDT Calculators",
+      "description": "Browse and access NDT calculation tools",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "dataUrl": "/api/calculators?module=ndt",
+        "dataPath": "calculators",
+        "title": "NDT Calculators",
+        "itemType": "calculators",
+        "modulePath": "intelliNDT",
+        "workspacePath": "calculators",
+        "showDescriptions": true,
+        "enableSearch": true,
+        "enableCategoryFilter": true,
+        "enableTagFilter": true,
+        "enableFavorites": true,
+        "enableSorting": true,
+        "enableViewToggle": true,
+        "searchFields": ["label", "description", "tags"],
+        "cardSize": "medium"
+      }
+    }
+  ],
+  "smartDefaults": {
+    "calculators-mega-menu": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": true
+    }
+  }
+}
+
+

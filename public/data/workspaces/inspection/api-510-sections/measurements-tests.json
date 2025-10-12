@@ -1,0 +1,267 @@
+[
+  {
+    "id": "measurements-tests",
+    "type": "section",
+    "title": "Measurements & Tests",
+    "description": "Physical measurements, testing procedures, and data collection",
+    "icon": "RulerOutlined",
+    "order": 4,
+    "size": 12
+  },
+  {
+    "id": "thickness-measurements-group",
+    "type": "group",
+    "title": "Thickness Measurements",
+    "description": "Ultrasonic thickness measurements",
+    "sectionId": "measurements-tests",
+    "order": 1,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "thickness-measurements-taken",
+    "type": "radio",
+    "title": "Thickness Measurements Taken",
+    "label": "Ultrasonic thickness measurements performed",
+    "required": true,
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "thickness-measurements-reason",
+    "type": "textarea",
+    "title": "Reason for No Thickness Measurements",
+    "label": "Please explain why thickness measurements were not taken",
+    "placeholder": "Enter detailed explanation for not performing thickness measurements",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": "",
+    "watchField": "thickness-measurements-taken",
+    "showWhen": "no"
+  },
+  {
+    "id": "minimum-thickness",
+    "type": "number",
+    "title": "Minimum Thickness (inches)",
+    "label": "Minimum Thickness",
+    "placeholder": "0.000",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": null,
+    "watchField": "thickness-measurements-taken",
+    "showWhen": "yes"
+  },
+  {
+    "id": "design-thickness",
+    "type": "number",
+    "title": "Design Thickness (inches)",
+    "label": "Design Thickness",
+    "placeholder": "0.000",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": null,
+    "watchField": "thickness-measurements-taken",
+    "showWhen": "yes"
+  },
+  {
+    "id": "corrosion-rate",
+    "type": "number",
+    "title": "Corrosion Rate (mpy)",
+    "label": "Corrosion Rate",
+    "placeholder": "0.00",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": null,
+    "watchField": "thickness-measurements-taken",
+    "showWhen": "yes"
+  },
+  {
+    "id": "thickness-anomalies",
+    "type": "radio",
+    "title": "Thickness Anomalies Found",
+    "label": "Any anomalies or defects found during thickness measurements",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": "no",
+    "watchField": "thickness-measurements-taken",
+    "showWhen": "yes",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "thickness-anomalies-details",
+    "type": "inspection-findings",
+    "title": "Thickness Anomaly Details",
+    "label": "Document thickness measurement anomalies with images and details",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": [],
+    "watchField": "thickness-anomalies",
+    "showWhen": "yes",
+    "maxFindings": 10,
+    "maxImagesPerFinding": 5,
+    "showMeasurements": true,
+    "showLocation": true,
+    "showSeverity": true
+  },
+  {
+    "id": "thickness-results",
+    "type": "select",
+    "title": "Thickness Measurement Results",
+    "label": "Thickness Measurement Results",
+    "placeholder": "Select measurement results",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": "",
+    "watchField": "thickness-measurements-taken",
+    "showWhen": "yes",
+    "options": [
+      {"label": "Acceptable", "value": "acceptable"},
+      {"label": "Below Minimum", "value": "below-minimum"},
+      {"label": "Critical", "value": "critical"},
+      {"label": "Not Applicable", "value": "na"}
+    ]
+  },
+  {
+    "id": "thickness-notes",
+    "type": "textarea",
+    "title": "Thickness Measurement Notes",
+    "label": "Additional thickness measurement notes and observations",
+    "placeholder": "Enter detailed thickness measurement observations",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "thickness-measurements-group",
+    "defaultValue": "",
+    "watchField": "thickness-measurements-taken",
+    "showWhen": "yes"
+  },
+  {
+    "id": "pressure-tests-group",
+    "type": "group",
+    "title": "Pressure Tests",
+    "description": "Pressure testing results",
+    "sectionId": "measurements-tests",
+    "order": 2,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "hydrostatic-test",
+    "type": "radio",
+    "title": "Hydrostatic Test Performed",
+    "label": "Hydrostatic pressure test completed",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "pressure-tests-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "test-pressure",
+    "type": "number",
+    "title": "Test Pressure (psi)",
+    "label": "Test Pressure",
+    "placeholder": "0",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "pressure-tests-group",
+    "defaultValue": null,
+    "watchField": "hydrostatic-test",
+    "showWhen": "yes"
+  },
+  {
+    "id": "test-duration",
+    "type": "number",
+    "title": "Test Duration (minutes)",
+    "label": "Test Duration",
+    "placeholder": "0",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "pressure-tests-group",
+    "defaultValue": null,
+    "watchField": "hydrostatic-test",
+    "showWhen": "yes"
+  },
+  {
+    "id": "test-results",
+    "type": "select",
+    "title": "Test Results",
+    "label": "Test Results",
+    "placeholder": "Select test results",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "pressure-tests-group",
+    "defaultValue": "",
+    "watchField": "hydrostatic-test",
+    "showWhen": "yes",
+    "options": [
+      {"label": "Pass", "value": "pass"},
+      {"label": "Fail", "value": "fail"},
+      {"label": "Not Applicable", "value": "na"}
+    ]
+  },
+  {
+    "id": "pressure-test-anomalies",
+    "type": "radio",
+    "title": "Pressure Test Anomalies Found",
+    "label": "Any anomalies or defects found during pressure testing",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "pressure-tests-group",
+    "defaultValue": "no",
+    "watchField": "hydrostatic-test",
+    "showWhen": "yes",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "pressure-test-anomalies-details",
+    "type": "inspection-findings",
+    "title": "Pressure Test Anomaly Details",
+    "label": "Document pressure test anomalies with images and details",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "pressure-tests-group",
+    "defaultValue": [],
+    "watchField": "pressure-test-anomalies",
+    "showWhen": "yes",
+    "maxFindings": 10,
+    "maxImagesPerFinding": 5,
+    "showMeasurements": true,
+    "showLocation": true,
+    "showSeverity": true
+  },
+  {
+    "id": "measurement-notes",
+    "type": "textarea",
+    "title": "Measurement Notes",
+    "label": "Additional measurement and test notes",
+    "placeholder": "Enter detailed measurement and test observations",
+    "size": 24,
+    "sectionId": "measurements-tests",
+    "groupId": "pressure-tests-group",
+    "defaultValue": "",
+    "watchField": "hydrostatic-test",
+    "showWhen": "yes"
+  }
+] 

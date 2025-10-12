@@ -1,0 +1,1304 @@
+{
+  "id": "piping-inspection-wizard",
+  "title": "AI-Powered Piping Inspection Wizard",
+  "description": "Comprehensive piping inspection wizard with API 570 compliance, AI analysis, and automated work order generation",
+  "icon": "ExperimentOutlined",
+  "type": "wizard",
+  "mode": "wizard",
+  "layout": "dashboard",
+  "standards": ["API 570", "ASME B31.3", "API 574", "API 571"],
+  "gadgets": [
+    {
+      "id": "wizard-navigation",
+      "type": "action-panel-gadget",
+      "title": "Navigation",
+      "description": "Quick navigation for the piping inspection wizard",
+      "position": 12,
+      "size": 12,
+      "config": {
+        "title": "Navigation",
+        "actions": [
+          {
+            "id": "back-to-piping-dashboard",
+            "label": "Back to Dashboard",
+            "description": "Return to piping inspection dashboard",
+            "icon": "ExperimentOutlined",
+            "type": "workspace",
+            "workspace": "inspection/piping-inspection-dashboard",
+            "category": "navigation",
+            "color": "default"
+          },
+          {
+            "id": "back-to-inspection-home",
+            "label": "Inspection Home",
+            "description": "Return to the main inspection dashboard",
+            "icon": "HomeOutlined",
+            "type": "workspace",
+            "workspace": "inspection/inspection-home",
+            "category": "navigation",
+            "color": "default"
+          }
+        ]
+      }
+    },
+    {
+      "id": "workflow-metadata",
+      "type": "action-panel-gadget",
+      "title": "Workflow Configuration",
+      "description": "Metadata-driven workflow configuration for piping inspection",
+      "position": 0,
+      "size": 0,
+      "config": {
+        "title": "Workflow Configuration",
+        "actions": []
+      },
+      "workflowConfig": {
+        "workflowId": "piping-inspection-workflow",
+        "agents": [
+          {
+            "id": "EquipmentIdentificationAgent",
+            "type": "EquipmentIdentificationAgent",
+            "config": {
+              "analysisPrompt": "Extract equipment information from nameplate images including manufacturer, model, serial number, design pressure, temperature, and material specifications. Cross-reference with the voice inspection transcript from Step 1 to validate findings and identify any equipment mentioned. Perform comprehensive OCR on all visible text and populate equipment details automatically. Flag any discrepancies between OCR data and voice transcript observations.",
+              "aiConfig": {
+                "model": "gpt-5",
+                "reasoningConfig": {
+                  "reasoningEffort": "high",
+                  "textVerbosity": "medium",
+                  "maxCompletionTokens": 1000
+                },
+                "temperature": 0.1
+              }
+            }
+          },
+          {
+            "id": "VisualInspectionAgent",
+            "type": "VisualInspectionAgent",
+            "config": {
+              "analysisPrompt": "COMBINED ANALYSIS: Analyze external piping photos in direct correlation with the voice inspection transcript from Step 1. For each observation mentioned in the voice transcript, verify visual evidence in the images. Additionally, identify any critical findings visible in photos but NOT mentioned in the voice transcript. Specific tasks:\n\n1. VOICE-IMAGE CORRELATION: Match each voice observation (corrosion, leaks, support issues) with corresponding visual evidence\n2. SEVERITY VALIDATION: Compare inspector's verbal severity assessment with visual analysis\n3. ADDITIONAL FINDINGS: Identify defects visible in images but missed in voice inspection\n4. DISCREPANCY ANALYSIS: Flag any contradictions between voice and visual observations\n5. QUANTIFICATION: Provide measurements and percentages based on visual analysis to supplement voice descriptions\n\nClassify all findings per API 574 standards and provide confidence levels for each assessment.",
+              "aiConfig": {
+                "model": "gpt-5",
+                "reasoningConfig": {
+                  "reasoningEffort": "high",
+                  "textVerbosity": "medium",
+                  "maxCompletionTokens": 1500
+                },
+                "temperature": 0.2
+              }
+            }
+          },
+          {
+            "id": "CorrosionAnalysisAgent",
+            "type": "CorrosionAnalysisAgent",
+            "config": {
+              "analysisPrompt": "Analyze corrosion patterns and assess remaining life based on visual inspection, thickness measurements, and historical data. Apply API 570 and ASME B31.3 standards for corrosion assessment.",
+              "aiConfig": {
+                "model": "gpt-5",
+                "reasoningConfig": {
+                  "reasoningEffort": "high",
+                  "textVerbosity": "medium",
+                  "maxCompletionTokens": 1500
+                },
+                "temperature": 0.3
+              }
+            }
+          },
+          {
+            "id": "ThicknessMeasurementAgent",
+            "type": "ThicknessMeasurementAgent",
+            "config": {
+              "analysisPrompt": "Process ultrasonic thickness measurements and calculate remaining life, corrosion rates, and retirement thickness based on ASME standards.",
+              "aiConfig": {
+                "model": "gpt-5",
+                "reasoningConfig": {
+                  "reasoningEffort": "minimal",
+                  "textVerbosity": "low",
+                  "maxCompletionTokens": 800
+                },
+                "temperature": 0.1
+              }
+            }
+          },
+          {
+            "id": "ComplianceCheckAgent",
+            "type": "ComplianceCheckAgent",
+            "config": {
+              "analysisPrompt": "Verify compliance with API 574, API 570, and ASME B31.3 standards. Identify violations and recommend corrective actions.",
+              "aiConfig": {
+                "model": "gpt-5",
+                "reasoningConfig": {
+                  "reasoningEffort": "medium",
+                  "textVerbosity": "medium",
+                  "maxCompletionTokens": 1200
+                },
+                "temperature": 0.2
+              }
+            }
+          },
+          {
+            "id": "RiskAssessmentAgent",
+            "type": "RiskAssessmentAgent",
+            "config": {
+              "analysisPrompt": "Perform comprehensive risk assessment using likelihood and consequence analysis. Prioritize mitigation actions and recommend inspection intervals.",
+              "aiConfig": {
+                "model": "gpt-5",
+                "reasoningConfig": {
+                  "reasoningEffort": "high",
+                  "textVerbosity": "medium",
+                  "maxCompletionTokens": 1500
+                },
+                "temperature": 0.3
+              }
+            }
+          },
+          {
+            "id": "RecommendationAgent",
+            "type": "RecommendationAgent",
+            "config": {
+              "analysisPrompt": "Generate comprehensive recommendations based on all inspection data. Prioritize actions and create work orders for maintenance teams.",
+              "aiConfig": {
+                "model": "gpt-5",
+                "reasoningConfig": {
+                  "reasoningEffort": "medium",
+                  "textVerbosity": "medium",
+                  "maxCompletionTokens": 1500
+                },
+                "temperature": 0.3
+              }
+            }
+          }
+        ],
+        "connections": [
+          {
+            "from": "EquipmentIdentificationAgent",
+            "to": "VisualInspectionAgent",
+            "data_mapping": {
+              "source": "EquipmentIdentificationAgent.equipmentData",
+              "target": "VisualInspectionAgent.equipmentContext"
+            }
+          },
+          {
+            "from": "VisualInspectionAgent",
+            "to": "CorrosionAnalysisAgent",
+            "data_mapping": {
+              "source": "VisualInspectionAgent.findings",
+              "target": "CorrosionAnalysisAgent.visualData"
+            }
+          },
+          {
+            "from": "ThicknessMeasurementAgent",
+            "to": "CorrosionAnalysisAgent",
+            "data_mapping": {
+              "source": "ThicknessMeasurementAgent.readings",
+              "target": "CorrosionAnalysisAgent.thicknessData"
+            }
+          },
+          {
+            "from": "CorrosionAnalysisAgent",
+            "to": "ComplianceCheckAgent",
+            "data_mapping": {
+              "source": "CorrosionAnalysisAgent.assessment",
+              "target": "ComplianceCheckAgent.corrosionData"
+            }
+          },
+          {
+            "from": "ComplianceCheckAgent",
+            "to": "RiskAssessmentAgent",
+            "data_mapping": {
+              "source": "ComplianceCheckAgent.complianceResults",
+              "target": "RiskAssessmentAgent.complianceData"
+            }
+          },
+          {
+            "from": "RiskAssessmentAgent",
+            "to": "RecommendationAgent",
+            "data_mapping": {
+              "source": "RiskAssessmentAgent.riskAssessment",
+              "target": "RecommendationAgent.riskData"
+            }
+          }
+        ],
+        "entryPoint": "EquipmentIdentificationAgent",
+        "finishPoint": "RecommendationAgent"
+      }
+    },
+    {
+      "id": "piping-inspection-gadget",
+      "type": "ai-agentic-wizard-gadget",
+      "title": "Piping Inspection Wizard",
+      "description": "AI-powered piping inspection with automated analysis and work order generation",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "enableRealtimeAI": true,
+        "enableHITL": true,
+        "enableWorkOrders": true,
+        "showProgress": true,
+        "aiConfig": {
+          "defaultModel": "gpt-5",
+          "visionModel": "gpt-5",
+          "voiceModel": "gpt-4-realtime-preview",
+          "reasoningModel": "gpt-5",
+          "realtimeModel": "gpt-realtime",
+          "ephemeralKeyEndpoint": "/v1/realtime/client_secrets",
+          "gpt5Config": {
+            "reasoningEffort": "medium",
+            "textVerbosity": "medium",
+            "maxCompletionTokens": 2000
+          }
+        },
+        "voiceConfig": {
+          "enabled": true,
+          "model": "gpt-realtime",
+          "sessionType": "realtime",
+          "connectionType": "webrtc",
+          "modalities": ["text", "audio"],
+          "outputModalities": ["audio"],
+          "audio": {
+            "input": {
+              "format": "pcm16",
+              "turn_detection": {
+                "type": "semantic_vad",
+                "create_response": true
+              }
+            },
+            "output": {
+              "format": "pcm16",
+              "voice": "alloy",
+              "speed": 1.0
+            }
+          },
+          "instructions": "You are an expert piping inspection assistant. Guide inspectors through API 570 compliant procedures. Provide clear, step-by-step instructions and record all observations accurately. Speak clearly and briefly. Confirm understanding before taking actions.",
+          "promptStructure": {
+            "role": "Expert Piping Inspection Assistant",
+            "objective": "Guide inspectors through API 570 compliant procedures, record observations accurately, and ensure safety compliance",
+            "personality": "Professional, clear, concise, confident, safety-focused",
+            "tone": "Authoritative yet approachable, technical but accessible",
+            "language": "Respond in the same language as the user. Use technical terms appropriately but explain when necessary.",
+            "pacing": "Speak at a natural pace, not too fast. Keep responses to 2-3 sentences when possible.",
+            "variety": "Do not repeat the same phrases. Vary your responses to sound natural and avoid robotic speech."
+          }
+        },
+        "realtimeConfig": {
+          "enabled": true,
+          "model": "gpt-realtime",
+          "sessionType": "realtime",
+          "modalities": ["text", "audio"],
+          "audio": {
+            "output": {
+              "voice": "alloy",
+              "format": "pcm16"
+            },
+            "input": {
+              "format": "pcm16"
+            }
+          },
+          "outputModalities": ["audio"],
+          "temperature": 0.3,
+          "maxTokens": 150,
+          "instructions": "Provide real-time feedback on inspection observations. Validate measurements, suggest follow-up actions, and ensure compliance with API 570 standards. Speak clearly and briefly. Confirm understanding before taking actions.",
+          "connectionType": "webrtc",
+          "webrtcUrl": "/v1/realtime/calls",
+          "promptStructure": {
+            "role": "Real-time Inspection Assistant",
+            "objective": "Provide immediate feedback, validate data, suggest actions, ensure safety compliance",
+            "personality": "Responsive, precise, safety-conscious, proactive",
+            "tone": "Direct, helpful, authoritative, concise",
+            "language": "Use clear, technical language. Match user's language. Avoid jargon unless explained.",
+            "pacing": "Respond quickly but clearly. Keep responses brief and actionable.",
+            "variety": "Vary response patterns. Don't sound repetitive.",
+            "clarity": "Always confirm understanding. Ask for clarification when needed.",
+            "safety": "Prioritize safety concerns. Escalate critical issues immediately."
+          },
+          "tools": [],
+          "toolChoice": "auto"
+        },
+        "sections": [
+          {
+            "id": "visual-inspection",
+            "title": "External Visual Inspection (API 574)",
+            "description": "Voice recording for external visual examination to assess overall condition and identify equipment",
+            "sectionType": "voice",
+            "order": 1,
+            "includeInPdf": true,
+            "widgetType": "voice-recorder-widget",
+            "aiAgent": "EquipmentIdentificationAgent",
+            "voicePrompt": "Record your observations for the initial API 574 external visual inspection. Include observations for corrosion, leaks, support conditions, insulation damage, and coating integrity. This will help identify the piping system and guide subsequent OCR and detailed analysis.",
+            "voiceRecorderConfig": {
+              "showVisualization": true,
+              "showTranscription": true,
+              "showConfidence": true,
+              "maxDuration": 300,
+              "autoTranscribe": true,
+              "language": "en",
+              "showControls": true,
+              "showProgress": true,
+              "openaiConfig": {
+                "model": "whisper-1",
+                "responseFormat": "text"
+              }
+            },
+            "langGraphConfig": {
+              "enabled": true,
+              "triggerOnTranscription": true,
+              "workflowId": "piping-inspection-workflow",
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 3000,
+                "temperature": 0.2
+              },
+              "inputMapping": {
+                "transcription": "inspection_observations",
+                "confidence": "transcription_confidence",
+                "audioUrl": "audio_recording_url",
+                "timestamp": "inspection_timestamp",
+                "location": "inspection_location"
+              },
+              "agentPrompt": "You are an expert piping inspector. Apply deep reasoning to analyze the following inspection observations. Think step-by-step through each observation, cross-reference with API 574/570 standards, and identify patterns or anomalies that might indicate systemic issues.\n\nInspection Transcript: {{transcription}}\n\nProvide a thorough analysis with reasoning chains for each conclusion.",
+              "responseType": "structured",
+              "outputFields": [
+                {
+                  "field": "corrosion_analysis",
+                  "type": "object",
+                  "properties": {
+                    "type": "string",
+                    "severity": "number",
+                    "location": "array",
+                    "metal_loss_percentage": "number",
+                    "reasoning": "string"
+                  }
+                },
+                {
+                  "field": "leak_assessment",
+                  "type": "object",
+                  "properties": {
+                    "detected": "boolean",
+                    "active_leaks": "number",
+                    "severity": "string",
+                    "fluid_type": "string",
+                    "reasoning": "string"
+                  }
+                },
+                {
+                  "field": "structural_integrity",
+                  "type": "object",
+                  "properties": {
+                    "support_condition": "string",
+                    "vibration_risk": "string",
+                    "thermal_issues": "boolean",
+                    "reasoning": "string"
+                  }
+                },
+                {
+                  "field": "insulation_evaluation",
+                  "type": "object",
+                  "properties": {
+                    "condition": "string",
+                    "cui_risk": "string",
+                    "replacement_needed": "boolean",
+                    "reasoning": "string"
+                  }
+                },
+                {
+                  "field": "coating_assessment",
+                  "type": "object",
+                  "properties": {
+                    "integrity_percentage": "number",
+                    "failure_mode": "string",
+                    "recoating_priority": "string",
+                    "reasoning": "string"
+                  }
+                },
+                {
+                  "field": "compliance_analysis",
+                  "type": "object",
+                  "properties": {
+                    "api_574_score": "number",
+                    "api_570_compliance": "boolean",
+                    "violations": "array",
+                    "reasoning": "string"
+                  }
+                },
+                {
+                  "field": "recommendations",
+                  "type": "object",
+                  "properties": {
+                    "immediate_actions": "array",
+                    "short_term_repairs": "array",
+                    "long_term_planning": "array",
+                    "next_inspection_date": "string",
+                    "reasoning": "string"
+                  }
+                },
+                {
+                  "field": "confidence_assessment",
+                  "type": "object",
+                  "properties": {
+                    "overall_confidence": "number",
+                    "ambiguous_observations": "array",
+                    "additional_data_needed": "array",
+                    "reasoning": "string"
+                  }
+                }
+              ]
+            },
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 2000
+              },
+              "temperature": 0.3,
+              "systemPrompt": "You are an expert piping inspector with deep knowledge of API 574, API 570, and ASME standards. Analyze the voice transcription with careful reasoning to extract structured inspection data, identify potential safety issues, and ensure regulatory compliance.",
+              "analysisPrompt": "Based on the inspector's voice recording, perform a comprehensive analysis:\n\n1. CORROSION ASSESSMENT:\n   - Type (uniform, pitting, crevice, galvanic, MIC)\n   - Severity (1-5 scale)\n   - Location (specific components)\n   - Estimated metal loss percentage\n\n2. LEAK DETECTION:\n   - Active vs inactive leaks\n   - Leak rate estimation\n   - Fluid type and hazard classification\n   - Environmental impact assessment\n\n3. STRUCTURAL INTEGRITY:\n   - Support condition (damaged, missing, misaligned)\n   - Vibration concerns\n   - Thermal expansion issues\n   - Load distribution problems\n\n4. INSULATION STATUS:\n   - Condition (wet, damaged, missing)\n   - CUI (Corrosion Under Insulation) risk\n   - Energy loss implications\n\n5. COATING INTEGRITY:\n   - Failure mode (peeling, blistering, rust breakthrough)\n   - Coverage percentage\n   - Recoating urgency\n\n6. COMPLIANCE & SAFETY:\n   - API 574 compliance score (0-100%)\n   - Immediate safety concerns\n   - Regulatory violations\n   - Required notifications\n\n7. RECOMMENDATIONS:\n   - Immediate actions (< 24 hours)\n   - Short-term repairs (< 30 days)\n   - Long-term planning (< 1 year)\n   - Inspection frequency adjustment\n\nProvide confidence levels for each assessment and flag any ambiguous observations that require clarification."
+            },
+            "formulas": {
+              "inspectionCompleteness": "VOICE_TRANSCRIPT_LENGTH > 100 ? 1 : 0.5",
+              "observationCount": "COUNT_DISTINCT_OBSERVATIONS",
+              "complianceScore": "API_574_COMPLIANCE_CHECK ? 1 : 0.8"
+            }
+          },
+          {
+            "id": "nameplate-ocr",
+            "title": "Equipment Identification (OCR)",
+            "description": "Capture and analyze nameplate images for automatic equipment identification",
+            "sectionType": "image",
+            "order": 2,
+            "includeInPdf": true,
+            "maxImages": 5,
+            "imageType": "nameplate",
+            "aiAgent": "EquipmentIdentificationAgent",
+            "analysisPrompt": "Extract equipment information from nameplate images including manufacturer, model, serial number, design pressure, temperature, and material specifications. Cross-reference with the voice inspection transcript from Step 1 to validate findings and identify any equipment mentioned. Perform comprehensive OCR on all visible text and populate equipment details automatically. Flag any discrepancies between OCR data and voice transcript observations.",
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 1000
+              },
+              "temperature": 0.1
+            },
+            "formulas": {
+              "ocrConfidence": "OCR_ACCURACY_SCORE",
+              "dataCompleteness": "REQUIRED_FIELDS_FILLED / TOTAL_REQUIRED_FIELDS",
+              "validationScore": "OCR_VOICE_MATCH_SCORE"
+            }
+          },
+          {
+            "id": "piping-system-identification",
+            "title": "Piping System Identification",
+            "description": "Complete piping system details using voice transcript and OCR data",
+            "sectionType": "form",
+            "order": 3,
+            "includeInPdf": true,
+            "fields": [
+              {
+                "id": "system_name",
+                "type": "autocomplete",
+                "label": "System Name/Tag",
+                "required": true,
+                "placeholder": "e.g., 10-P-101, Boiler Feedwater Line",
+                "options": [
+                  {"label": "10-P-101 - Boiler Feedwater", "value": "10-P-101"},
+                  {"label": "10-P-102 - Condensate Return", "value": "10-P-102"},
+                  {"label": "20-P-201 - Process Feed", "value": "20-P-201"}
+                ]
+              },
+              {
+                "id": "line_number",
+                "type": "input-field",
+                "label": "Line Number",
+                "required": true,
+                "placeholder": "e.g., 10-LN-001"
+              },
+              {
+                "id": "fluid_service",
+                "type": "combo-box",
+                "label": "Fluid Service",
+                "required": true,
+                "placeholder": "Select or type fluid service",
+                "options": [
+                  {"label": "Steam", "value": "steam"},
+                  {"label": "Water", "value": "water"},
+                  {"label": "Hydrocarbon", "value": "hydrocarbon"},
+                  {"label": "Chemical", "value": "chemical"},
+                  {"label": "Air/Gas", "value": "air_gas"},
+                  {"label": "Refrigerant", "value": "refrigerant"}
+                ],
+                "allowCustom": true
+              },
+              {
+                "id": "design_pressure",
+                "type": "input-number",
+                "label": "Design Pressure (psi)",
+                "required": true,
+                "min": 0,
+                "max": 10000,
+                "step": 1,
+                "precision": 0
+              },
+              {
+                "id": "design_temperature",
+                "type": "input-number",
+                "label": "Design Temperature (°F)",
+                "required": true,
+                "min": -459,
+                "max": 2000,
+                "step": 1,
+                "precision": 0
+              },
+              {
+                "id": "material_spec",
+                "type": "autocomplete",
+                "label": "Material Specification",
+                "required": true,
+                "placeholder": "e.g., SA-106 Gr.B, A312 TP316",
+                "options": [
+                  {"label": "SA-106 Gr.B - Carbon Steel", "value": "SA-106 Gr.B"},
+                  {"label": "A312 TP316 - Stainless Steel", "value": "A312 TP316"},
+                  {"label": "A335 P11 - Alloy Steel", "value": "A335 P11"}
+                ]
+              }
+            ]
+          },
+          {
+            "id": "external-photos",
+            "title": "External Condition Photos",
+            "description": "Capture detailed photos of external piping conditions for AI analysis",
+            "sectionType": "image",
+            "order": 4,
+            "includeInPdf": true,
+            "maxImages": 15,
+            "imageType": "external",
+            "drawingEnabled": true,
+            "aiAgent": "VisualInspectionAgent",
+            "analysisPrompt": "COMBINED ANALYSIS: Analyze external piping photos in direct correlation with the voice inspection transcript from Step 1. For each observation mentioned in the voice transcript, verify visual evidence in the images. Additionally, identify any critical findings visible in photos but NOT mentioned in the voice transcript. Specific tasks:\n\n1. VOICE-IMAGE CORRELATION: Match each voice observation (corrosion, leaks, support issues) with corresponding visual evidence\n2. SEVERITY VALIDATION: Compare inspector's verbal severity assessment with visual analysis\n3. ADDITIONAL FINDINGS: Identify defects visible in images but missed in voice inspection\n4. DISCREPANCY ANALYSIS: Flag any contradictions between voice and visual observations\n5. QUANTIFICATION: Provide measurements and percentages based on visual analysis to supplement voice descriptions\n\nClassify all findings per API 574 standards and provide confidence levels for each assessment.",
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 1500
+              },
+              "temperature": 0.2
+            },
+            "langGraphConfig": {
+              "enabled": true,
+              "workflowId": "piping-inspection-workflow",
+              "executionMode": "parallel",
+              "agents": [
+                "EquipmentIdentificationAgent",
+                "CorrosionAnalysisAgent",
+                "ThicknessMeasurementAgent", 
+                "ComplianceCheckAgent",
+                "RiskAssessmentAgent",
+                "RecommendationAgent"
+              ],
+              "autoPopulateForms": true,
+              "aggregationStrategy": "merge_and_validate"
+            },
+            "formulas": {
+              "defectDensity": "DEFECT_COUNT / TOTAL_PHOTOS",
+              "severityIndex": "SUM_DEFECT_SEVERITY_SCORES / DEFECT_COUNT",
+              "coverageScore": "PHOTOS_WITH_ANNOTATIONS / TOTAL_PHOTOS"
+            }
+          },
+          {
+            "id": "ndt-methods",
+            "title": "Non-Destructive Testing (NDT) Methods",
+            "description": "Select NDT methods and procedures to be performed",
+            "sectionType": "form",
+            "order": 5,
+            "includeInPdf": true,
+            "fields": [
+              {
+                "id": "ndt_method",
+                "type": "segmented",
+                "label": "Primary NDT Method",
+                "required": true,
+                "options": [
+                  {"label": "UT", "value": "ut", "tooltip": "Ultrasonic Testing - Wall thickness measurement"},
+                  {"label": "RT", "value": "rt", "tooltip": "Radiographic Testing - Weld examination"},
+                  {"label": "MT", "value": "mt", "tooltip": "Magnetic Particle Testing - Surface cracks"},
+                  {"label": "PT", "value": "pt", "tooltip": "Liquid Penetrant Testing - Surface defects"},
+                  {"label": "VT", "value": "vt", "tooltip": "Visual Testing - General examination"}
+                ]
+              },
+              {
+                "id": "secondary_methods",
+                "type": "checkbox",
+                "label": "Additional NDT Methods",
+                "required": false,
+                "options": [
+                  {"label": "Ultrasonic Testing (UT)", "value": "ut"},
+                  {"label": "Radiographic Testing (RT)", "value": "rt"},
+                  {"label": "Magnetic Particle Testing (MT)", "value": "mt"},
+                  {"label": "Liquid Penetrant Testing (PT)", "value": "pt"},
+                  {"label": "Visual Testing (VT)", "value": "vt"}
+                ]
+              },
+              {
+                "id": "inspection_standard",
+                "type": "combo-box",
+                "label": "Applicable Standard",
+                "required": true,
+                "placeholder": "Select or type inspection standard",
+                "options": [
+                  {"label": "ASME Section V - NDT Methods", "value": "asme_v"},
+                  {"label": "API 1104 - Welding Inspection", "value": "api_1104"},
+                  {"label": "ASME Section VIII - Pressure Vessels", "value": "asme_viii"},
+                  {"label": "API 570 - Piping Inspection", "value": "api_570"}
+                ],
+                "allowCustom": true
+              },
+              {
+                "id": "certification_level",
+                "type": "radio",
+                "label": "Inspector Certification Level",
+                "required": true,
+                "options": [
+                  {"label": "Level I", "value": "level1"},
+                  {"label": "Level II", "value": "level2"},
+                  {"label": "Level III", "value": "level3"}
+                ]
+              },
+              {
+                "id": "inspection_date",
+                "type": "date-picker",
+                "label": "Inspection Date & Time",
+                "required": true,
+                "showTime": true,
+                "format": "YYYY-MM-DD HH:mm"
+              }
+            ]
+          },
+          {
+            "id": "thickness-measurements",
+            "title": "Wall Thickness Measurements (UT)",
+            "description": "Ultrasonic thickness measurements at critical locations",
+            "sectionType": "form",
+            "order": 6,
+            "includeInPdf": true,
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "minimal",
+                "textVerbosity": "low",
+                "maxCompletionTokens": 800
+              }
+            },
+            "formulas": {
+              "remainingLife": "(NOMINAL_THICKNESS - MEASURED_THICKNESS) / CORROSION_RATE * 12",
+              "corrosionRate": "(NOMINAL_THICKNESS - MEASURED_THICKNESS) / YEARS_IN_SERVICE",
+              "retirementThickness": "NOMINAL_THICKNESS * 0.8",
+              "corrosionAllowance": "NOMINAL_THICKNESS - RETIREMENT_THICKNESS",
+              "inspectionInterval": "REMAINING_LIFE * 0.75",
+              "riskLevel": "MEASURED_THICKNESS < RETIREMENT_THICKNESS ? \"CRITICAL\" : MEASURED_THICKNESS < (NOMINAL_THICKNESS * 0.9) ? \"HIGH\" : \"MEDIUM\""
+            },
+            "fields": [
+              {
+                "id": "nominal_thickness",
+                "type": "number",
+                "label": "Nominal Wall Thickness (mm)",
+                "required": true,
+                "min": 0,
+                "max": 50,
+                "step": 0.1
+              },
+              {
+                "id": "minimum_thickness",
+                "type": "number",
+                "label": "Minimum Required Thickness (mm)",
+                "required": true,
+                "min": 0,
+                "max": 50,
+                "step": 0.1
+              },
+              {
+                "id": "measured_thickness",
+                "type": "number",
+                "label": "Measured Thickness (mm)",
+                "required": true,
+                "min": 0,
+                "max": 50,
+                "step": 0.01
+              },
+              {
+                "id": "measurement_location",
+                "type": "select",
+                "label": "Measurement Location",
+                "required": true,
+                "options": [
+                  {"label": "12 o'clock (Top)", "value": "12_oclock"},
+                  {"label": "3 o'clock", "value": "3_oclock"},
+                  {"label": "6 o'clock (Bottom)", "value": "6_oclock"},
+                  {"label": "9 o'clock", "value": "9_oclock"},
+                  {"label": "Center", "value": "center"},
+                  {"label": "Weld center", "value": "weld_center"},
+                  {"label": "Heat affected zone", "value": "haz"}
+                ]
+              },
+              {
+                "id": "corrosion_rate",
+                "type": "number",
+                "label": "Estimated Corrosion Rate (mm/year)",
+                "required": false,
+                "min": 0,
+                "max": 5,
+                "step": 0.01
+              },
+              {
+                "id": "inspection_standard",
+                "type": "radio",
+                "label": "Inspection Standard",
+                "required": true,
+                "options": [
+                  {"label": "ASME Section V - NDT", "value": "asme_v"},
+                  {"label": "API 570 - Piping", "value": "api_570"},
+                  {"label": "ASME B31.3 - Process Piping", "value": "asme_b31_3"}
+                ]
+              }
+            ]
+          },
+          {
+            "id": "radiographic-testing",
+            "title": "Radiographic Testing (RT)",
+            "description": "X-ray or gamma ray examination of welds and critical areas",
+            "sectionType": "image",
+            "order": 7,
+            "includeInPdf": true,
+            "maxImages": 20,
+            "imageType": "radiographic",
+            "aiAgent": "RadiographicAnalysisAgent",
+            "analysisPrompt": "Analyze radiographic films for weld defects, porosity, inclusions, and other discontinuities. IMPORTANT: Cross-reference with voice inspection transcript from Step 1 to verify if any weld concerns or suspected internal defects mentioned verbally are confirmed by radiographic testing. Identify critical internal defects that were not visible during external voice inspection. Classify defect types and severity according to ASME Section V and API 1104 standards. Measure defect sizes and calculate acceptance criteria based on applicable codes. Cross-reference with thickness measurements from Step 6. Provide a correlation report between voice observations and radiographic findings.",
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 2000
+              }
+            },
+            "formulas": {
+              "defectDensity": "DEFECT_COUNT / WELD_LENGTH_MM",
+              "acceptanceRatio": "ACCEPTABLE_DEFECTS / TOTAL_DEFECTS",
+              "severityIndex": "SUM_DEFECT_SEVERITY_SCORES / DEFECT_COUNT",
+              "repairRequired": "ACCEPTANCE_RATIO < 0.95 ? \"YES\" : \"NO\"",
+              "inspectionQuality": "IMAGE_CLARITY_SCORE * COVERAGE_PERCENTAGE"
+            }
+          },
+          {
+            "id": "surface-examination",
+            "title": "Surface Examination (MT/PT)",
+            "description": "Magnetic particle or liquid penetrant testing for surface defects",
+            "sectionType": "image",
+            "order": 8,
+            "includeInPdf": true,
+            "maxImages": 15,
+            "imageType": "surface",
+            "aiAgent": "SurfaceExaminationAgent",
+            "analysisPrompt": "Analyze surface examination indications for cracks, porosity, and other surface defects. Cross-reference with voice inspection observations from Step 1 to verify if surface defects mentioned verbally are confirmed by MT/PT testing. Identify any surface defects found through testing that were not mentioned in the initial voice inspection. Classify defect types and measure sizes according to ASME Section V standards. Evaluate acceptance criteria and recommend follow-up actions. Provide correlation confidence between voice observations and test results."
+          },
+          {
+            "id": "corrosion-assessment",
+            "title": "Corrosion Assessment",
+            "description": "Comprehensive corrosion analysis and remaining life calculations",
+            "sectionType": "form",
+            "order": 9,
+            "includeInPdf": true,
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 1500
+              }
+            },
+            "formulas": {
+              "fitnessForService": "CORROSION_RATE > 0.1 ? \"REJECT\" : CORROSION_RATE > 0.05 ? \"MONITOR\" : \"ACCEPT\"",
+              "remainingLifeYears": "CURRENT_THICKNESS / CORROSION_RATE",
+              "nextInspectionDate": "CURRENT_DATE + (REMAINING_LIFE_YEARS * 0.75 * 365)",
+              "mitigationPriority": "CORROSION_RATE > 0.2 ? \"CRITICAL\" : CORROSION_RATE > 0.1 ? \"HIGH\" : \"MEDIUM\"",
+              "corrosionAllowanceUsed": "(NOMINAL_THICKNESS - CURRENT_THICKNESS) / CORROSION_ALLOWANCE",
+              "retirementRisk": "CORROSION_ALLOWANCE_USED > 0.8 ? \"HIGH\" : CORROSION_ALLOWANCE_USED > 0.6 ? \"MEDIUM\" : \"LOW\""
+            },
+            "fields": [
+              {
+                "id": "corrosion_type",
+                "type": "select",
+                "label": "Type of Corrosion",
+                "required": true,
+                "options": [
+                  {"label": "General Corrosion - Uniform metal loss", "value": "general"},
+                  {"label": "Pitting Corrosion - Localized deep pits", "value": "pitting"},
+                  {"label": "Crevice Corrosion - Under deposits/flanges", "value": "crevice"},
+                  {"label": "Galvanic Corrosion - Dissimilar metals", "value": "galvanic"},
+                  {"label": "Erosion Corrosion - Flow accelerated", "value": "erosion"},
+                  {"label": "Stress Corrosion Cracking - SCC", "value": "scc"},
+                  {"label": "Microbiologically Induced - MIC", "value": "mic"},
+                  {"label": "High Temperature Oxidation", "value": "oxidation"}
+                ]
+              },
+              {
+                "id": "severity_level",
+                "type": "radio",
+                "label": "Corrosion Severity",
+                "required": true,
+                "options": [
+                  {"label": "Minor", "value": "1"},
+                  {"label": "Light", "value": "2"},
+                  {"label": "Moderate", "value": "3"},
+                  {"label": "Severe", "value": "4"},
+                  {"label": "Critical", "value": "5"}
+                ]
+              },
+              {
+                "id": "corrosion_rate",
+                "type": "number",
+                "label": "Corrosion Rate (mm/year)",
+                "required": true,
+                "min": 0,
+                "max": 10,
+                "step": 0.01
+              },
+              {
+                "id": "remaining_life",
+                "type": "number",
+                "label": "Estimated Remaining Life (years)",
+                "required": true,
+                "min": 0,
+                "max": 50,
+                "step": 0.1
+              },
+              {
+                "id": "next_inspection",
+                "type": "date",
+                "label": "Recommended Next Inspection Date",
+                "required": true
+              },
+              {
+                "id": "mitigation_required",
+                "type": "radio",
+                "label": "Immediate Mitigation Required",
+                "required": true,
+                "options": [
+                  {"label": "Yes", "value": "yes"},
+                  {"label": "No", "value": "no"}
+                ]
+              },
+              {
+                "id": "mitigation_notes",
+                "type": "textarea",
+                "label": "Mitigation Notes",
+                "required": false,
+                "placeholder": "Describe recommended mitigation actions...",
+                "rows": 3
+              }
+            ]
+          },
+          {
+            "id": "fitness-for-service",
+            "title": "Fitness-for-Service (FFS) Evaluation",
+            "description": "API 579 Level 1 or Level 2 assessment for continued service",
+            "sectionType": "form",
+            "order": 10,
+            "includeInPdf": true,
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 2000
+              }
+            },
+            "formulas": {
+              "calculatedRemainingLife": "CURRENT_THICKNESS / CORROSION_RATE",
+              "safetyFactorApplied": "DESIGN_THICKNESS / CURRENT_THICKNESS",
+              "allowableStressRatio": "CURRENT_THICKNESS / REQUIRED_THICKNESS",
+              "inspectionIntervalMonths": "CALCULATED_REMAINING_LIFE * 12 * 0.75",
+              "confidenceLevel": "DATA_COMPLETENESS * MEASUREMENT_ACCURACY",
+              "recommendation": "SAFETY_FACTOR_APPLIED < 1.5 ? \"REJECT\" : SAFETY_FACTOR_APPLIED < 2.0 ? \"MONITOR\" : \"ACCEPT\""
+            },
+            "fields": [
+              {
+                "id": "assessment_level",
+                "type": "radio",
+                "label": "Assessment Level",
+                "required": true,
+                "options": [
+                  {"label": "Level 1", "value": "level1"},
+                  {"label": "Level 2", "value": "level2"},
+                  {"label": "Level 3", "value": "level3"}
+                ]
+              },
+              {
+                "id": "assessment_standard",
+                "type": "radio",
+                "label": "FFS Standard",
+                "required": true,
+                "options": [
+                  {"label": "API 579 - Fitness-for-Service", "value": "api_579"},
+                  {"label": "ASME Section VIII", "value": "asme_viii"},
+                  {"label": "BS 7910", "value": "bs_7910"}
+                ]
+              },
+              {
+                "id": "damage_mechanism",
+                "type": "select",
+                "label": "Primary Damage Mechanism",
+                "required": true,
+                "options": [
+                  {"label": "General Corrosion", "value": "general_corrosion"},
+                  {"label": "Local Corrosion", "value": "local_corrosion"},
+                  {"label": "Pitting Corrosion", "value": "pitting"},
+                  {"label": "Crevice Corrosion", "value": "crevice"},
+                  {"label": "Stress Corrosion Cracking", "value": "scc"},
+                  {"label": "Fatigue", "value": "fatigue"},
+                  {"label": "Brittle Fracture", "value": "brittle_fracture"},
+                  {"label": "Ductile Fracture", "value": "ductile_fracture"}
+                ]
+              },
+              {
+                "id": "remaining_life",
+                "type": "number",
+                "label": "Calculated Remaining Life (years)",
+                "required": true,
+                "min": 0,
+                "max": 50,
+                "step": 0.1
+              },
+              {
+                "id": "safety_factor",
+                "type": "number",
+                "label": "Safety Factor Applied",
+                "required": true,
+                "min": 1,
+                "max": 5,
+                "step": 0.1
+              },
+              {
+                "id": "confidence_level",
+                "type": "radio",
+                "label": "Assessment Confidence Level",
+                "required": true,
+                "options": [
+                  {"label": "Low", "value": "1"},
+                  {"label": "Moderate", "value": "2"},
+                  {"label": "Good", "value": "3"},
+                  {"label": "High", "value": "4"},
+                  {"label": "Very High", "value": "5"}
+                ]
+              },
+              {
+                "id": "recommendation",
+                "type": "radio",
+                "label": "FFS Recommendation",
+                "required": true,
+                "options": [
+                  {"label": "Accept for continued service", "value": "accept"},
+                  {"label": "Accept with monitoring", "value": "monitor"},
+                  {"label": "Accept with repair", "value": "repair"},
+                  {"label": "Reject for continued service", "value": "reject"}
+                ]
+              },
+              {
+                "id": "recommendation_notes",
+                "type": "textarea",
+                "label": "Recommendation Notes",
+                "required": false,
+                "placeholder": "Provide detailed reasoning for the FFS recommendation...",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "id": "recommendations",
+            "title": "Inspection Recommendations & Action Items",
+            "description": "AI-generated recommendations based on all inspection data",
+            "sectionType": "form",
+            "order": 11,
+            "includeInPdf": true,
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "medium",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 1500
+              },
+              "temperature": 0.3
+            },
+            "formulas": {
+              "overallRiskScore": "(CORROSION_SEVERITY + DEFECT_SEVERITY + THICKNESS_RISK) / 3",
+              "priorityLevel": "OVERALL_RISK_SCORE > 0.8 ? \"CRITICAL\" : OVERALL_RISK_SCORE > 0.6 ? \"HIGH\" : OVERALL_RISK_SCORE > 0.4 ? \"MEDIUM\" : \"LOW\"",
+              "inspectionIntervalMonths": "REMAINING_LIFE_MONTHS * 0.75",
+              "nextInspectionDate": "CURRENT_DATE + INSPECTION_INTERVAL_MONTHS",
+              "workOrderPriority": "PRIORITY_LEVEL === \"CRITICAL\" ? \"URGENT\" : PRIORITY_LEVEL === \"HIGH\" ? \"HIGH\" : \"NORMAL\""
+            },
+            "fields": [
+              {
+                "id": "priority_level",
+                "type": "radio",
+                "label": "Overall Inspection Priority",
+                "required": true,
+                "options": [
+                  {"label": "Low", "value": "low"},
+                  {"label": "Medium", "value": "medium"},
+                  {"label": "High", "value": "high"},
+                  {"label": "Critical", "value": "critical"}
+                ]
+              },
+              {
+                "id": "immediate_actions",
+                "type": "multiselect",
+                "label": "Immediate Actions Required",
+                "required": false,
+                "options": [
+                  {"label": "Isolate leaking sections", "value": "isolate_leaks"},
+                  {"label": "Install temporary supports", "value": "temp_supports"},
+                  {"label": "Reduce operating pressure", "value": "reduce_pressure"},
+                  {"label": "Increase monitoring frequency", "value": "increase_monitoring"},
+                  {"label": "Schedule emergency repair", "value": "emergency_repair"}
+                ]
+              },
+              {
+                "id": "short_term_actions",
+                "type": "textarea",
+                "label": "Short-term Actions (0-3 months)",
+                "required": false,
+                "placeholder": "List actions to be completed within 3 months...",
+                "rows": 3
+              },
+              {
+                "id": "long_term_actions",
+                "type": "textarea",
+                "label": "Long-term Actions (3-12 months)",
+                "required": false,
+                "placeholder": "List actions to be completed within 12 months...",
+                "rows": 3
+              },
+              {
+                "id": "ai_recommendations",
+                "type": "textarea",
+                "label": "AI Analysis Summary",
+                "required": false,
+                "placeholder": "AI-generated recommendations will appear here...",
+                "rows": 6
+              }
+            ]
+          },
+          {
+            "id": "work-orders",
+            "title": "Maintenance Work Orders",
+            "description": "Automated generation of work orders from inspection recommendations",
+            "sectionType": "form",
+            "order": 12,
+            "includeInPdf": true,
+            "fields": [
+              {
+                "id": "generate_work_orders",
+                "type": "radio",
+                "label": "Generate Maintenance Work Orders",
+                "required": true,
+                "options": [
+                  {"label": "Yes", "value": "yes"},
+                  {"label": "No", "value": "no"}
+                ]
+              },
+              {
+                "id": "work_order_priority",
+                "type": "select",
+                "label": "Work Order Priority",
+                "required": true,
+                "options": [
+                  {"label": "Critical - Immediate action required", "value": "critical"},
+                  {"label": "High - Address within 1 week", "value": "high"},
+                  {"label": "Medium - Address within 1 month", "value": "medium"},
+                  {"label": "Low - Address within 3 months", "value": "low"}
+                ]
+              },
+              {
+                "id": "assigned_department",
+                "type": "select",
+                "label": "Assigned Department",
+                "required": true,
+                "options": [
+                  {"label": "Maintenance - Mechanical", "value": "maintenance_mechanical"},
+                  {"label": "Maintenance - Electrical", "value": "maintenance_electrical"},
+                  {"label": "Inspection Department", "value": "inspection"},
+                  {"label": "Corrosion Engineering", "value": "corrosion_engineering"},
+                  {"label": "Process Engineering", "value": "process_engineering"}
+                ]
+              },
+              {
+                "id": "estimated_cost",
+                "type": "number",
+                "label": "Estimated Cost ($)",
+                "required": false,
+                "min": 0,
+                "max": 1000000,
+                "step": 100
+              },
+              {
+                "id": "target_completion",
+                "type": "date",
+                "label": "Target Completion Date",
+                "required": true
+              },
+              {
+                "id": "work_order_notes",
+                "type": "textarea",
+                "label": "Work Order Notes",
+                "required": false,
+                "placeholder": "Additional notes for the maintenance team...",
+                "rows": 4
+              }
+            ]
+          },
+          {
+            "id": "observations-checklist",
+            "title": "Observations Checklist",
+            "description": "Comprehensive inspection observations with ratings for piping systems, supports, connections, and insulation",
+            "sectionType": "form",
+            "order": 13,
+            "includeInPdf": true,
+            "fields": [
+              {
+                "id": "observations_data",
+                "type": "dynamic-observations",
+                "label": "Inspection Observations",
+                "optionsUrl": "/api/reference-data/list-options/piping_inspection_observations",
+                "optionsPath": "data",
+                "optionsValueField": "value",
+                "optionsLabelField": "label",
+                "required": false
+              }
+            ]
+          },
+          {
+            "id": "final-report",
+            "title": "Final Inspection Report",
+            "description": "Complete inspection report with findings and recommendations",
+            "sectionType": "form",
+            "order": 14,
+            "includeInPdf": true,
+            "aiConfig": {
+              "model": "gpt-5",
+              "reasoningConfig": {
+                "reasoningEffort": "high",
+                "textVerbosity": "medium",
+                "maxCompletionTokens": 2000
+              },
+              "temperature": 0.2
+            },
+            "formulas": {
+              "overallConditionScore": "(THICKNESS_RATIO + DEFECT_SEVERITY_INVERSE + CORROSION_SEVERITY_INVERSE) / 3",
+              "dataCompletenessPercentage": "COMPLETED_FIELDS / TOTAL_FIELDS * 100",
+              "inspectionQualityScore": "DATA_COMPLETENESS_PERCENTAGE * MEASUREMENT_ACCURACY",
+              "complianceScore": "API_570_COMPLIANCE + ASME_COMPLIANCE + INTERNAL_STANDARDS_COMPLIANCE",
+              "reportConfidence": "INSPECTION_QUALITY_SCORE * COMPLIANCE_SCORE / 100",
+              "nextInspectionUrgency": "REMAINING_LIFE_MONTHS < 6 ? \"CRITICAL\" : REMAINING_LIFE_MONTHS < 12 ? \"HIGH\" : \"NORMAL\""
+            },
+            "fields": [
+              {
+                "id": "report_summary",
+                "type": "textarea",
+                "label": "Inspection Summary",
+                "required": true,
+                "placeholder": "Provide a comprehensive summary of the inspection findings...",
+                "rows": 6
+              },
+              {
+                "id": "overall_condition",
+                "type": "rate",
+                "label": "Overall Equipment Condition",
+                "required": true,
+                "count": 5,
+                "tooltips": ["Poor", "Fair", "Good", "Very Good", "Excellent"]
+              },
+              {
+                "id": "inspection_quality",
+                "type": "segmented",
+                "label": "Inspection Quality Assurance",
+                "required": true,
+                "options": [
+                  {"label": "Limited", "value": "limited"},
+                  {"label": "Standard", "value": "standard"},
+                  {"label": "Comprehensive", "value": "comprehensive"}
+                ]
+              },
+              {
+                "id": "data_completeness",
+                "type": "slider",
+                "label": "Data Completeness (%)",
+                "required": true,
+                "min": 0,
+                "max": 100,
+                "step": 5,
+                "defaultValue": 95,
+                "marks": {
+                  "0": "0%",
+                  "25": "25%",
+                  "50": "50%",
+                  "75": "75%",
+                  "100": "100%"
+                }
+              },
+              {
+                "id": "report_distribution",
+                "type": "checkbox",
+                "label": "Report Distribution",
+                "required": true,
+                "options": [
+                  {"label": "Asset Owner", "value": "asset_owner"},
+                  {"label": "Maintenance Manager", "value": "maintenance_manager"},
+                  {"label": "Inspection Department", "value": "inspection_dept"},
+                  {"label": "Process Engineer", "value": "process_engineer"},
+                  {"label": "Regulatory Compliance", "value": "regulatory"}
+                ]
+              },
+              {
+                "id": "report_approval",
+                "type": "switch",
+                "label": "Report Approved for Distribution",
+                "required": true,
+                "checkedChildren": "Approved",
+                "unCheckedChildren": "Draft"
+              },
+              {
+                "id": "follow_up_inspection",
+                "type": "date-picker",
+                "label": "Next Scheduled Inspection",
+                "required": true,
+                "showTime": false,
+                "format": "YYYY-MM-DD"
+              },
+              {
+                "id": "priority_level",
+                "type": "button-group",
+                "label": "Inspection Priority",
+                "required": true,
+                "options": [
+                  {"label": "Low", "value": "low"},
+                  {"label": "Medium", "value": "medium"},
+                  {"label": "High", "value": "high"},
+                  {"label": "Critical", "value": "critical"}
+                ]
+              },
+              {
+                "id": "additional_comments",
+                "type": "textarea",
+                "label": "Additional Comments",
+                "required": false,
+                "placeholder": "Any additional comments or observations...",
+                "rows": 4
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

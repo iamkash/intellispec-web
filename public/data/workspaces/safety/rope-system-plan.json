@@ -1,0 +1,54 @@
+{
+  "id": "rope-system-plan",
+  "title": "Rope System Plan / Rigging Plan",
+  "description": "Plan rigging layout, anchors, devices, and actions with AI assistance.",
+  "gadgets": [
+    {
+      "id": "rope-system-plan-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Rope System Plan",
+      "description": "Images → analysis → methods/resources grids → PDF.",
+      "config": {
+        "sections": [
+          { "id": "image_capture", "title": "Image Capture", "sectionType": "image", "includeInPdf": false },
+          { "id": "image_analysis", "title": "Scene Analysis", "imageAnalysisPromptRef": "deepImageAnalysis", "promptSourceIds": ["image_capture"], "includeInPdf": true, "pdf": { "includeOverview": true, "includeImages": false } },
+          {
+            "id": "rigging_methods",
+            "title": "Rigging Methods",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Methods",
+              "dataKey": "methods",
+              "columns": [ { "key": "method", "title": "Method", "editable": true }, { "key": "devices", "title": "Devices", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ],
+              "promptRef": "methodsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "rigging_resources",
+            "title": "Rigging Resources",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Resources",
+              "dataKey": "resources",
+              "columns": [ { "key": "name", "title": "Name", "editable": true }, { "key": "type", "title": "Type", "editable": true }, { "key": "quantity", "title": "Qty", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ],
+              "promptRef": "resourcesPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          }
+        ],
+        "groups": [],
+        "fields": [],
+        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Rigging Plan", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
+        "prompts": {
+          "deepImageAnalysis": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1200 }, "promptConfig": { "systemPrompt": "Analyze scene for rigging options and hazards. JSON only.", "userPrompt": "JSON only" } },
+          "methodsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000 }, "promptConfig": { "systemPrompt": "Propose rigging methods (method, devices, notes).", "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"method\": \"string\", \"devices\": \"string\", \"notes\": \"string\" } ]" } },
+          "resourcesPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000 }, "promptConfig": { "systemPrompt": "List resources required (name, type, quantity, notes).", "userPrompt": "Selected recommendations:\n{{selected_recommendations_json}}\n\nReturn array: [ { \"name\": \"string\", \"type\": \"tool|equipment|hardware|rope|other\", \"quantity\": \"string|number\", \"notes\": \"string\" } ]" } }
+        }
+      },
+      "position": 24
+    }
+  ]
+}
+
+

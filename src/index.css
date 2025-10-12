@@ -1,0 +1,8 @@
+/* Import our modern theme system */
+@import './styles/globals.css';
+
+/* CSS Animation for Shell component loading spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

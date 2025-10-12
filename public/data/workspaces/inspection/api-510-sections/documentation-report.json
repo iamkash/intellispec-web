@@ -1,0 +1,278 @@
+[
+  {
+    "id": "documentation-report",
+    "type": "section",
+    "title": "Documentation & Report",
+    "description": "Supporting documents, report generation, and final submission",
+    "icon": "FileTextOutlined",
+    "order": 6,
+    "size": 12
+  },
+  {
+    "id": "technical-drawings-group",
+    "type": "group",
+    "title": "Technical Drawings",
+    "description": "Technical drawings, sketches, and engineering documentation",
+    "sectionId": "documentation-report",
+    "order": 1,
+    "size": 8,
+    "collapsible": true
+  },
+  {
+    "id": "technical-drawings",
+    "type": "radio",
+    "title": "Technical Drawings",
+    "label": "Technical drawings or sketches created",
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "technical-drawings-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "technical-drawings-upload",
+    "type": "document-upload",
+    "title": "Upload Technical Drawings",
+    "label": "Upload technical drawings or sketches with descriptions",
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "technical-drawings-group",
+    "defaultValue": [],
+    "watchField": "technical-drawings",
+    "showWhen": "yes",
+    "maxUploads": 10,
+    "maxFilesPerUpload": 5,
+    "maxFileSize": 10485760,
+    "accept": ".pdf,.jpg,.jpeg,.png,.dwg,.dxf,.svg",
+    "categoryOptions": [
+      {"label": "Vessel Drawings", "value": "vessel-drawings", "color": "blue"},
+      {"label": "Nozzle Details", "value": "nozzle-details", "color": "green"},
+      {"label": "Support Structures", "value": "support-structures", "color": "orange"},
+      {"label": "Piping Diagrams", "value": "piping-diagrams", "color": "purple"},
+      {"label": "Instrumentation", "value": "instrumentation", "color": "cyan"},
+      {"label": "Other", "value": "other", "color": "default"}
+    ],
+    "defaultCategories": ["vessel-drawings"],
+    "tagOptions": [
+      {"label": "Current", "value": "current", "color": "green"},
+      {"label": "Historical", "value": "historical", "color": "blue"},
+      {"label": "As-Built", "value": "as-built", "color": "orange"},
+      {"label": "Design", "value": "design", "color": "purple"},
+      {"label": "Reference", "value": "reference", "color": "cyan"}
+    ],
+    "addUploadText": "Add Technical Drawing"
+  },
+
+  {
+    "id": "supporting-documents-group",
+    "type": "group",
+    "title": "Supporting Documents",
+    "description": "Additional supporting documentation and attachments",
+    "sectionId": "documentation-report",
+    "order": 2,
+    "size": 8,
+    "collapsible": true
+  },
+  {
+    "id": "supporting-documents",
+    "type": "radio",
+    "title": "Supporting Documents",
+    "label": "Additional supporting documents attached",
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "supporting-documents-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "supporting-documents-upload",
+    "type": "document-upload",
+    "title": "Upload Supporting Documents",
+    "label": "Upload additional supporting documents with descriptions",
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "supporting-documents-group",
+    "defaultValue": [],
+    "watchField": "supporting-documents",
+    "showWhen": "yes",
+    "maxUploads": 20,
+    "maxFilesPerUpload": 10,
+    "maxFileSize": 52428800,
+    "accept": ".pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar",
+    "categoryOptions": [
+      {"label": "Manufacturer Data", "value": "manufacturer-data", "color": "blue"},
+      {"label": "Previous Reports", "value": "previous-reports", "color": "green"},
+      {"label": "Maintenance Records", "value": "maintenance-records", "color": "orange"},
+      {"label": "Operating Procedures", "value": "operating-procedures", "color": "purple"},
+      {"label": "Safety Data Sheets", "value": "safety-data", "color": "red"},
+      {"label": "Calibration Certificates", "value": "calibration-certs", "color": "cyan"},
+      {"label": "Material Certificates", "value": "material-certs", "color": "magenta"},
+      {"label": "Weld Procedures", "value": "weld-procedures", "color": "geekblue"},
+      {"label": "NDE Reports", "value": "nde-reports", "color": "lime"},
+      {"label": "Other", "value": "other", "color": "default"}
+    ],
+    "defaultCategories": ["manufacturer-data"],
+    "tagOptions": [
+      {"label": "Important", "value": "important", "color": "red"},
+      {"label": "Reference", "value": "reference", "color": "blue"},
+      {"label": "Historical", "value": "historical", "color": "green"},
+      {"label": "Current", "value": "current", "color": "orange"},
+      {"label": "Required", "value": "required", "color": "purple"},
+      {"label": "Optional", "value": "optional", "color": "default"}
+    ],
+    "addUploadText": "Add Supporting Document"
+  },
+  {
+    "id": "photographic-documentation-group",
+    "type": "group",
+    "title": "Photographic Documentation",
+    "description": "Inspection photographs and visual documentation",
+    "sectionId": "documentation-report",
+    "order": 3,
+    "size": 8,
+    "collapsible": true
+  },
+  {
+    "id": "photographic-documentation",
+    "type": "radio",
+    "title": "Photographic Documentation",
+    "label": "Photographs taken during inspection",
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "photographic-documentation-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "inspection-photographs",
+    "type": "document-upload",
+    "title": "Upload Inspection Photographs",
+    "label": "Upload inspection photographs and visual documentation",
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "photographic-documentation-group",
+    "defaultValue": [],
+    "watchField": "photographic-documentation",
+    "showWhen": "yes",
+    "maxUploads": 30,
+    "maxFilesPerUpload": 20,
+    "maxFileSize": 20971520,
+    "accept": ".jpg,.jpeg,.png,.gif,.bmp,.tiff",
+    "categoryOptions": [
+      {"label": "Overall Vessel Views", "value": "overall-views", "color": "blue"},
+      {"label": "Component Details", "value": "component-details", "color": "green"},
+      {"label": "Safety Conditions", "value": "safety-conditions", "color": "orange"},
+      {"label": "Access Points", "value": "access-points", "color": "purple"},
+      {"label": "Support Structures", "value": "support-structures", "color": "cyan"},
+      {"label": "General Documentation", "value": "general-docs", "color": "magenta"},
+      {"label": "Other", "value": "other", "color": "default"}
+    ],
+    "defaultCategories": ["overall-views"],
+    "tagOptions": [
+      {"label": "Overview", "value": "overview", "color": "blue"},
+      {"label": "Detail", "value": "detail", "color": "green"},
+      {"label": "Before", "value": "before", "color": "orange"},
+      {"label": "After", "value": "after", "color": "purple"},
+      {"label": "Reference", "value": "reference", "color": "cyan"}
+    ],
+    "addUploadText": "Add Photo Collection"
+  },
+  {
+    "id": "report-generation-group",
+    "type": "group",
+    "title": "Report Generation",
+    "description": "Final report generation and submission",
+    "sectionId": "documentation-report",
+    "order": 4,
+    "size": 12,
+    "collapsible": false
+  },
+
+  {
+    "id": "completion-group",
+    "type": "group",
+    "title": "Inspection Completion",
+    "description": "Final verification and submission",
+    "sectionId": "documentation-report",
+    "order": 5,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "inspection-complete",
+    "type": "radio",
+    "title": "Inspection Complete",
+    "label": "Inspection is complete and ready for submission",
+    "required": true,
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "completion-group",
+    "defaultValue": "no",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "inspector-signature",
+    "type": "signature",
+    "title": "Inspector Signature",
+    "label": "Digital signature of inspector",
+    "required": true,
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "completion-group",
+    "defaultValue": null,
+    "watchField": "inspection-complete",
+    "showWhen": "yes"
+  },
+  {
+    "id": "inspector-name",
+    "type": "text",
+    "title": "Inspector Name",
+    "label": "Inspector Name",
+    "placeholder": "Enter inspector name",
+    "required": true,
+    "size": 8,
+    "sectionId": "documentation-report",
+    "groupId": "completion-group",
+    "defaultValue": "",
+    "watchField": "inspection-complete",
+    "showWhen": "yes"
+  },
+  {
+    "id": "inspection-date",
+    "type": "date",
+    "title": "Inspection Date",
+    "label": "Date of Inspection",
+    "required": true,
+    "size": 8,
+    "sectionId": "documentation-report",
+    "groupId": "completion-group",
+    "defaultValue": null,
+    "watchField": "inspection-complete",
+    "showWhen": "yes"
+  },
+  {
+    "id": "completion-notes",
+    "type": "textarea",
+    "title": "Completion Notes",
+    "label": "Any final notes or special considerations",
+    "placeholder": "Enter any final notes about the inspection completion",
+    "size": 24,
+    "sectionId": "documentation-report",
+    "groupId": "completion-group",
+    "defaultValue": "",
+    "watchField": "inspection-complete",
+    "showWhen": "yes"
+  }
+] 

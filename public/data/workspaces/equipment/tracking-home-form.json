@@ -1,0 +1,236 @@
+{
+  "id": "equipment-tracking-form",
+  "layout": "form",
+  "gadgets": [
+    {
+    "position": 24,
+      "id": "sectioned-form",
+      "type": "document-form-gadget",
+      "title": "Equipment Tracking Form",
+      "config": {
+        "dataUrl": "/data/mock-data/forms/advanced-form-demo.json",
+        "dataPath": "formData",
+        "gadgetOptions": [
+          {
+            "id": "basic-info",
+            "title": "Basic Information",
+            "type": "section",
+            "size": 12,
+            "icon": "EditOutlined"
+          },
+          {
+            "sectionId": "basic-info",
+            "id": "personal-details",
+            "title": "Personal Details",
+            "type": "group",
+            "size": 6,
+            "icon": "UserOutlined"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "personal-details",
+            "id": "q1",
+            "title": "Question 1",
+            "type": "text",
+            "size": 12,
+            "icon": "FileTextOutlined",
+            "label": "What is your full name?",
+            "placeholder": "Enter your full name",
+            "required": true
+          },
+          {
+            "sectionId": "basic-info",
+            "id": "contact-group",
+            "title": "Contact Information",
+            "type": "group",
+            "size": 6,
+            "icon": "PhoneOutlined"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "contact-group",
+            "id": "q2",
+            "title": "Question 2",
+            "type": "email",
+            "size": 12,
+            "icon": "MailOutlined",
+            "label": "What is your email address?",
+            "placeholder": "Enter your email",
+            "required": true
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "contact-group",
+            "id": "q3",
+            "title": "Question 3",
+            "type": "phone",
+            "size": 12,
+            "icon": "PhoneOutlined",
+            "label": "What is your phone number?",
+            "placeholder": "Enter your phone number",
+            "required": true
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "contact-group",
+            "id": "q4",
+            "title": "Question 4",
+            "type": "text",
+            "size": 12,
+            "icon": "HomeOutlined",
+            "label": "What is your address?",
+            "placeholder": "Enter your address"
+          },
+          {
+            "id": "equipment-details",
+            "title": "Equipment Details",
+            "type": "section",
+            "size": 12,
+            "icon": "ToolOutlined"
+          },
+          {
+            "sectionId": "equipment-details",
+            "id": "equipment-info",
+            "title": "Equipment Information",
+            "type": "group",
+            "size": 6,
+            "icon": "SettingOutlined"
+          },
+          {
+            "sectionId": "equipment-details",
+            "groupId": "equipment-info",
+            "id": "q5",
+            "title": "Question 5",
+            "type": "select",
+            "size": 12,
+            "icon": "DownOutlined",
+            "label": "What type of equipment are you tracking?",
+            "placeholder": "Select equipment type",
+            "required": true,
+            "options": [
+              { "label": "Heavy Machinery", "value": "heavy" },
+              { "label": "Light Equipment", "value": "light" },
+              { "label": "Tools", "value": "tools" },
+              { "label": "Vehicles", "value": "vehicles" }
+            ]
+          },
+          {
+            "sectionId": "equipment-details",
+            "groupId": "equipment-info",
+            "id": "q6",
+            "title": "Question 6",
+            "type": "text",
+            "size": 12,
+            "icon": "BarcodeOutlined",
+            "label": "What is the equipment serial number?",
+            "placeholder": "Enter serial number",
+            "required": true
+          },
+          {
+            "sectionId": "equipment-details",
+            "id": "status-group",
+            "title": "Status Information",
+            "type": "group",
+            "size": 6,
+            "icon": "CheckCircleOutlined"
+          },
+          {
+            "sectionId": "equipment-details",
+            "groupId": "status-group",
+            "id": "q7",
+            "title": "Question 7",
+            "type": "radio",
+            "size": 12,
+            "icon": "CheckCircleOutlined",
+            "label": "What is the current status of the equipment?",
+            "required": true,
+            "options": [
+              { "label": "Operational", "value": "operational" },
+              { "label": "Under Maintenance", "value": "maintenance" },
+              { "label": "Out of Service", "value": "out_of_service" },
+              { "label": "Retired", "value": "retired" }
+            ]
+          },
+          {
+            "sectionId": "equipment-details",
+            "groupId": "status-group",
+            "id": "q8",
+            "title": "Question 8",
+            "type": "date",
+            "size": 12,
+            "icon": "CalendarOutlined",
+            "label": "When was the last maintenance performed?",
+            "placeholder": "Select date"
+          },
+          {
+            "id": "additional-info",
+            "title": "Additional Information",
+            "type": "section",
+            "size": 12,
+            "icon": "FileTextOutlined"
+          },
+          {
+            "sectionId": "additional-info",
+            "id": "details-group",
+            "title": "Detailed Information",
+            "type": "group",
+            "size": 12,
+            "icon": "AlignLeftOutlined"
+          },
+          {
+            "sectionId": "additional-info",
+            "groupId": "details-group",
+            "id": "q9",
+            "title": "Question 9",
+            "type": "select",
+            "size": 6,
+            "icon": "DownOutlined",
+            "label": "Do you need additional support?",
+            "placeholder": "Select option",
+            "required": true,
+            "options": [
+              { "label": "Yes", "value": "yes" },
+              { "label": "No", "value": "no" }
+            ]
+          },
+          {
+            "sectionId": "additional-info",
+            "groupId": "details-group",
+            "id": "q10",
+            "title": "Question 10",
+            "type": "textarea",
+            "size": 12,
+            "icon": "AlignLeftOutlined",
+            "label": "Please describe the support needed:",
+            "placeholder": "Enter detailed description of support needed",
+            "rows": 4,
+            "watchField": "q9",
+            "showWhen": "yes"
+          },
+          {
+            "sectionId": "additional-info",
+            "groupId": "details-group",
+            "id": "q11",
+            "title": "Question 11",
+            "type": "textarea",
+            "size": 12,
+            "icon": "AlignLeftOutlined",
+            "label": "Additional comments or notes:",
+            "placeholder": "Enter any additional comments or notes",
+            "rows": 3
+          },
+          {
+            "sectionId": "additional-info",
+            "groupId": "details-group",
+            "id": "q12",
+            "title": "Question 12",
+            "type": "checkbox",
+            "size": 6,
+            "icon": "CheckSquareOutlined",
+            "label": "I agree to the terms and conditions"
+          }
+        ]
+      }
+    }
+  ]
+} 

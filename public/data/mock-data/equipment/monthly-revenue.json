@@ -1,0 +1,58 @@
+{
+  "monthly_revenue": [
+    {
+      "month": "Jan",
+      "revenue": 285000,
+      "profit": 91200,
+      "margin": 32.0,
+      "period": "2024-01",
+      "category": "monthly",
+      "year": 2024
+    },
+    {
+      "month": "Feb",
+      "revenue": 310000,
+      "profit": 105400,
+      "margin": 34.0,
+      "period": "2024-02",
+      "category": "monthly",
+      "year": 2024
+    },
+    {
+      "month": "Mar",
+      "revenue": 295000,
+      "profit": 94400,
+      "margin": 32.0,
+      "period": "2024-03",
+      "category": "monthly",
+      "year": 2024
+    },
+    {
+      "month": "Apr",
+      "revenue": 325000,
+      "profit": 114750,
+      "margin": 35.3,
+      "period": "2024-04",
+      "category": "monthly",
+      "year": 2024
+    },
+    {
+      "month": "May",
+      "revenue": 340000,
+      "profit": 125800,
+      "margin": 37.0,
+      "period": "2024-05",
+      "category": "monthly",
+      "year": 2024
+    },
+    {
+      "month": "Jun",
+      "revenue": 315000,
+      "profit": 107100,
+      "margin": 34.0,
+      "period": "2024-06",
+      "category": "monthly",
+      "year": 2024
+    }
+  ]
+} 

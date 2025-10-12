@@ -1,0 +1,1326 @@
+/**
+ * AIAnalysisWidget - Generic OpenAI-powered inspection analysis with detailed markdown report generation
+ * 
+ * A completely generic widget that uses OpenAI's vision and text analysis capabilities
+ * to analyze inspection data (voice, text, images) and generate professional reports.
+ * All configuration comes from metadata for maximum flexibility.
+ */
+
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import { 
+  Button, 
+  Space, 
+  Typography, 
+  Card, 
+  Form, 
+  Input, 
+  Select, 
+  Spin, 
+  Alert, 
+  Divider,
+  Row,
+  Col,
+  Tag,
+  Progress,
+  Collapse,
+  List,
+  Avatar,
+  Badge,
+  DatePicker,
+  Switch,
+  Checkbox,
+  Radio,
+  Upload,
+  message,
+  Tabs,
+  Modal,
+  Statistic
+} from 'antd';
+import { 
+  RobotOutlined, 
+  EyeOutlined, 
+  FileTextOutlined, 
+  PictureOutlined,
+  SendOutlined,
+  LoadingOutlined,
+  CheckCircleOutlined,
+  ExclamationCircleOutlined,
+  EditOutlined,
+  SaveOutlined,
+  ReloadOutlined,
+  BulbOutlined,
+  FormOutlined,
+  UploadOutlined,
+  AudioOutlined,
+  FileMarkdownOutlined,
+  EyeOutlined as ViewOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined
+} from '@ant-design/icons';
+import { useOpenAI, OpenAIConfig, OpenAIModelConfig, OpenAIPromptConfig } from '../../../../hooks/useOpenAI';
+import { 
+  FormConfig, 
+  FormFieldConfig, 
+  AIAnalysisResult, 
+  createFormConfig, 
+  mergeAnalysisWithForm,
+  validateFieldValue,
+  isFieldVisible,
+  getFieldValue
+} from '../../../../utils/formFieldConfig';
+import ReactMarkdown from 'react-markdown';
+
+const { Text, Title, Paragraph } = Typography;
+const { Option } = Select;
+const { Panel } = Collapse;
+const { TextArea } = Input;
+const { TabPane } = Tabs;
+
+export interface InspectionType {
+  label: string;
+  value: string;
+}
+
+export interface AIAnalysisWidgetProps {
+  id: string;
+  label?: string;
+  value?: {
+    inspectionType?: string;
+    voiceData?: {
+      audioUrl?: string;
+      transcription?: string;
+      confidence?: number;
+    };
+    textData?: string;
+    images?: Array<{
+      url: string;
+      name: string;
+      drawingData?: string;
+    }>;
+    analysisResults?: AIAnalysisResult[];
+    markdownReport?: string;
+    formData?: Record<string, any>;
+  };
+  onChange?: (value: {
+    inspectionType?: string;
+    voiceData?: {
+      audioUrl?: string;
+    transcription?: string;
+      confidence?: number;
+    };
+    textData?: string;
+    images?: Array<{ url: string; name: string; drawingData?: string }>;
+    analysisResults?: AIAnalysisResult[];
+    markdownReport?: string;
+    formData?: Record<string, any>;
+  }) => void;
+  disabled?: boolean;
+  required?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+  // Configuration from metadata - no defaults
+  inspectionTypes?: InspectionType[];
+  openaiConfig?: OpenAIConfig;
+  modelConfig?: OpenAIModelConfig;
+  promptConfig?: OpenAIPromptConfig;
+  formConfig?: FormConfig;
+  reportConfig?: {
+    includeSections?: string[];
+    markdownTemplate?: Record<string, any>;
+  };
+  // Analysis options
+  analysisTypes?: Array<'visual' | 'text' | 'compliance' | 'safety' | 'quality'>;
+  includeRecommendations?: boolean;
+  includeRisks?: boolean;
+  includeCompliance?: boolean;
+  // UI options
+  showProgress?: boolean;
+  showConfidence?: boolean;
+  showMetadata?: boolean;
+  theme?: 'light' | 'dark';
+  // Customizable labels and text
+  typeLabel?: string;
+  typePlaceholder?: string;
+  typeHelpText?: string;
+  reportTitle?: string;
+  reportHeaderText?: string;
+  reportHeaderSubtext?: string;
+  reportFooterText?: string;
+  editModalTitle?: string;
+}
+
+export const AIAnalysisWidget: React.FC<AIAnalysisWidgetProps> = ({
+  id,
+  label,
+  value = {},
+  onChange,
+  disabled = false,
+  required = false,
+  className,
+  style,
+  inspectionTypes = [],
+  openaiConfig,
+  modelConfig,
+  promptConfig,
+  formConfig,
+  reportConfig,
+  analysisTypes = [],
+  includeRecommendations = false,
+  includeRisks = false,
+  includeCompliance = false,
+  showProgress = false,
+  showConfidence = false,
+  showMetadata = false,
+  theme = 'light',
+  // Customizable labels with defaults
+  typeLabel = 'Inspection Type',
+  typePlaceholder = 'Select inspection type',
+  typeHelpText = 'Please select an inspection type',
+  reportTitle = 'Inspection Report',
+  reportHeaderText = 'INSPECTION REPORT',
+  reportHeaderSubtext = 'Professional Engineering Analysis Documentation',
+  reportFooterText = 'Professional API Inspection Report - Confidential Document',
+  editModalTitle = 'Edit Inspection Report'
+}) => {
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisProgress, setAnalysisProgress] = useState(0);
+  const [error, setError] = useState<string>('');
+  const [currentFormConfig, setCurrentFormConfig] = useState<FormConfig | undefined>(formConfig);
+  const [formData, setFormData] = useState<Record<string, any>>(value.formData || {});
+  const [analysisResults, setAnalysisResults] = useState<AIAnalysisResult[]>(value.analysisResults || []);
+  const [markdownReport, setMarkdownReport] = useState<string>(value.markdownReport || '');
+  const [isEditingReport, setIsEditingReport] = useState(false);
+  const [editReportContent, setEditReportContent] = useState<string>('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [form] = Form.useForm();
+
+  // Initialize OpenAI hook
+  const openAI = useOpenAI(openaiConfig || { apiKey: '' });
+
+  // Update form when analysis results change
+  useEffect(() => {
+    if (analysisResults.length > 0 && formConfig) {
+      const latestResult = analysisResults[analysisResults.length - 1];
+      const enhancedConfig = mergeAnalysisWithForm(formConfig, latestResult);
+      setCurrentFormConfig(enhancedConfig);
+      
+      // Update form data with AI-generated values
+      const newFormData = { ...formData };
+      if (latestResult.fields) {
+        Object.entries(latestResult.fields).forEach(([key, value]) => {
+          newFormData[key] = value;
+        });
+      }
+      setFormData(newFormData);
+      form.setFieldsValue(newFormData);
+      
+      // Update markdown report if available
+      if (latestResult.markdownReport) {
+        setMarkdownReport(latestResult.markdownReport);
+      }
+      
+      onChange?.({
+        ...value,
+        analysisResults,
+        formData: newFormData,
+        markdownReport: latestResult.markdownReport || markdownReport
+      });
+    }
+  }, [analysisResults.length, formConfig]);
+
+  // Check if input data is available for analysis
+  const hasInputData = useMemo(() => {
+    const hasData = (
+      value.inspectionType &&
+      (value.voiceData?.transcription || 
+       value.textData || 
+       value.images?.length)
+    );
+    console.log('🔍 hasInputData calculation:', {
+      inspectionType: value.inspectionType,
+      voiceTranscription: value.voiceData?.transcription,
+      textData: value.textData,
+      imagesLength: value.images?.length,
+      images: value.images,
+      hasData
+    });
+    return hasData;
+  }, [value.inspectionType, value.voiceData?.transcription, value.textData, value.images?.length]);
+
+  // Analyze inspection data using OpenAI
+  const analyzeInspectionData = useCallback(async () => {
+console.log('🔍 Current value:', value);
+console.log('🔍 openaiConfig:', openaiConfig);
+console.log('🔍 promptConfig:', promptConfig);
+    
+    if (!openaiConfig?.apiKey) {
+      console.error('❌ No OpenAI API key');
+      throw new Error('OpenAI API key is required for analysis');
+    }
+
+    if (!value.inspectionType) {
+      console.error('❌ No analysis type');
+      throw new Error('Analysis type is required');
+    }
+
+    if (!hasInputData) {
+      console.error('❌ No input data');
+      throw new Error('At least one input source (voice, text, or images) is required');
+    }
+
+    if (!modelConfig) {
+      console.error('❌ No model config');
+      throw new Error('Model configuration is required');
+    }
+
+    if (!promptConfig) {
+      console.error('❌ No prompt config');
+      throw new Error('Prompt configuration is required');
+    }
+
+    setIsAnalyzing(true);
+    setError('');
+    setAnalysisProgress(0);
+
+    try {
+      // Prepare analysis data
+      const transcription = value.voiceData?.transcription || '';
+      const textNotes = value.textData || '';
+      const imageCount = value.images?.length || 0;
+      
+      // Create combined text for analysis
+      let combinedText = '';
+      if (transcription) {
+        combinedText += `Voice Transcription: ${transcription}\n\n`;
+      }
+      if (textNotes) {
+        combinedText += `Text Notes: ${textNotes}\n\n`;
+      }
+      
+      // Add image information
+      if (imageCount > 0) {
+        combinedText += `IMAGES PROVIDED (${imageCount} total):\n`;
+        value.images?.forEach((image, index) => {
+          combinedText += `\nImage ${index + 1}: ${image.name}\n`;
+          if (image.drawingData) {
+            combinedText += `- Contains annotations/drawings\n`;
+              }
+        });
+        combinedText += `\nPlease analyze each image individually and provide specific findings for each image.\n\n`;
+      }
+
+      setAnalysisProgress(25);
+
+      // Prepare images for vision analysis
+      const imageUrls = value.images?.map(img => img.url) || [];
+      
+      // Analyze with OpenAI Vision API if images are provided, otherwise use text API
+      let response;
+      if (imageUrls.length > 0) {
+response = await openAI.analyzeVision({
+          text: combinedText,
+          imageUrls: imageUrls,
+          modelConfig,
+          promptConfig: {
+            ...promptConfig,
+            userPrompt: (promptConfig.userPrompt || '')
+              .replace('{inspectionType}', value.inspectionType)
+              .replace('{transcription}', transcription)
+              .replace('{text}', textNotes)
+              .replace('{imageCount}', imageCount.toString())
+          }
+        });
+      } else {
+response = await openAI.analyzeText({
+          text: combinedText,
+          modelConfig,
+          promptConfig: {
+            ...promptConfig,
+            userPrompt: (promptConfig.userPrompt || '')
+              .replace('{inspectionType}', value.inspectionType)
+              .replace('{transcription}', transcription)
+              .replace('{text}', textNotes)
+              .replace('{imageCount}', imageCount.toString())
+          }
+        });
+      }
+
+      setAnalysisProgress(75);
+const openaiResponse = response as any;
+      let content = openaiResponse.choices?.[0]?.message?.content || 
+                     response.data?.choices?.[0]?.message?.content || 
+                     openaiResponse.content || 
+                     response.data?.content || 
+                     response.data;
+if (content) {
+        // Handle direct markdown response
+        let markdownReport = content;
+        
+        // Remove any markdown code blocks if present
+        if (typeof content === 'string' && content.includes('```')) {
+          const markdownMatch = content.match(/```(?:markdown)?\s*([\s\S]*?)\s*```/);
+          if (markdownMatch) {
+            markdownReport = markdownMatch[1];
+}
+        }
+const result: AIAnalysisResult = {
+          confidence: 0.9,
+            entities: [],
+          summary: 'Analysis completed successfully',
+          recommendations: ['Review the detailed report', 'Implement recommended actions'],
+            riskLevel: 'medium',
+          markdownReport: markdownReport,
+          complianceStatus: 'pending',
+          priority: 'medium',
+          nextActions: ['Review findings', 'Schedule follow-up'],
+            fields: {
+            inspectionType: value.inspectionType,
+            equipmentId: 'TBD',
+            location: 'TBD',
+            inspectorName: 'TBD',
+            inspectionDate: new Date().toISOString().split('T')[0],
+            summary: 'Analysis completed',
+            findings: 'Analysis of provided data completed',
+              status: 'pending',
+              priority: 'medium'
+            }
+          };
+console.log('🔍 Markdown report:', result.markdownReport);
+setAnalysisResults([result]);
+        setMarkdownReport(result.markdownReport || '');
+        setEditReportContent(result.markdownReport || '');
+
+        onChange?.({
+        ...value,
+          analysisResults: [result],
+          markdownReport: result.markdownReport
+        });
+
+      message.success('Analysis completed successfully');
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Analysis failed';
+      console.error('Analysis failed:', error);
+      setError(errorMessage);
+      message.error(errorMessage);
+    } finally {
+      setIsAnalyzing(false);
+      setAnalysisProgress(0);
+    }
+  }, [value, openaiConfig?.apiKey, modelConfig, promptConfig, openAI, hasInputData, onChange]);
+
+  // Handle form value changes
+  const handleFormChange = useCallback((changedValues: any, allValues: any) => {
+    setFormData(allValues);
+    
+    const hasChanges = JSON.stringify(allValues) !== JSON.stringify(formData);
+    if (hasChanges) {
+      onChange?.({
+        ...value,
+        analysisResults,
+        formData: allValues,
+        markdownReport
+      });
+    }
+  }, [formData, onChange, value, analysisResults, markdownReport]);
+
+  // Handle analysis type change
+  const handleInspectionTypeChange = useCallback((inspectionType: string) => {
+    onChange?.({
+      ...value,
+      inspectionType
+    });
+  }, [value, onChange]);
+
+  // Handle text data change
+  const handleTextDataChange = useCallback((textData: string) => {
+    onChange?.({
+      ...value,
+      textData
+    });
+  }, [value, onChange]);
+
+  // Handle markdown report edit
+  const handleEditReport = useCallback(() => {
+    setEditReportContent(markdownReport);
+    setIsEditingReport(true);
+  }, [markdownReport]);
+
+  // Handle save edited report
+  const handleSaveReport = useCallback(() => {
+    setMarkdownReport(editReportContent);
+    setIsEditingReport(false);
+    
+    onChange?.({
+      ...value,
+      markdownReport: editReportContent
+    });
+    
+    message.success('Report updated successfully');
+  }, [editReportContent, onChange, value]);
+
+  // Handle fullscreen toggle
+  const handleFullscreenToggle = useCallback(async () => {
+try {
+      if (!isFullscreen) {
+        // Enter fullscreen - target the Card element
+        const cardElement = document.querySelector('.inspection-report-card') as HTMLElement;
+        if (cardElement) {
+          if (cardElement.requestFullscreen) {
+            await cardElement.requestFullscreen();
+          } else if ((cardElement as any).webkitRequestFullscreen) {
+            await (cardElement as any).webkitRequestFullscreen();
+          } else if ((cardElement as any).mozRequestFullScreen) {
+            await (cardElement as any).mozRequestFullScreen();
+          } else if ((cardElement as any).msRequestFullscreen) {
+            await (cardElement as any).msRequestFullscreen();
+          }
+        }
+      } else {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+        } else if ((document as any).webkitExitFullscreen) {
+          await (document as any).webkitExitFullscreen();
+        } else if ((document as any).mozCancelFullScreen) {
+          await (document as any).mozCancelFullScreen();
+        } else if ((document as any).msExitFullscreen) {
+          await (document as any).msExitFullscreen();
+        }
+      }
+    } catch (error) {
+      console.error('Fullscreen error:', error);
+      // Fallback to CSS fullscreen if browser API fails
+      setIsFullscreen(!isFullscreen);
+    }
+  }, [isFullscreen]);
+
+  // Listen for fullscreen changes
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFullscreenNow = !!(document.fullscreenElement || 
+        (document as any).webkitFullscreenElement || 
+        (document as any).mozFullScreenElement || 
+        (document as any).msFullscreenElement);
+setIsFullscreen(isFullscreenNow);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+  }, []);
+
+  // Handle keyboard events for fullscreen
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isFullscreen && event.key === 'Escape') {
+        setIsFullscreen(false);
+      }
+    };
+
+    if (isFullscreen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isFullscreen]);
+
+  // Render form field based on configuration
+  const renderFormField = useCallback((field: FormFieldConfig) => {
+    if (!isFieldVisible(field, formData)) {
+      return null;
+    }
+
+    const fieldValue = getFieldValue(field, formData[field.name]);
+    const validationErrors = validateFieldValue(field, fieldValue);
+
+    const commonProps = {
+      name: field.name,
+      label: field.label,
+      required: field.required,
+      placeholder: field.placeholder,
+      help: field.metadata?.aiGenerated ? 
+        `AI-generated with ${Math.round((field.metadata.confidence || 0) * 100)}% confidence` : 
+        validationErrors.length > 0 ? validationErrors[0] : undefined,
+      validateStatus: validationErrors.length > 0 ? 'error' as const : undefined
+    };
+
+    switch (field.type) {
+      case 'textarea':
+        return (
+          <Form.Item {...commonProps}>
+            <TextArea rows={4} />
+          </Form.Item>
+        );
+
+      case 'number':
+        return (
+          <Form.Item {...commonProps}>
+            <Input type="number" />
+          </Form.Item>
+        );
+
+      case 'select':
+        return (
+          <Form.Item {...commonProps}>
+            <Select>
+              {field.options?.map((option: any) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        );
+
+      case 'multiselect':
+        return (
+          <Form.Item {...commonProps}>
+            <Select mode="multiple">
+              {field.options?.map((option: any) => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        );
+
+      case 'date':
+        return (
+          <Form.Item {...commonProps}>
+            <DatePicker style={{ width: '100%' }} />
+          </Form.Item>
+        );
+
+      case 'boolean':
+        return (
+          <Form.Item {...commonProps} valuePropName="checked">
+            <Switch />
+          </Form.Item>
+        );
+
+      case 'file':
+        return (
+          <Form.Item {...commonProps}>
+            <Upload>
+              <Button icon={<UploadOutlined />}>Upload File</Button>
+            </Upload>
+          </Form.Item>
+        );
+
+      default:
+        return (
+          <Form.Item {...commonProps}>
+            <Input />
+          </Form.Item>
+        );
+    }
+  }, [formData]);
+
+  // Render analysis results
+  const renderAnalysisResults = useCallback(() => {
+    if (!analysisResults.length) {
+      return null;
+    }
+
+    const result = analysisResults[0];
+
+    return (
+      <Card title={<span style={{ color: 'hsl(var(--foreground))' }}>Analysis Results</span>} style={{ marginBottom: 16 }}>
+        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+          <Row gutter={16}>
+            <Col span={8}>
+              <Card size="small">
+                <Statistic
+                  title="Confidence"
+                  value={Math.round(result.confidence * 100)}
+                  suffix="%"
+                  prefix={<CheckCircleOutlined />}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card size="small">
+                <Statistic
+                  title="Risk Level"
+                  value={result.riskLevel}
+                  valueStyle={{ 
+                    color: result.riskLevel === 'critical' ? 'hsl(var(--destructive))' :
+                           result.riskLevel === 'high' ? 'hsl(var(--warning))' :
+                           result.riskLevel === 'medium' ? 'hsl(var(--warning))' : 'hsl(var(--success))'
+                  }}
+                />
+              </Card>
+            </Col>
+            <Col span={8}>
+              <Card size="small">
+                <Statistic
+                  title="Priority"
+                  value={result.priority}
+                  valueStyle={{ 
+                    color: result.priority === 'critical' ? 'hsl(var(--destructive))' :
+                           result.priority === 'high' ? 'hsl(var(--warning))' :
+                           result.priority === 'medium' ? 'hsl(var(--warning))' : 'hsl(var(--success))'
+                  }}
+                />
+              </Card>
+            </Col>
+          </Row>
+
+          {result.nextActions && result.nextActions.length > 0 && (
+                      <div>
+              <Text strong>Next Actions:</Text>
+                        <ul>
+                {result.nextActions.map((action, i) => (
+                  <li key={i}>{action}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </Space>
+      </Card>
+    );
+  }, [analysisResults]);
+
+  // Extract and store table data
+  const [parsedTables, setParsedTables] = useState<Array<{headers: string[], rows: string[][]}>>([]);
+  const [processedMarkdown, setProcessedMarkdown] = useState<string>('');
+
+  // Process markdown to handle tables
+  const processMarkdownTables = useCallback((markdown: string) => {
+    const lines = markdown.split('\n');
+    const processedLines: string[] = [];
+    const extractedTables: Array<{headers: string[], rows: string[][]}> = [];
+    let inTable = false;
+    let tableBuffer: string[] = [];
+    let tableIndex = 0;
+    
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      
+      // Detect table start (line with pipes)
+      if (line.includes('|') && !inTable) {
+        // Check if next line is separator (contains dashes and pipes)
+        const nextLine = lines[i + 1]?.trim() || '';
+        if (nextLine.includes('|') && nextLine.includes('-')) {
+          inTable = true;
+          tableBuffer = [line];
+          continue;
+        }
+      }
+      
+      // Continue collecting table rows
+      if (inTable && line.includes('|')) {
+        tableBuffer.push(line);
+        continue;
+      }
+      
+      // End of table
+      if (inTable && !line.includes('|')) {
+        // Process the collected table
+        const tableData = parseTable(tableBuffer);
+        if (tableData) {
+          extractedTables.push(tableData);
+          processedLines.push(convertTableToPlaceholder(tableBuffer, tableIndex));
+          tableIndex++;
+        }
+        processedLines.push(''); // Add blank line after table
+        tableBuffer = [];
+        inTable = false;
+      }
+      
+      // Regular line (not part of table)
+      if (!inTable) {
+        processedLines.push(lines[i]);
+      }
+    }
+    
+    // Handle table at end of content
+    if (inTable && tableBuffer.length > 0) {
+      const tableData = parseTable(tableBuffer);
+      if (tableData) {
+        extractedTables.push(tableData);
+        processedLines.push(convertTableToPlaceholder(tableBuffer, tableIndex));
+      }
+    }
+    
+    return { processedMarkdown: processedLines.join('\n'), extractedTables };
+  }, []);
+
+  // Effect to process markdown when it changes
+  useEffect(() => {
+    if (markdownReport) {
+      const { processedMarkdown: processed, extractedTables } = processMarkdownTables(markdownReport);
+      setProcessedMarkdown(processed);
+      setParsedTables(extractedTables);
+    } else {
+      setProcessedMarkdown('');
+      setParsedTables([]);
+    }
+  }, [markdownReport, processMarkdownTables]);
+
+  // Parse table markdown and return structured data
+  const parseTable = (tableLines: string[]) => {
+    if (tableLines.length < 2) return null;
+    
+    const headerLine = tableLines[0];
+    const separatorLine = tableLines[1];
+    const dataLines = tableLines.slice(2);
+    
+    // Parse header
+    const headers = headerLine.split('|')
+      .map(h => h.trim())
+      .filter(h => h.length > 0);
+    
+    // Parse data rows
+    const rows = dataLines.map(line => 
+      line.split('|')
+        .map(cell => cell.trim())
+        .filter(cell => cell.length > 0)
+    ).filter(row => row.length > 0);
+    
+    return { headers, rows };
+  };
+
+  // Convert table markdown to a placeholder
+  const convertTableToPlaceholder = (tableLines: string[], index: number) => {
+    return `__TABLE_${index}__`;
+  };
+
+  // Render a table component
+  const renderTable = (headers: string[], rows: string[][]) => {
+    return (
+      <table style={{
+        width: '100%', 
+        borderCollapse: 'collapse', 
+        marginBottom: '25px', 
+        border: '2px solid hsl(var(--border))',
+        boxShadow: '0 2px 8px hsl(var(--shadow) / 0.1)'
+      }}>
+        <thead>
+          <tr>
+            {headers.map((header, i) => (
+              <th key={i} style={{
+                border: '1px solid hsl(var(--border))', 
+                padding: '15px', 
+                backgroundColor: 'hsl(var(--primary))', 
+                color: 'hsl(var(--primary-foreground))',
+                fontWeight: 'bold', 
+                textAlign: 'left',
+                fontSize: '14px'
+              }}>
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={i}>
+              {row.map((cell, j) => (
+                <td key={j} style={{
+                  border: '1px solid hsl(var(--border))', 
+                  padding: '12px',
+                  verticalAlign: 'top'
+                }}>
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    );
+  };
+
+  // Process markdown content to replace table placeholders with React components
+  const renderMarkdownWithTables = useCallback((content: string) => {
+    const parts = content.split(/(__TABLE_\d+__)/);
+    const elements: React.ReactNode[] = [];
+    
+    parts.forEach((part, index) => {
+      const tableMatch = part.match(/^__TABLE_(\d+)__$/);
+      if (tableMatch) {
+        const tableIndex = parseInt(tableMatch[1]);
+        const tableData = parsedTables[tableIndex];
+        if (tableData) {
+          elements.push(
+            <div key={`table-${index}`} style={{ margin: '20px 0' }}>
+              {renderTable(tableData.headers, tableData.rows)}
+            </div>
+          );
+        }
+      } else if (part.trim()) {
+        elements.push(
+          <ReactMarkdown
+            key={`markdown-${index}`}
+            skipHtml={false}
+            components={{
+              h1: ({children}) => (
+                <h1 style={{
+                  color: 'hsl(var(--foreground))', 
+                  fontSize: '24px', 
+                  fontWeight: 'bold', 
+                  marginTop: '40px',
+                  marginBottom: '20px', 
+                  borderBottom: '2px solid hsl(var(--foreground))', 
+                  paddingBottom: '8px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}>
+                  {children}
+                </h1>
+              ),
+              h2: ({children}) => (
+                <h2 style={{
+                  color: 'hsl(var(--foreground))', 
+                  fontSize: '20px', 
+                  fontWeight: 'bold', 
+                  marginTop: '35px', 
+                  marginBottom: '15px', 
+                  borderLeft: '4px solid hsl(var(--foreground))', 
+                  paddingLeft: '15px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.3px'
+                }}>
+                  {children}
+                </h2>
+              ),
+              h3: ({children}) => (
+                <h3 style={{
+                  color: 'hsl(var(--muted-foreground))', 
+                  fontSize: '18px', 
+                  fontWeight: 'bold', 
+                  marginTop: '30px', 
+                  marginBottom: '12px',
+                  borderBottom: '1px solid hsl(var(--border))',
+                  paddingBottom: '5px'
+                }}>
+                  {children}
+                </h3>
+              ),
+              p: ({children}) => (
+                <p style={{
+                  marginBottom: '18px', 
+                  textAlign: 'justify',
+                  textIndent: '20px',
+                  lineHeight: '1.8'
+                }}>
+                  {children}
+                </p>
+              ),
+              ul: ({children}) => (
+                <ul style={{
+                  marginBottom: '18px', 
+                  paddingLeft: '25px',
+                  listStyleType: 'disc'
+                }}>
+                  {children}
+                </ul>
+              ),
+              li: ({children}) => (
+                <li style={{
+                  marginBottom: '10px',
+                  lineHeight: '1.6'
+                }}>
+                  {children}
+                </li>
+              ),
+              strong: ({children}) => (
+                <strong style={{
+                  color: 'hsl(var(--foreground))', 
+                  fontWeight: 'bold',
+                  textDecoration: 'underline'
+                }}>
+                  {children}
+                </strong>
+              )
+            }}
+          >
+            {part}
+          </ReactMarkdown>
+        );
+      }
+    });
+    
+    return elements;
+  }, [parsedTables]);
+
+  // Render markdown report
+  const renderMarkdownReport = useCallback(() => {
+console.log('🔍 markdownReport value:', markdownReport);
+if (!markdownReport || !processedMarkdown) {
+return null;
+    }
+
+    return (
+      <div style={{ position: 'relative' }}>
+        {/* Fullscreen Controls - Always visible */}
+        <div style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          zIndex: 10000,
+          display: 'flex',
+          gap: '8px'
+        }}>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={handleEditReport}
+            size="small"
+          >
+            Edit
+          </Button>
+          <Button
+            type="primary"
+            icon={isFullscreen ? <FullscreenExitOutlined /> : <FullscreenOutlined />}
+            onClick={handleFullscreenToggle}
+            size="small"
+          >
+            {isFullscreen ? 'Exit' : 'Fullscreen'}
+          </Button>
+        </div>
+
+        <Card 
+          className="inspection-report-card"
+          title={
+            <Space>
+              <FileMarkdownOutlined />
+              {reportTitle}
+            </Space>
+          }
+          style={{ 
+            marginBottom: 16,
+            ...(isFullscreen && {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              zIndex: 999999,
+              margin: 0,
+              borderRadius: 0,
+              border: 'none',
+              display: 'flex',
+              flexDirection: 'column'
+            })
+          }}
+          bodyStyle={{
+            ...(isFullscreen && {
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '20px',
+              overflow: 'hidden'
+            })
+          }}
+        >
+        <div 
+          style={{ 
+            maxHeight: isFullscreen ? '100%' : '800px',
+            height: isFullscreen ? '100%' : 'auto',
+            overflow: 'auto',
+            width: '100%',
+            maxWidth: '800px',
+            margin: '0 auto',
+            padding: '40px 60px',
+            border: '2px solid hsl(var(--border))',
+            borderRadius: isFullscreen ? '0' : '12px',
+            backgroundColor: 'hsl(var(--background))',
+            boxShadow: isFullscreen ? 'none' : '0 4px 20px hsl(var(--shadow) / 0.15)',
+            fontFamily: 'Times New Roman, serif',
+            lineHeight: '1.8',
+            fontSize: isFullscreen ? '16px' : '14px',
+            color: 'hsl(var(--foreground))',
+            position: 'relative',
+            minHeight: isFullscreen ? '100%' : '600px',
+            ...(isFullscreen && {
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column'
+            })
+          }}
+          className="markdown-report-pdf"
+        >
+          {/* PDF Header */}
+          <div style={{
+            borderBottom: '3px solid hsl(var(--foreground))',
+            paddingBottom: '20px',
+            marginBottom: '30px',
+            textAlign: 'center',
+            position: 'relative'
+          }}>
+            {isFullscreen && (
+              <Button
+                type="text"
+                icon={<FullscreenExitOutlined />}
+                onClick={handleFullscreenToggle}
+                size="large"
+                style={{
+                  position: 'absolute',
+                  top: '0',
+                  right: '0',
+                  fontSize: '18px',
+                  color: 'hsl(var(--muted-foreground))'
+                }}
+              />
+            )}
+            <div style={{
+              fontSize: '32px',
+              fontWeight: 'bold',
+              color: 'hsl(var(--foreground))',
+              marginBottom: '8px',
+              letterSpacing: '1px'
+            }}>
+              {reportHeaderText}
+            </div>
+            <div style={{
+              fontSize: '16px',
+              color: 'hsl(var(--muted-foreground))',
+              fontStyle: 'italic'
+            }}>
+              {reportHeaderSubtext}
+            </div>
+          </div>
+
+          {renderMarkdownWithTables(processedMarkdown)}
+
+          {/* PDF Footer */}
+          <div style={{
+            borderTop: '2px solid hsl(var(--foreground))',
+            paddingTop: '20px',
+            marginTop: '40px',
+            textAlign: 'center',
+            fontSize: '12px',
+            color: 'hsl(var(--muted-foreground))'
+          }}>
+            <div style={{ marginBottom: '5px' }}>
+              <strong>Report Generated:</strong> {new Date().toLocaleDateString()} | <strong>Page:</strong> 1 of 1
+            </div>
+            <div>
+              {reportFooterText}
+            </div>
+          </div>
+        </div>
+      </Card>
+        </div>
+    );
+  }, [markdownReport, processedMarkdown, parsedTables, handleEditReport, handleFullscreenToggle, isFullscreen]);
+
+    return (
+    <div className={className} style={style}>
+      {label && (
+        <label style={{ display: 'block', marginBottom: 8, fontWeight: 500 }}>
+          {label}
+          {required && <span style={{ color: 'hsl(var(--destructive))' }}> *</span>}
+        </label>
+      )}
+
+      <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        
+        {/* Input Configuration */}
+        <Card title={<span style={{ color: 'hsl(var(--foreground))' }}>Input Configuration</span>} size="small">
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label={typeLabel}
+                required
+                help={!value.inspectionType ? typeHelpText : undefined}
+                validateStatus={!value.inspectionType ? "error" : undefined}
+              >
+                <Select
+                  placeholder={typePlaceholder}
+                  value={value.inspectionType}
+                  onChange={handleInspectionTypeChange}
+                  disabled={disabled}
+                >
+                  {inspectionTypes.map(type => (
+                    <Option key={type.value} value={type.value}>
+                      {type.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item label="Text Notes">
+                <TextArea
+                  placeholder="Enter inspection notes, observations, or findings..."
+                  value={value.textData}
+                  onChange={(e) => handleTextDataChange(e.target.value)}
+                  disabled={disabled}
+                  rows={3}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Card>
+
+        {/* Images for Analysis */}
+        {value.images && value.images.length > 0 && (
+          <Card title={<span style={{ color: 'hsl(var(--foreground))' }}>{`Images for Analysis (${value.images.length})`}</span>} size="small">
+            <Row gutter={[16, 16]}>
+              {value.images.map((image, index) => (
+                <Col span={8} key={index}>
+                  <Card size="small" style={{ textAlign: 'center' }}>
+                    <img 
+                      src={image.url} 
+                      alt={image.name}
+                      style={{ 
+                        width: '100%', 
+                        height: '120px', 
+                        objectFit: 'cover',
+                        borderRadius: '4px',
+                        border: '1px solid hsl(var(--border))'
+                      }} 
+                    />
+                    <div style={{ marginTop: 8, fontSize: '12px', color: 'hsl(var(--muted-foreground))' }}>
+                      {image.name}
+                    </div>
+                    {image.drawingData && (
+                      <Tag style={{ backgroundColor: 'hsl(var(--secondary))', color: 'hsl(var(--secondary-foreground))', border: 'none' }}>Has Annotations</Tag>
+                    )}
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </Card>
+        )}
+        
+        {/* Analysis Controls */}
+        <Card size="small">
+          <Space>
+            <Button
+              type="primary"
+              icon={<RobotOutlined />}
+              onClick={() => {
+console.log('🔘 disabled:', disabled);
+console.log('🔘 isAnalyzing:', isAnalyzing);
+                analyzeInspectionData();
+              }}
+              loading={isAnalyzing}
+              disabled={disabled || !hasInputData}
+              style={{
+                backgroundColor: 'hsl(var(--primary))',
+                borderColor: 'hsl(var(--primary))',
+                color: 'hsl(var(--primary-foreground))'
+              }}
+            >
+              {isAnalyzing ? 'Analyzing...' : 'Generate Report'}
+            </Button>
+            
+            {analysisResults.length > 0 && (
+              <Button
+                icon={<ReloadOutlined />}
+                onClick={analyzeInspectionData}
+                disabled={disabled || isAnalyzing}
+              >
+                Re-analyze
+              </Button>
+            )}
+          </Space>
+
+          {showProgress && isAnalyzing && (
+            <div style={{ marginTop: 16 }}>
+              <Progress percent={analysisProgress} status="active" />
+            </div>
+          )}
+        </Card>
+
+        {/* Error Display */}
+        {error && (
+          <Alert
+            message="Analysis Error"
+            description={error}
+            type="error"
+            showIcon
+            closable
+            onClose={() => setError('')}
+          />
+        )}
+
+        {/* Analysis Results */}
+        {renderAnalysisResults()}
+
+        {/* Markdown Report */}
+        {(() => { console.log('🔍 About to render markdown report section'); return null; })()}
+        {renderMarkdownReport()}
+
+        {/* Editable Form */}
+        {currentFormConfig && (
+          <Card 
+            title={
+              <Space>
+                <FormOutlined />
+                Analysis Form
+              </Space>
+            }
+          >
+            <Form
+              form={form}
+              layout="vertical"
+              onValuesChange={handleFormChange}
+              initialValues={formData}
+            >
+              {currentFormConfig.sections.map((section, sectionIndex) => (
+                <div key={sectionIndex}>
+                  <Title level={4}>{section.title}</Title>
+                  {section.description && (
+                    <Paragraph type="secondary">{section.description}</Paragraph>
+                  )}
+                  
+                  <Row gutter={[16, 16]}>
+                    {section.fields.map((field, fieldIndex) => (
+                      <Col 
+                        key={fieldIndex} 
+                        span={currentFormConfig.columns === 2 ? 12 : 24}
+                      >
+                        {renderFormField(field)}
+                      </Col>
+                    ))}
+                  </Row>
+                  
+                  {sectionIndex < currentFormConfig.sections.length - 1 && (
+                    <Divider />
+                  )}
+                </div>
+              ))}
+            </Form>
+          </Card>
+        )}
+      </Space>
+
+      {/* Edit Report Modal */}
+      <Modal
+        title={editModalTitle}
+        open={isEditingReport}
+        onOk={handleSaveReport}
+        onCancel={() => setIsEditingReport(false)}
+        width={800}
+        okText="Save"
+        cancelText="Cancel"
+      >
+        <TextArea
+          value={editReportContent}
+          onChange={(e) => setEditReportContent(e.target.value)}
+          rows={20}
+          style={{ fontFamily: 'monospace' }}
+        />
+      </Modal>
+    </div>
+  );
+};
+
+export default AIAnalysisWidget; 

@@ -1,0 +1,48 @@
+{
+  "revenue_breakdown": [
+    {
+      "id": "revenue_scaffolding_2024",
+      "name": "Scaffolding",
+      "value": 1200000,
+      "percentage": 45.2,
+      "category": "scaffolding",
+      "type": "revenue",
+      "year": 2024,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-12-17T10:30:00Z"
+    },
+    {
+      "id": "revenue_heavy_equipment_2024",
+      "name": "Heavy Equipment",
+      "value": 850000,
+      "percentage": 32.1,
+      "category": "heavy_equipment",
+      "type": "revenue",
+      "year": 2024,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-12-17T10:30:00Z"
+    },
+    {
+      "id": "revenue_safety_equipment_2024",
+      "name": "Safety Equipment",
+      "value": 400000,
+      "percentage": 15.1,
+      "category": "safety_equipment",
+      "type": "revenue",
+      "year": 2024,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-12-17T10:30:00Z"
+    },
+    {
+      "id": "revenue_tools_accessories_2024",
+      "name": "Tools & Accessories",
+      "value": 200000,
+      "percentage": 7.6,
+      "category": "tools_accessories",
+      "type": "revenue",
+      "year": 2024,
+      "created_at": "2024-01-01T00:00:00Z",
+      "updated_at": "2024-12-17T10:30:00Z"
+    }
+  ]
+} 

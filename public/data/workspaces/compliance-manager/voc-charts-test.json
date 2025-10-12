@@ -1,0 +1,137 @@
+{
+  "id": "voc-charts-test",
+  "name": "VOC Charts Test",
+  "description": "Simple test workspace for chart gadgets",
+  "version": "1.0.0",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": [
+      {
+        "id": "company_id",
+        "type": "multiselect",
+        "label": "Company",
+        "optionsUrl": "/api/options/companies",
+        "placeholder": "Select companies...",
+        "labelField": "label",
+        "valueField": "value"
+      },
+      {
+        "id": "date_range",
+        "type": "daterange",
+        "label": "Date Range",
+        "presets": ["MTD", "QTD", "YTD"]
+      }
+    ]
+  },
+  "gadgets": [
+    {
+      "id": "test-filters",
+      "type": "workspace-filter-gadget",
+      "title": "Filters",
+      "description": "Test filter controls for company and date range selection",
+      "config": {
+        "filterDefinitions": [
+          {
+            "id": "company_id",
+            "type": "multiselect",
+            "label": "Company",
+            "optionsUrl": "/api/options/companies",
+            "placeholder": "Select companies...",
+            "labelField": "label",
+            "valueField": "value"
+          },
+          {
+            "id": "date_range",
+            "type": "daterange",
+            "label": "Date Range",
+            "presets": ["MTD", "QTD", "YTD"]
+          }
+        ],
+        "filterLayout": "horizontal",
+        "showClearAll": true,
+        "showFilterCount": true
+      },
+      "position": 12
+    },
+    {
+      "id": "test-charts",
+      "type": "generic-chart-gadget",
+      "title": "Test Charts",
+      "description": "Sample VOC analytics charts for testing chart gadget functionality and data visualization",
+      "config": {
+        "charts": [
+          {
+            "id": "voc-monthly-trend-test",
+            "title": "VOC Monthly Trend",
+            "description": "Test chart showing VOC emissions over time",
+            "chartType": "line",
+            "dataSource": {
+              "endpoint": "/api/aggregation/chart?config=voc-monthly-trend",
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "month",
+              "name": "Month"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "VOC Emissions (lbs)"
+            },
+            "series": [
+              {
+                "name": "VOC Emissions",
+                "type": "line",
+                "dataKey": "voc_emissions",
+                "smooth": true,
+                "color": "hsl(var(--chart-2))",
+                "areaStyle": {
+                  "opacity": 0.3
+                }
+              }
+            ],
+            "animation": {
+              "enabled": true,
+              "duration": 1500
+            }
+          },
+          {
+            "id": "paint-monthly-trend-test",
+            "title": "Paint Monthly Trend",
+            "description": "Test chart showing paint consumption over time",
+            "chartType": "bar",
+            "dataSource": {
+              "endpoint": "/api/aggregation/chart?config=paint-monthly-trend",
+              "dataPath": "data"
+            },
+            "xAxis": {
+              "type": "category",
+              "dataKey": "month",
+              "name": "Month"
+            },
+            "yAxis": {
+              "type": "value",
+              "name": "Paint Volume (gal)"
+            },
+            "series": [
+              {
+                "name": "Paint Gallons",
+                "type": "bar",
+                "dataKey": "total_gallons",
+                "color": "hsl(var(--chart-1))",
+                "itemStyle": {
+                  "borderRadius": [4, 4, 0, 0]
+                }
+              }
+            ]
+          }
+        ],
+        "chartLayout": "grid",
+        "columns": 2,
+        "height": 350
+      },
+      "position": 24
+    }
+  ]
+}
+

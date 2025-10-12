@@ -1,0 +1,10 @@
+{
+  "options": [
+    { "label": "Item 1", "value": "item1", "description": "First item description" },
+    { "label": "Item 2", "value": "item2", "description": "Second item description" },
+    { "label": "Item 3", "value": "item3", "description": "Third item description" },
+    { "label": "Item 4", "value": "item4", "description": "Fourth item description" },
+    { "label": "Item 5", "value": "item5", "description": "Fifth item description" },
+    { "label": "Item 6", "value": "item6", "description": "Sixth item description" }
+  ]
+} 

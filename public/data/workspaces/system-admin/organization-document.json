@@ -1,0 +1,123 @@
+{
+  "id": "organization-document",
+  "title": "Organization Configuration",
+  "description": "Create and manage organizations that can contain multiple tenants",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "org-form",
+      "type": "document-form-gadget",
+      "title": "Organization Information",
+      "description": "Organization details and settings",
+      "position": 24,
+      "config": {
+        "title": "Organization Information",
+        "description": "Organization details and settings",
+        "dataUrl": "/api/multi-tenant/organizations/{id}",
+        "submitUrl": "/api/multi-tenant/organizations",
+        "updateUrl": "/api/multi-tenant/organizations/{id}",
+        "deleteUrl": "/api/multi-tenant/organizations/{id}",
+        "layout": "vertical",
+        "size": "large",
+        "showSaveButton": true,
+        "showResetButton": true,
+        "showCancelButton": true,
+        "headerActions": {
+          "showClose": true,
+          "showMaximize": true,
+          "showMinimize": false
+        },
+        "fitContent": false,
+        "fullHeight": true,
+        "onSaveSuccess": {
+          "action": "navigate",
+          "target": "back"
+        },
+        "onCancel": {
+          "action": "close"
+        },
+        "gadgetOptions": [
+          {
+            "id": "basic-info",
+            "type": "section",
+            "title": "Basic Information",
+            "description": "Organization identification and status",
+            "icon": "InfoCircleOutlined",
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "basic-info",
+            "id": "basic-fields",
+            "type": "group",
+            "title": "Organization Details",
+            "size": 24,
+            "order": 1
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "name",
+            "type": "text",
+            "title": "Organization Name",
+            "label": "Organization Name",
+            "placeholder": "e.g., PK Companies",
+            "required": true,
+            "size": 12,
+            "description": "Full name of the organization"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "status",
+            "type": "select",
+            "title": "Status",
+            "label": "Status",
+            "required": true,
+            "size": 12,
+            "defaultValue": "active",
+            "options": [
+              { "value": "active", "label": "Active" },
+              { "value": "inactive", "label": "Inactive" }
+            ],
+            "description": "Current organizational status"
+          },
+          {
+            "sectionId": "basic-info",
+            "groupId": "basic-fields",
+            "id": "notes",
+            "type": "textarea",
+            "title": "Notes",
+            "label": "Notes",
+            "placeholder": "Internal notes about this organization",
+            "required": false,
+            "size": 24,
+            "rows": 4,
+            "description": "Administrative notes (not visible to organization)"
+          }
+        ]
+      }
+    }
+  ],
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable",
+    "requireSuperAdmin": true,
+    "auditAllActions": true
+  },
+  "metadata": {
+    "created": "2025-01-24T10:35:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "organization", "form"],
+    "description": "Organization creation and editing form",
+    "permissions": {
+      "required": ["super_admin"],
+      "actions": [
+        "organization:create",
+        "organization:update"
+      ]
+    }
+  }
+}
+

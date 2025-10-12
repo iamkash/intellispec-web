@@ -1,0 +1,149 @@
+{
+  "id": "ai-analysis-wizard",
+  "title": "AI Analysis Wizard",
+  "description": "Complete inspection workflow with AI-powered analysis",
+  "layout": "single",
+  "gadgets": [
+    {
+      "id": "ai-analysis-wizard-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "AI Analysis Wizard",
+      "description": "AI-powered inspection wizard with voice, image, analysis, and detailed markdown report generation",
+      "config": {
+        "title": "AI Analysis Wizard",
+        "description": "Complete inspection workflow with AI-powered analysis",
+        "theme": "light",
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "autoAdvance": true,
+        "steps": {
+          "input": {
+                      "enabled": true,
+          "title": "Input Data",
+          "description": "",
+            "inspectionTypes": [
+              { "label": "API 510 - Pressure Vessel Inspection", "value": "api510" },
+              { "label": "API 570 - Piping Inspection", "value": "api570" },
+              { "label": "API 653 - Aboveground Storage Tank Inspection", "value": "api653" },
+              { "label": "API 580 - Risk-Based Inspection", "value": "api580" },
+              { "label": "API 581 - Risk-Based Inspection Methodology", "value": "api581" },
+              { "label": "General Equipment Inspection", "value": "general" },
+              { "label": "Safety Inspection", "value": "safety" },
+              { "label": "Quality Control Inspection", "value": "quality" },
+              { "label": "Compliance Audit", "value": "compliance" }
+            ],
+            "voice": {
+              "enabled": true,
+              "maxDuration": 300,
+              "showVisualization": true,
+              "transcriptionModel": "whisper-1"
+            },
+            "images": {
+              "enabled": true,
+              "maxCount": 10,
+              "maxSize": 10485760,
+              "drawingEnabled": true,
+              "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow"]
+            },
+            "text": {
+              "enabled": true,
+              "maxLength": 5000,
+              "placeholder": "Enter inspection notes, observations, or findings..."
+            }
+          },
+          "analysis": {
+            "enabled": true,
+            "title": "AI Analysis & Report Generation",
+            "description": "",
+            "modelConfig": {
+              "model": "gpt-4o",
+              "temperature": 0.3,
+              "maxTokens": 4000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a senior API-certified inspection engineer with 20+ years of experience in pressure vessel, piping, and storage tank inspections. You specialize in API 510, API 570, API 653, and API 580/581 standards.\n\nYour task is to analyze the provided inspection data (voice transcription, text notes, and/or images) and generate a comprehensive, professional API inspection report in detailed markdown format.\n\nCRITICAL REQUIREMENTS:\n1. Respond with ONLY the markdown report content - no JSON, no explanations\n2. Follow API inspection report standards and best practices\n3. Include ALL required sections for the specified inspection type\n4. Use professional technical language and terminology\n5. Provide actionable recommendations and risk assessments\n6. Analyze EACH image individually and provide specific findings\n7. Include detailed NDE requirements, operating conditions, safety access, thickness measurements, etc.\n8. Format the markdown with proper spacing, headers, and professional styling\n9. Provide EXTREMELY DETAILED analysis - each section should be comprehensive with specific technical details\n10. LIST EACH FINDING IN EXTREME DETAIL with specific measurements, locations, severity, and technical analysis\n\nREQUIRED SECTIONS (each with 2-4 detailed paragraphs):\n- Executive Summary\n- Introduction and Scope\n- Equipment Information and History\n- Operating Conditions and Service History\n- Inspection Methodology and Procedures\n- Safety Access and Preparation\n- Visual Examination Results (with individual image analysis)\n- Thickness Measurements and Analysis\n- NDE Requirements and Results\n- Material Verification\n- Corrosion Assessment\n- Structural Integrity Evaluation\n- Coating and Lining Assessment\n- Foundation and Support Assessment\n- Safety Systems and Emergency Equipment\n- Environmental Considerations\n- Compliance Evaluation\n- Risk Assessment and Analysis\n- Findings and Observations (LIST EACH FINDING IN DETAIL)\n- Recommendations and Corrective Actions\n- Follow-up Requirements\n- Quality Assurance and Documentation\n- Appendices and References\n\nFINDINGS REQUIREMENTS:\n- List each finding individually with detailed descriptions\n- Include specific measurements, dimensions, and locations\n- Provide severity assessment and risk evaluation\n- Include technical analysis and root cause assessment\n- Reference photographic documentation\n- Include compliance implications\n- Provide detailed technical specifications\n\nIMAGE ANALYSIS: Analyze each image individually with detailed findings, measurements, locations, severity assessment, and technical analysis.\n\nRESPONSE: Return ONLY the complete markdown report with proper formatting.",
+              "userPrompt": "Generate a comprehensive API inspection report for the following data:\n\nInspection Type: {inspectionType}\nVoice Transcription: {transcription}\nText Notes: {text}\nImages: {imageCount} images provided\n\nCRITICAL REQUIREMENTS:\n1. Analyze EACH image individually and provide EXTREMELY DETAILED findings for each image\n2. Include ALL comprehensive sections with MINIMUM 2-4 paragraphs per section\n3. Format the markdown with proper spacing, headers, bullet points, and professional styling\n4. Provide detailed technical assessments with specific measurements, locations, and technical specifications\n5. Include photographic documentation references for each image\n6. Follow API {inspectionType} standards completely\n7. Each section must be comprehensive and detailed - NO one-line summaries\n8. Include specific technical data, measurements, calculations, and detailed analysis\n9. Provide thorough root cause analysis and technical justification for all findings\n10. Include detailed recommendations with specific actions, timelines, and resource requirements\n11. LIST EACH FINDING INDIVIDUALLY with detailed descriptions, measurements, locations, severity, and technical analysis\n12. Provide specific dimensions, thickness measurements, defect sizes, and exact locations for all findings\n13. Include compliance implications and code violations for each finding\n14. Provide detailed technical specifications and material properties for all components\n15. Include environmental factors and service conditions affecting each finding\n\nFINDINGS DETAIL REQUIREMENTS:\n- List each finding as a separate numbered item\n- Include exact measurements and dimensions\n- Specify precise locations and coordinates\n- Provide severity assessment with technical justification\n- Include root cause analysis for each finding\n- Reference specific API code sections and requirements\n- Include photographic documentation references\n- Provide compliance status and implications\n- Include material properties and specifications\n- Detail environmental and service condition impacts\n\nCreate an EXTREMELY DETAILED, professional markdown report that would be suitable for regulatory compliance and professional inspection documentation. Each section should be comprehensive with multiple paragraphs of detailed technical analysis."
+            },
+            "reportConfig": {
+              "includeSections": [
+                "executive_summary",
+                "inspection_details",
+                "equipment_information",
+                "inspection_scope",
+                "findings_and_observations",
+                "technical_assessment",
+                "compliance_evaluation",
+                "risk_analysis",
+                "recommendations",
+                "corrective_actions",
+                "follow_up_requirements",
+                "attachments_and_references"
+              ],
+              "markdownTemplate": {
+                "api510": {
+                  "title": "API 510 Pressure Vessel Inspection Report",
+                  "sections": [
+                    "Executive Summary",
+                    "Inspection Details",
+                    "Equipment Information",
+                    "Inspection Scope",
+                    "Visual Examination",
+                    "Thickness Measurements",
+                    "NDE Results",
+                    "Findings and Observations",
+                    "Technical Assessment",
+                    "Compliance Evaluation",
+                    "Risk Analysis",
+                    "Recommendations",
+                    "Corrective Actions",
+                    "Follow-up Requirements"
+                  ]
+                },
+                "api570": {
+                  "title": "API 570 Piping Inspection Report",
+                  "sections": [
+                    "Executive Summary",
+                    "Inspection Details",
+                    "Piping System Information",
+                    "Inspection Scope",
+                    "Visual Examination",
+                    "Thickness Measurements",
+                    "NDE Results",
+                    "Findings and Observations",
+                    "Technical Assessment",
+                    "Compliance Evaluation",
+                    "Risk Analysis",
+                    "Recommendations",
+                    "Corrective Actions",
+                    "Follow-up Requirements"
+                  ]
+                },
+                "api653": {
+                  "title": "API 653 Aboveground Storage Tank Inspection Report",
+                  "sections": [
+                    "Executive Summary",
+                    "Inspection Details",
+                    "Tank Information",
+                    "Inspection Scope",
+                    "Visual Examination",
+                    "Thickness Measurements",
+                    "NDE Results",
+                    "Foundation Assessment",
+                    "Findings and Observations",
+                    "Technical Assessment",
+                    "Compliance Evaluation",
+                    "Risk Analysis",
+                    "Recommendations",
+                    "Corrective Actions",
+                    "Follow-up Requirements"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "position": 24
+    }
+  ]
+} 

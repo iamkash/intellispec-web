@@ -1,0 +1,97 @@
+{
+  "id": "confined-space-entry-permit",
+  "title": "Confined Space Entry Permit",
+  "description": "Capture key permit details, analyze scene images, and generate a printable permit.",
+  "gadgets": [
+    {
+      "id": "confined-space-entry-permit-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Confined Space Entry Permit",
+      "description": "Metadata-driven permit workflow with voice/text notes, image analysis, and PDF.",
+      "config": {
+        "sections": [
+          { "id": "voice_capture", "title": "Voice Capture", "description": "Record voice notes (optional).", "sectionType": "voice", "includeInPdf": false },
+          { "id": "image_capture", "title": "Image Capture", "description": "Upload space photos for analysis.", "sectionType": "image", "includeInPdf": false },
+          {
+            "id": "image_analysis",
+            "title": "Space Analysis",
+            "description": "Analyze images to derive hazards and controls.",
+            "imageAnalysisPromptRef": "deepImageAnalysis",
+            "promptSourceIds": ["image_capture"],
+            "includeInPdf": true,
+            "pdf": { "includeOverview": true, "includeImages": true, "imagesDataPath": "sections[image_capture].images", "fit": "contain", "align": "center" }
+          },
+          { "id": "permit_details", "title": "Permit Details", "description": "Core entry information.", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 4 }, "btnLabel": "Populate Details", "promptRef": "generalPopulate", "includeInPdf": true },
+          {
+            "id": "controls_required",
+            "title": "Controls & PPE",
+            "description": "Required controls and PPE for safe entry.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Controls & PPE",
+              "dataKey": "controls",
+              "columns": [
+                { "key": "control", "title": "Control/PPE", "editable": true, "summary": "uniqueCount" },
+                { "key": "required", "title": "Required (Yes/No)", "editable": true },
+                { "key": "notes", "title": "Notes", "editable": true }
+              ],
+              "promptRef": "controlsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          { "id": "attachments_signoff", "title": "Attachments & Sign-Off", "description": "Supervisor signoff.", "includeInPdf": true }
+        ],
+        "groups": [
+          { "id": "permit_core", "title": "Permit Core", "sectionId": "permit_details", "lgSpan": 24 },
+          { "id": "work_details", "title": "Work Details", "sectionId": "permit_details", "lgSpan": 24 },
+          { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 }
+        ],
+        "fields": [
+          { "id": "entry_date", "label": "Entry Date", "type": "date", "required": true, "groupId": "permit_core", "lgSpan": 6 },
+          { "id": "plant_location", "label": "Plant/Entry Location", "type": "text", "required": true, "groupId": "permit_core", "lgSpan": 6 },
+          { "id": "space_designation", "label": "Space Designation", "type": "text", "required": true, "groupId": "permit_core", "lgSpan": 6 },
+          { "id": "permit_number", "label": "Permit #", "type": "text", "required": true, "groupId": "permit_core", "lgSpan": 6 },
+          { "id": "rescue_status", "label": "Rescue Status", "type": "radio", "options": ["Standby","Available"], "required": true, "groupId": "work_details", "lgSpan": 12 },
+          { "id": "num_entrants", "label": "Entrants (count)", "type": "number", "required": true, "groupId": "work_details", "lgSpan": 12 },
+          { "id": "hazards", "label": "Key Hazards", "type": "textarea", "groupId": "work_details", "lgSpan": 24 },
+          { "id": "supervisor_name", "label": "Supervisor Name", "type": "text", "required": true, "groupId": "signoff_group", "lgSpan": 12 },
+          { "id": "signoff_date", "label": "Signoff Date", "type": "date", "required": true, "groupId": "signoff_group", "lgSpan": 12 }
+        ],
+        "pdfStyling": {
+          "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" },
+          "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Entry Permit", "centerText": "Confidential", "rightText": "Page {page} of {pages}" },
+          "sections": { "headerFontSize": 10, "contentFontSize": 8, "lineSpacing": 3.5, "margins": { "left": 15, "right": 195 } },
+          "tables": { "headerBackground": [2,6,23], "headerTextColor": [255,255,255], "headerFontSize": 8, "contentFontSize": 7, "cellPadding": 3 },
+          "images": { "dpi": 300, "format": "JPEG", "quality": 0.92, "fit": "contain", "align": "center", "widthPercent": 1 }
+        },
+        "prompts": {
+          "deepImageAnalysis": {
+            "modelConfig": { "model": "gpt-5-nano", "temperature": 0.2, "max_completion_tokens": 1200, "topP": 1 },
+            "promptConfig": {
+              "systemPrompt": "ROLE: You are a confined-space image-analysis assistant. GOAL: Identify hazards, access/egress, staging, anchors, and controls from images. FORMAT: Strict JSON with overview and recommendations as in rescue preplan.",
+              "userPrompt": "Return ONLY JSON (no markdown)."
+            }
+          },
+          "generalPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000, "temperature": 0.7 },
+            "promptConfig": {
+              "systemPrompt": "ROLE: Populate permit form fields from transcript and image overview. BOUNDARIES: Strict JSON with only the requested keys.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn ONLY the JSON object."
+            }
+          },
+          "controlsPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800, "temperature": 0.3 },
+            "promptConfig": {
+              "systemPrompt": "ROLE: Suggest controls and PPE for the entry based on context. FORMAT: Strict JSON array with {control, required: Yes|No, notes}.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn an array of rows: [ { \"control\": \"string\", \"required\": \"Yes|No\", \"notes\": \"string\" } ]"
+            }
+          }
+        }
+      },
+      "position": 24
+    }
+  ]
+}
+
+
+

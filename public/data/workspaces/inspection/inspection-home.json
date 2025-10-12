@@ -1,0 +1,180 @@
+{
+  "id": "inspection-home",
+  "type": "dashboard",
+  "title": "Inspection Home",
+  "description": "Main inspection dashboard with quick access to inspection tools and workflows",
+  "icon": "HomeOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "gadgets": [
+    {
+      "id": "inspection-quicklinks-gadget",
+      "type": "action-panel-gadget",
+      "title": "Inspection Tools",
+      "description": "Quick access to inspection tools and workflows",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "title": "Inspection Tools",
+        "dataUrl": "/data/mock-data/forms/inspection-quicklinks-data.json",
+        "dataPath": "quicklinks",
+        "columns": 4,
+        "size": "large",
+        "layout": "grid",
+        "maxItems": 60,
+        "actions": [
+          {
+            "id": "ai-inspection-assistant",
+            "label": "AI Inspection Assistant",
+            "description": "AI-powered inspection assistant with voice, image analysis, and automated reporting",
+            "icon": "RobotOutlined",
+            "type": "workspace",
+            "workspace": "inspection/ai-inspection-assistant",
+            "category": "ai",
+            "tags": ["ai", "voice", "image", "automation"]
+          },
+          {
+            "id": "api-510-pressure-vessel",
+            "label": "API 510 Pressure Vessel",
+            "description": "Complete API 510 pressure vessel inspection workflow",
+            "icon": "SafetyCertificateOutlined",
+            "type": "workspace",
+            "workspace": "inspection/api-510-pressure-vessel-inspection",
+            "category": "pressure_vessel",
+            "tags": ["api-510", "pressure-vessel", "inspection"]
+          },
+          {
+            "id": "piping-inspection-dashboard",
+            "label": "Piping Inspection Dashboard",
+            "description": "Dashboard for managing piping inspections with search, KPIs, and quick actions",
+            "icon": "ExperimentOutlined",
+            "type": "workspace",
+            "workspace": "inspection/piping-inspection-dashboard",
+            "category": "piping",
+            "tags": ["api-570", "piping", "corrosion", "ai", "dashboard"]
+          },
+          {
+            "id": "piping-visual-inspection-wizard",
+            "label": "Visual Piping Inspection",
+            "description": "Visual-only piping inspection wizard with API 574 compliance and AI analysis",
+            "icon": "EyeOutlined",
+            "type": "workspace",
+            "workspace": "inspection/piping-visual-inspection-wizard",
+            "category": "piping",
+            "tags": ["api-574", "piping", "visual", "inspection", "ai"]
+          },
+          {
+            "id": "ai-project-plan-wizard",
+            "label": "AI Project Plan Wizard",
+            "description": "AI-powered project planning and execution wizard",
+            "icon": "ProjectOutlined",
+            "type": "workspace",
+            "workspace": "inspection/ai-project-plan-wizard",
+            "category": "planning",
+            "tags": ["project", "planning", "ai"]
+          },
+          {
+            "id": "final-documentation-attachments",
+            "label": "Final Documentation",
+            "description": "Complete inspection documentation and attachments",
+            "icon": "FileTextOutlined",
+            "type": "workspace",
+            "workspace": "inspection/final-documentation-attachments",
+            "category": "documentation",
+            "tags": ["documentation", "reports", "attachments"]
+          },
+          {
+            "id": "nde-requirements-results",
+            "label": "NDE Requirements & Results",
+            "description": "Non-destructive examination requirements and results",
+            "icon": "ScanOutlined",
+            "type": "workspace",
+            "workspace": "inspection/nde-requirements-results",
+            "category": "nde",
+            "tags": ["nde", "ultrasonic", "radiographic", "testing"]
+          },
+          {
+            "id": "thickness-measurements",
+            "label": "Thickness Measurements",
+            "description": "Ultrasonic thickness measurements and analysis",
+            "icon": "RulerOutlined",
+            "type": "workspace",
+            "workspace": "inspection/thickness-measurements",
+            "category": "measurements",
+            "tags": ["thickness", "ultrasonic", "corrosion"]
+          },
+          {
+            "id": "visual-examination",
+            "label": "Visual Examination",
+            "description": "Visual inspection procedures and documentation",
+            "icon": "EyeOutlined",
+            "type": "workspace",
+            "workspace": "inspection/visual-examination",
+            "category": "visual",
+            "tags": ["visual", "inspection", "examination"]
+          },
+          {
+            "id": "inspection-results-analysis",
+            "label": "Inspection Results Analysis",
+            "description": "Comprehensive analysis of inspection results and recommendations",
+            "icon": "BarChartOutlined",
+            "type": "workspace",
+            "workspace": "inspection/inspection-results-analysis",
+            "category": "analysis",
+            "tags": ["analysis", "results", "recommendations"]
+          },
+          {
+            "id": "repairs-modifications",
+            "label": "Repairs & Modifications",
+            "description": "Repair requirements, modifications, and post-repair inspection",
+            "icon": "ToolOutlined",
+            "type": "workspace",
+            "workspace": "inspection/repairs-modifications",
+            "category": "repairs",
+            "tags": ["repairs", "modifications", "post-repair"]
+          },
+          {
+            "id": "operating-conditions-history",
+            "label": "Operating Conditions & History",
+            "description": "Service conditions, operating history, and maintenance records",
+            "icon": "HistoryOutlined",
+            "type": "workspace",
+            "workspace": "inspection/operating-conditions-history",
+            "category": "history",
+            "tags": ["operating", "conditions", "history", "maintenance"]
+          },
+          {
+            "id": "safety-access-preparation",
+            "label": "Safety & Access Preparation",
+            "description": "Safety procedures, permits, and access preparation",
+            "icon": "SafetyCertificateOutlined",
+            "type": "workspace",
+            "workspace": "inspection/safety-access-preparation",
+            "category": "safety",
+            "tags": ["safety", "access", "permits", "preparation"]
+          },
+          {
+            "id": "vessel-identification-planning",
+            "label": "Vessel Identification & Planning",
+            "description": "Vessel identification, inspection planning, and equipment verification",
+            "icon": "DatabaseOutlined",
+            "type": "workspace",
+            "workspace": "inspection/vessel-identification-planning",
+            "category": "planning",
+            "tags": ["vessel", "identification", "planning"]
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "inspection-quicklinks-gadget": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": true,
+      "showCategories": ["ai", "piping", "pressure_vessel", "planning", "documentation", "nde", "measurements", "visual", "analysis", "repairs", "history", "safety"]
+    }
+  }
+} 

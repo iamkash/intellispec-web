@@ -1,0 +1,311 @@
+{
+  "id": "module-management",
+  "title": "Module Management Dashboard",
+  "description": "Super Admin module management using generic framework components",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "module-stats",
+      "type": "stats-gadget",
+      "title": "Module Overview Statistics",
+      "config": {
+        "dataUrl": "/api/admin/modules/stats",
+        "dataPath": "stats",
+        "maxItems": 4,
+        "layout": "grid",
+        "showTrends": true,
+        "showIcons": true,
+        "size": "medium",
+        "autoRefresh": true,
+        "refreshInterval": 300000
+      },
+      "position": 24
+    },
+    {
+      "id": "module-data-grid",
+      "type": "inline-editable-grid-gadget",
+      "title": "Module Management",
+      "config": {
+        "baseUrl": "/api/admin",
+        "endpoints": {
+          "read": "/modules",
+          "create": "/modules",
+          "update": "/modules",
+          "delete": "/modules"
+        },
+        "columns": [
+          {
+            "key": "icon",
+            "title": "Icon",
+            "dataIndex": "icon",
+            "width": 80,
+            "type": "text",
+            "editable": true,
+            "required": false,
+            "placeholder": "Icon name (e.g., Package)",
+            "validation": {
+              "message": "Please enter a valid icon name"
+            }
+          },
+          {
+            "key": "key",
+            "title": "Key",
+            "dataIndex": "key",
+            "width": 120,
+            "type": "text",
+            "editable": false,
+            "required": true,
+            "placeholder": "Enter unique key (e.g., track, comply)",
+            "validation": {
+              "pattern": "^[a-z][a-z0-9-]*$",
+              "min": 2,
+              "max": 20,
+              "message": "Key must start with lowercase letter, contain only lowercase letters, numbers, and hyphens"
+            }
+          },
+          {
+            "key": "name",
+            "title": "Module Name",
+            "dataIndex": "name",
+            "width": 200,
+            "type": "text",
+            "editable": true,
+            "required": true,
+            "placeholder": "Enter display name (e.g., IntelliTrack – Asset Tracking)",
+            "validation": {
+              "min": 3,
+              "max": 100,
+              "message": "Module name must be between 3-100 characters"
+            }
+          },
+          {
+            "key": "status",
+            "title": "Status",
+            "dataIndex": "status",
+            "width": 100,
+            "type": "select",
+            "editable": true,
+            "required": true,
+            "optionsUrl": "/api/reference-data/options-by-type/module_status?format=options",
+            "options": [
+              {"value": "active", "label": "Active"},
+              {"value": "hidden", "label": "Hidden"}
+            ]
+          },
+          {
+            "key": "category",
+            "title": "Category",
+            "dataIndex": "category",
+            "width": 120,
+            "type": "select",
+            "editable": true,
+            "required": false,
+            "optionsUrl": "/api/reference-data/options-by-type/module_category?format=options",
+            "options": [
+              {"value": "Admin", "label": "Admin"},
+              {"value": "AI", "label": "AI"},
+              {"value": "Compliance", "label": "Compliance"},
+              {"value": "Documents", "label": "Documents"},
+              {"value": "Inspection", "label": "Inspection"},
+              {"value": "Operations", "label": "Operations"}
+            ],
+            "placeholder": "Select category"
+          },
+          {
+            "key": "defaultIncludedInFlex",
+            "title": "Default in Flex",
+            "dataIndex": "defaultIncludedInFlex",
+            "width": 120,
+            "type": "boolean",
+            "editable": true,
+            "required": false
+          },
+          {
+            "key": "description",
+            "title": "Description",
+            "dataIndex": "description",
+            "width": 200,
+            "type": "text",
+            "editable": true,
+            "required": false,
+            "placeholder": "Module description"
+          }
+        ],
+        "title": "Module Management",
+        "subtitle": "Manage B2B SaaS modules for tenant provisioning",
+        "showInstructions": true,
+        "instructionsText": "💡 Bulk Edit: Edit modules directly in the grid. System Admin module is protected and cannot be modified. Use the delete button to archive modules (soft delete). Click 'Save All' to commit changes.",
+        "enableBulkActions": true,
+        "enableAdd": true,
+        "enableDelete": true,
+        "addButtonText": "Add Module",
+        "saveAllButtonText": "Save All Changes",
+        "resetChangesButtonText": "Reset Changes",
+        "newRecordDefaults": {
+          "status": "active",
+          "defaultIncludedInFlex": false,
+          "icon": "Package",
+          "isSystemModule": false
+        },
+        "pagination": {
+          "pageSize": 15,
+          "showSizeChanger": true,
+          "showQuickJumper": true,
+          "showTotal": true
+        },
+        "styling": {
+          "size": "middle",
+          "bordered": true,
+          "striped": false,
+          "scroll": { "y": 500 }
+        }
+      },
+      "position": 24
+    },
+    {
+      "id": "quick-actions",
+      "type": "action-panel-gadget",
+      "title": "Module Actions",
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 4,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "create-module",
+            "label": "Create Module",
+            "icon": "PlusOutlined",
+            "type": "primary",
+            "action": {
+              "type": "modal",
+              "modalConfig": {
+                "title": "Create New Module",
+                "size": "medium",
+                "formConfig": {
+                  "submitUrl": "/api/admin/modules",
+                  "method": "POST",
+                  "fields": [
+                    {
+                      "key": "key",
+                      "label": "Module Key",
+                      "type": "text",
+                      "required": true,
+                      "placeholder": "e.g., track, comply",
+                      "validation": {
+                        "pattern": "^[a-z][a-z0-9-]*$",
+                        "min": 2,
+                        "max": 20,
+                        "message": "Key must start with lowercase letter, contain only lowercase letters, numbers, and hyphens"
+                      }
+                    },
+                    {
+                      "key": "name",
+                      "label": "Display Name",
+                      "type": "text",
+                      "required": true,
+                      "placeholder": "e.g., IntelliTrack – Asset Tracking",
+                      "validation": {
+                        "min": 3,
+                        "max": 100
+                      }
+                    },
+                    {
+                      "key": "icon",
+                      "label": "Icon",
+                      "type": "icon-picker",
+                      "required": false,
+                      "iconLibrary": "lucide",
+                      "defaultIcon": "Package",
+                      "placeholder": "Select an icon"
+                    },
+                    {
+                      "key": "category",
+                      "label": "Category",
+                      "type": "select",
+                      "required": false,
+                      "optionsUrl": "/api/reference-data/options-by-type/module_category?format=options",
+                      "placeholder": "Select category"
+                    },
+                    {
+                      "key": "defaultIncludedInFlex",
+                      "label": "Include by Default in Flex Plans",
+                      "type": "switch",
+                      "required": false,
+                      "defaultValue": false
+                    },
+                    {
+                      "key": "status",
+                      "label": "Status",
+                      "type": "select",
+                      "required": true,
+                      "optionsUrl": "/api/reference-data/options-by-type/module_status?format=options",
+                      "defaultValue": "active"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "key": "export-modules",
+            "label": "Export Data",
+            "icon": "DownloadOutlined",
+            "type": "default",
+            "action": {
+              "type": "export",
+              "exportConfig": {
+                "url": "/api/admin/modules/export",
+                "format": "xlsx",
+                "filename": "modules"
+              }
+            }
+          },
+          {
+            "key": "import-modules",
+            "label": "Import Data",
+            "icon": "UploadOutlined",
+            "type": "default",
+            "action": {
+              "type": "import",
+              "importConfig": {
+                "url": "/api/admin/modules/import",
+                "allowedFormats": ["xlsx", "csv"],
+                "templateUrl": "/api/admin/modules/template"
+              }
+            }
+          },
+          {
+            "key": "module-settings",
+            "label": "Module Settings",
+            "icon": "SettingOutlined",
+            "type": "default",
+            "route": "/admin/modules/settings"
+          }
+        ]
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": true,
+    "enablePrint": false
+  },
+  "metadata": {
+    "created": "2024-12-20T10:00:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "module", "management", "saas", "framework"],
+    "description": "Super administrator module management dashboard for managing B2B SaaS modules with left-nav readiness.",
+    "permissions": {
+      "required": ["super_admin"],
+      "roles": ["system_administrator"]
+    }
+  }
+}

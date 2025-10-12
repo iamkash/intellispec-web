@@ -1,0 +1,1064 @@
+# Cursor IDE Rules for IntelliSpec Workspace & Document Management
+
+## 🚨 ABSOLUTE REQUIREMENT #1: NO HARDCODED BUSINESS LOGIC 🚨
+
+**CRITICAL ARCHITECTURAL PRINCIPLE - NEVER VIOLATE:**
+
+All business logic, semantic rules, field mappings, aliases, keywords, and domain-specific knowledge MUST be defined in **METADATA ONLY**. Framework code must be **100% GENERIC** and reusable across different domains.
+
+### ❌ FORBIDDEN - Examples of Hardcoded Business Logic:
+```typescript
+// ❌ BAD - Hardcoded field names in framework code
+const semanticRules = {
+  'asset_tag': ['asset', 'tag', 'equipment_id'],
+  'site_code': ['facility', 'site', 'location']
+};
+
+// ❌ BAD - Hardcoded aliases in framework code
+export const FIELD_DEFINITIONS = [
+  { dbField: 'asset_tag', aliases: ['Equipment ID', 'Asset ID'] }
+];
+
+// ❌ BAD - Hardcoded patterns in framework code
+if (normalized.includes('facility') || normalized.includes('site')) {
+  return { dbField: 'site_code', confidence: 0.85 };
+}
+
+// ❌ BAD - Hardcoded document types in framework code
+if (documentType === 'asset') { /* special logic */ }
+```
+
+### ✅ CORRECT - All Configuration from Metadata:
+```typescript
+// ✅ GOOD - Pure generic utility
+export class AIColumnMapper {
+  constructor(config: AIMapperConfig) {
+    this.fieldDefinitions = config.fieldDefinitions; // From metadata
+    this.semanticRules = config.semanticRules;       // From metadata
+    this.dataPatterns = config.dataPatterns;         // From metadata
+  }
+}
+
+// ✅ GOOD - Gadget reads from metadata
+const aiMapper = new AIColumnMapper({
+  fieldDefinitions: config.importConfig?.fieldDefinitions || [],
+  semanticRules: config.importConfig?.aiConfig?.semanticRules || [],
+  dataPatterns: config.importConfig?.aiConfig?.dataPatterns || []
+});
+```
+
+### 📄 Metadata Configuration Location:
+```
+public/data/workspaces/<workspace>/<workspace>.json
+```
+
+### Metadata Structure Example:
+```json
+{
+  "gadgets": [{
+    "type": "data-import-export-gadget",
+    "config": {
+      "importConfig": {
+        "fieldDefinitions": [
+          {
+            "dbField": "asset_tag",
+            "label": "Asset Tag",
+            "aliases": ["Equipment ID", "Tag", "Asset Number"],
+            "dataType": "string"
+          }
+        ],
+        "aiConfig": {
+          "enabled": true,
+          "model": "gpt-4o-mini",
+          "temperature": 0.3,
+          "maxTokens": 300,
+          "systemPrompt": "You are an AI assistant...",
+          "userPromptTemplate": "Excel Column: {{excelColumn}}...",
+          "responseFormat": { "type": "json_object" }
+        }
+      }
+    }
+  }]
+}
+```
+
+**Critical**: AI prompts, model settings, and all configuration MUST be in workspace metadata.
+**Never** create separate AI config files (e.g., `public/data/ai-config/*.json`).
+
+### Validation Checklist:
+- [ ] Zero hardcoded field names in framework code
+- [ ] Zero hardcoded aliases in framework code
+- [ ] Zero hardcoded semantic rules in framework code
+- [ ] Zero hardcoded document types in framework code
+- [ ] Zero hardcoded AI prompts in framework code
+- [ ] All configuration read from workspace metadata
+- [ ] Utility classes accept config via constructor
+- [ ] Gadgets pass metadata config to utilities
+- [ ] AI prompts in workspace metadata (not separate files)
+
+**If you violate this rule, STOP and refactor immediately!**
+
+---
+
+## CRITICAL: API Configuration Framework
+
+### Centralized API Configuration (MANDATORY)
+
+**IMPORTANT: All API calls MUST use the centralized apiConfig**
+
+1. **Import from centralized config:**
+   ```typescript
+   // ✅ CORRECT
+   import { getApiFullUrl } from '@/config';
+   const url = getApiFullUrl('/api/inspections');
+   
+   // ❌ WRONG - Do NOT hardcode URLs
+   const url = 'http://localhost:4001/api/inspections';
+   
+   // ❌ WRONG - Do NOT use relative URLs directly
+   const url = '/api/inspections';
+   fetch(url); // Will hit wrong port!
+   ```
+
+2. **ALWAYS use getApiFullUrl for fetch calls:**
+   ```typescript
+   // ✅ CORRECT
+   const response = await fetch(getApiFullUrl('/api/auth/login'), {...});
+   
+   // ❌ WRONG
+   const response = await fetch('/api/auth/login', {...});
+   ```
+
+3. **BaseGadget automatically uses apiConfig:**
+   ```typescript
+   // Just use relative URLs - they're auto-resolved!
+   await BaseGadget.makeAuthenticatedFetch('/api/inspections');
+   ```
+
+4. **Workspace metadata uses relative URLs:**
+   ```json
+   {
+     "dataUrl": "/api/inspections",
+     "optionsUrl": "/api/options/companies"
+   }
+   ```
+   - API paths (`/api/*`) → converted to `http://localhost:4000/api/*`
+   - Static paths (`/data/*`) → remain relative, served by frontend
+
+5. **Environment Configuration:**
+   - Set `REACT_APP_API_BASE=http://localhost:4000` in `.env`
+   - API server runs on port **4000** (NOT 4001)
+   - Framework auto-detects if not set
+
+6. **Validation (MANDATORY before commit):**
+   ```bash
+   npm run validate-endpoints  # Checks all API calls use framework
+   npm run validate-all        # Validates auth + endpoints
+   ```
+
+7. **Debug API Config:**
+   ```javascript
+   // In browser console:
+   window.__API_CONFIG__.getDebugInfo()
+   ```
+
+8. **Reference Documentation:**
+   - See `API_CONFIGURATION_GUIDE.md` for complete details
+   - Framework location: `src/config/api.config.ts`
+   - Diagnostics: `src/components/diagnostics/ApiConfigDiagnostics.tsx`
+   - Endpoint validator: `api/scripts/validate-endpoints.js`
+
+### Centralized HTTP Client (MANDATORY)
+
+**CRITICAL: All API calls MUST use the centralized HttpClient service**
+
+1. **Import HttpClient (not plain fetch):**
+   ```typescript
+   // ✅ CORRECT - Use HttpClient
+   import { httpClient } from '@/services/HttpClient';
+   const response = await httpClient.get('/api/documents?type=company');
+   
+   // ❌ WRONG - Do NOT use plain fetch
+   const response = await fetch('/api/documents?type=company');
+   
+   // ❌ WRONG - Do NOT manually add auth headers
+   const response = await fetch('/api/documents', {
+     headers: { 'Authorization': `Bearer ${token}` } // HttpClient does this automatically!
+   });
+   ```
+
+2. **HttpClient automatically handles:**
+   - ✅ JWT authentication injection (`Authorization: Bearer <token>`)
+   - ✅ Tenant context injection (`x-tenant-id`, `x-user-id`)
+   - ✅ API URL resolution (relative → absolute)
+   - ✅ Content-Type headers
+   - ✅ 401 error handling (auto-logout)
+   - ✅ Development logging
+
+3. **Available methods:**
+   ```typescript
+   // GET
+   await httpClient.get('/api/documents?type=company');
+   
+   // POST
+   await httpClient.post('/api/documents', { type: 'company', name: 'Acme' });
+   
+   // PUT
+   await httpClient.put('/api/documents/123', { name: 'Updated' });
+   
+   // PATCH
+   await httpClient.patch('/api/documents/123', { status: 'active' });
+   
+   // DELETE
+   await httpClient.delete('/api/documents/123?type=company');
+   
+   // Upload file
+   const formData = new FormData();
+   formData.append('file', file);
+   await httpClient.upload('/api/uploads', formData);
+   ```
+
+4. **When to use plain fetch (rare cases):**
+   - External APIs (non-IntelliSpec APIs)
+   - Public endpoints that don't need auth
+   - Use `skipAuth: true` option if needed:
+     ```typescript
+     await httpClient.get('/api/public/status', { skipAuth: true });
+     ```
+
+5. **Migration from plain fetch:**
+   ```typescript
+   // Before
+   const response = await fetch(getApiFullUrl('/api/documents'), {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+       'Authorization': `Bearer ${token}`
+     },
+     body: JSON.stringify(data)
+   });
+   
+   // After
+   const response = await httpClient.post('/api/documents', data);
+   ```
+
+6. **Reference Documentation:**
+   - See `HTTP_CLIENT_ARCHITECTURE.md` for complete details
+   - Service location: `src/services/HttpClient.ts`
+   - Architecture patterns: Singleton, Interceptor, Strategy, Factory
+
+### API Endpoint Contract (MANDATORY)
+
+**CRITICAL: Frontend and backend must stay in sync**
+
+1. **Before adding frontend API calls:**
+   ```typescript
+   // ❌ BAD - Call endpoint that doesn't exist
+   await httpClient.get('/api/new-feature'); // Backend doesn't have this yet!
+   
+   // ✅ GOOD - Check endpoint exists first
+   // 1. Check api/routes/ for existing endpoint
+   // 2. Or add endpoint to backend
+   // 3. Then call from frontend
+   ```
+
+2. **Before removing backend endpoints:**
+   - Search frontend code for calls to that endpoint
+   - Remove/update frontend code first
+   - Then remove backend endpoint
+   - Run `npm run validate-endpoints` to verify
+
+3. **Validation catches missing endpoints:**
+   ```bash
+   npm run validate-endpoints
+   
+   # Checks:
+   # ✅ All frontend calls use httpClient or getApiFullUrl (not relative URLs)
+   # ✅ All endpoints called by frontend exist in backend
+   # ✅ No endpoints are missing
+   ```
+
+4. **If validation fails:**
+   - Fix to use httpClient for utilities/services
+   - Or use getApiFullUrl() for legacy code
+   - Add missing backend endpoints
+   - Or remove unused frontend calls
+
+---
+
+## CRITICAL: Database Configuration
+
+### MongoDB Atlas (Cloud Database)
+
+**IMPORTANT: This project uses MongoDB Atlas (cloud), NOT local MongoDB**
+
+1. **Database Connection:**
+   - Production/Development: MongoDB Atlas (cloud-hosted)
+   - Connection URI: `mongodb+srv://...` (from `.env` file)
+   - Environment variable: `MONGODB_URI` or `MONGODB_ATLAS_URI`
+   - **NEVER hardcode localhost MongoDB connections**
+
+2. **Connection in Scripts:**
+   ```javascript
+   // ✅ CORRECT - Uses environment variable
+   const mongoUri = process.env.MONGODB_URI || process.env.MONGODB_ATLAS_URI;
+   await mongoose.connect(mongoUri);
+   
+   // ❌ WRONG - Hardcoded localhost
+   await mongoose.connect('mongodb://localhost:27017/intellispec');
+   ```
+
+3. **Environment Setup:**
+   - Copy `env.sample` to `.env`
+   - Configure `MONGODB_URI` with Atlas connection string
+   - All database access goes through MongoDB Atlas
+   - Use `DatabaseManager` for all connections (no direct mongoose.connect)
+
+4. **Testing Database Access:**
+   ```bash
+   # Check database connection and data
+   node check-inspection-data.js
+   
+   # Check tenants
+   node check-tenants.js
+   ```
+
+---
+
+## CRITICAL: Validation System Enforcement
+
+### When creating or modifying workspace definitions:
+
+1. **ALWAYS use the validation system**:
+   - Import and use `validateWorkspaceConfig` from `src/schemas/WorkspaceValidation.ts`
+   - Import field mappings from `src/models/DocumentSchemas.ts`
+   - Validate ALL field mappings against `DOCUMENT_FIELD_MAPPINGS`
+
+2. **MANDATORY workspace structure**:
+   ```json
+   {
+     "id": "workspace-id",
+     "title": "Workspace Title", 
+     "filterContext": {
+       "enabled": true,
+       "filterDefinitions": [...]
+     },
+     "gadgets": [...]
+   }
+   ```
+
+3. **REQUIRED field mappings validation**:
+   - For `paintInvoice`: `company_id` → `companyId`, `site_id` → `facilityId`, `date_range` → `purchaseDate`
+   - For `company`: `industry` → `industry`, `name` → `name`
+   - For `site`: `company_id` → `company_id` (underscore!)
+   - For `paint_specifications`: `manufacturer` → `manufacturer`, `voc_content` → `vocContent`
+
+4. **ALWAYS include validation in workspace renderer**:
+   ```typescript
+   import { useDevWorkspaceValidation } from '../../../hooks/useWorkspaceValidation';
+   import { ValidationAlert } from '../validation/ValidationBadge';
+   
+   const validation = useDevWorkspaceValidation(workspace);
+   // Include <ValidationAlert validation={validation} /> in render
+   ```
+
+### When creating new document schemas:
+
+1. **ALWAYS extend BaseDocument interface**
+2. **ALWAYS add to DOCUMENT_FIELD_MAPPINGS** in `src/models/DocumentSchemas.ts`
+3. **ALWAYS use proper Mongoose validation**:
+   ```typescript
+   const Schema = new Schema({
+     id: { type: String, required: true, unique: true, index: true },
+     type: { type: String, required: true, enum: ['documentType'], index: true },
+     // ... other fields with proper validation
+   });
+   ```
+
+### When adding KPI configurations:
+
+1. **ALWAYS validate aggregationConfig.fieldMappings** against document schema
+2. **ALWAYS use proper dataPath** (e.g., "data.0.field_name")
+3. **ALWAYS include baseFilter** with document type
+
+### When adding filter definitions:
+
+1. **ALWAYS use standard endpoints**: `/api/options/companies`, `/api/options/sites`, `/api/options/paint-specs`
+2. **ALWAYS include refreshTrigger: true** for dynamic filters
+3. **ALWAYS validate dependencies** exist before referencing
+
+## Code Generation Templates
+
+### New Workspace Template:
+```json
+{
+  "id": "{{workspace-id}}",
+  "title": "{{title}}",
+  "description": "{{description}}",
+  "layout": "dashboard",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": [
+      {
+        "id": "company_id",
+        "type": "multiselect", 
+        "label": "Company",
+        "optionsUrl": "/api/options/companies",
+        "refreshTrigger": true
+      },
+      {
+        "id": "site_id",
+        "type": "multiselect",
+        "label": "Facility/Site", 
+        "optionsUrl": "/api/options/sites",
+        "dependsOn": "company_id",
+        "refreshTrigger": true
+      },
+      {
+        "id": "date_range",
+        "type": "daterange",
+        "label": "Date Range",
+        "presets": ["MTD", "QTD", "YTD", "Last 6 Months", "Last Year"],
+        "refreshTrigger": true
+      }
+    ]
+  },
+  "gadgets": [],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable"
+  }
+}
+```
+
+### New KPI Gadget Template:
+```json
+{
+  "id": "{{gadget-id}}",
+  "type": "generic-kpi-gadget",
+  "title": "{{title}}",
+  "config": {
+    "kpis": [
+      {
+        "id": "{{kpi-id}}",
+        "title": "{{kpi-title}}",
+        "aggregationConfig": {
+          "name": "{{aggregation-name}}",
+          "collection": "documents",
+          "baseFilter": { "type": "{{document-type}}" },
+          "fieldMappings": {
+            "date_range": "purchaseDate",
+            "company_id": "companyId", 
+            "site_id": "facilityId"
+          },
+          "groupBy": {
+            "_id": null,
+            "fields": {
+              "{{field-name}}": {
+                "expression": { "$sum": 1 }
+              }
+            }
+          }
+        },
+        "dataPath": "data.0.{{field-name}}"
+      }
+    ]
+  }
+}
+```
+
+### New Document Schema Template:
+```typescript
+export interface {{InterfaceName}} extends BaseDocument {
+  type: '{{documentType}}';
+  {{fieldName}}: {{fieldType}};
+}
+
+const {{InterfaceName}}Schema = new Schema({
+  id: { type: String, required: true, unique: true, index: true },
+  type: { type: String, required: true, enum: ['{{documentType}}'], index: true },
+  tenantId: { type: String, required: true, index: true },
+  {{fieldName}}: { type: {{MongooseType}}, required: {{required}}, index: {{indexed}} },
+  // Standard audit fields
+  deleted: { type: Boolean, default: false, index: true },
+  created_date: { type: Date, default: Date.now },
+  last_updated: { type: Date, default: Date.now }
+}, {
+  collection: 'documents',
+  timestamps: false
+});
+
+export const {{InterfaceName}}Model = mongoose.model<{{InterfaceName}}>('{{InterfaceName}}', {{InterfaceName}}Schema);
+```
+
+## Validation Checklist
+
+Before saving any workspace or document schema file:
+
+- [ ] Validated against Zod schema
+- [ ] Field mappings checked against DOCUMENT_FIELD_MAPPINGS  
+- [ ] All required fields present
+- [ ] Proper TypeScript types used
+- [ ] Validation component included in UI
+- [ ] Console validation enabled in development
+
+## Error Prevention
+
+### Common Mistakes to Avoid:
+1. ❌ Using `company_id` → `company_id` for paintInvoice (should be `companyId`)
+2. ❌ Missing `baseFilter.type` in aggregation configs
+3. ❌ Invalid dataPath syntax (use dot notation)
+4. ❌ Forgetting to add new document types to DOCUMENT_FIELD_MAPPINGS
+5. ❌ Using hardcoded API endpoints instead of standard ones
+6. ❌ Missing validation imports in workspace renderer
+
+### Auto-Fix Patterns:
+- Replace `"company_id": "company_id"` with `"company_id": "companyId"` for paintInvoice
+- Replace `/api/documents?type=company` with `/api/options/companies`
+- Add missing `refreshTrigger: true` to filter definitions
+- Add missing validation imports to workspace components
+- Accept relative URLs (starting with /) in optionsUrl and endpoint fields
+- Add missing `description` fields to all gadgets for better maintainability
+- Add missing `labelField` and `valueField` to select/multiselect filters with optionsUrl
+- Replace `"name"` with `"title"` in workspace root configuration
+
+## File Patterns
+
+### Always validate these files:
+- `public/data/workspaces/**/*.json` - Workspace definitions
+- `src/models/DocumentSchemas.ts` - Document schemas  
+- `src/components/ui/workspace/*.tsx` - Workspace renderers
+
+### Auto-include validation in:
+- Any component that renders workspaces
+- Any file that creates/modifies workspace configs
+- Any API route that handles document CRUD operations
+
+---
+
+## CRITICAL: API Architecture Rules
+
+### Framework Architecture (MANDATORY)
+
+The API follows a strict layered architecture. **ALL code must respect these boundaries:**
+
+```
+api/
+├── core/           → Framework components (21 files)
+├── services/       → Domain business logic
+├── repositories/   → Data access layer
+├── models/         → Pure Mongoose schemas
+├── middleware/     → HTTP request/response handling only
+├── routes/         → Route definitions (thin controllers)
+└── workflows/      → Workflow agents and execution
+```
+
+### CRITICAL: Logging Rules
+
+1. **NEVER use console.log, console.error, console.warn, console.debug in production code**
+   - ❌ `console.log('User created')`
+   - ✅ `logger.info('User created', { userId, tenantId })`
+
+2. **ALWAYS import and use framework logger**:
+   ```javascript
+   const { logger } = require('../core/Logger');
+   
+   logger.info('Operation completed', { context });
+   logger.error('Operation failed', { error: error.message, stack: error.stack });
+   logger.warn('Potential issue detected', { details });
+   logger.debug('Debug information', { data });
+   ```
+
+3. **console.* is ONLY allowed in**:
+   - `api/scripts/` (utility scripts)
+   - Documentation files (*.md)
+
+### CRITICAL: Data Access Rules (Repository Pattern)
+
+1. **NEVER access Mongoose models directly in routes**:
+   ```javascript
+   // ❌ BAD - Direct model access
+   const user = await UserModel.findOne({ id: userId });
+   
+   // ✅ GOOD - Use repository
+   const repository = new DocumentRepository(tenantContext, 'user', request.context);
+   const user = await repository.findById(userId);
+   ```
+
+2. **ALWAYS use repositories for data access**:
+   - `BaseRepository` - Generic CRUD operations
+   - `DocumentRepository` - All document types (company, site, inspection, etc.)
+   - `ExecutionRepository` - Workflow executions
+   - `WorkflowRepository` - Workflow definitions
+   - `MembershipRepository` - User-tenant memberships
+
+3. **ALWAYS create TenantContext for repositories**:
+   ```javascript
+   const TenantContextFactory = require('../core/TenantContextFactory');
+   const tenantContext = TenantContextFactory.fromRequest(request);
+   
+   const repository = new DocumentRepository(tenantContext, 'documentType', request.context);
+   ```
+
+4. **Tenant isolation is AUTOMATIC** - repositories handle it:
+   - No manual `tenantId` filtering needed
+   - Platform admins bypass filtering automatically
+   - All queries are tenant-scoped
+
+### CRITICAL: Service Layer Rules
+
+1. **Business logic belongs in services**, not routes:
+   ```javascript
+   // ❌ BAD - Business logic in route
+   fastify.post('/users', async (request, reply) => {
+     const hashedPassword = await bcrypt.hash(request.body.password, 10);
+     const user = await UserModel.create({ ...request.body, password: hashedPassword });
+     // ... more business logic
+   });
+   
+   // ✅ GOOD - Business logic in service
+   fastify.post('/users', async (request, reply) => {
+     const user = await AuthService.createUser(request.body);
+     return reply.send({ user });
+   });
+   ```
+
+2. **Service location**:
+   - **Framework services** → `api/core/` (AuthService, AuthorizationService, FileStorage)
+   - **Domain services** → `api/services/` (WorkflowService, ExecutionService, vectorUpdateService)
+
+3. **Services MUST use repositories** for data access, never models directly
+
+### CRITICAL: Model Rules (Pure Schemas)
+
+1. **Models are ONLY for schema definitions**:
+   ```javascript
+   // ✅ GOOD - Pure schema
+   const UserSchema = new mongoose.Schema({
+     id: { type: String, required: true, unique: true, index: true },
+     email: { type: String, required: true, index: true },
+     tenantId: { type: String, required: true, index: true }
+   });
+   
+   // Simple getter is OK
+   UserSchema.methods.getFullName = function() {
+     return `${this.firstName} ${this.lastName}`;
+   };
+   
+   module.exports = mongoose.model('User', UserSchema);
+   ```
+
+2. **Models MUST NOT contain**:
+   - ❌ Static methods that perform database operations
+   - ❌ Instance methods that call `.save()` or `.update()`
+   - ❌ Business logic
+   - ❌ Validation logic beyond Mongoose schema validation
+   - ❌ Any async operations
+
+3. **Move logic to repositories/services**:
+   - Query logic → Repository
+   - Business logic → Service
+   - State transitions → Service
+
+### CRITICAL: Authentication Middleware (MANDATORY)
+
+**⚠️ BREAKING RULE: ALL authentication MUST use centralized middleware from `api/core/AuthMiddleware.js`**
+
+1. **NEVER create custom auth middleware**:
+   ```javascript
+   // ❌ BAD - Custom auth implementation
+   const requireSuperAdmin = async (request, reply) => {
+     const token = request.headers.authorization;
+     const decoded = jwt.verify(token, secret);
+     // ... custom logic
+   };
+   
+   // ✅ GOOD - Use centralized middleware
+   const { requirePlatformAdmin } = require('../core/AuthMiddleware');
+   fastify.get('/admin/route', { preHandler: requirePlatformAdmin }, ...);
+   ```
+
+2. **Available middleware** (ONLY use these):
+   - `requireAuth` - Basic JWT authentication
+   - `requirePlatformAdmin` - Platform admin only (checks JWT platformRole)
+   - `requireTenantAdmin` - Tenant admin or platform admin
+   - `optionalAuth` - Optional authentication
+   - `requirePermission(permissions)` - Permission-based auth
+   - `combineMiddleware(...middleware)` - Combine multiple checks
+
+3. **Import pattern** (mandatory):
+   ```javascript
+   const { requireAuth, requirePlatformAdmin, requireTenantAdmin } = require('../core/AuthMiddleware');
+   ```
+
+4. **NEVER**:
+   - ❌ Implement JWT verification in routes
+   - ❌ Create local `requireSuperAdmin` functions
+   - ❌ Use `fastify.verifySuperAdmin` decorator
+   - ❌ Import from `../middleware/platform-admin.js` (deprecated)
+   - ❌ Check `platformRole` manually in routes
+   - ❌ Call `jwt.verify()` directly in routes
+
+5. **Route protection pattern**:
+   ```javascript
+   // Public route (no auth)
+   fastify.get('/public', async (req, reply) => {...});
+   
+   // Authenticated route
+   fastify.get('/data', { preHandler: requireAuth }, async (req, reply) => {
+     // req.user is available
+   });
+   
+   // Admin-only route
+   fastify.get('/admin/stats', { preHandler: requirePlatformAdmin }, async (req, reply) => {
+     // req.user.isPlatformAdmin === true
+   });
+   ```
+
+6. **Validation**: Run before committing:
+   ```bash
+   node api/scripts/validate-auth-middleware.js
+   ```
+
+7. **Migration**: To update existing routes:
+   ```bash
+   node api/scripts/migrate-to-central-auth.js
+   ```
+
+### CRITICAL: Middleware Rules (Pure HTTP)
+
+1. **Middleware is ONLY for HTTP concerns**:
+   ```javascript
+   // ✅ GOOD - Pure middleware (but prefer AuthMiddleware for auth)
+   async function authenticateJWT(request, reply) {
+     const token = request.headers.authorization?.replace('Bearer ', '');
+     if (!token) {
+       return reply.code(401).send({ error: 'No token' });
+     }
+     
+     const user = await AuthService.authenticate(token); // Delegate to service
+     request.user = user;
+   }
+   ```
+
+2. **Middleware MUST NOT contain**:
+   - ❌ Business logic
+   - ❌ Database queries (delegate to services/repositories)
+   - ❌ Data transformations
+   - ❌ Complex calculations
+
+3. **Framework middleware** (use these, don't create duplicates):
+   - `api/core/AuthMiddleware.js` - **ALL authentication (MANDATORY)**
+   - `api/middleware/fastify-auth.js` - Legacy (being migrated)
+   - `api/middleware/platform-admin.js` - Deprecated (use AuthMiddleware)
+   - `api/middleware/tenant-scope.js` - Tenant utilities (thin wrapper)
+   - `api/middleware/tenant-security.js` - Security utilities (thin wrapper)
+
+### CRITICAL: Error Handling
+
+1. **ALWAYS use ErrorHandler for exceptions**:
+   ```javascript
+   const { NotFoundError, ValidationError, AppError } = require('../core/ErrorHandler');
+   
+   // ❌ BAD
+   if (!user) {
+     return reply.code(404).send({ error: 'User not found' });
+   }
+   
+   // ✅ GOOD
+   if (!user) {
+     throw new NotFoundError('User', userId);
+   }
+   ```
+
+2. **Available error types**:
+   - `NotFoundError(entityType, id)` - Resource not found
+   - `ValidationError(message, details)` - Input validation failed
+   - `DatabaseError(operation, details)` - Database operation failed
+   - `AppError(message, statusCode)` - Generic application error
+
+3. **ErrorHandler is registered globally** - just throw errors, framework catches them
+
+### CRITICAL: Audit Trail
+
+1. **Repositories log automatically** - no manual logging needed:
+   ```javascript
+   // This automatically logs to audit trail:
+   await repository.create(data);
+   await repository.update(id, data);
+   await repository.delete(id);
+   ```
+
+2. **Manual audit logging** (if needed outside repositories):
+   ```javascript
+   const AuditTrail = require('../core/AuditTrail');
+   const RequestContextManager = require('../core/RequestContext');
+   
+   const context = RequestContextManager.getCurrentContext();
+   await AuditTrail.logUpdate(context, {
+     entityType: 'tenant',
+     entityId: tenantId,
+     changes: { before, after },
+     reason: 'Admin update'
+   });
+   ```
+
+3. **Audit events are stored** in `audit_events` collection automatically
+
+### CRITICAL: Route Registration
+
+1. **Routes are auto-registered** - no manual registration needed:
+   ```javascript
+   // Just create file: api/routes/my-feature.js
+   async function registerMyFeatureRoutes(fastify) {
+     fastify.get('/my-feature', async (request, reply) => {
+       // Route logic
+     });
+   }
+   
+   module.exports = registerMyFeatureRoutes;
+   ```
+
+2. **RouteLoader automatically**:
+   - Discovers all files in `api/routes/`
+   - Applies convention-based prefixes
+   - Registers with error handling
+   - Logs registration status
+
+3. **Configure in** `api/core/RouteLoader.js` if custom prefix needed
+
+### CRITICAL: Vector Service Rules
+
+1. **Service logs in ALL scenarios**:
+   - ✅ Success: "Vector Update Service started successfully"
+   - ✅ Disabled: "Vector Update Service disabled"
+   - ✅ Failed: "Failed to start Vector Update Service"
+
+2. **Vector service must**:
+   - Use `DatabaseManager` (no separate connections)
+   - Use framework `logger` (no console.*)
+   - Handle errors gracefully (no crashes)
+
+3. **Check status endpoint**: `/api/vector-service/health`
+
+### CRITICAL: TODO Policy
+
+1. **TODOs are NOT allowed in production code**:
+   ```javascript
+   // ❌ BAD
+   async function requireSuperAdmin(request, reply) {
+     // TODO: Implement proper super admin check
+   }
+   
+   // ✅ GOOD - Use existing framework
+   const { verifyPlatformAdmin } = require('../middleware/platform-admin');
+   const requireSuperAdmin = verifyPlatformAdmin;
+   ```
+
+2. **Before committing, resolve ALL TODOs**:
+   - Connect to existing framework components
+   - Implement the feature properly
+   - Or remove the TODO if not needed
+
+3. **TODOs only allowed in**:
+   - Documentation files
+   - Comments about future enhancements (with JIRA ticket)
+
+### Generic Document System
+
+1. **Use DocumentRepository for ALL document types**:
+   ```javascript
+   // ✅ For companies, sites, inspections, wizards, ANY document type
+   const repository = new DocumentRepository(tenantContext, 'documentType', request.context);
+   ```
+
+2. **Do NOT create type-specific repositories** unless absolutely necessary:
+   - ❌ `InspectionRepository` (use DocumentRepository)
+   - ❌ `CompanyRepository` (use DocumentRepository)
+   - ❌ `SiteRepository` (use DocumentRepository)
+
+3. **Type-specific repositories only if**:
+   - Complex domain-specific queries needed
+   - Special aggregations that can't be generic
+
+### Route Template
+
+```javascript
+const { logger } = require('../core/Logger');
+const DocumentRepository = require('../repositories/DocumentRepository');
+const TenantContextFactory = require('../core/TenantContextFactory');
+const { NotFoundError, ValidationError } = require('../core/ErrorHandler');
+
+async function registerMyRoutes(fastify) {
+  
+  // GET /api/my-resource
+  fastify.get('/my-resource', async (request, reply) => {
+    const tenantContext = TenantContextFactory.fromRequest(request);
+    const repository = new DocumentRepository(tenantContext, 'myResourceType', request.context);
+    
+    const resources = await repository.findWithPagination({}, request.query.page, request.query.limit);
+    
+    return reply.send(resources);
+  });
+  
+  // POST /api/my-resource
+  fastify.post('/my-resource', async (request, reply) => {
+    const tenantContext = TenantContextFactory.fromRequest(request);
+    const repository = new DocumentRepository(tenantContext, 'myResourceType', request.context);
+    
+    const resource = await repository.create(request.body);
+    
+    logger.info('Resource created', { 
+      resourceId: resource.id, 
+      tenantId: tenantContext.tenantId 
+    });
+    
+    return reply.code(201).send(resource);
+  });
+  
+  // PUT /api/my-resource/:id
+  fastify.put('/my-resource/:id', async (request, reply) => {
+    const tenantContext = TenantContextFactory.fromRequest(request);
+    const repository = new DocumentRepository(tenantContext, 'myResourceType', request.context);
+    
+    const resource = await repository.update(request.params.id, request.body);
+    
+    if (!resource) {
+      throw new NotFoundError('Resource', request.params.id);
+    }
+    
+    return reply.send(resource);
+  });
+  
+  // DELETE /api/my-resource/:id
+  fastify.delete('/my-resource/:id', async (request, reply) => {
+    const tenantContext = TenantContextFactory.fromRequest(request);
+    const repository = new DocumentRepository(tenantContext, 'myResourceType', request.context);
+    
+    const deleted = await repository.delete(request.params.id);
+    
+    if (!deleted) {
+      throw new NotFoundError('Resource', request.params.id);
+    }
+    
+    return reply.code(204).send();
+  });
+  
+}
+
+module.exports = registerMyRoutes;
+```
+
+### Service Template
+
+```javascript
+const { logger } = require('../core/Logger');
+const { ValidationError, AppError } = require('../core/ErrorHandler');
+
+class MyService {
+  /**
+   * Business logic method
+   */
+  static async performBusinessOperation(data, context) {
+    try {
+      // Validate
+      if (!data.required) {
+        throw new ValidationError('Required field missing', { field: 'required' });
+      }
+      
+      // Business logic
+      const result = this.calculateSomething(data);
+      
+      // Log
+      logger.info('Business operation completed', {
+        operation: 'performBusinessOperation',
+        userId: context.userId,
+        tenantId: context.tenantId
+      });
+      
+      return result;
+      
+    } catch (error) {
+      logger.error('Business operation failed', {
+        error: error.message,
+        operation: 'performBusinessOperation'
+      });
+      throw error;
+    }
+  }
+  
+  /**
+   * Private helper method
+   */
+  static calculateSomething(data) {
+    // Pure business logic
+    return data.value * 2;
+  }
+}
+
+module.exports = MyService;
+```
+
+### Repository Template
+
+```javascript
+const BaseRepository = require('../core/BaseRepository');
+const MyModel = require('../models/MyModel');
+
+class MyRepository extends BaseRepository {
+  constructor(tenantContext, requestContext) {
+    super(MyModel, tenantContext, requestContext);
+  }
+  
+  /**
+   * Domain-specific query method (only if needed)
+   */
+  async findBySpecialCriteria(criteria) {
+    const baseQuery = this.buildBaseQuery(); // Tenant filtering automatic
+    
+    const results = await this.model.find({
+      ...baseQuery,
+      specialField: criteria.value
+    });
+    
+    return results;
+  }
+}
+
+module.exports = MyRepository;
+```
+
+## API Pre-Commit Checklist
+
+Before committing ANY API code:
+
+- [ ] Zero `console.*` in production code (routes, services, repositories, models, middleware, workflows)
+- [ ] All logging uses `logger.info/error/warn/debug`
+- [ ] No direct Mongoose model access in routes
+- [ ] All data access through repositories
+- [ ] Business logic in services, not routes or middleware
+- [ ] Models are pure schemas (no business logic)
+- [ ] Middleware is pure HTTP handling (no business logic)
+- [ ] All errors use ErrorHandler (NotFoundError, ValidationError, etc.)
+- [ ] TenantContext created from request for repositories
+- [ ] No manual `tenantId` filtering (repositories handle it)
+- [ ] No TODOs in production code
+- [ ] Audit trail automatic (or manually logged if outside repository)
+- [ ] Vector service uses logger, not console.*
+- [ ] New routes auto-registered (no manual registration needed)
+
+## API Quality Standards
+
+**Minimum Quality Score: 80/100**
+
+- Architecture: 90+
+- Code Quality: 85+
+- Security: 90+
+- Logging: 95+ (zero console.* in production)
+- Error Handling: 90+
+- Tenant Isolation: 95+ (automatic)
+- Audit Trail: 90+ (automatic)
+
+**Current Status: 95/100** ✅

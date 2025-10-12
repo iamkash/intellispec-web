@@ -1,0 +1,108 @@
+{
+  "id": "scaffolding-dismantling-wizard",
+  "name": "Scaffolding Dismantling Wizard",
+  "gadgets": [
+    {
+      "id": "scaffolding-dismantling-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "config": {
+        "id": "scaffolding-dismantling-wizard",
+        "title": "Scaffolding Dismantling & Recovery Analysis",
+        "description": "Analyze existing scaffolding installations and plan safe dismantling, equipment recovery, and transportation logistics",
+        "theme": "light",
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "autoAdvance": true,
+        "typeLabel": "Dismantling Analysis",
+        "typePlaceholder": "Select dismantling analysis type",
+        "typeHelpText": "Please select a dismantling analysis type",
+        "reportTitle": "Scaffolding Dismantling Analysis",
+        "reportHeaderText": "SCAFFOLDING DISMANTLING & RECOVERY REPORT",
+        "reportHeaderSubtext": "Professional Dismantling Planning & Equipment Recovery",
+        "reportFooterText": "Scaffolding Dismantling Analysis - Professional Engineering Report",
+        "editModalTitle": "Edit Dismantling Analysis Report",
+        "steps": {
+          "input": {
+            "enabled": true,
+            "title": "Dismantling Analysis Input",
+            "description": "Upload images of existing scaffolding and provide project details for comprehensive dismantling planning",
+            "inspectionTypes": [
+              { "label": "🚛 Complete Dismantling Planning", "value": "complete_dismantling" },
+              { "label": "📦 Partial Removal Analysis", "value": "partial_removal" },
+              { "label": "⚡ Emergency Dismantling", "value": "emergency_dismantling" }
+            ],
+            "scaffoldingTypes": [
+              { "label": "Tube & Clamp System", "value": "tube_clamp" },
+              { "label": "Modular/System Scaffolding", "value": "modular" },
+              { "label": "Frame Scaffolding", "value": "frame" },
+              { "label": "Suspended Scaffolding", "value": "suspended" },
+              { "label": "Mobile/Rolling Scaffolding", "value": "mobile" },
+              { "label": "Cantilever Scaffolding", "value": "cantilever" },
+              { "label": "Mast Climbing Work Platform", "value": "mast_climbing" },
+              { "label": "Ringlock System", "value": "ringlock" }
+            ],
+            "voice": {
+              "enabled": true,
+              "duration": 180,
+              "autoStart": false
+            },
+            "images": {
+              "enabled": true,
+              "maxImages": 10,
+              "maxSize": 10485760,
+              "drawing": true,
+              "measurements": true,
+              "scaleCalibration": true
+            },
+            "text": {
+              "enabled": true,
+              "maxLength": 8000,
+              "placeholder": "Enter dismantling requirements, site constraints, equipment condition notes, timeline requirements, transportation considerations, or specific recovery instructions..."
+            },
+            "measurements": {
+              "enabled": true,
+              "units": ["meters", "feet", "inches"],
+              "fields": [
+                { "label": "Current Height (m)", "key": "currentHeight", "required": false },
+                { "label": "Dismantling Timeline (days)", "key": "dismantlingDays", "required": false },
+                { "label": "Crew Size Available", "key": "crewSize", "required": false },
+                { "label": "Transportation Distance (miles)", "key": "transportDistance", "required": false },
+                { "label": "Storage Location Requirements", "key": "storageRequirements", "required": false },
+                { "label": "Site Access Constraints", "key": "accessConstraints", "required": false },
+                { "label": "Weather Considerations", "key": "weatherFactors", "required": false },
+                { "label": "Priority Level (1-5)", "key": "priorityLevel", "required": false }
+              ]
+            }
+          },
+          "analysis": {
+            "enabled": true,
+            "title": "AI Dismantling Analysis & Report Generation",
+            "description": "Comprehensive dismantling analysis with recovery planning, transportation logistics, and cost calculations",
+            "modelConfig": {
+              "model": "gpt-4o",
+              "temperature": 0.2,
+              "maxTokens": 8000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a senior scaffolding dismantling specialist with 25+ years of experience in safe scaffolding removal, equipment recovery, and logistics coordination. You specialize in analyzing existing scaffolding installations and planning efficient, safe dismantling operations.\n\nYour task is to generate detailed dismantling analysis reports in markdown format with comprehensive procedures, calculations, and logistics planning.\n\nCRITICAL INSTRUCTIONS:\n1. Respond with ONLY the markdown report content - no JSON, no explanations, no placeholders\n2. DO NOT use placeholder text like 'TBD', 'To Be Determined', or template variables like {variable}\n3. Generate REALISTIC and SPECIFIC values based on typical scaffolding dismantling projects\n4. Include detailed dismantling procedures, equipment counts, timeline calculations\n5. Calculate actual component quantities, labor requirements, and transportation needs\n6. Provide technical dismantling language and professional formatting\n7. Include realistic dismantling schedules, crew requirements, and safety protocols\n8. Use industry standard dismantling practices and safety regulations\n\nDISMANTLING FOCUS AREAS:\n\n📋 DISMANTLING ANALYSIS STRUCTURE:\n- Executive summary with dismantling overview and key metrics\n- Existing installation assessment and component inventory\n- Dismantling sequence and safety procedures\n- Equipment recovery and transportation planning\n- Timeline calculations and crew requirements\n- Cost analysis and logistics coordination\n- Safety compliance and risk management\n- Technical recommendations and best practices\n\n💰 DISMANTLING COST PARAMETERS:\n- Dismantling labor: $75-$110 per hour per technician\n- Equipment handling: $2.00-$5.00 per component\n- Transportation: $1.25 per mile plus fuel and logistics\n- Equipment inspection: $0.50-$1.00 per component\n- Storage and handling: 5-8% of equipment value\n- Safety compliance: 3-5% of total dismantling scope\n\n🎯 COMPLETE DISMANTLING COMPONENT ANALYSIS REQUIRED:\n**MANDATORY: Analyze and count ALL existing scaffolding components for recovery:**\n\n**STRUCTURAL COMPONENTS ANALYSIS:**\n- Standards (vertical posts): Count by length, assess condition\n- Ledgers (horizontal members): Count by length, assess condition\n- Transoms (cross members): Count by length, assess condition\n- Diagonal braces: Count by type, assess condition\n- Base plates: Count and assess condition\n- Sole plates: Count and assess condition\n\n**PLATFORM COMPONENTS ANALYSIS:**\n- Steel platforms/decks: Count and assess condition\n- Timber boards: Count and assess condition\n- Platform brackets: Count and assess condition\n- Platform clips: Count and assess condition\n\n**CONNECTION HARDWARE ANALYSIS:**\n- All couplers by type: Count and assess condition\n- Pins, clips, and hardware: Count and assess condition\n\n**SAFETY COMPONENTS ANALYSIS:**\n- Safety equipment: Count and assess condition\n\n**ACCESS COMPONENTS ANALYSIS:**\n- Ladders, stairs, gates: Count and assess condition\n\n**ANCHORING & TIES ANALYSIS:**\n- Wall ties and anchors: Count and assess removal requirements\n\nREPORT REQUIREMENTS:\n- Professional dismantling documentation\n- Detailed component recovery calculations\n- Specific dismantling procedures and safety protocols\n- Clear timeline with dismantling phases\n- Transportation and logistics planning\n- Equipment condition assessment and recommendations\n\nFORMAT: Professional dismantling and recovery report suitable for project execution and safety compliance.",
+              "userPrompt": "Generate a comprehensive scaffolding dismantling and recovery analysis report for the following data:\n\nAnalysis Type: {inspectionType}\nScaffolding Type: {scaffoldingType}\nVoice Transcription: {transcription}\nText Notes: {text}\nImages: {imageCount} images provided\nMeasurements: {measurements}\n\nCRITICAL: Generate a REAL dismantling analysis with ACTUAL CALCULATIONS and EXACT COMPONENT COUNTS!\n\n🚨 MANDATORY REQUIREMENTS:\n- Replace ALL [COUNT] placeholders with REAL calculated quantities from image analysis\n- Replace ALL [XXX.XX] placeholders with ACTUAL calculated costs\n- Replace ALL [TOTAL] placeholders with REAL calculated totals\n- Provide SPECIFIC numbers for every component identified\n- Calculate REALISTIC quantities based on visible scaffolding\n- NO placeholder text or template variables allowed!\n\n🚛 DISMANTLING ANALYSIS SCENARIOS:\n\n**IF Analysis Type = \"complete_dismantling\" (Complete Dismantling Planning):**\n- ANALYZE: Existing scaffolding images to count all visible components\n- ASSESS: Complete dismantling requirements and equipment recovery\n- CALCULATE: Total component counts, dismantling labor, transportation needs\n- PLAN: Sequential dismantling procedures and safety protocols\n- OUTPUT: Complete dismantling plan with detailed component recovery\n\n**IF Analysis Type = \"partial_removal\" (Partial Removal Analysis):**\n- ANALYZE: Scaffolding sections requiring removal while maintaining others\n- ASSESS: Partial dismantling impact on remaining structure\n- CALCULATE: Components to be removed, structural modifications needed\n- PLAN: Selective dismantling procedures and temporary supports\n- OUTPUT: Partial removal plan with structural safety considerations\n\n**IF Analysis Type = \"emergency_dismantling\" (Emergency Dismantling):**\n- ANALYZE: Urgent dismantling requirements due to safety or weather\n- ASSESS: Rapid dismantling procedures and emergency protocols\n- CALCULATE: Emergency crew requirements, accelerated timeline\n- PLAN: Emergency dismantling sequence and safety measures\n- OUTPUT: Emergency dismantling plan with expedited procedures\n\n**REQUIRED SECTIONS FOR DISMANTLING ANALYSIS:**\n1. **Executive Summary & Dismantling Overview**\n2. **Existing Installation Assessment**\n3. **Component Inventory & Recovery Planning**\n4. **Dismantling Sequence & Procedures**\n5. **Labor Requirements & Timeline**\n6. **Transportation & Logistics Planning**\n7. **Safety Protocols & Risk Management**\n8. **Equipment Condition & Recommendations**\n\n**DISMANTLING COMPONENT RECOVERY TABLE:**\n## Scaffolding Component Recovery Analysis\n\n### Component Recovery Breakdown\n| Component | Current Quantity | Condition | Recovery Rate | Labor Hours | Recovery Cost |\n|-----------|------------------|-----------|---------------|-------------|---------------|\n| Standards 2m | [COUNT] | Good/Fair/Poor | $XX.XX/unit | X.X hrs | $XXX.XX |\n| Standards 3m | [COUNT] | Good/Fair/Poor | $XX.XX/unit | X.X hrs | $XXX.XX |\n| Ledgers 3m | [COUNT] | Good/Fair/Poor | $XX.XX/unit | X.X hrs | $XXX.XX |\n| [Continue with all visible components...]\n\n### Dismantling Summary\n- Total Components to Recover: [COUNT] pieces\n- Total Recovery Weight: [WEIGHT] kg\n- Dismantling Crew Required: [CREW SIZE] technicians\n- Dismantling Duration: [DAYS] days\n- Transportation Requirements: [VEHICLES] vehicles\n- **TOTAL DISMANTLING COST: $[FINAL TOTAL]**\n\n### Transportation Planning\n| Vehicle Type | Load Capacity | Trips Required | Distance | Transport Cost |\n|--------------|---------------|----------------|----------|----------------|\n| Flatbed Truck | [CAPACITY] kg | [TRIPS] | [MILES] miles | $XXX.XX |\n| [Additional vehicles as needed...]\n\nFORMAT: Professional dismantling and recovery report ready for project execution!"
+            },
+            "reportConfig": {
+              "includeSections": [
+                "executive_summary",
+                "installation_assessment",
+                "component_inventory",
+                "dismantling_sequence",
+                "labor_requirements",
+                "transportation_planning",
+                "safety_protocols",
+                "equipment_recommendations"
+              ]
+            }
+          }
+        }
+      },
+      "position": 24
+    }
+  ]
+}

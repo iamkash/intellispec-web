@@ -1,0 +1,20 @@
+{
+  "options": [
+    {
+      "label": "Parent 1",
+      "value": "parent1",
+      "children": [
+        { "label": "Child 1.1", "value": "child1_1" },
+        { "label": "Child 1.2", "value": "child1_2" }
+      ]
+    },
+    {
+      "label": "Parent 2",
+      "value": "parent2",
+      "children": [
+        { "label": "Child 2.1", "value": "child2_1" },
+        { "label": "Child 2.2", "value": "child2_2" }
+      ]
+    }
+  ]
+} 

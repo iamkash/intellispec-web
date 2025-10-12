@@ -1,0 +1,1131 @@
+/* AIAnalysisWizardGadget.css
+   Professional AI Inspection Assistant layout with enhanced design
+   Uses shadcn tokens (HSL) for theme compatibility and modern design principles. */
+
+/* Root: full height with professional styling */
+.ai-analysis-wizard {
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* header + content + footer */
+  height: 100%;
+  max-height: 100%; /* Prevent expansion beyond container */
+  min-height: 0;
+  padding: 0;
+  background: hsl(var(--background));
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  border: 1px solid hsl(var(--border)); /* subtle outer border */
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: 0 2px 8px hsl(var(--foreground) / 0.06); /* subtle elevation */
+  overflow: hidden; /* keep rounded corners on inner content */
+  transition: all 0.3s ease;
+}
+
+/* Fullscreen mode styles */
+.ai-analysis-wizard.fullscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  border: none;
+  border-radius: 0;
+  z-index: 1000;
+  box-shadow: none;
+}
+
+/* Professional header section */
+.ai-analysis-wizard .wizard-header {
+  background: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  padding: 8px 16px; /* reduced height */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 3px hsl(var(--foreground) / 0.1);
+}
+
+.ai-analysis-wizard .wizard-header__title {
+  font-size: 1.25rem; /* slightly smaller */
+  font-weight: 700;
+  color: hsl(var(--foreground));
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-analysis-wizard .wizard-header__subtitle {
+  font-size: 0.8rem; /* slightly smaller */
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+  font-weight: 400;
+}
+
+.ai-analysis-wizard .wizard-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-analysis-wizard .wizard-header__buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ai-analysis-wizard .wizard-header__button {
+  color: hsl(var(--muted-foreground));
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  border-radius: calc(var(--radius) - 2px);
+}
+
+.ai-analysis-wizard .wizard-header__button:hover {
+  color: hsl(var(--foreground));
+  background: hsl(var(--muted) / 0.1);
+  border-color: hsl(var(--border));
+}
+
+.ai-analysis-wizard .wizard-header__close-button:hover {
+  color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 0.1);
+  border-color: hsl(var(--destructive) / 0.3);
+}
+
+/* Two-column document layout: sidebar + content */
+.ai-analysis-wizard .wizard-doc-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr; /* Wider sidebar for better UX */
+  gap: 0;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%; /* Ensure it doesn't exceed container height */
+  overflow: hidden; /* Prevent layout from expanding */
+}
+
+/* Professional sidebar design */
+.ai-analysis-wizard .wizard-sidebar {
+  /* Styles are now inline in component for better control */
+  animation: wizardSidebarIn 300ms ease-out;
+  box-shadow: inset -1px 0 0 hsl(var(--border));
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+/* Force sidebar body to have scrollbar - same pattern as section-body */
+.ai-analysis-wizard .wizard-sidebar .sidebar-body {
+  height: calc(100vh - 350px); /* Adjust for header, footer, and sidebar header */
+  overflow: auto;
+  padding-right: 8px;
+}
+
+@keyframes wizardSidebarIn {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Professional content area */
+.ai-analysis-wizard .wizard-content {
+  background: hsl(var(--background));
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 12px; /* reduced body padding */
+}
+
+.ai-analysis-wizard .wizard-content > .ant-card.wizard-card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) + 2px);
+  box-shadow: 0 4px 6px hsl(var(--foreground) / 0.05), 0 1px 3px hsl(var(--foreground) / 0.1);
+  background: hsl(var(--card));
+}
+
+.ai-analysis-wizard .wizard-content > .ant-card.wizard-card .ant-card-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 24px;
+}
+
+/* Enhanced section body with better scrolling */
+.ai-analysis-wizard .wizard-content > .ant-card.wizard-card .section-body {
+  height: calc(100vh - 420px);
+  overflow: auto;
+  padding-right: 8px;
+}
+
+/* Constrain PDF step and allow inner scroll */
+.ai-analysis-wizard .wizard-content > .ant-card.wizard-card.pdf-step {
+  min-height: 0;
+}
+.ai-analysis-wizard .wizard-content > .ant-card.wizard-card.pdf-step .ant-card-body {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.ai-analysis-wizard .wizard-content > .ant-card.wizard-card.pdf-step .ant-card-body > *:last-child {
+  min-height: 0;
+  overflow: auto;
+}
+
+.ai-analysis-wizard .wizard-content .section-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-analysis-wizard .wizard-content .section-body::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.2);
+  border-radius: 3px;
+}
+
+.ai-analysis-wizard .wizard-content .section-body::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 3px;
+}
+
+.ai-analysis-wizard .wizard-content .section-body::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.6);
+}
+
+/* Sidebar scrollbar styling - exact same as section-body */
+.ai-analysis-wizard .wizard-sidebar .sidebar-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-analysis-wizard .wizard-sidebar .sidebar-body::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.2);
+  border-radius: 3px;
+}
+
+.ai-analysis-wizard .wizard-sidebar .sidebar-body::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.4);
+  border-radius: 3px;
+}
+
+.ai-analysis-wizard .wizard-sidebar .sidebar-body::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.6);
+}
+
+/* Professional section header */
+.ai-analysis-wizard .wizard-content .wizard-card .ant-card-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: calc(var(--radius) + 2px) calc(var(--radius) + 2px) 0 0;
+}
+
+/* Professional footer design */
+.ai-analysis-wizard .wizard-footer {
+  background: hsl(var(--card));
+  border-top: 1px solid hsl(var(--border));
+  box-shadow: 0 -1px 3px hsl(var(--foreground) / 0.1);
+  padding: 8px 16px; /* reduced height */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Footer clusters with better styling */
+.ai-analysis-wizard .wizard-footer-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-analysis-wizard .wizard-footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-analysis-wizard .progress-indicator {
+  color: hsl(var(--muted-foreground));
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-analysis-wizard .progress-indicator::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  display: inline-block;
+}
+
+/* Steps: compact vertical nav with state highlights */
+.ai-analysis-wizard .ant-steps {
+  --wizard-step-title-size: 12px;
+  --wizard-step-description-size: 11px;
+  --wizard-step-gap: 6px;
+  --wizard-step-max-width: 120px;
+  --wizard-step-icon-size: 18px;
+}
+
+.ai-analysis-wizard .ant-steps-item-title {
+  font-size: var(--wizard-step-title-size);
+  max-width: var(--wizard-step-max-width);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ai-analysis-wizard .ant-steps-item-description {
+  font-size: var(--wizard-step-description-size);
+  max-width: var(--wizard-step-max-width);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tighten up spacing and shrink item footprint */
+.ai-analysis-wizard .ant-steps-horizontal .ant-steps-item {
+  min-width: 0;
+  flex: 0 0 auto; /* prevent stretching to fill */
+}
+
+.ai-analysis-wizard .ant-steps-item-container {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wizard-step-gap);
+}
+
+.ai-analysis-wizard .ant-steps-item-icon {
+  width: var(--wizard-step-icon-size);
+  height: var(--wizard-step-icon-size);
+  line-height: var(--wizard-step-icon-size);
+  font-size: 12px;
+}
+
+.ai-analysis-wizard .ant-steps-item-content {
+  max-width: var(--wizard-step-max-width);
+}
+
+/* Reduce space between steps */
+.ai-analysis-wizard .ant-steps-horizontal .ant-steps-item:not(:first-child) {
+  margin-inline-start: 8px;
+}
+
+/* Apply theme color to the selected (current) step */
+.ai-analysis-wizard .ant-steps-item-process .ant-steps-item-title {
+  color: hsl(var(--primary));
+}
+
+.ai-analysis-wizard .ant-steps-item-process .ant-steps-item-icon {
+  background-color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+.ai-analysis-wizard .ant-steps-item-process .ant-steps-icon,
+.ai-analysis-wizard .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon {
+  color: hsl(var(--primary-foreground));
+}
+
+/* Completed steps: subtle success state */
+.ai-analysis-wizard .ant-steps-item-finish .ant-steps-item-title {
+  color: hsl(var(--muted-foreground));
+}
+.ai-analysis-wizard .ant-steps-item-finish .ant-steps-item-icon {
+  background-color: hsl(var(--accent));
+  border-color: hsl(var(--accent));
+}
+.ai-analysis-wizard .ant-steps-item-wait .ant-steps-item-icon {
+  background-color: hsl(var(--muted) / 0.4);
+  border-color: hsl(var(--border));
+}
+
+/* =================================================================
+   SIDEBAR MENU STYLING - CLEAN AND ORGANIZED
+   ================================================================= */
+
+/* Base menu container */
+.ai-analysis-wizard .ant-menu {
+  border: none;
+  background: transparent;
+  padding: 0 8px;
+  height: auto !important;
+  min-height: auto !important;
+}
+
+/* =================================================================
+   BASE MENU ITEM STATES
+   ================================================================= */
+
+/* Default state - all menu items */
+.ai-analysis-wizard .ant-menu-item {
+  margin: 4px 8px;
+  border-radius: var(--radius);
+  transition: all 200ms ease;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+  background: transparent;
+  border: 1px solid transparent;
+  position: relative;
+  overflow: visible;
+}
+
+/* Hover state - non-selected items */
+.ai-analysis-wizard .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background: hsl(var(--accent));
+  opacity: 1;
+}
+
+/* =================================================================
+   SELECTED STATE - HIGHEST PRIORITY
+   ================================================================= */
+
+/* Selected item - dark background with light text */
+.ai-analysis-wizard .ant-menu-item-selected {
+  background: hsl(var(--foreground)) !important;
+  border-color: transparent !important;
+  opacity: 1 !important;
+}
+
+/* Selected hover - maintain selected state */
+.ai-analysis-wizard .ant-menu-item-selected:hover {
+  background: hsl(var(--foreground)) !important;
+}
+
+/* Left indicator for selected */
+.ai-analysis-wizard .ant-menu-item-selected::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 50%;
+  background: hsl(var(--primary));
+  border-radius: 0 3px 3px 0;
+}
+
+/* =================================================================
+   COMPLETION STATES - VISUAL MODIFIERS
+   ================================================================= */
+
+/* All items should be fully visible - no fading */
+.ai-analysis-wizard .ant-menu-item {
+  opacity: 1;
+}
+
+/* Avoid sidebar text causing horizontal scroll */
+.ai-analysis-wizard .wizard-sidebar .ant-menu-title-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =================================================================
+   ICON STYLING - CLEAR HIERARCHY
+   ================================================================= */
+
+/* Base icon wrapper */
+.ai-analysis-wizard .sidebar-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+  margin-right: 12px;
+  flex-shrink: 0;
+  font-size: 14px;
+  position: relative;
+  
+  /* Default: not completed - clean border */
+  background: hsl(var(--muted) / 0.1);
+  border: 1.5px solid hsl(var(--border));
+  color: hsl(var(--foreground) / 0.7);
+}
+
+/* Active state (in progress) */
+.ai-analysis-wizard .sidebar-icon-wrapper.active:not(.completed) {
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  border: 1.5px solid hsl(var(--primary));
+  border-style: solid;
+}
+
+/* Completed state */
+.ai-analysis-wizard .sidebar-icon-wrapper.completed {
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
+  border: 1.5px solid hsl(var(--primary) / 0.3);
+  border-style: solid;
+}
+
+/* Selected item icons - visible on dark background */
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-icon-wrapper {
+  background: hsl(var(--background) / 0.15) !important;
+  border: 1.5px solid hsl(var(--background) / 0.3) !important;
+}
+
+/* Force icon color to be light on selected items */
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-icon-wrapper,
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-icon-wrapper * {
+  color: hsl(var(--background)) !important;
+  fill: hsl(var(--background)) !important;
+}
+
+/* Selected + active - show with primary accent */
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-icon-wrapper.active {
+  background: hsl(var(--primary) / 0.2) !important;
+  color: hsl(var(--background)) !important;
+  border: 1.5px solid hsl(var(--primary) / 0.4) !important;
+}
+
+/* Selected + completed - show primary accent */
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-icon-wrapper.completed {
+  background: hsl(var(--primary) / 0.2) !important;
+  color: hsl(var(--background)) !important;
+  border: 1.5px solid hsl(var(--primary) / 0.4) !important;
+}
+
+/* Checkmark overlay for completed items */
+.ai-analysis-wizard .sidebar-icon-check-overlay {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px; /* Small, proportional to badge size */
+  font-weight: bold;
+  border: 1.5px solid hsl(var(--card));
+  z-index: 1;
+}
+
+/* Ensure checkmark is visible on selected items */
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-icon-check-overlay {
+  border-color: hsl(var(--foreground));
+}
+
+/* Menu label styling */
+.ai-analysis-wizard .sidebar-menu-label {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* =================================================================
+   TEXT STYLING - CLEAR HIERARCHY
+   ================================================================= */
+
+/* Base menu title */
+.ai-analysis-wizard .sidebar-menu-title {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  color: hsl(var(--foreground) / 0.8); /* More visible, not too muted */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Active/completed items - darker text */
+.ai-analysis-wizard .sidebar-menu-item.active .sidebar-menu-title,
+.ai-analysis-wizard .sidebar-menu-item.completed .sidebar-menu-title {
+  color: hsl(var(--foreground));
+  font-weight: 500;
+}
+
+/* Selected items - inverted text color */
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-menu-title {
+  color: hsl(var(--background)) !important;
+  font-weight: 600;
+}
+
+.ai-analysis-wizard .sidebar-menu-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+/* =================================================================
+   STATUS BADGES
+   ================================================================= */
+
+/* Base badge styling */
+.ai-analysis-wizard .sidebar-status-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 200ms ease;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+/* Active badge */
+.ai-analysis-wizard .sidebar-status-badge.active {
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+
+/* Selected item badge - inverted */
+.ai-analysis-wizard .ant-menu-item-selected .sidebar-status-badge {
+  color: hsl(var(--background)) !important;
+}
+
+/* Hover effects - only for non-selected items */
+.ai-analysis-wizard .ant-menu-item:not(.ant-menu-item-selected):hover .sidebar-icon-wrapper {
+  transform: scale(1.05);
+  background: hsl(var(--accent) / 0.3);
+}
+
+/* Prevent hover from changing selected item icon colors */
+.ai-analysis-wizard .ant-menu-item-selected:hover .sidebar-icon-wrapper {
+  background: hsl(var(--background) / 0.15) !important;
+  border: 1.5px solid hsl(var(--background) / 0.3) !important;
+}
+
+.ai-analysis-wizard .ant-menu-item-selected:hover .sidebar-icon-wrapper,
+.ai-analysis-wizard .ant-menu-item-selected:hover .sidebar-icon-wrapper * {
+  color: hsl(var(--background)) !important;
+  fill: hsl(var(--background)) !important;
+}
+
+/* Maintain selected + active icon on hover */
+.ai-analysis-wizard .ant-menu-item-selected:hover .sidebar-icon-wrapper.active {
+  background: hsl(var(--primary) / 0.2) !important;
+  color: hsl(var(--background)) !important;
+  border: 1.5px solid hsl(var(--primary) / 0.4) !important;
+}
+
+/* Maintain selected + completed icon on hover */
+.ai-analysis-wizard .ant-menu-item-selected:hover .sidebar-icon-wrapper.completed {
+  background: hsl(var(--primary) / 0.2) !important;
+  color: hsl(var(--background)) !important;
+  border: 1.5px solid hsl(var(--primary) / 0.4) !important;
+}
+
+/* Improve focus visibility with theme ring */
+.ai-analysis-wizard .ant-steps-item:focus-visible .ant-steps-item-icon {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Spacing between form groups inside section forms */
+.ai-analysis-wizard .form-group-card:not(:last-child) {
+  margin-bottom: 16px;
+}
+
+/* Professional form cards */
+.ai-analysis-wizard .ant-card {
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: 0 1px 3px hsl(var(--foreground) / 0.05);
+  transition: all 200ms ease;
+  margin-bottom: 20px;
+}
+
+.ai-analysis-wizard .ant-card:hover {
+  box-shadow: 0 4px 12px hsl(var(--foreground) / 0.08);
+  border-color: hsl(var(--ring));
+}
+
+.ai-analysis-wizard .ant-card:last-child {
+  margin-bottom: 0;
+}
+
+/* Enhanced card headers */
+.ai-analysis-wizard .ant-card-head {
+  min-height: 48px;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.3);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.ai-analysis-wizard .ant-card-head-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  padding: 0;
+}
+
+/* Professional card body */
+.ai-analysis-wizard .ant-card-body {
+  padding: 20px;
+  background: hsl(var(--card));
+}
+
+/* Professional buttons and form elements */
+.ai-analysis-wizard .ant-btn {
+  border-radius: calc(var(--radius) - 2px);
+  font-weight: 500;
+  transition: all 200ms ease;
+}
+
+.ai-analysis-wizard .ant-btn-primary {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+  box-shadow: 0 1px 3px hsl(var(--primary) / 0.3);
+}
+
+.ai-analysis-wizard .ant-btn-primary:hover {
+  background: hsl(var(--primary) / 0.9);
+  border-color: hsl(var(--primary) / 0.9);
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.4);
+}
+
+.ai-analysis-wizard .ant-input, .ai-analysis-wizard .ant-select-selector, .ai-analysis-wizard .ant-textarea {
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid hsl(var(--border));
+  transition: all 200ms ease;
+}
+
+.ai-analysis-wizard .ant-input:focus, .ai-analysis-wizard .ant-select-focused .ant-select-selector, .ai-analysis-wizard .ant-textarea:focus {
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.1);
+  transform: scale(1.01);
+}
+
+/* Loading states and micro-interactions */
+.ai-analysis-wizard .ant-btn-loading {
+  opacity: 0.8;
+}
+
+.ai-analysis-wizard .ant-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Progress bar animation */
+.ai-analysis-wizard .progress-indicator::before {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Card entrance animations */
+.ai-analysis-wizard .ant-card {
+  animation: cardEntrance 300ms ease-out;
+}
+
+@keyframes cardEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced hover states */
+.ai-analysis-wizard .ant-btn:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+
+.ai-analysis-wizard .ant-card:hover .ant-card-head {
+  background: hsl(var(--muted) / 0.4);
+}
+
+/* Professional loading spinner */
+.ai-analysis-wizard .ant-spin-nested-loading .ant-spin-container {
+  position: relative;
+}
+
+.ai-analysis-wizard .ant-spin-nested-loading .ant-spin-blur {
+  opacity: 0.6;
+}
+
+@media (max-width: 575.98px) { /* xs */
+  .ai-analysis-wizard .ant-card-head-title { font-size: 0.9rem; }
+}
+
+@media (min-width: 1200px) { /* xl */
+  .ai-analysis-wizard .ant-card-head-title { font-size: 1rem; }
+}
+
+/* Fluid group grid: auto-fit cards that wrap naturally on large screens */
+.ai-analysis-wizard .group-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 992px) { /* lg */
+  .ai-analysis-wizard .group-grid {
+    /* 24-grid equivalent: each span unit = 1fr; children use gridColumn: span N */
+    grid-template-columns: repeat(24, minmax(0, 1fr));
+  }
+}
+
+.ai-analysis-wizard .group-grid-item {
+  min-width: 0;
+}
+
+/* Recommendation grid - 6 cards per row on large screens, responsive */
+.ai-analysis-wizard .suggestion-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Single card per row for clarity */
+@media (min-width: 992px) {
+  .ai-analysis-wizard .suggestion-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ai-analysis-wizard .rec-card {
+  cursor: pointer;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  transition: all 200ms ease;
+  border-radius: calc(var(--radius) - 2px);
+  overflow: hidden;
+  box-shadow: 0 1px 3px hsl(var(--foreground) / 0.05);
+}
+
+.ai-analysis-wizard .rec-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px hsl(var(--foreground) / 0.08);
+  border-color: hsl(var(--ring));
+}
+
+.ai-analysis-wizard .rec-card--selected {
+  outline: 2px solid hsl(var(--primary));
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2), 0 2px 8px hsl(var(--primary) / 0.1);
+  border-color: hsl(var(--primary));
+}
+
+.ai-analysis-wizard .rec-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding: 16px 16px 0 16px;
+}
+
+.ai-analysis-wizard .rec-checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: hsl(var(--primary));
+  border-radius: 4px;
+}
+
+.ai-analysis-wizard .rec-card__index {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.ai-analysis-wizard .rec-card__spacer {
+  margin-left: auto;
+}
+
+.ai-analysis-wizard .rec-card--compact .rec-card__rationale {
+  display: none;
+}
+
+.ai-analysis-wizard .rec-card--compact .rec-card__label {
+  font-weight: 600;
+}
+.ai-analysis-wizard .rec-card__label {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+.ai-analysis-wizard .rec-card__title {
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  font-size: 1.1rem;
+}
+.ai-analysis-wizard .rec-card__rationale {
+  font-size: 14.5px;
+  color: hsl(var(--muted-foreground));
+}
+.ai-analysis-wizard .rec-card__text--clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Mini cards inside recommendation card */
+.ai-analysis-wizard .rec-mini-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+@media (min-width: 992px) {
+  .ai-analysis-wizard .rec-mini-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ai-analysis-wizard .mini-card {
+  border: 1px dashed hsl(var(--border));
+  background: hsl(var(--card));
+  border-radius: calc(var(--radius) - 4px);
+  padding: 8px;
+}
+
+.ai-analysis-wizard .mini-card__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: 4px;
+}
+
+.ai-analysis-wizard .mini-card__content {
+  font-size: 14.5px;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Chips and metadata row */
+.ai-analysis-wizard .rec-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.ai-analysis-wizard .chip {
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.ai-analysis-wizard .chip--muted {
+  background: hsl(var(--muted) / 0.2);
+}
+.ai-analysis-wizard .chip--soft {
+  background: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+/* Risk bar */
+.ai-analysis-wizard .riskbar {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  background: hsl(var(--muted) / 0.2);
+  border: 1px solid hsl(var(--border));
+  border-radius: 999px;
+  margin-bottom: 8px;
+  overflow: visible; /* allow label to render outside bar */
+}
+.ai-analysis-wizard .riskbar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, hsl(var(--destructive) / 0.8), hsl(var(--warning) / 0.8));
+}
+.ai-analysis-wizard .riskbar__label {
+  position: absolute;
+  left: 0;
+  top: 10px; /* render below the bar to avoid clipping by card overflow */
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Larger header for the analysis card title */
+.ai-analysis-wizard .ai-vision-card .ant-card-head-title { font-size: 1.05rem; }
+
+/* Overview spacing and stats grid */
+.ai-analysis-wizard .analysis-overview { margin-top: 12px; margin-bottom: 16px; }
+.ai-analysis-wizard .analysis-stats {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+@media (min-width: 992px) {
+  .ai-analysis-wizard .analysis-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.ai-analysis-wizard .stat-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 12px 16px;
+}
+.ai-analysis-wizard .stat-title { font-size: 16px; font-weight: 700; color: hsl(var(--foreground)); }
+.ai-analysis-wizard .stat-value { font-size: 36px; font-weight: 800; color: hsl(var(--foreground)); }
+.ai-analysis-wizard .stat-desc { font-size: 12px; color: hsl(var(--muted-foreground)); }
+
+/* Steps list */
+.ai-analysis-wizard .mini-steps {
+  margin: 0;
+  padding-left: 16px;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+}
+.ai-analysis-wizard .rec-card__controls {
+  display: none; /* Priority is owned by the model; users cannot edit */
+}
+
+/* Image analysis hero section */
+.ai-analysis-wizard .ai-vision-card .analysis-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.10), hsl(var(--primary-foreground) / 0.05));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.ai-analysis-wizard .ai-vision-card .analysis-hero__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: hsl(var(--foreground));
+}
+
+.ai-analysis-wizard .ai-vision-card .analysis-hero__subtitle {
+  font-size: 0.9rem;
+  color: hsl(var(--muted-foreground));
+}
+
+.ai-analysis-wizard .ai-vision-card .analysis-hero__content {
+  display: grid;
+  gap: 6px;
+  min-width: 240px;
+}
+
+.ai-analysis-wizard .ai-vision-card .analysis-hero__cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Image gallery */
+.ai-analysis-wizard .image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.ai-analysis-wizard .image-grid__item {
+  border: 1px solid hsl(var(--border));
+  border-radius: calc(var(--radius) - 2px);
+  overflow: hidden;
+  background: hsl(var(--card));
+}
+
+.ai-analysis-wizard .image-grid__item img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+.ai-analysis-wizard .image-grid__caption {
+  font-size: 12px;
+  padding: 6px 8px;
+  color: hsl(var(--muted-foreground));
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  border-top: 1px solid hsl(var(--border));
+}
+
+/* Metrics row */
+.ai-analysis-wizard .metrics-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Toolbar */
+.ai-analysis-wizard .analysis-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.ai-analysis-wizard .analysis-toolbar .priority-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.ai-analysis-wizard .analysis-toolbar .chip { cursor: pointer; user-select: none; }
+.ai-analysis-wizard .analysis-toolbar .chip--active { outline: 1px dashed hsl(var(--ring)); }
+.ai-analysis-wizard .analysis-toolbar .toolbar-actions { display: flex; gap: 8px; align-items: center; }
+
+
+/* Theme-aware table styles for metadata-driven grids */
+.ai-analysis-wizard .meta-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.ai-analysis-wizard .meta-th {
+  text-align: left;
+  padding: 8px 10px;
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+  border-bottom: 1px solid hsl(var(--border));
+  font-weight: 600;
+  font-size: 12px;
+}
+.ai-analysis-wizard .meta-td {
+  padding: 8px 10px;
+  border-bottom: 1px solid hsl(var(--border));
+}
+.ai-analysis-wizard .meta-table tr:hover td {
+  background: hsl(var(--accent));
+}
+.ai-analysis-wizard .meta-table input {
+  background: hsl(var(--input));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+}

@@ -1,0 +1,181 @@
+{
+  "id": "paint-specs-dashboard",
+  "title": "Paint Specifications Dashboard",
+  "description": "Manage paint specifications and VOC compliance data with inline editing capabilities",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "paint-specs-navigation",
+      "type": "action-panel-gadget",
+      "title": "Navigation & Actions",
+      "description": "Action panel providing navigation to related workspaces and paint specifications management actions",
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 5,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "voc-dashboard",
+            "label": "← VOC Dashboard",
+            "description": "Return to VOC workspace",
+            "icon": "DashboardOutlined",
+            "type": "default",
+            "workspace": "compliance-manager/voc-workspace"
+          },
+          {
+            "key": "paint-invoices",
+            "label": "Paint Invoices",
+            "description": "Manage paint invoices and purchase tracking",
+            "icon": "FileTextOutlined",
+            "type": "primary",
+            "workspace": "asset-manager/paint-invoice-dashboard"
+          },
+          {
+            "key": "asset-management",
+            "label": "Asset Management",
+            "description": "Manage sites, asset groups, and assets with hierarchical tree view",
+            "icon": "ApartmentOutlined",
+            "type": "default",
+            "workspace": "asset-manager/asset-management"
+          }
+        ]
+      },
+      "position": 24
+    },
+    {
+      "id": "paint-specs-grid", 
+      "type": "inline-editable-grid-gadget",
+      "title": "Paint Specifications",
+      "description": "Interactive grid for managing paint specifications with inline editing, bulk operations, and VOC compliance tracking",
+      "config": {
+        "title": "Paint Specifications",
+        "subtitle": "Manage paint specifications with inline editing",
+        "baseUrl": "/api/documents",
+        "endpoints": {
+          "read": "?type=paint_specifications",
+          "create": "",
+          "update": "",
+          "delete": ""
+        },
+        "columns": [
+          {
+            "key": "manufacturer",
+            "title": "Manufacturer",
+            "dataIndex": "manufacturer",
+            "type": "text",
+            "editable": true,
+            "width": "25%",
+            "placeholder": "Enter manufacturer name",
+            "validation": {
+              "required": true
+            }
+          },
+          {
+            "key": "product",
+            "title": "Product",
+            "dataIndex": "product",
+            "type": "text",
+            "editable": true,
+            "width": "25%",
+            "placeholder": "Enter product name",
+            "validation": {
+              "required": true
+            }
+          },
+          {
+            "key": "product_code",
+            "title": "Product Code",
+            "dataIndex": "product_code",
+            "type": "text",
+            "editable": true,
+            "width": "20%",
+            "placeholder": "Enter product code",
+            "validation": {
+              "required": true
+            }
+          },
+          {
+            "key": "voc_content",
+            "title": "VOC (g/L)",
+            "dataIndex": "voc_content",
+            "type": "number",
+            "editable": true,
+            "width": "15%",
+            "placeholder": "VOC content",
+            "validation": {
+              "required": true,
+              "min": 0
+            }
+          },
+          {
+            "key": "last_updated",
+            "title": "Last Updated",
+            "dataIndex": "last_updated",
+            "type": "date",
+            "editable": false,
+            "width": "10%",
+            "render": "date"
+          },
+          {
+            "key": "updated_by",
+            "title": "Updated By",
+            "dataIndex": "updated_by",
+            "type": "text",
+            "editable": false,
+            "width": "15%"
+          }
+        ],
+        "config": {
+          "title": "Paint Specifications",
+          "subtitle": "Simple inline editing for VOC compliance tracking",
+          "showInstructions": true,
+          "instructionsText": "💡 Bulk Edit: Edit manufacturer, product, product code, and VOC content directly in the grid. Changed rows are highlighted. Use 'Save All' to commit changes.",
+          "enableBulkActions": true,
+          "enableAdd": true,
+          "enableDelete": true,
+          "addButtonText": "Add Paint Spec",
+          "saveAllButtonText": "Save All",
+          "resetChangesButtonText": "Reset Changes",
+          "newRecordDefaults": {
+            "manufacturer": "",
+            "product": "",
+            "product_code": "",
+            "voc_content": 0,
+            "type": "paint_specifications"
+          },
+          "pagination": {
+            "pageSize": 15,
+            "showSizeChanger": true,
+            "showQuickJumper": true,
+            "showTotal": true
+          },
+          "styling": {
+            "size": "small",
+            "bordered": true,
+            "striped": false,
+            "scroll": { "y": 500 }
+          }
+        }
+      },
+      "position": 24
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "showLastUpdated": true,
+    "enableExport": true,
+    "enablePrint": true
+  },
+  "metadata": {
+    "created": "2024-01-15T00:00:00Z",
+    "version": "1.0.0",
+    "tags": ["paint", "specifications", "voc", "compliance", "assets"],
+    "description": "Paint specifications dashboard with inline editing capabilities for VOC compliance tracking."
+  }
+}

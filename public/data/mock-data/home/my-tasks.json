@@ -1,0 +1,64 @@
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "title": "Review Safety Inspection Reports",
+      "description": "Review and approve pending safety inspection reports from last week",
+      "status": "In Progress",
+      "priority": "High",
+      "dueDate": "2024-01-16",
+      "assignedTo": "John Doe",
+      "tags": ["Safety", "Inspection", "Review"],
+      "timestamp": "2024-01-15T08:00:00Z",
+      "lastActivity": "Started reviewing reports"
+    },
+    {
+      "id": "task-002",
+      "title": "Update Equipment Inventory",
+      "description": "Update the equipment inventory database with new acquisitions",
+      "status": "Pending",
+      "priority": "Medium",
+      "dueDate": "2024-01-18",
+      "assignedTo": "John Doe",
+      "tags": ["Inventory", "Equipment", "Database"],
+      "timestamp": "2024-01-14T15:30:00Z",
+      "lastActivity": "Task assigned"
+    },
+    {
+      "id": "task-003",
+      "title": "Schedule Team Meeting",
+      "description": "Schedule monthly team meeting for safety protocol discussion",
+      "status": "Completed",
+      "priority": "Low",
+      "dueDate": "2024-01-15",
+      "assignedTo": "John Doe",
+      "tags": ["Meeting", "Team", "Schedule"],
+      "timestamp": "2024-01-14T10:15:00Z",
+      "lastActivity": "Meeting scheduled for Jan 20"
+    },
+    {
+      "id": "task-004",
+      "title": "Prepare Compliance Report",
+      "description": "Prepare quarterly compliance report for management review",
+      "status": "In Progress",
+      "priority": "High",
+      "dueDate": "2024-01-22",
+      "assignedTo": "John Doe",
+      "tags": ["Compliance", "Report", "Management"],
+      "timestamp": "2024-01-13T14:45:00Z",
+      "lastActivity": "Gathering compliance data"
+    },
+    {
+      "id": "task-005",
+      "title": "Update Training Materials",
+      "description": "Update safety training materials with new regulations",
+      "status": "Pending",
+      "priority": "Medium",
+      "dueDate": "2024-01-25",
+      "assignedTo": "John Doe",
+      "tags": ["Training", "Materials", "Regulations"],
+      "timestamp": "2024-01-12T16:20:00Z",
+      "lastActivity": "Task created"
+    }
+  ]
+} 

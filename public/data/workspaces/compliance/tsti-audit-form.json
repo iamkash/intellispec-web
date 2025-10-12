@@ -1,0 +1,714 @@
+{
+  "id": "tsti-audit-form",
+  "layout": "form",
+  "gadgets": [
+   {
+    "position": 24,
+    "id": "tsti-audit-gadget",
+    "type": "document-form-gadget",
+    "title": "TSTI Audit Form",
+    "config": {
+     "dataUrl": "/data/mock-data/forms/tsti-audit-data.json",
+     "dataPath": "formData",
+     "gadgetOptions": [
+      {
+       "id": "audit-header",
+       "title": "Audit Information",
+       "type": "section",
+       "size": 24,
+       "icon": "AuditOutlined"
+      },
+      {
+       "sectionId": "audit-header",
+       "id": "basic-info-group",
+       "title": "Basic Information",
+       "type": "group",
+       "size": 12,
+       "icon": "InfoCircleOutlined"
+      },
+      
+      {
+       "sectionId": "audit-header",
+       "groupId": "basic-info-group",
+       "id": "site",
+       "title": "Site Location",
+       "type": "text",
+       "size": 24,
+       "label": "Site Location",
+       "placeholder": "Enter site name or location",
+       "required": true
+      },
+      {
+       "sectionId": "audit-header",
+       "groupId": "basic-info-group",
+       "id": "date",
+       "title": "Audit Date",
+       "type": "date",
+       "size": 24,
+       "label": "Audit Date",
+       "placeholder": "Select audit date",
+       "required": true
+      },
+      {
+       "sectionId": "audit-header",
+       "groupId": "basic-info-group",
+       "id": "jobAudited",
+       "title": "Job Description",
+       "type": "textarea",
+       "size": 24,
+       "label": "Job Being Audited",
+       "placeholder": "Describe the job or task being audited",
+       "required": true,
+       "rows": 3,
+       "description": "Detailed description of the job or task being evaluated"
+      },
+      {
+       "sectionId": "audit-header",
+       "id": "auditor-info-group",
+       "title": "Auditor Information",
+       "type": "group",
+       "size": 12,
+       "icon": "UserOutlined"
+      },
+      {
+        "sectionId": "audit-header",
+        "groupId": "auditor-info-group",
+        "id": "auditorName",
+        "title": "Auditor Name",
+        "type": "text",
+        "size": 24,
+        "label": "Auditor Name",
+        "placeholder": "Enter auditor name",
+        "required": true
+       },
+       {
+        "sectionId": "audit-header",
+        "groupId": "auditor-info-group",
+        "id": "auditorTitle",
+        "title": "Auditor Title",
+        "type": "text",
+        "size": 24,
+        "label": "Auditor Title",
+        "placeholder": "Enter auditor title/role"
+       },
+
+
+      {
+       "id": "planning-section",
+       "title": "Task Planning & Preparation",
+       "type": "section",
+       "size": 24,
+       "icon": "SolutionOutlined"
+      },
+      {
+       "sectionId": "planning-section",
+       "id": "planning-group",
+       "title": "Planning Assessment",
+       "type": "group",
+       "size": 12,
+       "icon": "ScheduleOutlined"
+      },
+      {
+       "sectionId": "planning-section",
+       "groupId": "planning-group",
+       "id": "q1",
+       "title": "Task Planning Completion",
+       "type": "segmented",
+       "size": 24,
+       "label": "1. Is the task planning section completed by the FLS?",
+       "required": true,
+       "description": "Verify that the Front Line Supervisor has completed the task planning section",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+       "sectionId": "planning-section",
+       "groupId": "planning-group",
+       "id": "q1_reason",
+       "title": "Task Planning Completion - Reason",
+       "type": "textarea",
+       "size": 24,
+       "label": "Reason for No Response",
+       "placeholder": "Please explain why the task planning section was not completed and what corrective action is needed",
+       "required": true,
+       "rows": 3,
+       "description": "Required when 'No' is selected - explain the issue and required corrective action",
+       "watchField": "q1",
+       "showWhen": "no"
+      },
+      {
+       "sectionId": "planning-section",
+       "groupId": "planning-group",
+       "id": "q2",
+       "title": "Job Task Planning Score",
+       "type": "select",
+       "size": 24,
+       "label": "2. Job Task Planning Score",
+       "placeholder": "Select score",
+       "required": true,
+       "description": "Select the appropriate score based on job task planning quality",
+       "options": [
+        {
+         "label": "0 - No job steps listed",
+         "value": "0"
+        },
+        {
+         "label": "1 - Steps lack details",
+         "value": "1"
+        },
+        {
+         "label": "2 - Steps need improvement",
+         "value": "2"
+        },
+        {
+         "label": "3 - Clear, detailed steps",
+         "value": "3"
+        }
+       ]
+      },
+     
+      {
+       "sectionId": "planning-section",
+       "id": "hazard-group",
+       "title": "Hazard Assessment",
+       "type": "group",
+       "size": 12,
+       "icon": "ExclamationCircleOutlined"
+      },
+      {
+       "sectionId": "planning-section",
+       "groupId": "hazard-group",
+       "id": "q3",
+       "title": "Hazard Identification Score",
+       "type": "select",
+       "size": 24,
+       "label": "3. Hazard Identification Score",
+       "placeholder": "Select score",
+       "required": true,
+       "description": "Select the appropriate score based on hazard identification quality",
+       "options": [
+        {
+         "label": "0 - Hazards don't match tasks",
+         "value": "0"
+        },
+        {
+         "label": "1 - Hazards not specific",
+         "value": "1"
+        },
+        {
+         "label": "2 - Basic hazards listed",
+         "value": "2"
+        },
+        {
+         "label": "3 - Hazards clearly identified per step",
+         "value": "3"
+        }
+       ]
+      },
+      {
+       "sectionId": "planning-section",
+       "groupId": "hazard-group",
+       "id": "q4",
+       "title": "Hazard Mitigation Score",
+       "type": "select",
+       "size": 24,
+       "label": "4. Hazard Mitigation Score",
+       "placeholder": "Select score",
+       "required": true,
+       "description": "Select the appropriate score based on hazard mitigation quality",
+       "options": [
+        {
+         "label": "0 - No protective measures",
+         "value": "0"
+        },
+        {
+         "label": "1 - Some measures listed",
+         "value": "1"
+        },
+        {
+         "label": "2 - Basic measures need improvement",
+         "value": "2"
+        },
+        {
+         "label": "3 - Specific measures per step",
+         "value": "3"
+        }
+       ]
+      },
+      {
+       "sectionId": "planning-section",
+       "groupId": "hazard-group",
+       "id": "q6",
+       "title": "Hazard Recognition Completion",
+       "type": "segmented",
+       "size": 24,
+       "label": "5. Hazard recognition section completed properly and identifies all hazards?",
+       "required": true,
+       "description": "Verify that all hazards have been properly identified and documented",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+       "sectionId": "planning-section",
+       "groupId": "hazard-group",
+       "id": "q6_reason",
+       "title": "Hazard Recognition Completion - Reason",
+       "type": "textarea",
+       "size": 24,
+       "label": "Reason for No Response",
+       "placeholder": "Please explain what hazards were missed and what corrective action is needed",
+       "required": true,
+       "rows": 3,
+       "description": "Required when 'No' is selected - explain the missing hazards and required corrective action",
+       "watchField": "q6",
+       "showWhen": "no"
+      },
+      {
+       "id": "execution-section",
+       "title": "Execution & Communication",
+       "type": "section",
+       "size": 24,
+       "icon": "TeamOutlined"
+      },
+      {
+       "sectionId": "execution-section",
+       "id": "execution-group",
+       "title": "Execution Assessment",
+       "type": "group",
+       "size": 12,
+       "icon": "PlayCircleOutlined"
+      },
+      {
+       "sectionId": "execution-section",
+       "groupId": "execution-group",
+       "id": "q5",
+       "title": "TSTI Revisited After Scope Change",
+       "type": "segmented",
+       "size": 24,
+       "label": "6. Was TSTI revisited after job scope changed?",
+       "required": true,
+       "description": "Check if TSTI was updated when job scope changed",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+       "sectionId": "execution-section",
+       "groupId": "execution-group",
+       "id": "q5_reason",
+       "title": "TSTI Revisited After Scope Change - Reason",
+       "type": "textarea",
+       "size": 24,
+       "label": "Reason for No Response",
+       "placeholder": "Please explain why TSTI was not revisited and what corrective action is needed",
+       "required": true,
+       "rows": 3,
+       "description": "Required when 'No' is selected - explain the issue and required corrective action",
+       "watchField": "q5",
+       "showWhen": "no"
+      },
+      {
+       "sectionId": "execution-section",
+       "groupId": "execution-group",
+       "id": "q7",
+       "title": "Coach Questions Asked",
+       "type": "segmented",
+       "size": 24,
+       "label": "7. Were the coach questions asked by the FLS before work began?",
+       "required": true,
+       "description": "Verify that coaching questions were asked before work started",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+       "sectionId": "execution-section",
+       "groupId": "execution-group",
+       "id": "q7_reason",
+       "title": "Coach Questions Asked - Reason",
+       "type": "textarea",
+       "size": 24,
+       "label": "Reason for No Response",
+       "placeholder": "Please explain why coach questions were not asked and what corrective action is needed",
+       "required": true,
+       "rows": 3,
+       "description": "Required when 'No' is selected - explain the issue and required corrective action",
+       "watchField": "q7",
+       "showWhen": "no"
+      },
+      {
+       "sectionId": "execution-section",
+        "id": "communication-group",
+        "title": "Communication Assessment",
+        "type": "group",
+        "size": 12,
+        "icon": "MessageOutlined"
+       },
+      {
+       "sectionId": "execution-section",
+       "groupId": "communication-group",
+       "id": "q8",
+       "title": "Employee Review & Signatures",
+       "type": "segmented",
+       "size": 24,
+       "label": "8. Did all employees review and sign the TSTI?",
+       "required": true,
+       "description": "Confirm all employees have reviewed and signed the TSTI",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+       "sectionId": "execution-section",
+       "groupId": "communication-group",
+       "id": "q8_reason",
+       "title": "Employee Review & Signatures - Reason",
+       "type": "textarea",
+       "size": 24,
+       "label": "Reason for No Response",
+       "placeholder": "Please explain why employees did not review/sign and what corrective action is needed",
+       "required": true,
+       "rows": 3,
+       "description": "Required when 'No' is selected - explain the issue and required corrective action",
+       "watchField": "q8",
+       "showWhen": "no"
+      },
+      {
+       "sectionId": "execution-section",
+       "groupId": "communication-group",
+       "id": "q9",
+       "title": "FLS Authorization",
+       "type": "segmented",
+       "size": 24,
+       "label": "9. Did the FLS authorize the TSTI before work began?",
+       "required": true,
+       "description": "Verify FLS authorization was obtained before work started",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+       "sectionId": "execution-section",
+       "groupId": "communication-group",
+       "id": "q9_reason",
+       "title": "FLS Authorization - Reason",
+       "type": "textarea",
+       "size": 24,
+       "label": "Reason for No Response",
+       "placeholder": "Please explain why FLS authorization was not obtained and what corrective action is needed",
+       "required": true,
+       "rows": 3,
+       "description": "Required when 'No' is selected - explain the issue and required corrective action",
+       "watchField": "q9",
+       "showWhen": "no"
+      },
+      {
+       "id": "compliance-section",
+       "title": "Compliance & Safety",
+       "type": "section",
+       "size": 24,
+       "icon": "SafetyOutlined"
+      },
+      {
+       "sectionId": "compliance-section",
+       "id": "compliance-group",
+       "title": "Compliance Assessment",
+       "type": "group",
+       "size": 12,
+       "icon": "SafetyCertificateOutlined"
+      },
+      {
+       "sectionId": "compliance-section",
+       "groupId": "compliance-group",
+       "id": "q10",
+       "title": "2-Up Process Followed",
+       "type": "segmented",
+       "size": 24,
+       "label": "10. Was the 2-Up Process followed if required?",
+       "required": true,
+       "description": "Check if 2-Up process was followed when required",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+       "sectionId": "compliance-section",
+       "groupId": "compliance-group",
+        "id": "q10_reason",
+        "title": "2-Up Process Followed - Reason",
+        "type": "textarea",
+        "size": 24,
+        "label": "Reason for No Response",
+        "placeholder": "Please explain why the 2-Up Process was not followed and what corrective action is needed",
+        "required": true,
+        "rows": 3,
+        "description": "Required when 'No' is selected - explain the issue and required corrective action",
+        "watchField": "q10",
+        "showWhen": "no"
+       },
+
+      {
+        "sectionId": "compliance-section",
+        "id": "compliance-plan-group",
+        "title": "Compliance Plan Assessment",
+        "type": "group",
+        "size": 12,
+        "icon": "FileProtectOutlined"
+       },
+      {
+       "sectionId": "compliance-section",
+       "groupId": "compliance-plan-group",
+       "id": "q11",
+       "title": "TSTI Plan Compliance",
+       "type": "segmented",
+       "size": 24,
+       "label": "11. Are all employees following all aspects of the TSTI plan?",
+       "required": true,
+       "description": "Verify all employees are following the TSTI plan",
+       "options": [
+        {
+         "label": "✅ Yes",
+         "value": "yes"
+        },
+        {
+         "label": "❌ No",
+         "value": "no"
+        },
+        {
+         "label": "⏭️ N/A",
+         "value": "na"
+        }
+       ]
+      },
+      {
+        "sectionId": "compliance-section",
+        "groupId": "compliance-plan-group",
+        "id": "q11_reason",
+        "title": "TSTI Plan Compliance - Reason",
+        "type": "textarea",
+        "size": 24,
+        "label": "Reason for No Response",
+        "placeholder": "Please explain why the TSTI plan was not followed and what corrective action is needed",
+        "required": true,
+        "rows": 3,
+        "description": "Required when 'No' is selected - explain the issue and required corrective action",
+        "watchField": "q11",
+        "showWhen": "no"
+      },
+      {
+       "id": "summary-section",
+       "title": "Audit Summary & Results",
+       "type": "section",
+       "size": 24,
+       "icon": "BarChartOutlined"
+      },
+      {
+       "sectionId": "summary-section",
+       "id": "score-group",
+       "title": "Scoring Summary",
+       "type": "group",
+       "size": 12,
+       "icon": "BarChartOutlined"
+      },
+      {
+       "sectionId": "summary-section",
+       "groupId": "score-group",
+       "id": "totalYes",
+       "title": "Total Yes Responses",
+       "type": "stat-card",
+       "size": 8,
+       "calculated": true,
+       "autoRefresh": true,
+       "formula": "COUNT('yes')",
+                "widgetProps": {
+          "title": "Total Yes",
+          "color": "#34C759",
+          "icon": "✅",
+          "size": "small"
+        }
+      },
+      {
+       "sectionId": "summary-section",
+       "groupId": "score-group",
+       "id": "totalNo",
+       "title": "Total No Responses",
+       "type": "stat-card",
+       "size": 8,
+       "calculated": true,
+       "autoRefresh": true,
+       "formula": "COUNT('no')",
+               "widgetProps": {
+          "title": "Total No",
+          "color": "#FF3B30",
+          "icon": "❌",
+          "size": "small"
+        }
+      },
+      {
+       "sectionId": "summary-section",
+       "groupId": "score-group",
+       "id": "totalNA",
+       "title": "Total N/A Responses",
+       "type": "stat-card",
+       "size": 8,
+       "calculated": true,
+       "autoRefresh": true,
+       "formula": "COUNT('na')",
+               "widgetProps": {
+          "title": "Total N/A",
+          "color": "#FF9500",
+          "icon": "⏭️",
+          "size": "small"
+        }
+      },
+      {
+       "sectionId": "summary-section",
+       "groupId": "score-group",
+       "id": "score",
+       "title": "Overall Score",
+       "type": "score-gauge",
+       "size": 12,
+       "calculated": true,
+       "autoRefresh": true,
+       "formula": "FIELD('q2') + FIELD('q3') + FIELD('q4')",
+       "widgetProps": {
+         "title": "Overall Audit Score",
+         "maxValue": 9,
+         "description": "Sum of planning and hazard scores"
+       }
+      },
+      {
+       "sectionId": "summary-section",
+       "groupId": "score-group",
+       "id": "compliancePercentage",
+       "title": "Compliance Percentage",
+       "type": "progress-ring",
+       "size": 12,
+       "calculated": true,
+       "autoRefresh": true,
+       "formula": "(COUNT('yes') / (COUNT('yes') + COUNT('no'))) * 100",
+               "widgetProps": {
+          "title": "Compliance Rate",
+          "maxValue": 100,
+          "description": "Percentage of compliant responses",
+          "strokeColor": "#34C759",
+          "size": 120,
+          "precision": 1
+        }
+      },
+      {
+       "sectionId": "summary-section",
+       "id": "comments-group",
+       "title": "Audit Comments",
+       "type": "group",
+       "size": 12,
+       "icon": "FileTextOutlined"
+      },
+      {
+       "sectionId": "summary-section",
+       "groupId": "comments-group",
+       "id": "comments",
+       "title": "Audit Comments",
+       "type": "textarea",
+       "size": 24,
+       "label": "Comments & Recommendations",
+       "placeholder": "Enter any additional comments, observations, or recommendations. Note: Any 'No' answer requires a comment explaining the issue and corrective action needed.",
+       "rows": 6,
+       "description": "Provide detailed comments for any issues found and recommendations for improvement"
+      },
+      {
+       "sectionId": "summary-section",
+       "groupId": "comments-group",
+       "id": "nextSteps",
+       "title": "Next Steps",
+       "type": "textarea",
+       "size": 24,
+       "label": "Next Steps & Follow-up Actions",
+       "placeholder": "Describe any follow-up actions, training needs, or corrective measures required",
+       "rows": 3,
+       "description": "Outline specific actions needed to address any issues found"
+      }
+     ]
+    }
+   }
+  ]
+ }

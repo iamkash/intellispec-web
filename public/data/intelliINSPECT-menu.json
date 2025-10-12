@@ -1,0 +1,31 @@
+{
+  "menu_items": [
+    {
+      "key": "home",
+      "icon": "HomeOutlined",
+      "label": "Home",
+      "license_id": "LIC_INTELLI_INSPECT",
+      "auth_id": "AUTH_INSPECTOR",
+      "enabled": true,
+      "order": 1,
+      "route": "/intelliINSPECT/home",
+      "type": "item",
+      "permissions": ["inspection.view"],
+      "workspace": "intelliINSPECT/home",
+      "is_default": true
+    },
+    {
+      "key": "calculators",
+      "icon": "CalculatorOutlined",
+      "label": "Calculators",
+      "license_id": "LIC_INTELLI_INSPECT",
+      "auth_id": "AUTH_INSPECTOR",
+      "enabled": true,
+      "order": 2,
+      "route": "/intelliINSPECT/calculators",
+      "type": "item",
+      "permissions": ["inspection.view"],
+      "workspace": "intelliINSPECT/calculators"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "menu_items": [
+    {
+      "key": "ndt-dashboard",
+      "icon": "DashboardOutlined",
+      "label": "NDT Dashboard",
+      "license_id": "LIC_NDT_AI",
+      "auth_id": "AUTH_NDT_TECH",
+      "enabled": true,
+      "order": 1,
+      "route": "/ndt/dashboard",
+      "type": "item",
+      "permissions": ["ndt.view"]
+    },
+    {
+      "key": "analysis",
+      "icon": "RobotOutlined",
+      "label": "AI Analysis",
+      "license_id": "LIC_NDT_AI",
+      "auth_id": "AUTH_NDT_TECH",
+      "enabled": true,
+      "order": 2,
+      "type": "group",
+      "permissions": ["ndt.analysis"]
+    },
+    {
+      "key": "defect-detection",
+      "icon": "BugOutlined",
+      "label": "Defect Detection",
+      "license_id": "LIC_NDT_AI",
+      "auth_id": "AUTH_NDT_TECH",
+      "enabled": true,
+      "order": 3,
+      "route": "/ndt/analysis/defects",
+      "parent_key": "analysis",
+      "type": "item",
+      "permissions": ["ndt.analysis.defects"]
+    },
+    {
+      "key": "image-processing",
+      "icon": "PictureOutlined",
+      "label": "Image Processing",
+      "license_id": "LIC_NDT_AI",
+      "auth_id": "AUTH_NDT_TECH",
+      "enabled": true,
+      "order": 4,
+      "route": "/ndt/analysis/images",
+      "parent_key": "analysis",
+      "type": "item",
+      "permissions": ["ndt.analysis.images"]
+    },
+    {
+      "key": "reports",
+      "icon": "FileTextOutlined",
+      "label": "NDT Reports",
+      "license_id": "LIC_NDT_AI",
+      "auth_id": "AUTH_NDT_TECH",
+      "enabled": true,
+      "order": 5,
+      "route": "/ndt/reports",
+      "type": "item",
+      "permissions": ["ndt.reports"]
+    }
+  ]
+} 

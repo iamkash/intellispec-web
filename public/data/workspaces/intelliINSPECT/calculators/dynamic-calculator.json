@@ -1,0 +1,28 @@
+{
+  "id": "dynamic-calculator-workspace",
+  "type": "form",
+  "title": "Calculator",
+  "description": "Dynamic calculator workspace",
+  "icon": "CalculatorOutlined",
+  "mode": "form",
+  "layout": "dashboard",
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": []
+  },
+  "gadgets": [
+    {
+      "id": "dynamic-calculator-gadget",
+      "type": "dynamic-calculator-gadget",
+      "title": "Calculator",
+      "description": "AI-powered dynamic calculator rendering inputs from metadata and streaming professional report results",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "calculatorId": "{calculatorId}",
+        "dataUrl": "/api/calculators/{calculatorId}/metadata",
+        "mode": "form"
+      }
+    }
+  ]
+}

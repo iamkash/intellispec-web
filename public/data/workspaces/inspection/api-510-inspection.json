@@ -1,0 +1,153 @@
+{
+  "id": "api-510-inspection",
+  "type": "wizard",
+  "title": "API 510 Inspection",
+  "description": "Streamlined API 510 inspection wizard focused on core inspection workflow",
+  "icon": "SafetyCertificateOutlined",
+  "mode": "wizard",
+  "layout": "form",
+  "gadgets": [
+    {
+      "id": "api-510-inspection-gadget",
+      "type": "document-form-gadget",
+      "title": "API 510 Inspection",
+      "description": "Complete API 510 inspection process step by step",
+      "position": 24,
+      "config": {
+        "dataUrl": "/data/mock-data/forms/api-510-inspection-data.json",
+        "mode": "wizard",
+        "showStepper": true,
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "validateOnStepChange": true,
+        "autoSave": true,
+        "autoSaveInterval": 30000,
+        "showStepNumbers": true,
+        "showStepDescriptions": true,
+        "allowBackNavigation": true,
+        "stepperPosition": "top",
+        "stepperSize": "default",
+        "aiAssistant": {
+          "enabled": true,
+          "position": "drawer",
+          "title": "AI Inspection Assistant",
+          "description": "Get help with form filling, voice input, and image analysis",
+          "openaiConfig": {
+            "apiKey": "",
+            "baseUrl": "https://api.openai.com/v1"
+          },
+          "modelConfig": {
+            "model": "gpt-4o-mini",
+            "temperature": 0.7,
+            "maxTokens": 1000
+          },
+          "features": {
+            "enableVoice": true,
+            "enableImageUpload": true,
+            "enableDocumentUpload": true,
+            "enableSuggestions": true,
+            "enableAutoFill": true
+          },
+          "formSchema": {
+            "url": "/data/workspaces/inspection/api-510-complete-schema.json",
+            "description": "Complete API 510 inspection form schema with all fields and sections"
+          }
+        },
+        "gadgetOptions": [
+          {
+            "id": "vessel-identification",
+            "type": "section",
+            "title": "Vessel Identification",
+            "description": "Basic vessel information, location, and inspection planning",
+            "icon": "DatabaseOutlined",
+            "order": 1,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/vessel-identification.json"
+          },
+          {
+            "id": "safety-preparation",
+            "type": "section",
+            "title": "Safety Preparation",
+            "description": "Safety procedures, permits, and pre-inspection safety checks",
+            "icon": "SafetyCertificateOutlined",
+            "order": 2,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/safety-preparation.json"
+          },
+          {
+            "id": "visual-inspection",
+            "type": "section",
+            "title": "Visual Inspection",
+            "description": "General condition assessment, component inspection, and anomaly documentation",
+            "icon": "EyeOutlined",
+            "order": 3,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/visual-inspection.json"
+          },
+          {
+            "id": "measurements-tests",
+            "type": "section",
+            "title": "Measurements & Tests",
+            "description": "Physical measurements, testing procedures, and data collection",
+            "icon": "RulerOutlined",
+            "order": 4,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/measurements-tests.json"
+          },
+          {
+            "id": "findings-assessment",
+            "type": "section",
+            "title": "Findings & Assessment",
+            "description": "Inspection results, condition assessment, and recommendations",
+            "icon": "BarChartOutlined",
+            "order": 5,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/findings-assessment.json"
+          },
+          {
+            "id": "documentation-report",
+            "type": "section",
+            "title": "Documentation & Report",
+            "description": "Inspection photographs, supporting documents, and final report generation",
+            "icon": "FileTextOutlined",
+            "order": 6,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/documentation-report.json"
+          },
+          {
+            "id": "pdf-report-generation",
+            "type": "section",
+            "title": "PDF Report Generation",
+            "description": "Generate and preview the final inspection report",
+            "icon": "FilePdfOutlined",
+            "order": 7,
+            "size": 12,
+            "sectionOptionsUrl": "api-510-sections/pdf-report-generation.json"
+          }
+        ]
+      }
+    }
+  ],
+      "smartDefaults": {
+      "findings-assessment": {
+        "overall-condition": "good",
+        "vessel-status": "fit-for-service",
+        "critical-issues": "no",
+        "safety-concerns": "no",
+        "immediate-actions": "no",
+        "maintenance-recommendations": "routine",
+        "next-inspection-date": "6-months",
+        "api-510-compliance": "compliant",
+        "inspection-approval": "approved"
+      },
+      "documentation-report": {
+        "photographs-taken": "yes",
+        "photograph-quality": "good",
+        "supporting-documents": "yes",
+        "report-format": "pdf",
+        "report-template": "api-510-standard",
+        "report-verification": "verified",
+        "report-submission": "submitted"
+      }
+    }
+} 

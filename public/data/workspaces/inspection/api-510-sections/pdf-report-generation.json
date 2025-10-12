@@ -1,0 +1,38 @@
+[
+  {
+    "id": "pdf-report-generation",
+    "type": "section",
+    "title": "PDF Report Generation",
+    "description": "Generate and preview the final inspection report",
+    "icon": "FilePdfOutlined",
+    "order": 7,
+    "size": 12
+  },
+  {
+    "id": "pdf-report-preview-group",
+    "type": "group",
+    "title": "PDF Report Generation",
+    "description": "Generate and preview the final inspection report",
+    "sectionId": "pdf-report-generation",
+    "order": 1,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "pdf-report-preview",
+    "type": "pdf-report-preview",
+    "title": "PDF Report Preview",
+    "label": "Generate and preview the final inspection report",
+    "size": 24,
+    "sectionId": "pdf-report-generation",
+    "groupId": "pdf-report-preview-group",
+    "defaultValue": null,
+    "reportTitle": "API 510 Pressure Vessel Inspection Report",
+    "reportSubtitle": "Comprehensive Inspection Documentation",
+    "companyName": "IntelliSpec Inspection Services",
+    "pageSize": "a4",
+    "orientation": "portrait",
+    "showPreview": true,
+    "autoGenerate": false
+  }
+] 

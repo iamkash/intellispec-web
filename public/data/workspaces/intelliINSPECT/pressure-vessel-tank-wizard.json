@@ -1,0 +1,676 @@
+{
+  "id": "pressure-vessel-tank-wizard",
+  "title": "Pressure Vessel & Tank Inspection Wizard",
+  "description": "AI-powered inspection wizard for pressure vessels, spheres, bullets, and storage tanks",
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  },
+  "gadgets": [
+    {
+      "id": "pressure-vessel-tank-wizard-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Pressure Vessel & Tank Inspection Wizard",
+      "description": "Comprehensive inspection workflow for pressure vessels and storage tanks with AI analysis",
+      "config": {
+        "title": "Pressure Vessel & Tank Inspection Assistant",
+        "description": "Intelligent pressure vessel and storage tank inspection workflow with AI-powered analysis and documentation",
+        "inspectionType": "pressure_vessel",
+        "equipmentType": "pressure_vessel",
+        "assetDataPopulation": {
+          "enabled": true,
+          "apiEndpoint": "/api/documents",
+          "assetIdParam": "asset_id",
+          "populateOnLoad": true,
+          "disablePopulatedFields": true
+        },
+        "sections": [
+          {
+            "id": "voice_capture",
+            "title": "Voice Capture",
+            "description": "Record inspection notes and observations. Transcription will feed following steps.",
+            "sectionType": "voice",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_capture",
+            "title": "Equipment Images",
+            "description": "Upload images of equipment, nameplates, and conditions for AI analysis.",
+            "sectionType": "image",
+            "includeInPdf": false,
+            "images": {
+              "maxCount": 20,
+              "maxSize": 10485760,
+              "accept": "image/jpeg,image/png,image/gif,image/webp",
+              "multiple": true,
+              "showPreview": true,
+              "showThumbnails": true,
+              "thumbnailSize": 150,
+              "drawingEnabled": true,
+              "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow", "measurement"],
+              "drawingColors": ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"],
+              "strokeWidths": [1, 2, 3, 5, 8],
+              "uploadText": "Click or drag images here to upload",
+              "dragText": "Drop images here to upload"
+            },
+            "required": false,
+            "disabled": false,
+            "gridLayout": { "xs": 24, "sm": 24, "md": 24, "lg": 24 }
+          },
+          {
+            "id": "ai_analysis",
+            "title": "AI Equipment Analysis",
+            "description": "Detailed AI analysis of captured images and voice notes including equipment type detection and condition assessment.",
+            "imageAnalysisPromptRef": "detailedEquipmentAnalysis",
+            "promptSourceIds": ["image_capture", "voice_capture"],
+            "includeInPdf": true,
+            "analysisWidget": "simple",
+            "pdf": {
+              "includeOverview": false,
+              "includeImages": true,
+              "imagesDataPath": "sections[image_capture].images",
+              "fit": "contain",
+              "align": "center"
+            }
+          },
+          {
+            "id": "general_information",
+            "title": "General Information",
+            "description": "Basic inspection and equipment information.",
+            "sectionType": "form",
+            "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+            "btnLabel": "Populate General Info",
+            "promptRef": "generalInfoPopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "equipment_details",
+            "title": "Equipment Details & Specifications",
+            "description": "Detailed equipment specifications and design data.",
+            "sectionType": "form",
+            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "btnLabel": "Populate Equipment Details",
+            "promptRef": "equipmentDetailsPopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "inspection_scope",
+            "title": "Inspection Scope & Methodology",
+            "description": "Scope description and inspection methods used.",
+            "sectionType": "form",
+            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "btnLabel": "Populate Scope",
+            "promptRef": "scopePopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "observations_shell_head",
+            "title": "Observations - Shell & Head",
+            "description": "Shell and head condition observations with Good/Fair/Poor/NA ratings.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Shell & Head Observations",
+              "dataKey": "shellHeadObservations",
+              "columns": [
+                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
+                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
+                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
+                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+              ],
+              "promptRef": "shellHeadObservationsPopulate",
+              "btnLabel": "Populate Shell & Head Observations"
+            }
+          },
+          {
+            "id": "observations_welds",
+            "title": "Observations - Welds & Joints",
+            "description": "Weld and joint condition observations with Good/Fair/Poor/NA ratings.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Welds & Joints Observations",
+              "dataKey": "weldObservations",
+              "columns": [
+                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
+                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
+                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
+                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+              ],
+              "promptRef": "weldObservationsPopulate",
+              "btnLabel": "Populate Weld Observations"
+            }
+          },
+          {
+            "id": "observations_nozzles",
+            "title": "Observations - Nozzles & Connections",
+            "description": "Nozzle and connection observations with Good/Fair/Poor/NA ratings.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Nozzles & Connections Observations",
+              "dataKey": "nozzleObservations",
+              "columns": [
+                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
+                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
+                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
+                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+              ],
+              "promptRef": "nozzleObservationsPopulate",
+              "btnLabel": "Populate Nozzle Observations"
+            }
+          },
+          {
+            "id": "observations_supports_foundation",
+            "title": "Observations - Supports & Foundation",
+            "description": "Support and foundation observations with Good/Fair/Poor/NA ratings.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Supports & Foundation Observations",
+              "dataKey": "supportFoundationObservations",
+              "columns": [
+                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
+                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
+                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
+                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+              ],
+              "promptRef": "supportFoundationObservationsPopulate",
+              "btnLabel": "Populate Support & Foundation Observations"
+            }
+          },
+          {
+            "id": "internal_components",
+            "title": "Internal Components Assessment",
+            "description": "Internal component inspection and assessment (Always Required).",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Internal Components Findings",
+              "dataKey": "internalFindings",
+              "columns": [
+                { "key": "component", "title": "Component", "editable": true },
+                { "key": "condition", "title": "Condition", "editable": true },
+                { "key": "finding", "title": "Finding/Anomaly", "editable": true },
+                { "key": "severity", "title": "Severity", "editable": true, "summary": "severityStats" },
+                { "key": "recommendations", "title": "Recommendations", "editable": true }
+              ],
+              "promptRef": "internalComponentsPopulate",
+              "btnLabel": "Populate Internal Components"
+            }
+          },
+          {
+            "id": "roof_foundation_assessment",
+            "title": "Roof & Foundation Assessment",
+            "description": "Tank roof and foundation condition assessment (Tank Equipment Only).",
+            "includeInPdf": true,
+            "watchField": "detected_equipment_type",
+            "showWhen": "fixed_roof_tank,floating_roof_tank,internal_floating_roof_tank",
+            "grid": {
+              "title": "Roof & Foundation Assessment",
+              "dataKey": "roofFoundationFindings",
+              "columns": [
+                { "key": "component", "title": "Component", "editable": true, "summary": "countMissing" },
+                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
+                { "key": "finding", "title": "Finding/Anomaly", "editable": true, "summary": "countMissing" },
+                { "key": "measurements", "title": "Measurements", "editable": true },
+                { "key": "recommendations", "title": "Recommendations", "editable": true }
+              ],
+              "promptRef": "roofFoundationPopulate",
+              "btnLabel": "Populate Roof & Foundation"
+            }
+          },
+          {
+            "id": "floating_roof_seal",
+            "title": "Floating Roof Seal Assessment",
+            "description": "Floating roof seal condition and integrity assessment (Floating Roof Tanks Only).",
+            "includeInPdf": true,
+            "watchField": "detected_equipment_type",
+            "showWhen": "floating_roof_tank,internal_floating_roof_tank",
+            "grid": {
+              "title": "Floating Roof Seal Assessment",
+              "dataKey": "floatingRoofSealFindings",
+              "columns": [
+                { "key": "sealType", "title": "Seal Type", "editable": true },
+                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
+                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
+                { "key": "gapMeasurement", "title": "Gap Measurement", "editable": true },
+                { "key": "leakageRate", "title": "Leakage Rate", "editable": true },
+                { "key": "recommendations", "title": "Recommendations", "editable": true }
+              ],
+              "promptRef": "floatingRoofSealPopulate",
+              "btnLabel": "Populate Floating Roof Seal"
+            }
+          },
+          {
+            "id": "tank_bottom_settlement",
+            "title": "Tank Bottom Settlement Assessment",
+            "description": "Tank bottom settlement and deformation assessment (Tank Equipment Only).",
+            "includeInPdf": true,
+            "watchField": "detected_equipment_type",
+            "showWhen": "fixed_roof_tank,floating_roof_tank,internal_floating_roof_tank",
+            "grid": {
+              "title": "Tank Bottom Settlement",
+              "dataKey": "tankBottomFindings",
+              "columns": [
+                { "key": "location", "title": "Location/Grid", "editable": true, "summary": "countMissing" },
+                { "key": "settlementValue", "title": "Settlement (inches)", "editable": true, "summary": "average" },
+                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
+                { "key": "trendAnalysis", "title": "Trend Analysis", "editable": true },
+                { "key": "recommendations", "title": "Recommendations", "editable": true }
+              ],
+              "promptRef": "tankBottomPopulate",
+              "btnLabel": "Populate Tank Bottom Settlement"
+            }
+          },
+          {
+            "id": "nozzle_weld_detail",
+            "title": "Nozzle Weld Detail Assessment",
+            "description": "Detailed nozzle and weld inspection (Pressure Vessel Equipment Only).",
+            "includeInPdf": true,
+            "watchField": "detected_equipment_type",
+            "showWhen": "pressure_vessel_vertical,pressure_vessel_horizontal,sphere_tank,bullet_tank",
+            "grid": {
+              "title": "Nozzle Weld Detail Assessment",
+              "dataKey": "nozzleWeldFindings",
+              "columns": [
+                { "key": "nozzleId", "title": "Nozzle ID", "editable": true, "summary": "countMissing" },
+                { "key": "weldType", "title": "Weld Type", "editable": true },
+                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
+                { "key": "defectType", "title": "Defect Type", "editable": true },
+                { "key": "severity", "title": "Severity", "editable": true, "summary": "uniqueCount" },
+                { "key": "recommendations", "title": "Recommendations", "editable": true }
+              ],
+              "promptRef": "nozzleWeldPopulate",
+              "btnLabel": "Populate Nozzle Weld Details"
+            }
+          },
+          {
+            "id": "psv_nameplate_check",
+            "title": "PSV Nameplate Cross-Check",
+            "description": "Pressure Safety Valve nameplate verification and cross-check (Pressure Vessel Equipment Only).",
+            "includeInPdf": true,
+            "watchField": "detected_equipment_type",
+            "showWhen": "pressure_vessel_vertical,pressure_vessel_horizontal,sphere_tank,bullet_tank",
+            "grid": {
+              "title": "PSV Nameplate Cross-Check",
+              "dataKey": "psvNameplateFindings",
+              "columns": [
+                { "key": "psvTag", "title": "PSV Tag", "editable": true, "summary": "countMissing" },
+                { "key": "setPressure", "title": "Set Pressure (psig)", "editable": true },
+                { "key": "capacity", "title": "Capacity", "editable": true },
+                { "key": "complianceStatus", "title": "Compliance Status", "editable": true, "summary": "uniqueCount" },
+                { "key": "discrepancies", "title": "Discrepancies", "editable": true },
+                { "key": "recommendations", "title": "Recommendations", "editable": true }
+              ],
+              "promptRef": "psvNameplatePopulate",
+              "btnLabel": "Populate PSV Nameplate Check"
+            }
+          },
+          {
+            "id": "thickness_measurements",
+            "title": "Thickness Measurement & Calculations",
+            "description": "Thickness readings and remaining life calculations.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Thickness Measurements",
+              "dataKey": "measurements",
+              "columns": [
+                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
+                { "key": "nominalThickness", "title": "Nominal Thickness (in)", "editable": true, "summary": "average" },
+                { "key": "actualThickness", "title": "Actual Thickness (in)", "editable": true, "summary": "average" },
+                { "key": "corrosionRate", "title": "Corrosion Rate (mpy)", "editable": true, "summary": "average" },
+                { "key": "remainingLife", "title": "Remaining Life (years)", "editable": true, "summary": "minimum" }
+              ],
+              "promptRef": "thicknessPopulate",
+              "btnLabel": "Populate Measurements"
+            }
+          },
+          {
+            "id": "evaluation_compliance",
+            "title": "Evaluation & Compliance",
+            "description": "Fitness-for-service and code compliance assessment per API 510/653.",
+            "sectionType": "form",
+            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "btnLabel": "Populate Evaluation",
+            "promptRef": "evaluationPopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "recommendations",
+            "title": "Recommendations & Repairs",
+            "description": "Required repairs, alterations, and improvements.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Recommendations",
+              "dataKey": "recommendations",
+              "columns": [
+                { "key": "priority", "title": "Priority", "editable": true, "summary": "uniqueCount" },
+                { "key": "type", "title": "Type", "editable": true, "summary": "uniqueCount" },
+                { "key": "description", "title": "Description", "editable": true, "summary": "countMissing" },
+                { "key": "method", "title": "Method/Standard", "editable": true },
+                { "key": "timeline", "title": "Timeline", "editable": true }
+              ],
+              "promptRef": "recommendationsPopulate",
+              "btnLabel": "Populate Recommendations"
+            }
+          },
+          {
+            "id": "next_inspection",
+            "title": "Next Inspection Requirements",
+            "description": "Next inspection interval and requirements.",
+            "sectionType": "form",
+            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "btnLabel": "Populate Next Inspection",
+            "promptRef": "nextInspectionPopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "inspector_signoff",
+            "title": "Inspector Signoff",
+            "description": "Inspector certification and approval.",
+            "sectionType": "form",
+            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "includeInPdf": true
+          }
+        ],
+        "groups": [
+          { "id": "equipment_selection", "title": "Equipment Selection", "sectionId": "general_information", "lgSpan": 24 },
+          { "id": "inspection_details", "title": "Inspection Details", "sectionId": "general_information", "lgSpan": 24 },
+          { "id": "equipment_identification", "title": "Equipment Identification", "sectionId": "general_information", "lgSpan": 24 },
+          { "id": "equipment_specifications", "title": "Equipment Specifications", "sectionId": "equipment_details", "lgSpan": 24 },
+          { "id": "design_data", "title": "Design Data", "sectionId": "equipment_details", "lgSpan": 24 },
+          { "id": "operating_conditions", "title": "Operating Conditions", "sectionId": "equipment_details", "lgSpan": 24 },
+          { "id": "scope_details", "title": "Scope Details", "sectionId": "inspection_scope", "lgSpan": 24 },
+          { "id": "inspection_methods", "title": "Inspection Methods", "sectionId": "inspection_scope", "lgSpan": 24 },
+          { "id": "calculations", "title": "Calculations", "sectionId": "evaluation_compliance", "lgSpan": 24 },
+          { "id": "compliance_assessment", "title": "Compliance Assessment", "sectionId": "evaluation_compliance", "lgSpan": 24 },
+          { "id": "next_inspection_details", "title": "Next Inspection Details", "sectionId": "next_inspection", "lgSpan": 24 },
+          { "id": "inspector_info", "title": "Inspector Information", "sectionId": "inspector_signoff", "lgSpan": 24 }
+        ],
+        "fields": [
+          { "id": "company_id", "label": "Company", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select company...", "optionsUrl": "/api/options/companies", "labelField": "label", "valueField": "value", "required": true, "populateFromAsset": "company_id" },
+          { "id": "site_id", "label": "Facility/Site", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select facility...", "optionsUrl": "/api/options/sites", "labelField": "label", "valueField": "value", "dependsOn": "company_id", "required": true, "populateFromAsset": "site_id" },
+          { "id": "asset_group_id", "label": "Asset Group", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset group...", "optionsUrl": "/api/options/asset-groups", "labelField": "label", "valueField": "value", "dependsOn": "site_id", "required": false, "populateFromAsset": "asset_group_id" },
+          { "id": "asset_id", "label": "Asset", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset...", "optionsUrl": "/api/options/assets", "labelField": "label", "valueField": "value", "dependsOn": ["company_id", "site_id", "asset_group_id"], "required": false, "populateFromAsset": "id" },
+          { "id": "detected_equipment_type", "label": "Equipment Type", "type": "select", "readonly": false, "groupId": "equipment_identification", "lgSpan": 12, "placeholder": "Select or auto-detect equipment type", "options": [ { "label": "Pressure Vessel - Vertical", "value": "pressure_vessel_vertical" }, { "label": "Pressure Vessel - Horizontal", "value": "pressure_vessel_horizontal" }, { "label": "Sphere Tank", "value": "sphere_tank" }, { "label": "Bullet Tank", "value": "bullet_tank" }, { "label": "Fixed Roof Storage Tank", "value": "fixed_roof_tank" }, { "label": "Floating Roof Storage Tank", "value": "floating_roof_tank" }, { "label": "Internal Floating Roof Tank", "value": "internal_floating_roof_tank" } ] },
+          { "id": "applicable_standard", "label": "Applicable Standard", "type": "select", "groupId": "equipment_identification", "lgSpan": 12, "options": [ { "label": "API 510 - Pressure Vessel Inspection", "value": "API 510" }, { "label": "API 653 - Tank Inspection", "value": "API 653" } ] },
+          { "id": "inspection_type", "label": "Inspection Type", "type": "dropdown", "options": ["External", "Internal", "Internal & External", "On-stream", "RBI", "Turnaround", "Post-repair", "Post-alteration", "Pre-service"], "required": true, "groupId": "inspection_details", "lgSpan": 8 },
+          { "id": "equipment_id", "label": "Equipment ID / Tag", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 8, "populateFromAsset": "asset_tag" },
+          { "id": "inspection_date", "label": "Inspection Date", "type": "date", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
+          { "id": "equipment_description", "label": "Description (Type, Service, Design Code)", "type": "textarea", "required": true, "groupId": "equipment_identification", "lgSpan": 24, "populateFromAsset": "description" },
+          { "id": "owner_user", "label": "Owner/User", "type": "text", "required": true, "groupId": "equipment_identification", "lgSpan": 12, "populateFromAsset": "owner" },
+          { "id": "location", "label": "Location", "type": "text", "required": true, "groupId": "equipment_identification", "lgSpan": 12, "populateFromAsset": "location" },
+          { "id": "manufacturer", "label": "Manufacturer", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12, "populateFromAsset": "manufacturer" },
+          { "id": "year_built", "label": "Year Built", "type": "number", "groupId": "equipment_specifications", "lgSpan": 12, "populateFromAsset": "year_built" },
+          { "id": "serial_number", "label": "Serial Number", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12, "populateFromAsset": "serial_number" },
+          { "id": "capacity", "label": "Capacity (gallons/bbls)", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12, "populateFromAsset": "capacity" },
+          { "id": "mawp", "label": "MAWP (psi)", "type": "number", "groupId": "design_data", "lgSpan": 6, "populateFromAsset": "mawp" },
+          { "id": "mdmt", "label": "MDMT (°F)", "type": "number", "groupId": "design_data", "lgSpan": 6, "populateFromAsset": "mdmt" },
+          { "id": "design_temp", "label": "Design Temperature (°F)", "type": "number", "groupId": "design_data", "lgSpan": 6, "populateFromAsset": "design_temp" },
+          { "id": "corrosion_allowance", "label": "Corrosion Allowance (in)", "type": "number", "groupId": "design_data", "lgSpan": 6, "populateFromAsset": "corrosion_allowance" },
+          { "id": "original_thickness", "label": "Original Thickness (in)", "type": "number", "groupId": "design_data", "lgSpan": 6, "populateFromAsset": "original_thickness" },
+          { "id": "material_construction", "label": "Material of Construction", "type": "text", "groupId": "design_data", "lgSpan": 6, "populateFromAsset": "material_construction" },
+          { "id": "operating_pressure", "label": "Operating Pressure (psi)", "type": "number", "groupId": "operating_conditions", "lgSpan": 8, "populateFromAsset": "operating_pressure" },
+          { "id": "operating_temperature", "label": "Operating Temperature (°F)", "type": "number", "groupId": "operating_conditions", "lgSpan": 8, "populateFromAsset": "operating_temperature" },
+          { "id": "service_contents", "label": "Service/Contents", "type": "text", "groupId": "operating_conditions", "lgSpan": 8, "populateFromAsset": "service_contents" },
+          { "id": "inspector_name", "label": "Inspector Name", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
+          { "id": "api_certification", "label": "API Certification #", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
+          { "id": "other_personnel", "label": "Other Personnel (NDE techs, support staff)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
+          { "id": "references", "label": "References (API Standards, ASME code, OEM drawings)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
+          { "id": "scope_description", "label": "Scope Description (areas inspected, limitations)", "type": "textarea", "required": true, "groupId": "scope_details", "lgSpan": 24 },
+          { "id": "inspection_preparation", "label": "Inspection Preparation (cleaning, isolation, permits, safety)", "type": "textarea", "groupId": "scope_details", "lgSpan": 24 },
+          { "id": "inspection_methods_used", "label": "Inspection Methods Used", "type": "checkbox_group", "options": ["Visual", "UT Thickness", "Weld Inspection", "Foundation Check", "Relief Valve Check", "Settlement Survey", "Other"], "groupId": "inspection_methods", "lgSpan": 24 },
+          { "id": "rbi_interval_method", "label": "RBI or Interval Determination Method", "type": "text", "groupId": "inspection_methods", "lgSpan": 24 },
+          { "id": "min_required_thickness", "label": "Minimum Required Thickness per ASME (in)", "type": "number", "groupId": "calculations", "lgSpan": 8 },
+          { "id": "mawp_calculation", "label": "MAWP Calculation Result (psi)", "type": "number", "groupId": "calculations", "lgSpan": 8 },
+          { "id": "rbi_risk_factor", "label": "RBI Risk Factor Update", "type": "text", "groupId": "calculations", "lgSpan": 8 },
+          { "id": "fitness_service_results", "label": "Fitness-for-Service (API 579) Results", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
+          { "id": "code_compliance", "label": "Code Compliance Assessment (deviations from API/ASME)", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
+          { "id": "service_suitability", "label": "Service Suitability Determination", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
+          { "id": "next_inspection_interval", "label": "Next Inspection Interval (per code)", "type": "text", "groupId": "next_inspection_details", "lgSpan": 12 },
+          { "id": "next_inspection_date", "label": "Next Inspection Due Date", "type": "date", "groupId": "next_inspection_details", "lgSpan": 12 },
+          { "id": "next_inspection_type", "label": "Next Inspection Type", "type": "select", "options": [ { "label": "External", "value": "external" }, { "label": "Internal", "value": "internal" }, { "label": "On-stream", "value": "on_stream" }, { "label": "RBI", "value": "rbi" } ], "groupId": "next_inspection_details", "lgSpan": 12 },
+          { "id": "next_inspection_scope", "label": "Next Inspection Scope Requirements", "type": "textarea", "groupId": "next_inspection_details", "lgSpan": 24 },
+          { "id": "inspector_signature", "label": "Inspector's Signature", "type": "signature", "required": true, "groupId": "inspector_info", "lgSpan": 24, "props": { "width": 400, "height": 150, "showTools": true, "showTimestamp": true, "showSignedBy": true, "enableUndo": true, "placeholder": "Please sign here to certify this inspection", "penColor": "#000080", "backgroundColor": "#ffffff" } },
+          { "id": "signature_date", "label": "Date", "type": "date", "required": true, "groupId": "inspector_info", "lgSpan": 12 }
+        ],
+        "pdfStyling": { 
+          "header": { 
+            "backgroundColor": [24,24,27], 
+            "textColor": [255,255,255], 
+            "fontSize": 12, 
+            "companyName": "Pressure Vessel & Tank Inspection Report", 
+            "companyAddress": "" 
+          }, 
+          "footer": { 
+            "textColor": [100,116,139], 
+            "fontSize": 6, 
+            "leftText": "API 510/653 Inspection", 
+            "centerText": "Confidential", 
+            "rightText": "Page {page} of {pages}" 
+          }, 
+          "sections": { 
+            "headerFontSize": 10, 
+            "contentFontSize": 8, 
+            "lineSpacing": 3.5, 
+            "margins": { "left": 15, "right": 195 } 
+          }, 
+          "tables": { 
+            "headerBackground": [2,6,23], 
+            "headerTextColor": [255,255,255], 
+            "headerFontSize": 8, 
+            "contentFontSize": 7, 
+            "cellPadding": 3 
+          }, 
+          "images": { 
+            "dpi": 400, 
+            "format": "JPEG", 
+            "quality": 0.92, 
+            "fit": "contain", 
+            "align": "center", 
+            "widthPercent": 1 
+          } 
+        },
+        "prompts": {
+          "detailedEquipmentAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 2000,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate standard API 510/653 pressure vessel/tank inspection report. Use only factual data from voice transcript and images. Do not include disclaimers about 'not provided', 'photographic evidence', or 'insufficient data'. If data is not available, leave field blank or use 'N/A'. Standard report format only.",
+              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard API 510/653 inspection report using voice data and images:\n\n**PRESSURE VESSEL/TANK INSPECTION REPORT**\n**API 510/653 STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [vessel/tank type from voice/visual] |\n| Manufacturer | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Year Built | [from nameplate/voice] |\n| National Board Number | [from nameplate] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| MAWP | [psi from nameplate/voice] |\n| MDMT | [°F from nameplate/voice] |\n| Design Temperature | [°F from nameplate/voice] |\n| Material of Construction | [from nameplate/voice] |\n| Service/Contents | [from voice] |\n| Capacity | [gallons/bbls from nameplate/voice] |\n\n**INSPECTION SCOPE:**\n| Parameter | Value |\n|-----------|-------|\n| Inspection Type | [External/Internal from voice] |\n| Inspection Date | [today] |\n| Inspector | [name from voice] |\n| API Certification | [API 510/653 number from voice] |\n| Methods Used | [from voice] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Shell | [condition from voice/visual] | [details] |\n| Heads | [condition from voice/visual] | [details] |\n| Welds | [condition from voice/visual] | [details] |\n| Nozzles | [condition from voice/visual] | [details] |\n| Supports/Foundation | [condition from voice/visual] | [details] |\n| Internal Components | [condition from voice/visual] | [details] |\n\n**THICKNESS MEASUREMENTS:**\n| Parameter | Value | Unit |\n|-----------|-------|------|\n| Location | [from voice] | - |\n| Nominal Thickness | [design thickness from voice] | in |\n| Actual Thickness | [measured thickness from voice] | in |\n| Minimum Required | [calculated from voice] | in |\n| Corrosion Rate | [mpy from voice] | mpy |\n| Remaining Life | [years from voice] | years |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per API 510/653] |\n| Next Inspection Due | [Date per API interval] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| API Certification | [API 510/653 number from voice] |"
+            },
+            "streaming": {
+              "enabled": true,
+              "showProgress": true,
+              "updateInterval": 100
+            }
+          },
+          "generalInfoPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract general inspection information from the analysis and populate form fields. First, try to match equipment based on voice transcript references to company, facility, asset group, or asset names - if specific equipment is mentioned, suggest matching selections. Based on the equipment images and analysis, determine the detected_equipment_type (pressure_vessel_vertical, pressure_vessel_horizontal, sphere_tank, bullet_tank, fixed_roof_tank, floating_roof_tank, internal_floating_roof_tank) and applicable_standard (API 510 for pressure vessels, API 653 for tanks). For inspection_type, analyze the images: if you see both external views AND internal components/access, use 'Internal & External'; if only external views, use 'External'; if only internal views, use 'Internal'. Return JSON only with field names exactly matching the form configuration."
+            }
+          },
+          "equipmentDetailsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract equipment specifications and design data from the analysis. Return JSON only."
+            }
+          },
+          "scopePopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract inspection scope and methodology from the analysis. Return JSON only."
+            }
+          },
+          "evaluationPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate fitness-for-service evaluation and compliance assessment per API 510/653. Return JSON only."
+            }
+          },
+          "shellHeadObservationsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 2000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate shell and head observations per API 510/653 standards. Return JSON array for shellHeadObservations with ID, item, condition ratings (good/fair/poor/na), and detailed comments for: V1-General Corrosion, V2-Localized Corrosion, V3-Coating Condition, V4-Shell Distortion, V5-Head Condition, V6-Nameplate Legibility, V7-External Attachments, V8-Other Issues."
+            },
+            "autoPrompt": true
+          },
+          "weldObservationsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate weld and joint observations per API 510/653 standards. Return JSON array for weldObservations with ID, item, condition ratings (good/fair/poor/na), and detailed comments for: W1-Longitudinal Welds, W2-Circumferential Welds, W3-Nozzle Welds, W4-Attachment Welds, W5-Weld Repairs, W6-Heat Affected Zones, W7-Other Weld Issues."
+            },
+            "autoPrompt": true
+          },
+          "nozzleObservationsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate nozzle and connection observations per API 510/653 standards. Return JSON array for nozzleObservations with ID, item, condition ratings (good/fair/poor/na), and detailed comments for: N1-Nozzle Necks, N2-Nozzle Flanges, N3-Reinforcement Pads, N4-Bolting, N5-Gaskets, N6-External Loads, N7-Other Nozzle Issues."
+            },
+            "autoPrompt": true
+          },
+          "supportFoundationObservationsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate support and foundation observations per API 510/653 standards. Return JSON array for supportFoundationObservations with ID, item, condition ratings (good/fair/poor/na), and detailed comments for: S1-Saddle Supports, S2-Leg Supports, S3-Foundation, S4-Anchor Bolts, S5-Grout Condition, S6-Settlement, S7-Other Support Issues."
+            },
+            "autoPrompt": true
+          },
+          "internalComponentsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 2000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate internal component findings per API 510/653 standards. Return JSON array for internalFindings with detailed component-specific assessments focusing on internals, linings, and internal structures."
+            },
+            "autoPrompt": true
+          },
+          "roofFoundationPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate tank roof and foundation assessment per API 653 standards. Return JSON array for roofFoundationFindings focusing on roof structure, drainage, venting, and foundation condition."
+            },
+            "autoPrompt": true
+          },
+          "floatingRoofSealPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate floating roof seal assessment per API 653 standards. Return JSON array for floatingRoofSealFindings focusing on seal integrity, gap measurements, and emission compliance."
+            },
+            "autoPrompt": true
+          },
+          "tankBottomPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate tank bottom settlement assessment per API 653 standards. Return JSON array for tankBottomFindings focusing on settlement patterns, deformation, and structural implications."
+            },
+            "autoPrompt": true
+          },
+          "nozzleWeldPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate nozzle weld detail assessment per API 510 standards. Return JSON array for nozzleWeldFindings focusing on weld integrity, nozzle attachment, and stress concentration areas."
+            },
+            "autoPrompt": true
+          },
+          "psvNameplatePopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate PSV nameplate cross-check per API 510 standards. Return JSON array for psvNameplateFindings focusing on set pressure verification, capacity validation, and compliance status."
+            },
+            "autoPrompt": true
+          },
+          "thicknessPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate thickness measurements data with remaining life calculations. Return JSON array for measurements."
+            },
+            "autoPrompt": true
+          },
+          "recommendationsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 2000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Generate inspection recommendations per API 510/653 requirements. Return JSON array for recommendations with priority and timeline."
+            },
+            "autoPrompt": true
+          },
+          "nextInspectionPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.2
+            },
+            "promptConfig": {
+              "systemPrompt": "Determine next inspection requirements per API 510/653 interval requirements. Return JSON only."
+            }
+          }
+        }
+      },
+      "position": 24
+    }
+  ]
+}

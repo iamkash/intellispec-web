@@ -1,0 +1,798 @@
+[
+  {
+    "id": "vessel-identification-planning",
+    "type": "section",
+    "title": "Vessel Identification & Planning",
+    "description": "Basic vessel information, inspection planning, safety requirements, and equipment verification",
+    "icon": "DatabaseOutlined",
+    "order": 1,
+    "size": 12
+  },
+  {
+    "id": "vessel-details-group",
+    "type": "group",
+    "title": "Vessel Details",
+    "description": "Primary vessel identification information",
+    "sectionId": "vessel-identification-planning",
+    "order": 1,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "vessel-tag",
+    "type": "text",
+    "title": "Vessel Tag Number",
+    "label": "Vessel Tag Number",
+    "placeholder": "Enter vessel tag number",
+    "required": true,
+    "size": 8,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "vessel-details-group"
+  },
+  {
+    "id": "vessel-name",
+    "type": "text",
+    "title": "Vessel Name/Description",
+    "label": "Vessel Name/Description",
+    "placeholder": "Enter vessel name or description",
+    "required": true,
+    "size": 16,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "vessel-details-group"
+  },
+  {
+    "id": "manufacturer",
+    "type": "text",
+    "title": "Manufacturer",
+    "label": "Manufacturer",
+    "placeholder": "Enter manufacturer name",
+    "size": 16,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "vessel-details-group"
+  },
+  {
+    "id": "serial-number",
+    "type": "text",
+    "title": "Serial Number",
+    "label": "Serial Number",
+    "placeholder": "Enter serial number",
+    "size": 8,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "vessel-details-group"
+  },
+  {
+    "id": "design-code",
+    "type": "select",
+    "title": "Design Code",
+    "label": "Design Code",
+    "placeholder": "Select design code",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "vessel-details-group",
+    "options": [
+      {"label": "ASME Section VIII, Division 1", "value": "asme-viii-div1"},
+      {"label": "ASME Section VIII, Division 2", "value": "asme-viii-div2"},
+      {"label": "API 620", "value": "api-620"},
+      {"label": "API 650", "value": "api-650"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "construction-year",
+    "type": "number",
+    "title": "Year of Construction",
+    "label": "Year of Construction",
+    "placeholder": "YYYY",
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "vessel-details-group"
+  },
+  {
+    "id": "design-data-group",
+    "type": "group",
+    "title": "Design Data",
+    "description": "Vessel design specifications and requirements",
+    "sectionId": "vessel-identification-planning",
+    "order": 2,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "mawp",
+    "type": "number",
+    "title": "MAWP (Maximum Allowable Working Pressure)",
+    "label": "MAWP (psig)",
+    "placeholder": "Enter MAWP",
+    "required": true,
+    "size": 8,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "design-data-group"
+  },
+  {
+    "id": "design-temperature",
+    "type": "number",
+    "title": "Design Temperature",
+    "label": "Design Temp (°F)",
+    "placeholder": "Enter design temperature",
+    "required": true,
+    "size": 8,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "design-data-group"
+  },
+  {
+    "id": "corrosion-allowance",
+    "type": "number",
+    "title": "Corrosion Allowance",
+    "label": "Corrosion Allowance (inches)",
+    "placeholder": "Enter corrosion allowance",
+    "required": true,
+    "size": 8 ,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "design-data-group"
+  },
+  {
+    "id": "joint-efficiency",
+    "type": "number",
+    "title": "Joint Efficiency",
+    "label": "Joint Efficiency",
+    "placeholder": "Enter joint efficiency",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "design-data-group"
+  },
+  {
+    "id": "material-specification",
+    "type": "text",
+    "title": "Material Specification",
+    "label": "Material Specification",
+    "placeholder": "Enter material specification",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "design-data-group"
+  },
+  {
+    "id": "post-weld-heat-treatment",
+    "type": "radio",
+    "title": "Post Weld Heat Treatment Required",
+    "label": "PWHT Required",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "design-data-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "inspection-intervals-group",
+    "type": "group",
+    "title": "Inspection Intervals",
+    "description": "API 510 required inspection intervals and history",
+    "sectionId": "vessel-identification-planning",
+    "order": 3,
+    "size": 10,
+    "collapsible": false
+  },
+  {
+    "id": "last-internal-inspection",
+    "type": "date",
+    "title": "Last Internal Inspection Date",
+    "label": "Last Internal Inspection Date",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-intervals-group"
+  },
+  {
+    "id": "last-external-inspection",
+    "type": "date",
+    "title": "Last External Inspection Date",
+    "label": "Last External Inspection Date",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-intervals-group"
+  },
+  {
+    "id": "last-thickness-measurement",
+    "type": "date",
+    "title": "Last Thickness Measurement Date",
+    "label": "Last Thickness Measurement Date",
+    "required": true,
+    "size": 24,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-intervals-group"
+  },
+  {
+    "id": "internal-inspection-interval",
+    "type": "number",
+    "title": "Internal Inspection Interval",
+    "label": "Internal Inspection Interval (years)",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-intervals-group"
+  },
+  {
+    "id": "external-inspection-interval",
+    "type": "number",
+    "title": "External Inspection Interval",
+    "label": "External Inspection Interval (years)",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-intervals-group"
+  },
+  {
+    "id": "thickness-measurement-interval",
+    "type": "number",
+    "title": "Thickness Measurement Interval",
+    "label": "Thickness Measurement Interval (years)",
+    "required": true,
+    "size": 24,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-intervals-group"
+  },
+  {
+    "id": "inspection-planning-group",
+    "type": "group",
+    "title": "Inspection Planning",
+    "description": "Inspection scope and type",
+    "sectionId": "vessel-identification-planning",
+    "order": 4,
+    "size": 14,
+    "collapsible": false
+  },
+  {
+    "id": "inspection-type",
+    "type": "radio",
+    "title": "Type of Inspection",
+    "label": "Type of Inspection",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group",
+    "options": [
+      {"label": "Internal Inspection", "value": "internal"},
+      {"label": "External Inspection", "value": "external"},
+      {"label": "On-Stream Inspection", "value": "on-stream"},
+      {"label": "Combined Internal/External", "value": "combined"}
+    ]
+  },
+  {
+    "id": "inspection-date",
+    "type": "date",
+    "title": "Inspection Date",
+    "label": "Inspection Date",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group"
+  },
+  {
+    "id": "next-inspection-date",
+    "type": "date",
+    "title": "Next Inspection Due Date",
+    "label": "Next Inspection Due Date",
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group"
+  },
+  {
+    "id": "internal-inspection-required",
+    "type": "radio",
+    "title": "Internal Inspection Required",
+    "label": "Internal Inspection Required",
+    "size": 8,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "watchField": "inspection-type",
+    "showWhen": "combined",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "external-inspection-required",
+    "type": "radio",
+    "title": "External Inspection Required",
+    "label": "External Inspection Required",
+    "size": 8,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "watchField": "inspection-type",
+    "showWhen": "combined",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "on-stream-monitoring-required",
+    "type": "radio",
+    "title": "On-Stream Monitoring Required",
+    "label": "On-Stream Monitoring Required",
+    "size": 8,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "watchField": "inspection-type",
+    "showWhen": "on-stream",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "confined-space-entry-required",
+    "type": "radio",
+    "title": "Confined Space Entry Required",
+    "label": "Confined Space Entry Required",
+    "size": 8,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "watchField": "inspection-type",
+    "showWhen": ["internal", "combined"],
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "inspection-scope",
+    "type": "textarea",
+    "title": "Inspection Scope",
+    "label": "Inspection Scope",
+    "placeholder": "Describe the scope of inspection work to be performed",
+    "size": 24,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "inspection-planning-group"
+  },
+
+  {
+    "id": "rbi-assessment-group",
+    "type": "group",
+    "title": "Risk-Based Inspection Assessment",
+    "description": "RBI assessment details and requirements",
+    "sectionId": "vessel-identification-planning",
+    "order": 5,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "rbi-assessment-performed",
+    "type": "radio",
+    "title": "RBI Assessment Performed",
+    "label": "RBI Assessment Performed",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "rbi-assessment-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "rbi-assessment-date",
+    "type": "date",
+    "title": "RBI Assessment Date",
+    "label": "RBI Assessment Date",
+    "size": 12,
+    "watchField": "rbi-assessment-performed",
+    "showWhen": "yes",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "rbi-assessment-group"
+  },
+  {
+    "id": "risk-level",
+    "type": "select",
+    "title": "Risk Level",
+    "label": "Risk Level",
+    "size": 12,
+    "watchField": "rbi-assessment-performed",
+    "showWhen": "yes",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "rbi-assessment-group",
+    "options": [
+      {"label": "Low", "value": "low"},
+      {"label": "Medium", "value": "medium"},
+      {"label": "High", "value": "high"},
+      {"label": "Critical", "value": "critical"}
+    ]
+  },
+  {
+    "id": "damage-mechanisms",
+    "type": "checkbox",
+    "title": "Identified Damage Mechanisms",
+    "label": "Identified Damage Mechanisms",
+    "size": 24,
+    "watchField": "rbi-assessment-performed",
+    "showWhen": "yes",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "rbi-assessment-group",
+    "options": [
+      {"label": "General Corrosion", "value": "general-corrosion"},
+      {"label": "Localized Corrosion", "value": "localized-corrosion"},
+      {"label": "Stress Corrosion Cracking", "value": "scc"},
+      {"label": "Fatigue", "value": "fatigue"},
+      {"label": "Creep", "value": "creep"},
+      {"label": "Erosion", "value": "erosion"},
+      {"label": "Mechanical Damage", "value": "mechanical-damage"},
+      {"label": "Brittle Fracture", "value": "brittle-fracture"}
+    ]
+  },
+  
+  {
+    "id": "safety-requirements-group",
+    "type": "group",
+    "title": "Safety & Access Requirements",
+    "description": "Safety requirements and access preparation",
+    "sectionId": "vessel-identification-planning",
+    "order": 6,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "confined-space-required",
+    "type": "radio",
+    "title": "Confined Space Entry Required",
+    "label": "Confined Space Entry Required",
+    "required": true,
+    "size": 8,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "safety-requirements-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "lockout-tagout-required",
+    "type": "radio",
+    "title": "Lockout/Tagout Required",
+    "label": "Lockout/Tagout Required",
+    "required": true,
+    "size": 8,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "safety-requirements-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "ventilation-required",
+    "type": "radio",
+    "title": "Ventilation Required",
+    "label": "Ventilation Required",
+    "size": 8,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "safety-requirements-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "ppe-required",
+    "type": "checkbox",
+    "title": "Required PPE",
+    "label": "Required PPE",
+    "size": 24,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "safety-requirements-group",
+    "options": [
+      {"label": "Hard Hat", "value": "hard-hat"},
+      {"label": "Safety Glasses", "value": "safety-glasses"},
+      {"label": "Safety Boots", "value": "safety-boots"},
+      {"label": "Gloves", "value": "gloves"},
+      {"label": "Respirator", "value": "respirator"},
+      {"label": "Hearing Protection", "value": "hearing-protection"},
+      {"label": "Fall Protection", "value": "fall-protection"},
+      {"label": "Chemical Suit", "value": "chemical-suit"}
+    ]
+  },
+  {
+    "id": "emergency-contacts-group",
+    "type": "group",
+    "title": "Emergency Contacts & Procedures",
+    "description": "Emergency contacts and procedures",
+    "sectionId": "vessel-identification-planning",
+    "order": 7,
+    "size": 24,
+    "collapsible": false
+  },
+  {
+    "id": "emergency-contacts",
+    "type": "tags-input",
+    "title": "Emergency Contacts",
+    "label": "Emergency Contacts",
+    "placeholder": "Add emergency contact (Name: Phone)",
+    "size": 12,
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Contact",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all emergency contacts?",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "emergency-contacts-group"
+  },
+  {
+    "id": "emergency-procedures",
+    "type": "tags-input",
+    "title": "Emergency Procedures",
+    "label": "Emergency Procedures",
+    "placeholder": "Add emergency procedure",
+    "size": 12,
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Procedure",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all emergency procedures?",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "emergency-contacts-group"
+  },
+  {
+    "id": "crew-information-group",
+    "type": "group",
+    "title": "Crew Information",
+    "description": "Inspection crew details and qualifications",
+    "sectionId": "vessel-identification-planning",
+    "order": 9,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "lead-inspector",
+    "type": "text",
+    "title": "Lead Inspector",
+    "label": "Lead Inspector",
+    "placeholder": "Enter lead inspector name",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "crew-information-group"
+  },
+  {
+    "id": "lead-inspector-qualification",
+    "type": "select",
+    "title": "Lead Inspector Qualification",
+    "label": "Lead Inspector Qualification",
+    "required": true,
+    "size": 12,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "crew-information-group",
+    "options": [
+      {"label": "API 510 Certified", "value": "api-510"},
+      {"label": "ASNT Level II", "value": "asnt-ii"},
+      {"label": "ASNT Level III", "value": "asnt-iii"},
+      {"label": "Other", "value": "other"}
+    ]
+  },
+  {
+    "id": "lead-inspector-certification-number",
+    "type": "text",
+    "title": "Lead Inspector Certification Number",
+    "label": "Certification Number",
+    "placeholder": "Enter certification number",
+    "size": 24,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "crew-information-group"
+  },
+  {
+    "id": "crew-members",
+    "type": "tags-input",
+    "title": "Crew Members",
+    "label": "Crew Members",
+    "placeholder": "Add crew member (Name: Role: Qualification)",
+    "size": 24,
+    "showToolbar": true,
+    "showIndividualControls": true,
+    "showCount": true,
+    "addButtonText": "Add Crew Member",
+    "removeAllButtonText": "Clear All",
+    "confirmRemoveAllMessage": "Are you sure you want to remove all crew members?",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "crew-information-group"
+  },
+  {
+    "id": "contractor-information-group",
+    "type": "group",
+    "title": "Contractor Information",
+    "description": "Contractor details if applicable",
+    "sectionId": "vessel-identification-planning",
+    "order": 10,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "contractor-required",
+    "type": "radio",
+    "title": "Contractor Required",
+    "label": "Contractor Required",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "contractor-information-group",
+    "options": [
+      {"label": "Yes", "value": "yes"},
+      {"label": "No", "value": "no"}
+    ]
+  },
+  {
+    "id": "contractor-name",
+    "type": "text",
+    "title": "Contractor Name",
+    "label": "Contractor Name",
+    "placeholder": "Enter contractor name",
+    "size": 24,
+    "watchField": "contractor-required",
+    "showWhen": "yes",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "contractor-information-group"
+  },
+  {
+    "id": "contractor-contact",
+    "type": "text",
+    "title": "Contractor Contact",
+    "label": "Contractor Contact",
+    "placeholder": "Enter contractor contact",
+    "size": 24,
+    "watchField": "contractor-required",
+    "showWhen": "yes",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "contractor-information-group"
+  },
+  {
+    "id": "contractor-scope",
+    "type": "textarea",
+    "title": "Contractor Scope of Work",
+    "label": "Contractor Scope of Work",
+    "placeholder": "Describe contractor scope of work",
+    "size": 24,
+    "watchField": "contractor-required",
+    "showWhen": "yes",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "contractor-information-group"
+  },
+  {
+    "id": "schedule-coordination-group",
+    "type": "group",
+    "title": "Schedule Coordination",
+    "description": "Schedule coordination and timing",
+    "sectionId": "vessel-identification-planning",
+    "order": 11,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "vessel-shutdown-date",
+    "type": "date",
+    "title": "Vessel Shutdown Date",
+    "label": "Vessel Shutdown Date",
+    "size": 8,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "schedule-coordination-group"
+  },
+  {
+    "id": "estimated-duration",
+    "type": "number",
+    "title": "Estimated Duration (days)",
+    "label": "Estimated Duration (days)",
+    "placeholder": "Enter estimated duration",
+    "required": true,
+    "size": 8,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "schedule-coordination-group"
+  },
+  {
+    "id": "vessel-restart-date",
+    "type": "date",
+    "title": "Vessel Restart Date",
+    "label": "Vessel Restart Date",
+    "size": 8,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "schedule-coordination-group"
+  },
+  {
+    "id": "coordination-notes",
+    "type": "textarea",
+    "title": "Coordination Notes",
+    "label": "Coordination Notes",
+    "placeholder": "Enter any coordination notes or special requirements",
+    "size": 24,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "schedule-coordination-group"
+  },{
+    "id": "planning-status-group",
+    "type": "group",
+    "title": "Planning Status",
+    "description": "Inspection planning status and approvals",
+    "sectionId": "vessel-identification-planning",
+    "order": 12,
+    "size": 12,
+    "collapsible": false
+  },
+  {
+    "id": "planning-status",
+    "type": "button-group",
+    "title": "Planning Status",
+    "label": "Planning Status",
+    "required": true,
+    "size": 24,
+    "direction": "horizontal",
+    "buttonStyle": "solid",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "planning-status-group",
+    "options": [
+      {"label": "Draft", "value": "draft"},
+      {"label": "Under Review", "value": "under-review"},
+      {"label": "Approved", "value": "approved"},
+      {"label": "Rejected", "value": "rejected"},
+      {"label": "In Progress", "value": "in-progress"},
+      {"label": "Completed", "value": "completed"}
+    ]
+  },
+  {
+    "id": "planning-approval-date",
+    "type": "date",
+    "title": "Planning Approval Date",
+    "label": "Planning Approval Date",
+    "size": 12,
+    "watchField": "planning-status",
+    "showWhen": "approved",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "planning-status-group"
+  },
+  {
+    "id": "planning-approved-by",
+    "type": "text",
+    "title": "Planning Approved By",
+    "label": "Planning Approved By",
+    "placeholder": "Enter approver name",
+    "size": 12,
+    "watchField": "planning-status",
+    "showWhen": "approved",
+    "sectionId": "vessel-identification-planning",
+    "groupId": "planning-status-group"
+  },
+  {
+    "id": "planning-notes",
+    "type": "textarea",
+    "title": "Planning Notes",
+    "label": "Planning Notes",
+    "placeholder": "Enter any planning notes or comments",
+    "size": 24,
+    "sectionId": "vessel-identification-planning",
+    "groupId": "planning-status-group"
+  }
+] 

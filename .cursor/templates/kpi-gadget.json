@@ -1,0 +1,88 @@
+{
+  "name": "Validated KPI Gadget Template", 
+  "description": "Creates a KPI gadget with proper field mapping validation",
+  "variables": {
+    "gadgetId": "Gadget ID (kebab-case)",
+    "title": "Gadget Title",
+    "description": "Gadget Description",
+    "documentType": "Document Type (paintInvoice|company|site|paint_specifications)",
+    "kpiId": "KPI ID (kebab-case)",
+    "kpiTitle": "KPI Title",
+    "aggregationName": "Aggregation Name",
+    "fieldName": "Result Field Name"
+  },
+  "template": {
+    "id": "{{gadgetId}}",
+    "type": "generic-kpi-gadget", 
+    "title": "{{title}}",
+    "description": "{{description}}",
+    "config": {
+      "kpis": [
+        {
+          "id": "{{kpiId}}",
+          "title": "{{kpiTitle}}",
+          "description": "{{kpiTitle}} metric",
+          "icon": "FaChartBar",
+          "iconColor": "hsl(var(--primary))",
+          "unit": "items",
+          "format": "number",
+          "aggregationConfig": {
+            "name": "{{aggregationName}}",
+            "collection": "documents",
+            "baseFilter": {
+              "type": "{{documentType}}"
+            },
+            "fieldMappings": {
+              "date_range": "purchaseDate",
+              "company_id": "companyId",
+              "site_id": "facilityId"
+            },
+            "groupBy": {
+              "_id": null,
+              "fields": {
+                "{{fieldName}}": {
+                  "expression": {
+                    "$sum": 1
+                  }
+                }
+              }
+            }
+          },
+          "dataPath": "data.0.{{fieldName}}"
+        }
+      ],
+      "kpiLayout": "grid",
+      "columns": 6,
+      "showTrends": true,
+      "showTargets": true,
+      "autoRefresh": true
+    },
+    "position": 24
+  },
+  "validation": {
+    "fieldMappings": {
+      "paintInvoice": {
+        "date_range": "purchaseDate",
+        "company_id": "companyId", 
+        "site_id": "facilityId"
+      },
+      "company": {
+        "industry": "industry",
+        "name": "name"
+      },
+      "site": {
+        "company_id": "company_id",
+        "name": "name"
+      },
+      "paint_specifications": {
+        "manufacturer": "manufacturer",
+        "voc_content": "vocContent"
+      }
+    }
+  },
+  "autoCorrect": {
+    "fieldMappings": true,
+    "dataPath": true,
+    "baseFilter": true
+  }
+}

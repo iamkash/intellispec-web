@@ -1,0 +1,229 @@
+{
+  "id": "organization-list",
+  "title": "Organization Management",
+  "description": "Manage organizations and view their associated tenants",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "org-actions",
+      "type": "action-panel-gadget",
+      "title": "Quick Actions",
+      "description": "Create and manage organizations",
+      "position": 24,
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 1,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "actions": [
+          {
+            "key": "create-org",
+            "label": "Create New Organization",
+            "icon": "PlusOutlined",
+            "workspace": "system-admin/organization-document",
+            "params": {
+              "mode": "create"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "org-stats",
+      "type": "generic-kpi-gadget",
+      "title": "Organization Overview",
+      "description": "Key metrics for organization management",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/multi-tenant/organizations/stats",
+        "kpis": [
+          {
+            "id": "total-organizations",
+            "title": "Total Organizations",
+            "description": "All organizations",
+            "icon": "FaBuilding",
+            "iconColor": "hsl(var(--chart-1))",
+            "format": "number"
+          },
+          {
+            "id": "active-organizations",
+            "title": "Active",
+            "description": "Active status",
+            "icon": "FaCheckCircle",
+            "iconColor": "hsl(var(--chart-2))",
+            "format": "number"
+          },
+          {
+            "id": "total-tenants-in-orgs",
+            "title": "Tenants in Orgs",
+            "description": "Tenants with parent org",
+            "icon": "FaSitemap",
+            "iconColor": "hsl(var(--chart-3))",
+            "format": "number"
+          },
+          {
+            "id": "standalone-tenants",
+            "title": "Standalone Tenants",
+            "description": "No parent org",
+            "icon": "FaUserTie",
+            "iconColor": "hsl(var(--chart-4))",
+            "format": "number"
+          }
+        ],
+        "kpiLayout": "grid",
+        "columns": 4,
+        "showTrends": false,
+        "showTargets": false,
+        "autoRefresh": true
+      }
+    },
+    {
+      "id": "org-data-grid",
+      "type": "sgrid-search-gadget",
+      "title": "Organizations",
+      "description": "Manage all organizations and view associated tenants",
+      "position": 24,
+      "config": {
+        "dataUrl": "/api/multi-tenant/organizations",
+        "hideCreateButton": true,
+        "columns": [
+          {
+            "key": "name",
+            "title": "Organization Name",
+            "width": 250,
+            "sortable": true,
+            "field": {
+              "type": "text",
+              "required": true,
+              "placeholder": "Enter organization name",
+              "validation": {
+                "min": 2,
+                "max": 200,
+                "message": "Name must be between 2-200 characters"
+              }
+            }
+          },
+          {
+            "key": "tenantCount",
+            "title": "Tenants",
+            "width": 100,
+            "sortable": true,
+            "field": {
+              "type": "number",
+              "required": false
+            }
+          },
+          {
+            "key": "status",
+            "title": "Status",
+            "width": 120,
+            "sortable": true,
+            "field": {
+              "type": "select",
+              "required": true,
+              "options": [
+                { "value": "active", "label": "Active", "color": "green" },
+                { "value": "inactive", "label": "Inactive", "color": "gray" }
+              ]
+            }
+          },
+          {
+            "key": "createdAt",
+            "title": "Created",
+            "width": 120,
+            "sortable": true,
+            "field": {
+              "type": "date",
+              "required": false
+            }
+          },
+          {
+            "key": "notes",
+            "title": "Notes",
+            "width": 300,
+            "sortable": false,
+            "field": {
+              "type": "textarea",
+              "required": false,
+              "placeholder": "Internal notes"
+            }
+          }
+        ],
+        "rowActions": [
+          {
+            "key": "edit",
+            "label": "Edit",
+            "icon": "EditOutlined",
+            "type": "primary",
+            "workspace": "system-admin/organization-document",
+            "params": {
+              "mode": "edit",
+              "id": "{id}"
+            }
+          },
+          {
+            "key": "view-tenants",
+            "label": "View Tenants",
+            "icon": "TeamOutlined",
+            "type": "default",
+            "workspace": "system-admin/tenant-list",
+            "params": {
+              "organization": "{id}"
+            }
+          }
+        ],
+        "search": {
+          "placeholder": "Search organizations by name or notes...",
+          "filters": [
+            {
+              "key": "status",
+              "label": "Status",
+              "type": "select",
+              "options": [
+                { "value": "active", "label": "Active" },
+                { "value": "inactive", "label": "Inactive" }
+              ]
+            }
+          ]
+        },
+        "pagination": {
+          "pageSize": 15,
+          "showSizeChanger": true,
+          "showQuickJumper": true
+        },
+        "toolbar": {
+          "enableCreate": false
+        }
+      }
+    }
+  ],
+  "settings": {
+    "autoRefresh": true,
+    "refreshInterval": 300000,
+    "theme": "light",
+    "density": "comfortable",
+    "requireSuperAdmin": true,
+    "auditAllActions": true
+  },
+  "metadata": {
+    "created": "2025-01-24T10:30:00Z",
+    "version": "1.0.0",
+    "tags": ["admin", "organization", "management"],
+    "description": "Organization management workspace for Super Admin",
+    "features": [
+      "View all organizations",
+      "Create/edit organizations",
+      "View tenants per organization",
+      "Organization statistics"
+    ],
+    "permissions": {
+      "required": ["super_admin"],
+      "actions": [
+        "organization:create",
+        "organization:read",
+        "organization:update"
+      ]
+    }
+  }
+}

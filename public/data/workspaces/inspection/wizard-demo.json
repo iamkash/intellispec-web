@@ -1,0 +1,120 @@
+{
+  "id": "wizard-demo",
+  "layout": "form",
+  "gadgets": [
+    {
+      "id": "inspection-wizard-gadget",
+      "type": "document-form-gadget",
+      "title": "Equipment Inspection Wizard",
+      "description": "Complete the equipment inspection process step by step",
+      "position": 24,
+      "config": {
+        "dataUrl": "/data/mock-data/forms/inspection-wizard-data.json",
+        "dataPath": "formData",
+        "mode": "wizard",
+        "showStepper": true,
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "validateOnStepChange": true,
+        "autoSave": false,
+        "autoSaveInterval": 30000,
+        "showStepNumbers": true,
+        "showStepDescriptions": true,
+        "allowBackNavigation": true,
+        "stepperPosition": "top",
+        "stepperSize": "default",
+        "gadgetOptions": [
+          {
+            "id": "equipment-info",
+            "type": "section",
+            "title": "Equipment Information",
+            "description": "Enter basic equipment details",
+            "icon": "DatabaseOutlined",
+            "order": 1,
+            "size": 12
+          },
+          {
+            "id": "equipment-details-group",
+            "type": "group",
+            "title": "Equipment Details",
+            "description": "Basic equipment information",
+            "sectionId": "equipment-info",
+            "order": 1,
+            "size": 12,
+            "collapsible": false
+          },
+          {
+            "id": "equipmentId",
+            "type": "text",
+            "title": "Equipment ID",
+            "label": "Equipment ID",
+            "placeholder": "Enter equipment identification number",
+            "required": true,
+            "size": 6,
+            "sectionId": "equipment-info",
+            "groupId": "equipment-details-group"
+          },
+          {
+            "id": "equipmentName",
+            "type": "text",
+            "title": "Equipment Name",
+            "label": "Equipment Name",
+            "placeholder": "Enter equipment name or description",
+            "required": true,
+            "size": 6,
+            "sectionId": "equipment-info",
+            "groupId": "equipment-details-group"
+          },
+          {
+            "id": "inspection-details",
+            "type": "section",
+            "title": "Inspection Details",
+            "description": "Define inspection parameters and scope",
+            "icon": "SearchOutlined",
+            "order": 2,
+            "size": 12
+          },
+          {
+            "id": "inspection-params-group",
+            "type": "group",
+            "title": "Inspection Parameters",
+            "description": "Define inspection scope and parameters",
+            "sectionId": "inspection-details",
+            "order": 1,
+            "size": 12,
+            "collapsible": false
+          },
+          {
+            "id": "inspectionType",
+            "type": "select",
+            "title": "Inspection Type",
+            "label": "Inspection Type",
+            "placeholder": "Select inspection type",
+            "required": true,
+            "size": 6,
+            "sectionId": "inspection-details",
+            "groupId": "inspection-params-group",
+            "options": [
+              { "label": "Visual Inspection", "value": "visual" },
+              { "label": "Non-Destructive Testing", "value": "ndt" },
+              { "label": "Pressure Testing", "value": "pressure" },
+              { "label": "Leak Testing", "value": "leak" },
+              { "label": "Performance Testing", "value": "performance" },
+              { "label": "Comprehensive", "value": "comprehensive" }
+            ]
+          },
+          {
+            "id": "inspectionDate",
+            "type": "date",
+            "title": "Inspection Date",
+            "label": "Inspection Date",
+            "required": true,
+            "size": 6,
+            "sectionId": "inspection-details",
+            "groupId": "inspection-params-group"
+          }
+        ]
+      }
+    }
+  ]
+} 

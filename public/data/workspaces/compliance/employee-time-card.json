@@ -1,0 +1,843 @@
+{
+  "id": "employee-time-card",
+  "layout": "form",
+  "gadgets": [
+    {
+      "position": 24,
+      "id": "time-card-gadget",
+      "type": "document-form-gadget",
+      "title": "Employee Time Card",
+      "config": {
+        "dataUrl": "/data/mock-data/forms/employee-time-card-data.json",
+        "dataPath": "formData",
+        "gadgetOptions": [
+          {
+            "id": "employee-info-section",
+            "title": "Employee Information",
+            "type": "section",
+            "size": 24,
+            "icon": "UserOutlined"
+          },
+          {
+            "sectionId": "employee-info-section",
+            "id": "employee-details-group",
+            "title": "Employee Details",
+            "type": "group",
+            "size": 12,
+            "icon": "IdcardOutlined"
+          },
+          {
+            "sectionId": "employee-info-section",
+            "groupId": "employee-details-group",
+            "id": "employeeName",
+            "title": "Employee Name",
+            "type": "select",
+            "size": 12,
+            "label": "Employee Name",
+            "placeholder": "Select employee",
+            "required": true,
+            "options": [
+              { "label": "John Brown", "value": "john-brown" },
+              { "label": "Sarah Wilson", "value": "sarah-wilson" },
+              { "label": "Mike Johnson", "value": "mike-johnson" },
+              { "label": "Lisa Davis", "value": "lisa-davis" },
+              { "label": "Robert Smith", "value": "robert-smith" }
+            ]
+          },
+          {
+            "sectionId": "employee-info-section",
+            "groupId": "employee-details-group",
+            "id": "employeeId",
+            "title": "Employee ID",
+            "type": "text",
+            "size": 12,
+            "label": "Employee ID",
+            "placeholder": "Auto-filled",
+            "readonly": true,
+            "description": "Automatically populated based on employee selection"
+          },
+          {
+            "sectionId": "employee-info-section",
+            "groupId": "employee-details-group",
+            "id": "department",
+            "title": "Department",
+            "type": "select",
+            "size": 12,
+            "label": "Department",
+            "placeholder": "Select department",
+            "required": true,
+            "options": [
+              { "label": "Operations", "value": "operations" },
+              { "label": "Maintenance", "value": "maintenance" },
+              { "label": "Safety", "value": "safety" },
+              { "label": "Engineering", "value": "engineering" },
+              { "label": "Administration", "value": "administration" }
+            ]
+          },
+          {
+            "sectionId": "employee-info-section",
+            "groupId": "employee-details-group",
+            "id": "supervisor",
+            "title": "Supervisor/Approver",
+            "type": "select",
+            "size": 12,
+            "label": "Supervisor/Approver",
+            "placeholder": "Select supervisor",
+            "required": true,
+            "options": [
+              { "label": "David Manager", "value": "david-manager" },
+              { "label": "Jennifer Lead", "value": "jennifer-lead" },
+              { "label": "Tom Supervisor", "value": "tom-supervisor" },
+              { "label": "Amy Director", "value": "amy-director" }
+            ]
+          },
+          {
+            "sectionId": "employee-info-section",
+            "id": "time-period-group",
+            "title": "Time Period",
+            "type": "group",
+            "size": 12,
+            "icon": "CalendarOutlined"
+          },
+          {
+            "sectionId": "employee-info-section",
+            "groupId": "time-period-group",
+            "id": "weekStarting",
+            "title": "Week Starting",
+            "type": "date",
+            "size": 12,
+            "label": "Week Starting Date",
+            "placeholder": "Select start date",
+            "required": true,
+            "description": "Select the Monday of the work week"
+          },
+          {
+            "sectionId": "employee-info-section",
+            "groupId": "time-period-group",
+            "id": "weekEnding",
+            "title": "Week Ending",
+            "type": "date",
+            "size": 12,
+            "label": "Week Ending Date",
+            "placeholder": "Auto-calculated",
+            "readonly": true,
+            "description": "Automatically calculated (Friday of the same week)"
+          },
+          {
+            "sectionId": "employee-info-section",
+            "groupId": "time-period-group",
+            "id": "payPeriod",
+            "title": "Pay Period",
+            "type": "select",
+            "size": 12,
+            "label": "Pay Period",
+            "placeholder": "Select pay period",
+            "options": [
+              { "label": "Weekly", "value": "weekly" },
+              { "label": "Bi-Weekly", "value": "bi-weekly" },
+              { "label": "Semi-Monthly", "value": "semi-monthly" },
+              { "label": "Monthly", "value": "monthly" }
+            ]
+          },
+          {
+            "id": "daily-entries-section",
+            "title": "Daily Time Entries",
+            "type": "section",
+            "size": 24,
+            "icon": "ClockCircleOutlined"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "id": "daily-entries-group",
+            "title": "Weekly Time Entries",
+            "type": "group",
+            "size": 24,
+            "icon": "TableOutlined"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "mondayDate",
+            "title": "Monday Date",
+            "type": "date",
+            "size": 4,
+            "label": "Mon",
+            "readonly": true,
+            "description": "Auto-calculated"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "mondayProject",
+            "title": "Monday Project",
+            "type": "select",
+            "size": 4,
+            "label": "Project",
+            "placeholder": "Select",
+            "options": [
+              { "label": "Project Alpha", "value": "alpha" },
+              { "label": "Project Beta", "value": "beta" },
+              { "label": "Maintenance", "value": "maintenance" },
+              { "label": "Training", "value": "training" },
+              { "label": "Administrative", "value": "admin" }
+            ]
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "mondayTask",
+            "title": "Monday Task",
+            "type": "text",
+            "size": 4,
+            "label": "Task",
+            "placeholder": "Task description"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "mondayStartTime",
+            "title": "Monday Start",
+            "type": "time",
+            "size": 3,
+            "label": "Start",
+            "placeholder": "08:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "mondayEndTime",
+            "title": "Monday End",
+            "type": "time",
+            "size": 3,
+            "label": "End",
+            "placeholder": "17:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "mondayBreak",
+            "title": "Monday Break",
+            "type": "number",
+            "size": 3,
+            "label": "Break",
+            "placeholder": "30",
+            "min": 0,
+            "max": 480
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "mondayTotalHours",
+            "title": "Monday Total",
+            "type": "number",
+            "size": 3,
+            "label": "Total",
+            "readonly": true,
+            "calculated": true,
+            "formula": "CALC_HOURS('mondayStartTime', 'mondayEndTime', 'mondayBreak')",
+            "precision": 2
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "tuesdayDate",
+            "title": "Tuesday Date",
+            "type": "date",
+            "size": 4,
+            "label": "Tue",
+            "readonly": true
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "tuesdayProject",
+            "title": "Tuesday Project",
+            "type": "select",
+            "size": 4,
+            "label": "Project",
+            "placeholder": "Select",
+            "options": [
+              { "label": "Project Alpha", "value": "alpha" },
+              { "label": "Project Beta", "value": "beta" },
+              { "label": "Maintenance", "value": "maintenance" },
+              { "label": "Training", "value": "training" },
+              { "label": "Administrative", "value": "admin" }
+            ]
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "tuesdayTask",
+            "title": "Tuesday Task",
+            "type": "text",
+            "size": 4,
+            "label": "Task",
+            "placeholder": "Task description"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "tuesdayStartTime",
+            "title": "Tuesday Start",
+            "type": "time",
+            "size": 3,
+            "label": "Start",
+            "placeholder": "08:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "tuesdayEndTime",
+            "title": "Tuesday End",
+            "type": "time",
+            "size": 3,
+            "label": "End",
+            "placeholder": "17:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "tuesdayBreak",
+            "title": "Tuesday Break",
+            "type": "number",
+            "size": 3,
+            "label": "Break",
+            "placeholder": "30",
+            "min": 0,
+            "max": 480
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "tuesdayTotalHours",
+            "title": "Tuesday Total",
+            "type": "number",
+            "size": 3,
+            "label": "Total",
+            "readonly": true,
+            "calculated": true,
+            "formula": "CALC_HOURS('tuesdayStartTime', 'tuesdayEndTime', 'tuesdayBreak')",
+            "precision": 2
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "wednesdayDate",
+            "title": "Wednesday Date",
+            "type": "date",
+            "size": 4,
+            "label": "Wed",
+            "readonly": true
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "wednesdayProject",
+            "title": "Wednesday Project",
+            "type": "select",
+            "size": 4,
+            "label": "Project",
+            "placeholder": "Select",
+            "options": [
+              { "label": "Project Alpha", "value": "alpha" },
+              { "label": "Project Beta", "value": "beta" },
+              { "label": "Maintenance", "value": "maintenance" },
+              { "label": "Training", "value": "training" },
+              { "label": "Administrative", "value": "admin" }
+            ]
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "wednesdayTask",
+            "title": "Wednesday Task",
+            "type": "text",
+            "size": 4,
+            "label": "Task",
+            "placeholder": "Task description"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "wednesdayStartTime",
+            "title": "Wednesday Start",
+            "type": "time",
+            "size": 3,
+            "label": "Start",
+            "placeholder": "08:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "wednesdayEndTime",
+            "title": "Wednesday End",
+            "type": "time",
+            "size": 3,
+            "label": "End",
+            "placeholder": "17:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "wednesdayBreak",
+            "title": "Wednesday Break",
+            "type": "number",
+            "size": 3,
+            "label": "Break",
+            "placeholder": "30",
+            "min": 0,
+            "max": 480
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "wednesdayTotalHours",
+            "title": "Wednesday Total",
+            "type": "number",
+            "size": 3,
+            "label": "Total",
+            "readonly": true,
+            "calculated": true,
+            "formula": "CALC_HOURS('wednesdayStartTime', 'wednesdayEndTime', 'wednesdayBreak')",
+            "precision": 2
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "thursdayDate",
+            "title": "Thursday Date",
+            "type": "date",
+            "size": 4,
+            "label": "Thu",
+            "readonly": true
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "thursdayProject",
+            "title": "Thursday Project",
+            "type": "select",
+            "size": 4,
+            "label": "Project",
+            "placeholder": "Select",
+            "options": [
+              { "label": "Project Alpha", "value": "alpha" },
+              { "label": "Project Beta", "value": "beta" },
+              { "label": "Maintenance", "value": "maintenance" },
+              { "label": "Training", "value": "training" },
+              { "label": "Administrative", "value": "admin" }
+            ]
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "thursdayTask",
+            "title": "Thursday Task",
+            "type": "text",
+            "size": 4,
+            "label": "Task",
+            "placeholder": "Task description"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "thursdayStartTime",
+            "title": "Thursday Start",
+            "type": "time",
+            "size": 3,
+            "label": "Start",
+            "placeholder": "08:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "thursdayEndTime",
+            "title": "Thursday End",
+            "type": "time",
+            "size": 3,
+            "label": "End",
+            "placeholder": "17:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "thursdayBreak",
+            "title": "Thursday Break",
+            "type": "number",
+            "size": 3,
+            "label": "Break",
+            "placeholder": "30",
+            "min": 0,
+            "max": 480
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "thursdayTotalHours",
+            "title": "Thursday Total",
+            "type": "number",
+            "size": 3,
+            "label": "Total",
+            "readonly": true,
+            "calculated": true,
+            "formula": "CALC_HOURS('thursdayStartTime', 'thursdayEndTime', 'thursdayBreak')",
+            "precision": 2
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "fridayDate",
+            "title": "Friday Date",
+            "type": "date",
+            "size": 4,
+            "label": "Fri",
+            "readonly": true
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "fridayProject",
+            "title": "Friday Project",
+            "type": "select",
+            "size": 4,
+            "label": "Project",
+            "placeholder": "Select",
+            "options": [
+              { "label": "Project Alpha", "value": "alpha" },
+              { "label": "Project Beta", "value": "beta" },
+              { "label": "Maintenance", "value": "maintenance" },
+              { "label": "Training", "value": "training" },
+              { "label": "Administrative", "value": "admin" }
+            ]
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "fridayTask",
+            "title": "Friday Task",
+            "type": "text",
+            "size": 4,
+            "label": "Task",
+            "placeholder": "Task description"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "fridayStartTime",
+            "title": "Friday Start",
+            "type": "time",
+            "size": 3,
+            "label": "Start",
+            "placeholder": "08:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "fridayEndTime",
+            "title": "Friday End",
+            "type": "time",
+            "size": 3,
+            "label": "End",
+            "placeholder": "17:00"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "fridayBreak",
+            "title": "Friday Break",
+            "type": "number",
+            "size": 3,
+            "label": "Break",
+            "placeholder": "30",
+            "min": 0,
+            "max": 480
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "daily-entries-group",
+            "id": "fridayTotalHours",
+            "title": "Friday Total",
+            "type": "number",
+            "size": 3,
+            "label": "Total",
+            "readonly": true,
+            "calculated": true,
+            "formula": "CALC_HOURS('fridayStartTime', 'fridayEndTime', 'fridayBreak')",
+            "precision": 2
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "id": "notes-group",
+            "title": "Weekly Notes",
+            "type": "group",
+            "size": 24,
+            "icon": "FileTextOutlined"
+          },
+          {
+            "sectionId": "daily-entries-section",
+            "groupId": "notes-group",
+            "id": "weeklyNotes",
+            "title": "Weekly Notes",
+            "type": "textarea",
+            "size": 24,
+            "label": "Weekly Notes & Comments",
+            "placeholder": "Enter any notes, special circumstances, or comments for the entire week",
+            "rows": 3,
+            "description": "Optional notes for the entire week"
+          },
+          {
+            "id": "weekly-totals-section",
+            "title": "Weekly Totals",
+            "type": "section",
+            "size": 24,
+            "icon": "CalculatorOutlined"
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "id": "totals-group",
+            "title": "Hours Summary",
+            "type": "group",
+            "size": 12,
+            "icon": "BarChartOutlined"
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "groupId": "totals-group",
+            "id": "regularHours",
+            "title": "Regular Hours",
+            "type": "stat-card",
+            "size": 8,
+            "calculated": true,
+            "autoRefresh": true,
+            "formula": "SUM_DAILY_HOURS()",
+            "widgetProps": {
+              "title": "Regular Hours",
+              "color": "#1890FF",
+              "icon": "⏰",
+              "size": "small"
+            }
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "groupId": "totals-group",
+            "id": "overtimeHours",
+            "title": "Overtime Hours",
+            "type": "stat-card",
+            "size": 8,
+            "calculated": true,
+            "autoRefresh": true,
+            "formula": "CALC_OVERTIME()",
+            "widgetProps": {
+              "title": "Overtime Hours",
+              "color": "#FA8C16",
+              "icon": "🔥",
+              "size": "small"
+            }
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "groupId": "totals-group",
+            "id": "totalHours",
+            "title": "Total Hours",
+            "type": "stat-card",
+            "size": 8,
+            "calculated": true,
+            "autoRefresh": true,
+            "formula": "FIELD('regularHours') + FIELD('overtimeHours')",
+            "widgetProps": {
+              "title": "Total Hours",
+              "color": "#52C41A",
+              "icon": "📊",
+              "size": "small"
+            }
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "id": "leave-group",
+            "title": "Leave & Time Off",
+            "type": "group",
+            "size": 12,
+            "icon": "CalendarOutlined"
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "groupId": "leave-group",
+            "id": "sickLeave",
+            "title": "Sick Leave Hours",
+            "type": "number",
+            "size": 8,
+            "label": "Sick Leave (hours)",
+            "placeholder": "0",
+            "min": 0,
+            "max": 40,
+            "precision": 2
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "groupId": "leave-group",
+            "id": "ptoHours",
+            "title": "PTO Hours",
+            "type": "number",
+            "size": 8,
+            "label": "PTO (hours)",
+            "placeholder": "0",
+            "min": 0,
+            "max": 40,
+            "precision": 2
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "groupId": "leave-group",
+            "id": "holidayHours",
+            "title": "Holiday Hours",
+            "type": "number",
+            "size": 8,
+            "label": "Holiday (hours)",
+            "placeholder": "0",
+            "min": 0,
+            "max": 40,
+            "precision": 2
+          },
+          {
+            "sectionId": "weekly-totals-section",
+            "groupId": "leave-group",
+            "id": "totalLeaveHours",
+            "title": "Total Leave Hours",
+            "type": "stat-card",
+            "size": 8,
+            "calculated": true,
+            "autoRefresh": true,
+            "formula": "FIELD('sickLeave') + FIELD('ptoHours') + FIELD('holidayHours')",
+            "widgetProps": {
+              "title": "Total Leave",
+              "color": "#722ED1",
+              "icon": "🏖️",
+              "size": "small"
+            }
+          },
+          {
+            "id": "submission-section",
+            "title": "Submission & Approval",
+            "type": "section",
+            "size": 24,
+            "icon": "CheckCircleOutlined"
+          },
+          {
+            "sectionId": "submission-section",
+            "id": "employee-signature-group",
+            "title": "Employee Signature",
+            "type": "group",
+            "size": 12,
+            "icon": "UserOutlined"
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "employee-signature-group",
+            "id": "employeeSignature",
+            "title": "Employee Signature",
+            "type": "signature",
+            "size": 24,
+            "label": "Employee Signature",
+            "required": true,
+            "description": "I confirm this time card is accurate and complete"
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "employee-signature-group",
+            "id": "dateSubmitted",
+            "title": "Date Submitted",
+            "type": "date",
+            "size": 12,
+            "label": "Date Submitted",
+            "readonly": true,
+            "description": "Auto-filled when form is submitted"
+          },
+          {
+            "sectionId": "submission-section",
+            "id": "approver-signature-group",
+            "title": "Approver Signature",
+            "type": "group",
+            "size": 12,
+            "icon": "AuditOutlined"
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "approver-signature-group",
+            "id": "approverSignature",
+            "title": "Approver Signature",
+            "type": "signature",
+            "size": 24,
+            "label": "Approver Signature",
+            "description": "Supervisor approval signature"
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "approver-signature-group",
+            "id": "dateApproved",
+            "title": "Date Approved",
+            "type": "date",
+            "size": 12,
+            "label": "Date Approved",
+            "description": "Date when approved by supervisor"
+          },
+          {
+            "sectionId": "submission-section",
+            "id": "enhancements-group",
+            "title": "Optional Enhancements",
+            "type": "group",
+            "size": 24,
+            "icon": "ToolOutlined"
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "enhancements-group",
+            "id": "gpsLocation",
+            "title": "GPS Location",
+            "type": "location-picker",
+            "size": 8,
+            "label": "Work Location",
+            "description": "Capture GPS location for field work verification"
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "enhancements-group",
+            "id": "jobSite",
+            "title": "Job Site",
+            "type": "select",
+            "size": 8,
+            "label": "Job Site",
+            "placeholder": "Select job site",
+            "options": [
+              { "label": "Site A - North Plant", "value": "site-a" },
+              { "label": "Site B - South Facility", "value": "site-b" },
+              { "label": "Site C - East Complex", "value": "site-c" },
+              { "label": "Remote/Field Work", "value": "remote" }
+            ]
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "enhancements-group",
+            "id": "workProof",
+            "title": "Work Proof Photo",
+            "type": "image-upload-with-drawing",
+            "size": 8,
+            "label": "Work Proof",
+            "description": "Upload photo as proof of work completed"
+          },
+          {
+            "sectionId": "submission-section",
+            "groupId": "enhancements-group",
+            "id": "comments",
+            "title": "Additional Comments",
+            "type": "textarea",
+            "size": 24,
+            "label": "Comments",
+            "placeholder": "Enter any additional comments, special circumstances, or notes",
+            "rows": 4,
+            "description": "Optional comments for any special circumstances or additional information"
+          }
+        ]
+      }
+    }
+  ]
+} 

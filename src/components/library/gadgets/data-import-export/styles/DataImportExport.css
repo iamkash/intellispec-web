@@ -1,0 +1,745 @@
+/**
+ * Data Import/Export Gadget - Professional Stylesheet
+ * Uses theme CSS variables for consistency
+ */
+
+/* ============================================================================
+   GLOBAL ANT DESIGN OVERRIDE - REMOVE ALL STEPPER LINES
+   ============================================================================ */
+.ant-steps-item-tail,
+.ant-steps .ant-steps-item-tail,
+.ant-steps-horizontal .ant-steps-item-tail,
+.ant-steps-horizontal > .ant-steps-item > .ant-steps-item-container > .ant-steps-item-tail {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  position: absolute !important;
+  left: -9999px !important;
+}
+
+.ant-steps-item-tail::before,
+.ant-steps-item-tail::after {
+  display: none !important;
+  content: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+}
+
+/* ============================================================================
+   CONTAINER & LAYOUT
+   ============================================================================ */
+
+.data-import-export-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: hsl(var(--background));
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid hsl(var(--border));
+}
+
+/* ============================================================================
+   FIXED HEADER
+   ============================================================================ */
+
+.import-export-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: hsl(var(--card));
+  border-bottom: 2px solid hsl(var(--border));
+  padding: 6px 12px;
+  box-shadow: none;
+}
+
+.import-export-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.import-export-header-title h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  line-height: 1.2;
+}
+
+.import-export-header-icon {
+  font-size: 16px;
+  color: hsl(var(--primary));
+}
+
+/* ============================================================================
+   CUSTOM STEPPER - Clean, No Lines, Theme Colors
+   ============================================================================ */
+
+.custom-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 8px 12px;
+  background: hsl(var(--muted) / 0.05);
+  border: 1px solid hsl(var(--border) / 0.3);
+  border-radius: 6px;
+}
+
+.custom-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.custom-step-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.custom-step-title {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* COMPLETED STATE - Primary with checkmark */
+.custom-step.completed .custom-step-icon {
+  background-color: hsl(var(--primary));
+  color: white;
+}
+
+.custom-step.completed .custom-step-title {
+  color: hsl(var(--foreground));
+}
+
+/* ACTIVE STATE - Primary with number */
+.custom-step.active .custom-step-icon {
+  background-color: hsl(var(--primary));
+  color: white;
+}
+
+.custom-step.active .custom-step-title {
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+
+/* WAITING STATE - Muted */
+.custom-step.waiting .custom-step-icon {
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+.custom-step.waiting .custom-step-title {
+  color: hsl(var(--muted-foreground));
+}
+
+/* ============================================================================
+   PROFESSIONAL STEPPER - Maximum Specificity Override (DEPRECATED - Using custom)
+   ============================================================================ */
+
+/* Main container */
+.data-import-export-container .import-export-header .import-export-steps.ant-steps.ant-steps-horizontal {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+/* KILL ALL LINES - Nuclear option */
+.data-import-export-container .import-export-steps .ant-steps-item .ant-steps-item-tail,
+.data-import-export-container .import-export-steps .ant-steps-item-tail,
+.import-export-steps.ant-steps .ant-steps-item-tail,
+.ant-steps-item-tail {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  background: transparent !important;
+}
+
+.data-import-export-container .import-export-steps .ant-steps-item .ant-steps-item-tail::after,
+.data-import-export-container .import-export-steps .ant-steps-item-tail::after,
+.import-export-steps.ant-steps .ant-steps-item-tail::after,
+.ant-steps-item-tail::after {
+  display: none !important;
+  content: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+}
+
+/* Step items */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item {
+  padding: 0 !important;
+  margin: 0 !important;
+  flex: 1 !important;
+}
+
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item .ant-steps-item-container {
+  display: flex !important;
+  align-items: center !important;
+  height: 36px !important;
+}
+
+/* Icon circles - SOLID BACKGROUNDS */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item .ant-steps-item-icon {
+  width: 32px !important;
+  height: 32px !important;
+  line-height: 32px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 0 10px 0 0 !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  border: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* Number inside circle */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item .ant-steps-item-icon .ant-steps-icon {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  display: inline-block !important;
+}
+
+/* Content */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item .ant-steps-item-content {
+  min-height: 32px !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+/* Title */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item .ant-steps-item-title {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+  font-weight: 500 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Hide description */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item .ant-steps-item-description {
+  display: none !important;
+}
+
+/* ============================================================================
+   STATE COLORS - Theme Based
+   ============================================================================ */
+
+/* COMPLETED - Primary with checkmark */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-finish .ant-steps-item-icon {
+  background-color: hsl(var(--primary)) !important;
+  border: none !important;
+}
+
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
+  color: white !important;
+}
+
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-finish .ant-steps-item-title {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* ACTIVE - Primary with white number */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-process .ant-steps-item-icon {
+  background-color: hsl(var(--primary)) !important;
+  border: none !important;
+}
+
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-process .ant-steps-item-icon .ant-steps-icon {
+  color: white !important;
+}
+
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-process .ant-steps-item-title {
+  color: hsl(var(--primary)) !important;
+  font-weight: 600 !important;
+}
+
+/* WAITING - Muted */
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-wait .ant-steps-item-icon {
+  background-color: hsl(var(--muted)) !important;
+  border: none !important;
+}
+
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-wait .ant-steps-item-icon .ant-steps-icon {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.data-import-export-container .import-export-steps.ant-steps .ant-steps-item-wait .ant-steps-item-title {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* ============================================================================
+   SCROLLABLE BODY
+   ============================================================================ */
+
+.import-export-body {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 12px;
+  background: hsl(var(--muted) / 0.3);
+}
+
+.import-export-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.import-export-body::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.3);
+}
+
+.import-export-body::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+.import-export-body::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ============================================================================
+   FIXED FOOTER
+   ============================================================================ */
+
+.import-export-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background: hsl(var(--card));
+  border-top: 2px solid hsl(var(--border));
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none;
+}
+
+.footer-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.footer-info {
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ============================================================================
+   STEP CONTENT CARDS
+   ============================================================================ */
+
+.step-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  width: 100%;
+  margin: 0;
+}
+
+.step-card-header {
+  padding: 12px 16px;
+  text-align: center;
+  border-bottom: 1px solid hsl(var(--border));
+  background: hsl(var(--muted) / 0.2);
+}
+
+.step-card-header-icon {
+  font-size: 20px;
+  color: hsl(var(--primary));
+  margin-bottom: 4px;
+  display: inline-block;
+}
+
+.step-card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  line-height: 1.4;
+}
+
+.step-card-header p {
+  margin: 0;
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+.step-card-body {
+  padding: 12px;
+}
+
+/* ============================================================================
+   DOCUMENT TYPE SELECTION
+   ============================================================================ */
+
+.document-type-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+}
+
+.document-type-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 6px;
+  padding: 12px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.document-type-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-color: hsl(var(--primary) / 0.4);
+}
+
+.document-type-card.selected {
+  background: hsl(var(--primary) / 0.05);
+  border-color: hsl(var(--primary));
+  border-width: 2px;
+  padding: 11px 9px;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.15);
+}
+
+.document-type-icon-container {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--muted));
+  border-radius: 6px;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+}
+
+.document-type-card.selected .document-type-icon-container {
+  background: hsl(var(--primary) / 0.15);
+}
+
+.document-type-icon {
+  font-size: 24px;
+  color: hsl(var(--muted-foreground));
+  transition: all 0.2s ease;
+}
+
+.document-type-card.selected .document-type-icon {
+  color: hsl(var(--primary));
+}
+
+.document-type-card h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  line-height: 1.2;
+}
+
+.document-type-card p {
+  margin: 0;
+  font-size: 11px;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.3;
+  flex-grow: 1;
+}
+
+.document-type-selected-badge {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid hsl(var(--border));
+  width: 100%;
+}
+
+.document-type-selected-icon {
+  font-size: 16px;
+  color: hsl(var(--primary));
+}
+
+/* ============================================================================
+   UPLOAD ZONE
+   ============================================================================ */
+
+.upload-zone {
+  background: linear-gradient(135deg, hsl(var(--muted) / 0.3) 0%, hsl(var(--accent) / 0.1) 100%);
+  border: 3px dashed hsl(var(--border));
+  border-radius: 20px;
+  padding: 64px 48px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-zone:hover {
+  border-color: hsl(var(--primary));
+  background: linear-gradient(135deg, hsl(var(--primary) / 0.05) 0%, hsl(var(--accent) / 0.1) 100%);
+  transform: scale(1.02);
+}
+
+.upload-zone-icon {
+  font-size: 80px;
+  color: hsl(var(--primary));
+  margin-bottom: 24px;
+  display: block;
+}
+
+.upload-zone h3 {
+  margin: 0 0 12px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  line-height: 1.4;
+}
+
+.upload-zone p {
+  margin: 0 0 32px 0;
+  font-size: 14px;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
+}
+
+.upload-zone-info {
+  margin-top: 28px;
+  padding: 18px 24px;
+  background: hsl(var(--muted) / 0.5);
+  border-radius: 10px;
+  font-size: 13px;
+  color: hsl(var(--muted-foreground));
+  display: inline-block;
+}
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+
+.btn-primary {
+  height: 44px !important;
+  padding: 0 32px !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  background: hsl(var(--primary)) !important;
+  border-color: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  box-shadow: 0 4px 12px hsl(var(--primary) / 0.3) !important;
+  transition: all 0.3s ease !important;
+  line-height: 1.4 !important;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px hsl(var(--primary) / 0.4) !important;
+}
+
+.btn-secondary {
+  height: 44px !important;
+  padding: 0 28px !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  line-height: 1.4 !important;
+}
+
+/* ============================================================================
+   AI MAPPING INDICATORS
+   ============================================================================ */
+
+.ai-mapping-badge {
+  background: hsl(var(--primary) / 0.1);
+  border: 1px solid hsl(var(--primary) / 0.3);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ai-mapping-badge-icon {
+  font-size: 24px;
+  color: hsl(var(--primary));
+}
+
+.ai-mapping-summary {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+/* ============================================================================
+   LOADING STATES
+   ============================================================================ */
+
+.loading-container {
+  margin-top: 40px;
+  padding: 40px;
+  background: hsl(var(--muted) / 0.3);
+  border-radius: 16px;
+  border: 1px solid hsl(var(--border));
+  text-align: center;
+}
+
+.loading-container h4 {
+  margin: 24px 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.loading-container p {
+  margin: 0;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ============================================================================
+   VALIDATION ALERTS
+   ============================================================================ */
+
+.validation-alert {
+  border-radius: 12px;
+  padding: 20px;
+  margin: 24px 0;
+}
+
+.validation-alert-success {
+  background: hsl(var(--chart-2) / 0.1);
+  border: 1px solid hsl(var(--chart-2) / 0.3);
+}
+
+.validation-alert-error {
+  background: hsl(var(--destructive) / 0.1);
+  border: 1px solid hsl(var(--destructive) / 0.3);
+}
+
+.validation-errors-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 16px;
+}
+
+.validation-error-item {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--destructive) / 0.3);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+/* ============================================================================
+   VALIDATION ALERTS
+   ============================================================================ */
+
+.validation-alert {
+  margin-bottom: 24px;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+
+.validation-alert-error {
+  background: hsl(var(--destructive) / 0.05);
+  border-color: hsl(var(--destructive) / 0.3);
+}
+
+.validation-alert-success {
+  background: hsl(var(--chart-2) / 0.05);
+  border-color: hsl(var(--chart-2) / 0.3);
+}
+
+.validation-errors-list {
+  max-height: 200px;
+  overflow: auto;
+  margin-top: 12px;
+}
+
+.validation-error-item {
+  margin-bottom: 8px;
+  padding: 12px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--destructive) / 0.2);
+  border-radius: 8px;
+}
+
+/* ============================================================================
+   AI MAPPING SUMMARY
+   ============================================================================ */
+
+.ai-mapping-summary {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .import-export-header,
+  .import-export-body,
+  .import-export-footer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .step-card-body {
+    padding: 24px 16px;
+  }
+
+  .document-type-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .upload-zone {
+    padding: 40px 24px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}

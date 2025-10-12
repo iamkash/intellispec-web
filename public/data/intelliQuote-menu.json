@@ -1,0 +1,31 @@
+{
+  "menu_items": [
+    {
+      "key": "home",
+      "icon": "HomeOutlined",
+      "label": "Home",
+      "license_id": "LIC_INTELLI_QUOTE",
+      "auth_id": "AUTH_ESTIMATOR",
+      "enabled": true,
+      "order": 1,
+      "route": "/intelliQuote/home",
+      "type": "item",
+      "permissions": ["quote.view"],
+      "workspace": "intelliQuote/home",
+      "is_default": true
+    },
+    {
+      "key": "calculators",
+      "icon": "CalculatorOutlined",
+      "label": "Calculators",
+      "license_id": "LIC_INTELLI_QUOTE",
+      "auth_id": "AUTH_ESTIMATOR",
+      "enabled": true,
+      "order": 2,
+      "route": "/intelliQuote/calculators",
+      "type": "item",
+      "permissions": ["quote.view"],
+      "workspace": "intelliQuote/calculators"
+    }
+  ]
+}
