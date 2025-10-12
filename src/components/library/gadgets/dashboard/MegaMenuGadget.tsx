@@ -839,39 +839,36 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             border-radius: 16px;
             background: linear-gradient(
               145deg,
-              color-mix(in srgb, var(--icon-accent) 22%, hsl(var(--background)) 78%),
-              color-mix(in srgb, var(--icon-accent) 14%, hsl(var(--background)) 86%),
-              color-mix(in srgb, var(--icon-accent) 8%, hsl(var(--background)) 92%)
+              hsl(var(--primary) / 0.20),
+              hsl(var(--primary) / 0.12),
+              hsl(var(--primary) / 0.06)
             );
-            border: 2px solid color-mix(in srgb, var(--icon-accent) 40%, hsl(var(--border)));
+            border: 2.5px solid hsl(var(--primary) / 0.60);
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--icon-accent);
             overflow: visible;
             box-shadow: 
-              0 4px 16px color-mix(in srgb, var(--icon-accent) 20%, transparent),
-              0 2px 6px color-mix(in srgb, var(--icon-accent) 12%, transparent),
-              inset 0 1px 3px hsl(var(--background) / 0.95),
-              inset 0 -1px 3px color-mix(in srgb, var(--icon-accent) 8%, transparent);
+              0 4px 16px hsl(var(--primary) / 0.20),
+              0 2px 6px hsl(var(--primary) / 0.12),
+              inset 0 1px 3px hsl(var(--background) / 0.8),
+              inset 0 -2px 4px hsl(var(--primary) / 0.08);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
           .mega-menu-card__icon::before {
             content: '';
             position: absolute;
-            inset: -2px;
-            border-radius: 18px;
-            padding: 2px;
+            inset: -3px;
+            border-radius: 19px;
             background: linear-gradient(135deg, 
-              var(--icon-accent),
-              color-mix(in srgb, var(--icon-accent) 70%, transparent),
-              color-mix(in srgb, var(--icon-accent) 40%, transparent)
+              hsl(var(--primary)),
+              hsl(var(--primary) / 0.7),
+              hsl(var(--primary) / 0.3)
             );
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
             opacity: 0;
             transition: opacity 0.3s ease;
+            z-index: -1;
           }
           .mega-menu-card__icon::after {
             content: '';
@@ -880,30 +877,30 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
             border-radius: 28px;
             background: radial-gradient(
               circle at center,
-              color-mix(in srgb, var(--icon-accent) 35%, transparent) 0%,
-              color-mix(in srgb, var(--icon-accent) 15%, transparent) 40%,
+              hsl(var(--primary) / 0.35) 0%,
+              hsl(var(--primary) / 0.15) 40%,
               transparent 70%
             );
             opacity: 0;
             transition: opacity 0.4s ease;
-            z-index: -1;
+            z-index: -2;
           }
           .mega-menu-card:hover .mega-menu-card__icon,
           .mega-menu-list-card:hover .mega-menu-card__icon {
             transform: translateY(-3px) scale(1.08);
             box-shadow: 
-              0 12px 32px color-mix(in srgb, var(--icon-accent) 32%, transparent),
-              0 6px 20px color-mix(in srgb, var(--icon-accent) 22%, transparent),
-              0 2px 10px color-mix(in srgb, var(--icon-accent) 16%, transparent),
+              0 12px 32px hsl(var(--primary) / 0.35),
+              0 6px 20px hsl(var(--primary) / 0.25),
+              0 2px 10px hsl(var(--primary) / 0.18),
               inset 0 2px 4px hsl(var(--background)),
-              inset 0 -2px 4px color-mix(in srgb, var(--icon-accent) 12%, transparent);
-            border-color: var(--icon-accent);
-            border-width: 2.5px;
+              inset 0 -2px 4px hsl(var(--primary) / 0.15);
+            border-color: hsl(var(--primary) / 0.85);
+            border-width: 3px;
             background: linear-gradient(
               135deg,
-              color-mix(in srgb, var(--icon-accent) 28%, hsl(var(--background)) 72%),
-              color-mix(in srgb, var(--icon-accent) 18%, hsl(var(--background)) 82%),
-              color-mix(in srgb, var(--icon-accent) 10%, hsl(var(--background)) 90%)
+              hsl(var(--primary) / 0.32),
+              hsl(var(--primary) / 0.20),
+              hsl(var(--primary) / 0.12)
             );
           }
           .mega-menu-card:hover .mega-menu-card__icon::before,
@@ -916,16 +913,16 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
           }
           .mega-menu-card__icon svg {
             filter: 
-              drop-shadow(0 1px 3px color-mix(in srgb, var(--icon-accent) 30%, transparent))
-              drop-shadow(0 0 0 color-mix(in srgb, var(--icon-accent) 0%, transparent));
+              drop-shadow(0 1px 3px hsl(var(--primary) / 0.35))
+              drop-shadow(0 0 0 transparent);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0.92;
           }
           .mega-menu-card:hover .mega-menu-card__icon svg,
           .mega-menu-list-card:hover .mega-menu-card__icon svg {
             filter: 
-              drop-shadow(0 2px 8px color-mix(in srgb, var(--icon-accent) 45%, transparent))
-              drop-shadow(0 0 12px color-mix(in srgb, var(--icon-accent) 20%, transparent));
+              drop-shadow(0 2px 8px hsl(var(--primary) / 0.50))
+              drop-shadow(0 0 12px hsl(var(--primary) / 0.25));
             opacity: 1;
             transform: scale(1.05);
           }
