@@ -701,7 +701,7 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 }
 
 .module-bar.collapsed-sidebar {
-  left: 64px;
+  left: 44px;
 }
 
 .module-bar.mobile-view {
@@ -2783,7 +2783,7 @@ html[data-theme="dark"]:not([data-color-theme="red"]):not([data-color-theme="ora
 }
 
 .module-bar.collapsed-sidebar {
-  left: 64px;
+  left: 44px;
 }
 
 .module-bar.mobile-view {

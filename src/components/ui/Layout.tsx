@@ -291,7 +291,7 @@ return [currentMenuItem.key];
           collapsible
           collapsed={collapsed}
           trigger={null}
-          collapsedWidth={isMobile ? 0 : 64}
+          collapsedWidth={isMobile ? 0 : 44} // Align collapsed sidebar with header toggle footprint
           width={240}
           style={{
             background: 'hsl(var(--card))',
