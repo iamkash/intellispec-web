@@ -234,20 +234,18 @@ const SimpleCalculatorComponent: React.FC<{
 
       setMetadataLoading(true);
       try {
-        const apiBase =
-          process.env.REACT_APP_API_BASE || "http://localhost:4000";
         // Prefer metadata-driven URL if provided, otherwise fall back to standard endpoint
         let urlPath =
           (config as any)?.dataUrl ||
           `/api/calculators/{calculatorId}/metadata`;
         urlPath = urlPath.replace("{calculatorId}", String(calculatorId));
-        const url = urlPath.startsWith("http")
-          ? urlPath
-          : `${apiBase}${urlPath}`;
-        const response = await fetch(url);
+        const response = await BaseGadget.makeAuthenticatedFetch(urlPath);
         if (response.ok) {
           const data = await response.json();
           setCalculatorMetadata(data);
+        } else if (response.status === 401) {
+          BaseGadget.forceLogout();
+          setCalculatorMetadata(undefined);
         } else {
           // Handle error silently
         }

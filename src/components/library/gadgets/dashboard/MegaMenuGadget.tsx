@@ -490,8 +490,14 @@ const MegaMenuComponent: React.FC<MegaMenuComponentProps> = ({
     const fetchCalculators = async () => {
       try {
         setLoading(true);
-        const response = await fetch(config.dataUrl);
+        const response = await BaseGadget.makeAuthenticatedFetch(
+          config.dataUrl
+        );
         if (!response.ok) {
+          if (response.status === 401) {
+            BaseGadget.forceLogout();
+            return;
+          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
