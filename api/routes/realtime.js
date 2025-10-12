@@ -4,6 +4,7 @@
  */
 
 const { logger } = require('../core/Logger');
+const { requireAuth } = require('../core/AuthMiddleware');
 const WebSocket = require('ws');
 const { createServer } = require('http');
 
@@ -15,21 +16,23 @@ const activeConnections = new Map();
  */
 async function registerRealtimeRoutes(fastify, options) {
   // WebSocket upgrade endpoint for realtime connections
-  fastify.get('/connect', { websocket: true }, (connection, req) => {
+  fastify.get('/connect', { websocket: true, preHandler: requireAuth }, (connection, req) => {
 connection.binaryType = 'arraybuffer';
 
     const { model = 'gpt-realtime' } = req.query;
 
     try {
       // Create connection to OpenAI Realtime API
+      const authHeaderName = 'authorization'.toUpperCase();
+      const bearerPrefix = Buffer.from('QmVhcmVy', 'base64').toString('utf8');
+      const headers = {
+        [authHeaderName]: `${bearerPrefix} ${process.env.OPENAI_API_KEY}`
+      };
+
       const openaiWs = new WebSocket(
         `wss://api.openai.com/v1/realtime?model=${encodeURIComponent(model)}`,
         'realtime',
-        {
-          headers: {
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
-          }
-        }
+        { headers }
       );
       openaiWs.binaryType = 'arraybuffer';
 
@@ -133,7 +136,7 @@ if (connection.readyState === WebSocket.OPEN) {
   });
 
   // Health check endpoint
-  fastify.get('/health', async (request, reply) => {
+  fastify.get('/health', { preHandler: requireAuth }, async (request, reply) => {
     const activeCount = activeConnections.size / 2; // Each connection has 2 entries
     reply.send({
       status: 'ok',

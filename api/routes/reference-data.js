@@ -8,14 +8,6 @@
 const { logger } = require('../core/Logger');
 const mongoose = require('mongoose');
 const { ObjectId } = require('mongodb');
-const { 
-  ErrorTypes, 
-  APIError, 
-  handleError, 
-  asyncHandler, 
-  validateRequired,
-  safeDbOperation 
-} = require('../core/ErrorHandler');
 const { requireAuth } = require('../core/AuthMiddleware');
 
 async function registerReferenceDataRoutes(fastify, options) {
@@ -181,7 +173,7 @@ async function registerReferenceDataRoutes(fastify, options) {
   // ===================== LIST OPTIONS MANAGEMENT =====================
   
   // DEBUG: Temporary endpoint without auth to test data
-  fastify.get('/reference-data/debug/list-options/:listTypeName', async (request, reply) => {
+  fastify.get('/reference-data/debug/list-options/:listTypeName', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const db = mongoose.connection;
       const optionsCol = db.collection('referenceListOptions');
@@ -231,7 +223,7 @@ const options = await optionsCol.find(query).sort({ label: 1 }).toArray();
       const listTypesCol = db.collection('referenceListTypes');
       
       const { listTypeName } = request.params;
-      const { parentValue, format } = request.query;
+      const { parentValue } = request.query;
 // Get list type info
       const listType = await listTypesCol.findOne({ name: listTypeName });
 if (!listType) {
@@ -977,7 +969,6 @@ const formattedOptions = options.map(opt => ({
       const optionsCol = db.collection('referenceListOptions');
       
       const { listTypeName } = request.params;
-      const { format } = request.query;
       
       // Find list type by name
       const listType = await listTypesCol.findOne({ name: listTypeName.toLowerCase() });

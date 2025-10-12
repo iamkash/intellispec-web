@@ -6,6 +6,7 @@
  */
 
 const mongoose = require('mongoose');
+const { requirePlatformAdmin } = require('../core/AuthMiddleware');
 
 // Lazy-load models to avoid issues with initialization order
 const getTenantModel = () => mongoose.model('Tenant');
@@ -184,7 +185,7 @@ async function registerTenantRoutes(fastify) {
    * List all active tenants (for admin purposes or tenant selector)
    * Note: In production, this should be protected and possibly filtered
    */
-  fastify.get('/tenants', async (request, reply) => {
+  fastify.get('/tenants', { preHandler: requirePlatformAdmin }, async (request, reply) => {
     try {
       const { status = 'active', limit = 100 } = request.query;
       
@@ -217,7 +218,7 @@ async function registerTenantRoutes(fastify) {
    * 
    * Get tenant details by slug or ID
    */
-  fastify.get('/tenants/:slugOrId', async (request, reply) => {
+  fastify.get('/tenants/:slugOrId', { preHandler: requirePlatformAdmin }, async (request, reply) => {
     try {
       const { slugOrId } = request.params;
       

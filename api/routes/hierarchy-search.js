@@ -7,6 +7,7 @@
  */
 
 const { logger } = require('../core/Logger');
+const { requireAuth } = require('../core/AuthMiddleware');
 const DocumentRepository = require('../repositories/DocumentRepository');
 const TenantContextFactory = require('../core/TenantContextFactory');
 const { ValidationError } = require('../core/ErrorHandler');
@@ -18,7 +19,7 @@ async function registerHierarchySearchRoutes(fastify) {
    * 
    * Returns matched documents with their parent path for tree expansion
    */
-  fastify.get('/search/hierarchy', async (request, reply) => {
+  fastify.get('/search/hierarchy', { preHandler: requireAuth }, async (request, reply) => {
     const { q: query, types } = request.query;
 
     if (!query || query.trim().length === 0) {
@@ -42,7 +43,7 @@ async function registerHierarchySearchRoutes(fastify) {
         const repository = new DocumentRepository(tenantContext, docType, request.context);
 
         // ✅ Search by name, code, or tags (case-insensitive)
-        const matches = await repository.findAll({
+        const matches = await repository.find({
           $or: [
             { name: { $regex: query, $options: 'i' } },
             { code: { $regex: query, $options: 'i' } },

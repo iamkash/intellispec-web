@@ -56,7 +56,9 @@ class DatabaseManager {
       totalReconnections: 0,
       totalErrors: 0,
       uptime: 0,
-      lastHealthCheck: null
+      lastHealthCheck: null,
+      lastLeakCheckAt: null,
+      lastTotalCreated: null
     };
   }
   
@@ -352,7 +354,15 @@ class DatabaseManager {
         return;
       }
       
-      logger.debug('Database connection stats', stats);
+      const previousTotal = this.metrics.lastTotalCreated;
+      const createdSinceLastCheck = previousTotal !== null
+        ? stats.totalCreated - previousTotal
+        : null;
+
+      logger.debug('Database connection stats', {
+        ...stats,
+        createdSinceLastCheck: createdSinceLastCheck !== null ? createdSinceLastCheck : 'N/A'
+      });
       
       this.metrics.lastHealthCheck = Date.now();
       
@@ -434,12 +444,33 @@ class DatabaseManager {
       }
       
       // Check for abnormal total created vs current
-      if (stats.totalCreated > stats.maxPoolSize * 100) {
-        logger.warn('Abnormally high connection creation rate', {
-          totalCreated: stats.totalCreated,
-          current: stats.activeConnections,
-          ratio: (stats.totalCreated / stats.activeConnections).toFixed(1)
-        });
+      const now = Date.now();
+      const previousTotal = this.metrics.lastTotalCreated;
+      this.metrics.lastTotalCreated = stats.totalCreated;
+
+      const previousCheckAt = this.metrics.lastLeakCheckAt;
+      this.metrics.lastLeakCheckAt = now;
+
+      if (previousTotal !== null && previousCheckAt !== null) {
+        const delta = stats.totalCreated - previousTotal;
+        const intervalMs = now - previousCheckAt;
+
+        if (delta > 0 && intervalMs > 0) {
+          const leakThreshold = this.config.poolSize.max * 10;
+          const ratio = stats.activeConnections > 0
+            ? (delta / stats.activeConnections)
+            : delta;
+
+          if (delta > leakThreshold && ratio > 10) {
+            logger.warn('Abnormally high connection creation rate', {
+              totalCreated: stats.totalCreated,
+              createdDuringInterval: delta,
+              intervalMs,
+              current: stats.activeConnections,
+              ratio: ratio.toFixed(1)
+            });
+          }
+        }
       }
       
     } catch (error) {
@@ -592,4 +623,3 @@ class DatabaseManager {
 }
 
 module.exports = DatabaseManager;
-

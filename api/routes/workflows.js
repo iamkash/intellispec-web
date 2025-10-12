@@ -12,6 +12,7 @@
 
 const mongoose = require('mongoose');
 const { logger } = require('../core/Logger');
+const { requireAuth } = require('../core/AuthMiddleware');
 
 // Import models
 const Workflow = require('../models/Workflow');
@@ -41,7 +42,7 @@ async function registerWorkflowRoutes(fastify) {
   });
 
   // Test route to verify registration
-  fastify.get('/test', async (request, reply) => {
+  fastify.get('/test', { preHandler: requireAuth }, async (request, reply) => {
     reply.send({
       message: 'Workflow routes registered successfully',
       timestamp: new Date().toISOString(),
@@ -68,7 +69,7 @@ async function registerWorkflowRoutes(fastify) {
      * GET /api/workflows/
      * List all workflows with optional filtering
      */
-    fastify.get('/', async (request, reply) => {
+    fastify.get('/', { preHandler: requireAuth }, async (request, reply) => {
 try {
     const {
       status = 'active',
@@ -133,7 +134,7 @@ reply.send({
    * GET /api/workflows/:id
    * Get workflow by ID
    */
-  fastify.get('/:id', async (request, reply) => {
+  fastify.get('/:id', { preHandler: requireAuth }, async (request, reply) => {
   try {
     const workflow = await Workflow.findOne({ id: request.params.id });
 
@@ -160,7 +161,7 @@ reply.send({
    * POST /api/workflows/
    * Create new workflow
    */
-  fastify.post('/', async (request, reply) => {
+  fastify.post('/', { preHandler: requireAuth }, async (request, reply) => {
   try {
     const { metadata, ...workflowData } = request.body;
 
@@ -208,7 +209,7 @@ reply.code(201).send(workflow);
    * PUT /api/workflows/:id
    * Update workflow
    */
-  fastify.put('/:id', async (request, reply) => {
+  fastify.put('/:id', { preHandler: requireAuth }, async (request, reply) => {
   try {
     const { metadata, ...updateData } = request.body;
 
@@ -256,7 +257,7 @@ reply.send(workflow);
    * DELETE /api/workflows/:id
    * Delete workflow
    */
-  fastify.delete('/:id', async (request, reply) => {
+  fastify.delete('/:id', { preHandler: requireAuth }, async (request, reply) => {
   try {
     const workflow = await Workflow.findOneAndDelete({ id: request.params.id });
 
@@ -288,7 +289,7 @@ reply.send({
    * POST /api/workflows/:id/validate
    * Validate workflow metadata
    */
-  fastify.post('/:id/validate', async (request, reply) => {
+  fastify.post('/:id/validate', { preHandler: requireAuth }, async (request, reply) => {
   try {
     const workflow = await Workflow.findOne({ id: request.params.id });
 
@@ -325,7 +326,7 @@ reply.send({
    * POST /api/workflows/:id/execute
    * Execute workflow
    */
-  fastify.post('/:id/execute', async (request, reply) => {
+  fastify.post('/:id/execute', { preHandler: requireAuth }, async (request, reply) => {
   try {
     // First try to find workflow in database
     let workflow = await Workflow.findOne({ id: request.params.id });
@@ -472,7 +473,7 @@ reply.code(202).send({
    * GET /api/workflows/:id/executions
    * Get workflow executions
    */
-  fastify.get('/:id/executions', async (request, reply) => {
+  fastify.get('/:id/executions', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { limit = 20, offset = 0, status } = request.query;
 
@@ -512,7 +513,7 @@ reply.code(202).send({
    * GET /api/workflows/stats
    * Get workflow statistics
    */
-  fastify.get('/stats', async (request, reply) => {
+  fastify.get('/stats', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const workflowStats = await Workflow.getStatistics();
       const executionStats = await Execution.getStatistics();
@@ -573,4 +574,3 @@ async function executeWorkflow(workflow, execution, initialState) {
 }
 
 module.exports = registerWorkflowRoutes;
-

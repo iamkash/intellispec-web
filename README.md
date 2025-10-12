@@ -7,6 +7,7 @@ This repository powers IntelliSpec’s AI-driven inspection platform: a React/Ty
 1. Copy `env.sample` to `.env` and fill out the required values (MongoDB URI, JWT secret, OpenAI keys, API base).
 2. Install dependencies with `npm install`.
 3. Run the API server with `npm run api`, then start the web app with `npm start`.
+4. Execute the backend smoke suite with `npm run test:api` whenever you touch API routes or middleware.
 
 For production, use `NODE_ENV=production node api/server.js` or `pm2`, and consult the runbook for Docker and deployment details.
 

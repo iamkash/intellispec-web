@@ -1,6 +1,6 @@
 const { logger } = require('../core/Logger');
 const mongoose = require('mongoose');
-const { requireAuth } = require('../core/AuthMiddleware');
+const { optionalAuth } = require('../core/AuthMiddleware');
 
 /**
  * Calculator API routes
@@ -10,8 +10,7 @@ const { requireAuth } = require('../core/AuthMiddleware');
 async function registerCalculatorRoutes(fastify) {
 
   // GET /api/calculators - Get calculators with optional filtering
-  const calculatorRouteOptions = process.env.NODE_ENV === 'production' ? { preHandler: requireAuth } : {};
-  fastify.get('/calculators', calculatorRouteOptions, async (request, reply) => {
+  fastify.get('/calculators', { preHandler: optionalAuth }, async (request, reply) => {
     try {
       const db = mongoose.connection;
       if (!db || db.readyState !== 1) {
@@ -100,7 +99,7 @@ async function registerCalculatorRoutes(fastify) {
   });
 
   // GET /api/calculators/:id/metadata - Get calculator metadata for dynamic rendering
-  fastify.get('/calculators/:id/metadata', calculatorRouteOptions, async (request, reply) => {
+  fastify.get('/calculators/:id/metadata', { preHandler: optionalAuth }, async (request, reply) => {
     try {
       const db = mongoose.connection;
       if (!db || db.readyState !== 1) {
@@ -166,7 +165,7 @@ return reply.send(responseData);
   });
 
   // POST /api/calculators/:id/calculate - Execute calculator with input data
-  fastify.post('/calculators/:id/calculate', calculatorRouteOptions, async (request, reply) => {
+  fastify.post('/calculators/:id/calculate', { preHandler: optionalAuth }, async (request, reply) => {
     try {
       const db = mongoose.connection;
       if (!db || db.readyState !== 1) {

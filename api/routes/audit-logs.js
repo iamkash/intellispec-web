@@ -5,13 +5,14 @@
  */
 
 const { AuditTrail, AuditEventModel } = require('../core/AuditTrail');
+const { requirePlatformAdmin } = require('../core/AuthMiddleware');
 
 async function registerAuditLogsRoutes(fastify) {
   /**
    * GET /api/audit-logs
    * Get audit logs with filtering and pagination
    */
-  fastify.get('/', async (request, reply) => {
+  fastify.get('/', { preHandler: requirePlatformAdmin }, async (request, reply) => {
     try {
       const {
         eventType,
@@ -70,7 +71,7 @@ async function registerAuditLogsRoutes(fastify) {
    * GET /api/audit-logs/stats
    * Get audit log statistics
    */
-  fastify.get('/stats', async (request, reply) => {
+  fastify.get('/stats', { preHandler: requirePlatformAdmin }, async (request, reply) => {
     try {
       const stats = await AuditTrail.getStats();
       return reply.send(stats);
@@ -87,7 +88,7 @@ async function registerAuditLogsRoutes(fastify) {
    * GET /api/audit-logs/:id
    * Get a specific audit log by ID
    */
-  fastify.get('/:id', async (request, reply) => {
+  fastify.get('/:id', { preHandler: requirePlatformAdmin }, async (request, reply) => {
     try {
       const { id } = request.params;
       

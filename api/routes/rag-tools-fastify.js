@@ -1,4 +1,5 @@
 const { logger } = require('../core/Logger');
+const { requireAuth } = require('../core/AuthMiddleware');
 const mongoose = require('mongoose');
 
 // Use existing mongoose connection instead of creating new MongoClient
@@ -14,7 +15,7 @@ async function registerRagToolsRoutes(fastify) {
    * Configurable tool execution endpoint for search_data
    * Searches any document type based on current filters and context
    */
-  fastify.post('/api/tools/search_data', async (request, reply) => {
+  fastify.post('/api/tools/search_data', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { arguments: args, context } = request.body;
       const { query, filters } = args;
@@ -112,7 +113,7 @@ async function registerRagToolsRoutes(fastify) {
   /**
    * Calculate total VOC emissions
    */
-  fastify.post('/api/tools/calculate_voc', async (request, reply) => {
+  fastify.post('/api/tools/calculate_voc', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { arguments: args } = request.body;
       const { startDate, endDate, facilityId, companyId } = args;
@@ -170,7 +171,7 @@ const matchConditions = {
   /**
    * Get compliance status
    */
-  fastify.post('/api/tools/get_compliance_status', async (request, reply) => {
+  fastify.post('/api/tools/get_compliance_status', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { arguments: args } = request.body;
       const { facilityId, year } = args;
@@ -232,7 +233,7 @@ const matchConditions = {
   /**
    * Generate report
    */
-  fastify.post('/api/tools/generate_report', async (request, reply) => {
+  fastify.post('/api/tools/generate_report', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { arguments: args } = request.body;
       const { reportType, parameters } = args;
@@ -265,7 +266,7 @@ const matchConditions = {
   /**
    * Compare facilities
    */
-  fastify.post('/api/tools/compare_facilities', async (request, reply) => {
+  fastify.post('/api/tools/compare_facilities', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { arguments: args } = request.body;
       const { facilityIds, metric, timeRange } = args;

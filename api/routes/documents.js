@@ -25,9 +25,9 @@
 
 const DocumentRepository = require('../repositories/DocumentRepository');
 const TenantContextFactory = require('../core/TenantContextFactory');
-const { requireAuth } = require('../middleware/fastify-auth');
+const { requireAuth } = require('../core/AuthMiddleware');
 const { validateDocumentWithContext } = require('../core/SchemaValidator');
-const { NotFoundError, ValidationError, DatabaseError, APIError, ErrorTypes } = require('../core/ErrorHandler');
+const { APIError, ErrorTypes } = require('../core/ErrorHandler');
 const { logger } = require('../core/Logger');
 const { nanoid } = require('nanoid');
 
@@ -685,4 +685,3 @@ function getDocumentPrefix(type) {
 }
 
 module.exports = registerDocumentRoutes;
-

@@ -1,7 +1,6 @@
 // Simple Fastify API server for saving wizard states
 // Design: routes → controllers → services → repositories (file-backed JSON store)
 
-const path = require('path');
 require('dotenv').config();
 const Fastify = require('fastify');
 const cors = require('@fastify/cors');
@@ -24,6 +23,11 @@ const { RateLimiter } = require('./core/RateLimiter');
 const { FeatureFlags } = require('./core/FeatureFlags');
 const { initializeCache } = require('./core/CacheManager');
 const { logger } = require('./core/Logger');
+
+if (process.env.NODE_ENV === 'production' && process.env.ENFORCE_AUTH === undefined) {
+  process.env.ENFORCE_AUTH = 'true';
+  logger.info('ENFORCE_AUTH enabled by default for production environment');
+}
 
 // WebSocket support
 const websocket = require('@fastify/websocket');
@@ -105,17 +109,29 @@ async function buildServer() {
   if (process.env.ENABLE_VECTOR_SERVICE !== 'false') {
     try {
       // VectorUpdateService now uses DatabaseManager (no mongoUri needed)
-      vectorService = new VectorUpdateService({
+      const vectorConfig = {
         openaiKey: process.env.OPENAI_API_KEY,
         embeddingModel: process.env.EMBEDDING_MODEL || 'text-embedding-3-small',
-        monitoring: process.env.NODE_ENV === 'production'
-      });
+        monitoring: process.env.NODE_ENV === 'production',
+        allowedCollections: process.env.VECTOR_ALLOWED_COLLECTIONS,
+        discoveryEnabled: process.env.VECTOR_DISCOVERY_ENABLED,
+        maxCollections: process.env.VECTOR_MAX_COLLECTIONS,
+        batchSize: process.env.VECTOR_BATCH_SIZE,
+        rateLimitDelay: process.env.VECTOR_RATE_LIMIT_DELAY,
+        retryDelay: process.env.VECTOR_RETRY_DELAY,
+        debounceDelay: process.env.VECTOR_DEBOUNCE_MS,
+        maxRetries: process.env.VECTOR_MAX_RETRIES,
+        discoverySampleLimit: process.env.VECTOR_DISCOVERY_SAMPLE_LIMIT
+      };
+      vectorService = new VectorUpdateService(vectorConfig);
       
       await vectorService.start();
       
       logger.info('Vector Update Service started successfully', {
         embeddingModel: process.env.EMBEDDING_MODEL || 'text-embedding-3-small',
         monitoring: process.env.NODE_ENV === 'production',
+        discoveryEnabled: vectorService.config.discovery.enabled,
+        allowedCollections: vectorService.config.discovery.allowedCollections,
         healthEndpoint: '/api/vector-service/health',
         metricsEndpoint: '/api/vector-service/metrics'
       });

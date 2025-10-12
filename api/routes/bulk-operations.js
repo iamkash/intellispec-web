@@ -11,22 +11,9 @@ const multer = require('multer');
 const csv = require('csv-parser');
 const { Parser } = require('json2csv');
 const { Readable } = require('stream');
-const { z } = require('zod');
-const DocumentRepository = require('../repositories/DocumentRepository');
 const TenantContextFactory = require('../core/TenantContextFactory');
-const { ValidationError, NotFoundError } = require('../core/ErrorHandler');
-
-// Authentication middleware
-const requireAuth = async (request, reply) => {
-  try {
-    if (!request.user) {
-      return reply.code(401).send({ error: 'Authentication required' });
-    }
-    return;
-  } catch (error) {
-    return reply.code(401).send({ error: 'Invalid authentication' });
-  }
-};
+const { ValidationError } = require('../core/ErrorHandler');
+const { requireAuth } = require('../core/AuthMiddleware');
 const { validateDocumentWithContext } = require('../core/SchemaValidator');
 
 // Configure multer for file uploads
@@ -120,7 +107,6 @@ async function registerBulkOperationsRoutes(fastify) {
 
       // Create tenant context for automatic filtering
       const tenantContext = TenantContextFactory.fromRequest(request);
-      const repository = new DocumentRepository(tenantContext, type, request.context);
 
       const db = mongoose.connection;
       const collection = db.collection('documents');
@@ -170,7 +156,6 @@ async function registerBulkOperationsRoutes(fastify) {
             pipeline: [
               { $match: { $expr: { $eq: ['$id', '$$companyId'] } } }
             ],
-            from: 'documents',
             as: 'company'
           }
         });
@@ -207,7 +192,6 @@ async function registerBulkOperationsRoutes(fastify) {
             pipeline: [
               { $match: { $expr: { $eq: ['$id', '$$companyId'] } } }
             ],
-            from: 'documents',
             as: 'company'
           }
         });
@@ -275,8 +259,9 @@ return reply.send(csv);
   });
 
   // Import documents from CSV
-  fastify.post('/bulk/import/:type', { 
-    preHandler: [requireAuth, upload.single('csvFile')] 
+  fastify.post('/bulk/import/:type', {
+    preHandler: requireAuth,
+    preValidation: upload.single('csvFile')
   }, async (request, reply) => {
     try {
       const { type } = request.params;
@@ -291,7 +276,12 @@ return reply.send(csv);
 
       // Create tenant context for automatic tenant injection
       const tenantContext = TenantContextFactory.fromRequest(request);
-      const repository = new DocumentRepository(tenantContext, type, request.context);
+      const db = mongoose.connection;
+      if (!db || db.readyState !== 1) {
+        throw new ValidationError('Database not connected');
+      }
+      const collection = db.collection('documents');
+      const tenantId = tenantContext.tenantId;
       
       const userId = request.user.id || request.user.email || 'unknown';
       

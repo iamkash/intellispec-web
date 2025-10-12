@@ -12,9 +12,8 @@
  */
 
 const { logger } = require('../core/Logger');
-const ExecutionEngine = require('../workflows/execution/ExecutionEngine');
+const { requireAuth } = require('../core/AuthMiddleware');
 const ExecutionRepository = require('../repositories/ExecutionRepository');
-const WorkflowRepository = require('../repositories/WorkflowRepository');
 const TenantContextFactory = require('../core/TenantContextFactory');
 const { NotFoundError, ValidationError } = require('../core/ErrorHandler');
 
@@ -23,7 +22,7 @@ async function registerExecutionRoutes(fastify) {
    * GET /api/executions
    * List executions with optional filtering
    */
-  fastify.get('/', async (request, reply) => {
+  fastify.get('/', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -79,7 +78,7 @@ async function registerExecutionRoutes(fastify) {
    * GET /api/executions/:executionId
    * Get execution details
    */
-  fastify.get('/:executionId', async (request, reply) => {
+  fastify.get('/:executionId', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -119,7 +118,7 @@ async function registerExecutionRoutes(fastify) {
    * GET /api/executions/:executionId/state
    * Get current execution state
    */
-  fastify.get('/:executionId/state', async (request, reply) => {
+  fastify.get('/:executionId/state', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -163,7 +162,7 @@ async function registerExecutionRoutes(fastify) {
    * GET /api/executions/:executionId/checkpoints
    * Get execution checkpoints
    */
-  fastify.get('/:executionId/checkpoints', async (request, reply) => {
+  fastify.get('/:executionId/checkpoints', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { limit = 20, offset = 0 } = request.query;
 
@@ -219,7 +218,7 @@ async function registerExecutionRoutes(fastify) {
    * POST /api/executions/:executionId/pause
    * Pause execution
    */
-  fastify.post('/:executionId/pause', async (request, reply) => {
+  fastify.post('/:executionId/pause', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -270,7 +269,7 @@ async function registerExecutionRoutes(fastify) {
    * POST /api/executions/:executionId/resume
    * Resume execution
    */
-  fastify.post('/:executionId/resume', async (request, reply) => {
+  fastify.post('/:executionId/resume', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -321,7 +320,7 @@ async function registerExecutionRoutes(fastify) {
    * POST /api/executions/:executionId/cancel
    * Cancel execution
    */
-  fastify.post('/:executionId/cancel', async (request, reply) => {
+  fastify.post('/:executionId/cancel', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -363,9 +362,9 @@ async function registerExecutionRoutes(fastify) {
    * POST /api/executions/:executionId/human-response
    * Submit human intervention response
    */
-  fastify.post('/:executionId/human-response', async (request, reply) => {
+  fastify.post('/:executionId/human-response', { preHandler: requireAuth }, async (request, reply) => {
     try {
-      const { interventionId, response, decision } = request.body;
+      const { interventionId, response } = request.body;
 
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -419,7 +418,7 @@ async function registerExecutionRoutes(fastify) {
    * GET /api/executions/:executionId/human-interventions
    * Get pending human interventions
    */
-  fastify.get('/:executionId/human-interventions', async (request, reply) => {
+  fastify.get('/:executionId/human-interventions', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Create tenant context
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -457,51 +456,53 @@ async function registerExecutionRoutes(fastify) {
  * GET /api/executions/stats
  * Get execution statistics
  */
-fastify.get('/stats', async (request, reply) => {
-  try {
-    const stats = await Execution.getStatistics();
+  fastify.get('/stats', { preHandler: requireAuth }, async (request, reply) => {
+    try {
+      const tenantContext = TenantContextFactory.fromRequest(request);
+      const repository = new ExecutionRepository(tenantContext, request.context);
 
-    // Add additional metrics
-    const recentStats = await Execution.aggregate([
-      {
-        $match: {
-          createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) } // Last 24 hours
+      const stats = await repository.getStatistics();
+
+      const recentStats = await repository.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+          }
+        },
+        {
+          $group: {
+            _id: '$status',
+            count: { $sum: 1 },
+            avgDuration: { $avg: '$duration' }
+          }
         }
-      },
-      {
-        $group: {
-          _id: '$status',
-          count: { $sum: 1 },
-          avgDuration: { $avg: '$duration' }
-        }
-      }
-    ]);
+      ]);
 
-    reply.send({
-      overall: stats,
-      recent: recentStats.reduce((acc, stat) => {
-        acc[stat._id] = {
-          count: stat.count,
-          avgDuration: stat.avgDuration
-        };
-        return acc;
-      }, {})
-    });
+      reply.send({
+        overall: stats,
+        recent: recentStats.reduce((acc, stat) => {
+          acc[stat._id] = {
+            count: stat.count,
+            avgDuration: stat.avgDuration
+          };
+          return acc;
+        }, {})
+      });
 
-  } catch (error) {
-    logger.error('Error fetching execution statistics:', error);
-    reply.code(500).send({
-      error: 'Failed to fetch execution statistics',
-      message: error.message
-    });
-  }
-});
+    } catch (error) {
+      logger.error('Error fetching execution statistics:', error);
+      reply.code(500).send({
+        error: 'Failed to fetch execution statistics',
+        message: error.message
+      });
+    }
+  });
 
   /**
    * POST /api/executions/cleanup
    * Clean up old executions (admin only)
    */
-  fastify.post('/cleanup', async (request, reply) => {
+  fastify.post('/cleanup', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Check if user is admin
       if (!request.user?.isAdmin && !request.user?.isPlatformAdmin) {

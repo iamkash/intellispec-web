@@ -94,6 +94,10 @@ class TenantContextFactory {
    * @private
    */
   static _defaultContext() {
+    logger.warn('[TenantContextFactory] Falling back to anonymous tenant context. Upstream authentication missing or invalid.');
+    if (process.env.ENFORCE_AUTH === 'true') {
+      throw new Error('Authentication required: TenantContextFactory could not derive tenant context from the request');
+    }
     return new TenantContext({
       userId: 'anonymous',
       tenantId: 'default-tenant',
@@ -119,4 +123,3 @@ class TenantContextFactory {
 }
 
 module.exports = TenantContextFactory;
-

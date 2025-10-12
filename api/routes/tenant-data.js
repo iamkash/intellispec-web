@@ -8,6 +8,7 @@
  */
 
 const { enforceTenantScope, applyTenantFilter, requireTenantAdmin } = require('../middleware/tenant-scope');
+const { requireAuth } = require('../core/AuthMiddleware');
 const AuditTrail = require('../core/AuditTrail');
 const DocumentModel = require('../models/Document');
 
@@ -24,7 +25,7 @@ async function registerTenantDataRoutes(fastify, options) {
    * - Super Admin: Returns all documents from all tenants
    * - Tenant Admin: Returns only documents from their tenant(s)
    */
-  fastify.get('/documents', { preHandler: enforceTenantScope() }, async (request, reply) => {
+  fastify.get('/documents', { preHandler: requireAuth, preValidation: enforceTenantScope() }, async (request, reply) => {
     try {
       const page = parseInt(request.query.page) || 1;
       const limit = parseInt(request.query.limit) || 50;
@@ -81,7 +82,7 @@ async function registerTenantDataRoutes(fastify, options) {
    * GET /api/tenant-data/documents/:id
    * Get specific document - validates tenant access
    */
-  fastify.get('/documents/:id', { preHandler: enforceTenantScope() }, async (request, reply) => {
+  fastify.get('/documents/:id', { preHandler: requireAuth, preValidation: enforceTenantScope() }, async (request, reply) => {
     try {
       const { id } = request.params;
 
@@ -119,7 +120,7 @@ async function registerTenantDataRoutes(fastify, options) {
    * Create document in tenant
    * Requires tenant admin role
    */
-  fastify.post('/documents', { preHandler: [enforceTenantScope(), requireTenantAdmin] }, async (request, reply) => {
+  fastify.post('/documents', { preHandler: requireAuth, preValidation: [enforceTenantScope(), requireTenantAdmin] }, async (request, reply) => {
     try {
       const { tenantId, type, title, data } = request.body;
 
@@ -171,7 +172,7 @@ async function registerTenantDataRoutes(fastify, options) {
    * PUT /api/tenant-data/documents/:id
    * Update document - validates tenant access
    */
-  fastify.put('/documents/:id', { preHandler: [enforceTenantScope(), requireTenantAdmin] }, async (request, reply) => {
+  fastify.put('/documents/:id', { preHandler: requireAuth, preValidation: [enforceTenantScope(), requireTenantAdmin] }, async (request, reply) => {
     try {
       const { id } = request.params;
       const updates = request.body;
@@ -227,7 +228,7 @@ async function registerTenantDataRoutes(fastify, options) {
    * DELETE /api/tenant-data/documents/:id
    * Delete document - validates tenant access
    */
-  fastify.delete('/documents/:id', { preHandler: [enforceTenantScope(), requireTenantAdmin] }, async (request, reply) => {
+  fastify.delete('/documents/:id', { preHandler: requireAuth, preValidation: [enforceTenantScope(), requireTenantAdmin] }, async (request, reply) => {
     try {
       const { id } = request.params;
 
@@ -283,7 +284,7 @@ async function registerTenantDataRoutes(fastify, options) {
    * Get tenant statistics
    * Returns stats for user's tenant(s) only
    */
-  fastify.get('/stats', { preHandler: enforceTenantScope() }, async (request, reply) => {
+  fastify.get('/stats', { preHandler: requireAuth, preValidation: enforceTenantScope() }, async (request, reply) => {
     try {
       // Build base query with tenant filter
       let query = {
@@ -338,4 +339,3 @@ async function registerTenantDataRoutes(fastify, options) {
 }
 
 module.exports = registerTenantDataRoutes;
-

@@ -11,10 +11,8 @@
  */
 
 const { logger } = require('../core/Logger');
-const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
+const AuthService = require('../core/AuthService');
 
 // Import models (we'll need to create JS versions or use the compiled TS)
 // For now, let's define basic schemas
@@ -39,25 +37,6 @@ const TenantSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 const Tenant = mongoose.models.Tenant || mongoose.model('Tenant', TenantSchema);
-
-// JWT configuration
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-const JWT_EXPIRES_IN = '24h';
-
-// Helper function to generate JWT
-function generateToken(payload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-}
-
-// Helper function to verify password
-async function verifyPassword(password, hash) {
-  return bcrypt.compare(password, hash);
-}
-
-// Helper function to hash password
-async function hashPassword(password) {
-  return bcrypt.hash(password, 10);
-}
 
 async function registerAuthRoutes(fastify) {
   
@@ -118,7 +97,7 @@ async function registerAuthRoutes(fastify) {
       }
 
       // Hash password
-      const hashedPassword = await hashPassword(password);
+      const hashedPassword = await AuthService.hashPassword(password);
 
       // Create user
       const user = new User({
@@ -133,7 +112,7 @@ async function registerAuthRoutes(fastify) {
       await user.save();
 
       // Generate token
-      const token = generateToken({
+      const token = AuthService.generateToken({
         userId: user._id,
         email: user.email,
         tenantId: user.tenantId,
@@ -230,38 +209,50 @@ async function registerAuthRoutes(fastify) {
         });
       }
 
+      let decoded;
       try {
-        const decoded = jwt.verify(token, JWT_SECRET, { ignoreExpiration: true });
-        
-        // Check if token is not too old (e.g., within 7 days)
-        const tokenAge = Date.now() / 1000 - decoded.iat;
-        const maxAge = 7 * 24 * 60 * 60; // 7 days in seconds
-        
-        if (tokenAge > maxAge) {
+        decoded = await AuthService.verifyToken(token);
+      } catch (error) {
+        if (error.code === 'TOKEN_EXPIRED' || error.message === 'Token expired') {
+          decoded = AuthService.decodeToken(token);
+        } else {
           return reply.status(401).send({
             success: false,
-            message: 'Token is too old, please login again'
+            message: error.message || 'Invalid token'
           });
         }
+      }
 
-        // Generate new token
-        const newToken = generateToken({
-          userId: decoded.userId,
-          email: decoded.email,
-          tenantId: decoded.tenantId,
-          role: decoded.role
-        });
-
-        return reply.send({
-          success: true,
-          token: newToken
-        });
-      } catch (error) {
+      if (!decoded || !decoded.userId) {
         return reply.status(401).send({
           success: false,
           message: 'Invalid token'
         });
       }
+
+      const issuedAt = decoded.iat || 0;
+      const tokenAge = Date.now() / 1000 - issuedAt;
+      const maxAge = 7 * 24 * 60 * 60; // 7 days in seconds
+
+      if (issuedAt === 0 || tokenAge > maxAge) {
+        return reply.status(401).send({
+          success: false,
+          message: 'Token is too old, please login again'
+        });
+      }
+
+      const newToken = AuthService.generateToken({
+        userId: decoded.userId,
+        email: decoded.email,
+        tenantId: decoded.tenantId,
+        role: decoded.role,
+        platformRole: decoded.platformRole
+      });
+
+      return reply.send({
+        success: true,
+        token: newToken
+      });
     } catch (error) {
       logger.error('Token refresh error:', error);
       return reply.status(500).send({

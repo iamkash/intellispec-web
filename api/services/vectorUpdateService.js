@@ -28,23 +28,71 @@ class VectorUpdateService extends EventEmitter {
   constructor(config = {}) {
     super();
     
+    const env = process.env;
+    const isProduction = env.NODE_ENV === 'production';
+
+    const toBool = (value, defaultValue) => {
+      if (value === undefined || value === null) return defaultValue;
+      if (typeof value === 'boolean') return value;
+      const normalized = String(value).trim().toLowerCase();
+      if (['true', '1', 'yes', 'on'].includes(normalized)) return true;
+      if (['false', '0', 'no', 'off'].includes(normalized)) return false;
+      return defaultValue;
+    };
+
+    const toInt = (value, defaultValue) => {
+      if (value === undefined || value === null || value === '') {
+        return defaultValue;
+      }
+      const parsed = parseInt(value, 10);
+      return Number.isNaN(parsed) ? defaultValue : parsed;
+    };
+
+    const toArray = (value) => {
+      if (!value) return [];
+      if (Array.isArray(value)) {
+        return value.map(item => String(item).trim()).filter(Boolean);
+      }
+      return String(value)
+        .split(',')
+        .map(item => item.trim())
+        .filter(Boolean);
+    };
+
+    const allowedCollections = toArray(config.allowedCollections || env.VECTOR_ALLOWED_COLLECTIONS);
+    const discoveryEnabledEnv = env.VECTOR_DISCOVERY_ENABLED !== undefined
+      ? toBool(env.VECTOR_DISCOVERY_ENABLED, true)
+      : !isProduction;
+
     this.config = {
       openai: {
-        apiKey: config.openaiKey || process.env.OPENAI_API_KEY,
+        apiKey: config.openaiKey || env.OPENAI_API_KEY,
         embeddingModel: config.embeddingModel || 'text-embedding-3-small',
         dimensions: config.dimensions || 1536,
         maxTokens: 8000
       },
       processing: {
-        batchSize: config.batchSize || 10,
-        rateLimitDelay: config.rateLimitDelay || 200, // ms between requests
-        maxRetries: config.maxRetries || 3,
-        retryDelay: config.retryDelay || 5000,
-        debounceDelay: config.debounceDelay || 2000 // Prevent rapid successive updates
+        batchSize: toInt(config.batchSize || env.VECTOR_BATCH_SIZE, 5),
+        rateLimitDelay: toInt(config.rateLimitDelay || env.VECTOR_RATE_LIMIT_DELAY, 500),
+        maxRetries: toInt(config.maxRetries || env.VECTOR_MAX_RETRIES, 3),
+        retryDelay: toInt(config.retryDelay || env.VECTOR_RETRY_DELAY, 10000),
+        debounceDelay: toInt(config.debounceDelay || env.VECTOR_DEBOUNCE_MS, 3000) // Prevent rapid successive updates
       },
       monitoring: {
         enabled: config.monitoring !== false,
-        logInterval: config.logInterval || 60000 // 1 minute
+        logInterval: toInt(config.logInterval || env.VECTOR_MONITOR_INTERVAL, 60000) // 1 minute
+      },
+      discovery: {
+        enabled: toBool(config.discoveryEnabled, discoveryEnabledEnv),
+        allowedCollections,
+        maxCollections: toInt(
+          config.maxCollections || env.VECTOR_MAX_COLLECTIONS,
+          allowedCollections.length || 5
+        ),
+        sampleLimit: toInt(
+          config.discoverySampleLimit || env.VECTOR_DISCOVERY_SAMPLE_LIMIT,
+          100
+        )
       }
     };
     
@@ -133,7 +181,7 @@ class VectorUpdateService extends EventEmitter {
     
     try {
       // Close change streams
-      for (const [collectionName, changeStream] of this.changeStreams) {
+      for (const changeStream of this.changeStreams.values()) {
         await changeStream.close();
       }
       this.changeStreams.clear();
@@ -155,51 +203,118 @@ class VectorUpdateService extends EventEmitter {
    * Discover all document types in the database
    */
   async discoverDocumentTypes() {
-const collections = await this.db.listCollections().toArray();
-    
-    for (const collectionInfo of collections) {
-      const collectionName = collectionInfo.name;
-      
-      // Skip system collections
-      if (collectionName.startsWith('system.')) continue;
-      
-      const collection = this.db.collection(collectionName);
-      
-      // Get distinct document types
-      const types = await collection.distinct('type');
-      
-      if (types.length > 0) {
-        for (const type of types) {
-          if (!this.documentTypes.has(type)) {
-            // Get sample document to analyze structure
-            const sample = await collection.findOne({ type });
-            
-            if (sample) {
-              const structure = this.analyzeDocumentStructure(sample);
-              this.documentTypes.set(type, {
-                collection: collectionName,
-                structure,
-                count: await collection.countDocuments({ type })
-              });
-            }
-          }
+    this.documentTypes.clear();
+
+    const { discovery } = this.config;
+    const collectionsInfo = await this.db.listCollections().toArray();
+    const availableNames = new Set(collectionsInfo.map(info => info.name));
+
+    let targetCollections = [];
+
+    if (discovery.allowedCollections.length > 0) {
+      targetCollections = discovery.allowedCollections.filter(name => {
+        if (availableNames.has(name)) {
+          return true;
         }
+        logger.warn('Vector Update Service: skipping unknown collection from VECTOR_ALLOWED_COLLECTIONS', { collection: name });
+        return false;
+      });
+    }
+
+    if (discovery.enabled) {
+      const discovered = collectionsInfo
+        .map(info => info.name)
+        .filter(name => !name.startsWith('system.'));
+
+      if (targetCollections.length === 0) {
+        targetCollections = discovered;
       } else {
-        // Collection without 'type' field
-        const sampleDoc = await collection.findOne({});
-        if (sampleDoc) {
+        const allowed = new Set(targetCollections);
+        targetCollections = discovered.filter(name => allowed.has(name));
+      }
+    } else if (targetCollections.length === 0) {
+      logger.warn('Vector Update Service discovery disabled and no allowed collections provided; service will remain idle.');
+      return;
+    }
+
+    targetCollections = Array.from(new Set(targetCollections));
+
+    if (discovery.maxCollections > 0 && targetCollections.length > discovery.maxCollections) {
+      logger.warn('Vector Update Service limiting monitored collections', {
+        maxCollections: discovery.maxCollections,
+        truncated: targetCollections.slice(0, discovery.maxCollections)
+      });
+      targetCollections = targetCollections.slice(0, discovery.maxCollections);
+    }
+
+    if (targetCollections.length === 0) {
+      logger.info('Vector Update Service did not identify any collections to monitor.');
+      return;
+    }
+
+    for (const collectionName of targetCollections) {
+      if (collectionName.startsWith('system.')) {
+        continue;
+      }
+
+      try {
+        const collection = this.db.collection(collectionName);
+        const types = await collection.distinct('type');
+
+        if (types.length > 0) {
+          for (const type of types) {
+            if (this.documentTypes.has(type)) {
+              continue;
+            }
+
+            const sample = await collection.findOne({ type });
+            if (!sample) {
+              continue;
+            }
+
+            const structure = this.analyzeDocumentStructure(sample);
+            const count = await collection.countDocuments(
+              { type },
+              { limit: discovery.sampleLimit }
+            );
+
+            this.documentTypes.set(type, {
+              collection: collectionName,
+              structure,
+              count
+            });
+          }
+        } else {
+          const sampleDoc = await collection.findOne({});
+          if (!sampleDoc) {
+            continue;
+          }
+
           const inferredType = collectionName;
           const structure = this.analyzeDocumentStructure(sampleDoc);
+          const count = await collection.countDocuments(
+            {},
+            { limit: discovery.sampleLimit }
+          );
+
           this.documentTypes.set(inferredType, {
             collection: collectionName,
             structure,
-            count: await collection.countDocuments({})
+            count
           });
         }
+      } catch (error) {
+        logger.warn('Vector Update Service failed to inspect collection', {
+          collection: collectionName,
+          error: error.message
+        });
       }
     }
-for (const [type, info] of this.documentTypes) {
-}
+
+    logger.info('Vector Update Service discovered document types', {
+      totalTypes: this.documentTypes.size,
+      collections: [...new Set([...this.documentTypes.values()].map(info => info.collection))]
+    });
   }
   
   /**
@@ -259,9 +374,17 @@ for (const [type, info] of this.documentTypes) {
    * Start change streams for all collections
    */
   async startChangeStreams() {
-const collections = [...new Set([...this.documentTypes.values()].map(info => info.collection))];
-    
+    const collections = [...new Set([...this.documentTypes.values()].map(info => info.collection))];
+
+    if (collections.length === 0) {
+      logger.info('Vector Update Service: no change streams to start.');
+      return;
+    }
+
     for (const collectionName of collections) {
+      if (this.changeStreams.has(collectionName)) {
+        continue;
+      }
       await this.startChangeStreamForCollection(collectionName);
     }
   }
@@ -270,8 +393,12 @@ const collections = [...new Set([...this.documentTypes.values()].map(info => inf
    * Start change stream for a specific collection
    */
   async startChangeStreamForCollection(collectionName) {
+    if (this.changeStreams.has(collectionName)) {
+      return;
+    }
+
     const collection = this.db.collection(collectionName);
-const changeStream = collection.watch([
+    const changeStream = collection.watch([
       {
         $match: {
           $or: [
@@ -305,6 +432,7 @@ const changeStream = collection.watch([
       // Restart change stream after delay for other errors
       setTimeout(() => {
         logger.info(`🔄 Restarting change stream for ${collectionName}...`);
+        this.changeStreams.delete(collectionName);
         this.startChangeStreamForCollection(collectionName);
       }, this.config.processing.retryDelay);
     });
@@ -426,7 +554,7 @@ const changeStream = collection.watch([
           if (retryCount < maxRetries) {
             logger.warn(`⚠️ Duplicate key conflict for document ${document._id}, retrying (${retryCount}/${maxRetries})...`);
             // Wait before retry to reduce race conditions
-            await new Promise(resolve => setTimeout(resolve, 100 * retryCount));
+            await this.delay(100 * retryCount);
             continue;
           } else {
             logger.warn(`⚠️ Duplicate key conflict persisted for document ${document._id} after ${maxRetries} retries - vector may already exist, skipping`);
@@ -445,7 +573,7 @@ const changeStream = collection.watch([
         }
         
         // Wait before retry
-        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+        await this.delay(1000 * retryCount);
       }
     }
   }
@@ -606,7 +734,7 @@ const changeStream = collection.watch([
           throw error;
         }
         
-        await new Promise(resolve => setTimeout(resolve, this.config.processing.retryDelay));
+        await this.delay(this.config.processing.retryDelay);
       }
     }
   }
@@ -662,6 +790,10 @@ logger.info(`  ⏳ Pending updates: ${this.pendingUpdates.size}`);
            this.client && 
            this.db && 
            this.changeStreams.size > 0;
+  }
+
+  async delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
 

@@ -15,6 +15,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const FileStorage = require('../core/FileStorage');
 const { logger } = require('../core/Logger');
+const { requireAuth } = require('../core/AuthMiddleware');
 
 // Generate unique IDs
 function generateId(prefix = 'file') {
@@ -90,7 +91,7 @@ async function incrementReferenceCount(fileId) {
  */
 async function registerUploadRoutes(fastify, options) {
   // Upload single image with deduplication
-  fastify.post('/image', async (request, reply) => {
+  fastify.post('/image', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const data = await request.file();
 
@@ -215,7 +216,7 @@ async function registerUploadRoutes(fastify, options) {
   });
 
   // Upload multiple images
-  fastify.post('/images', async (request, reply) => {
+  fastify.post('/images', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const parts = request.files();
       const files = [];
@@ -299,7 +300,7 @@ async function registerUploadRoutes(fastify, options) {
   });
 
   // Get image by ID
-  fastify.get('/image/:id', async (request, reply) => {
+  fastify.get('/image/:id', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { id } = request.params;
 
@@ -331,7 +332,7 @@ async function registerUploadRoutes(fastify, options) {
   });
 
   // Get image metadata
-  fastify.get('/image/:id/metadata', async (request, reply) => {
+  fastify.get('/image/:id/metadata', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { id } = request.params;
 
@@ -374,7 +375,7 @@ async function registerUploadRoutes(fastify, options) {
   });
 
   // Delete image with reference counting
-  fastify.delete('/image/:id', async (request, reply) => {
+  fastify.delete('/image/:id', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { id } = request.params;
       const { force = false } = request.query; // Force delete even if references exist
@@ -443,7 +444,7 @@ async function registerUploadRoutes(fastify, options) {
   });
 
   // List images with optional filtering
-  fastify.get('/images', async (request, reply) => {
+  fastify.get('/images', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { uploadedBy, mimeType, limit = 50, skip = 0 } = request.query;
 

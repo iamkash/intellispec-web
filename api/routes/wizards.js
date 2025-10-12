@@ -19,8 +19,8 @@
 
 const DocumentRepository = require('../repositories/DocumentRepository');
 const TenantContextFactory = require('../core/TenantContextFactory');
-const { requireAuth } = require('../middleware/fastify-auth');
-const { NotFoundError, ValidationError, DatabaseError } = require('../core/ErrorHandler');
+const { requireAuth } = require('../core/AuthMiddleware');
+const { NotFoundError, ValidationError, DatabaseError, APIError, ErrorTypes } = require('../core/ErrorHandler');
 const { nanoid } = require('nanoid');
 
 /**
@@ -366,4 +366,3 @@ async function registerWizardRoutes(fastify) {
 }
 
 module.exports = registerWizardRoutes;
-

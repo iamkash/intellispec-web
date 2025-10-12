@@ -6,6 +6,7 @@
 
 const { logger } = require('../core/Logger');
 const mongoose = require('mongoose');
+const { requirePlatformAdmin } = require('../core/AuthMiddleware');
 
 // Helper to get or create models
 function getOrCreateModel(name) {
@@ -22,7 +23,7 @@ async function registerAdminStatsRoutes(fastify) {
    * GET /api/admin/system/stats
    * Get system-wide statistics for admin dashboard
    */
-  fastify.get('/system/stats', async (request, reply) => {
+  fastify.get('/system/stats', { preHandler: requirePlatformAdmin }, async (request, reply) => {
     try {
       // Get models
       const TenantModel = getOrCreateModel('Tenant');
@@ -127,4 +128,3 @@ async function registerAdminStatsRoutes(fastify) {
 }
 
 module.exports = registerAdminStatsRoutes;
-

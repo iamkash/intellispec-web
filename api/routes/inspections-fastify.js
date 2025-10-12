@@ -12,6 +12,7 @@
  */
 
 const TenantContextFactory = require('../core/TenantContextFactory');
+const { requireAuth } = require('../core/AuthMiddleware');
 const DocumentRepository = require('../repositories/DocumentRepository');
 
 /**
@@ -33,7 +34,7 @@ async function registerInspectionRoutes(fastify) {
    * GET /inspections
    * List all inspections with filters
    */
-  fastify.get('/inspections', async (request, reply) => {
+  fastify.get('/inspections', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Extract tenant context from request (JWT or headers)
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -115,7 +116,7 @@ async function registerInspectionRoutes(fastify) {
    * GET /inspections/stats
    * Get inspection statistics
    */
-  fastify.get('/inspections/stats', async (request, reply) => {
+  fastify.get('/inspections/stats', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Extract tenant context and create repository
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -145,7 +146,7 @@ async function registerInspectionRoutes(fastify) {
    * POST /api/inspections/aggregate
    * Run custom aggregation on inspections
    */
-  fastify.post('/api/inspections/aggregate', async (request, reply) => {
+  fastify.post('/api/inspections/aggregate', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Extract tenant context and create repository
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -173,7 +174,7 @@ async function registerInspectionRoutes(fastify) {
    * POST /inspections
    * Create a new inspection
    */
-  fastify.post('/inspections', async (request, reply) => {
+  fastify.post('/inspections', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { tenantId, userId } = getTenantAndUser(request);
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -206,7 +207,7 @@ async function registerInspectionRoutes(fastify) {
    * PUT /inspections/:id
    * Update an inspection
    */
-  fastify.put('/inspections/:id', async (request, reply) => {
+  fastify.put('/inspections/:id', { preHandler: requireAuth }, async (request, reply) => {
     try {
       const { userId } = getTenantAndUser(request);
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -238,7 +239,7 @@ async function registerInspectionRoutes(fastify) {
    * GET /inspections/:id
    * Get a single inspection
    */
-  fastify.get('/inspections/:id', async (request, reply) => {
+  fastify.get('/inspections/:id', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Extract tenant context and create repository
       const tenantContext = TenantContextFactory.fromRequest(request);
@@ -265,7 +266,7 @@ async function registerInspectionRoutes(fastify) {
    * DELETE /inspections/:id
    * Delete an inspection (soft delete)
    */
-  fastify.delete('/inspections/:id', async (request, reply) => {
+  fastify.delete('/inspections/:id', { preHandler: requireAuth }, async (request, reply) => {
     try {
       // Extract tenant context and create repository
       const tenantContext = TenantContextFactory.fromRequest(request);
