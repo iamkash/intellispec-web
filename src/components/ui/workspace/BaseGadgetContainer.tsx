@@ -111,6 +111,11 @@ export const BaseGadgetContainer: React.FC<BaseGadgetContainerProps> = ({
     background: 'transparent',
     minHeight: 0 // Allow flex item to shrink
   };
+  
+  // Debug logging for calculator gadget
+  if (title?.includes('Calculator') || title === undefined) {
+    console.log('[BaseGadgetContainer] noPadding:', noPadding, 'padding:', bodyStyle.padding, 'title:', title);
+  }
 
   const footerStyle: React.CSSProperties = {
     padding: size === 'small' ? '6px 8px' : size === 'large' ? '10px 16px' : '8px 12px',

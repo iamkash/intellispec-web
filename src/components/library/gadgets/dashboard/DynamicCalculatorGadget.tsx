@@ -89,10 +89,12 @@ export class DynamicCalculatorGadget extends BaseGadget {
   };
 
   getContainerProps(props: any, context?: GadgetContext): any {
-    return {
+    const containerProps = {
       ...super.getContainerProps(props, context),
       noPadding: true, // Calculator manages its own internal padding
     };
+    console.log('[DynamicCalculatorGadget] getContainerProps returning:', containerProps);
+    return containerProps;
   }
 
   renderBody(props: any): React.ReactNode {
