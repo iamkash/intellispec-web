@@ -55,12 +55,12 @@ module.exports = {
     // Access requirements
     { id: 'access-requirements', type: 'group', title: 'Access Requirements', description: 'Work access and positioning needs', sectionId: 'project-section', order: 3, size: 24, collapsible: true },
     { id: 'access_type_required', type: 'checkbox_group', title: 'Access Type Required', label: 'Access Type Required', sectionId: 'project-section', groupId: 'access-requirements', size: 24, options: [
-      'All-around access',
-      'Single-side access',
-      'Overhead work',
-      'Confined space access',
-      'Multi-level access',
-      'Equipment access'
+      { label: 'All-around access', value: 'all_around_access' },
+      { label: 'Single-side access', value: 'single_side_access' },
+      { label: 'Overhead work', value: 'overhead_work' },
+      { label: 'Confined space access', value: 'confined_space_access' },
+      { label: 'Multi-level access', value: 'multi_level_access' },
+      { label: 'Equipment access', value: 'equipment_access' }
     ]},
     { id: 'working_clearance_ft', type: 'number', title: 'Required Working Clearance (ft)', label: 'Required Working Clearance (ft)', sectionId: 'project-section', groupId: 'access-requirements', size: 8, defaultValue: 3 },
     { id: 'load_requirements', type: 'select', title: 'Load Requirements', label: 'Load Requirements', sectionId: 'project-section', groupId: 'access-requirements', size: 8, options: [
@@ -113,12 +113,12 @@ module.exports = {
     // Safety requirements
     { id: 'safety-requirements', type: 'group', title: 'Safety Requirements', description: 'Safety systems and fall protection', sectionId: 'project-section', order: 5, size: 24, collapsible: true },
     { id: 'fall_protection_required', type: 'checkbox_group', title: 'Fall Protection Required', label: 'Fall Protection Required', sectionId: 'project-section', groupId: 'safety-requirements', size: 24, options: [
-      'Guardrails (standard)',
-      'Toe boards',
-      'Safety nets',
-      'Personal fall arrest',
-      'Debris netting',
-      'Weather protection'
+      { label: 'Guardrails (standard)', value: 'guardrails_standard' },
+      { label: 'Toe boards', value: 'toe_boards' },
+      { label: 'Safety nets', value: 'safety_nets' },
+      { label: 'Personal fall arrest', value: 'personal_fall_arrest' },
+      { label: 'Debris netting', value: 'debris_netting' },
+      { label: 'Weather protection', value: 'weather_protection' }
     ]},
     { id: 'osha_compliance_level', type: 'select', title: 'OSHA Compliance Level', label: 'OSHA Compliance Level', sectionId: 'project-section', groupId: 'safety-requirements', size: 8, options: [
       { label: 'Standard Compliance', value: 'standard' },
@@ -325,5 +325,4 @@ The report must be **client-ready, detailed, and include structured tables, calc
    - Always provide **transparent assumptions**  
    - Emphasize **safety compliance** and **access efficiency**  `
 };
-
 

@@ -45,12 +45,12 @@ module.exports = {
     { id: 'critical_temperature', type: 'number', title: 'Critical Temperature (°F)', label: 'Critical Temperature (°F)', sectionId: 'project-section', groupId: 'fire-requirements', size: 8, defaultValue: 1000 },
     { id: 'ambient_temperature', type: 'number', title: 'Ambient Temperature (°F)', label: 'Ambient Temperature (°F)', sectionId: 'project-section', groupId: 'fire-requirements', size: 8, defaultValue: 70 },
     { id: 'regulatory_requirements', type: 'checkbox_group', title: 'Regulatory Requirements', label: 'Regulatory Requirements', sectionId: 'project-section', groupId: 'fire-requirements', size: 24, options: [
-      'OSHA 1910.106',
-      'API 2218',
-      'NFPA 30',
-      'Local Fire Code',
-      'Insurance Requirements',
-      'Corporate Standards'
+      { label: 'OSHA 1910.106', value: 'osha_1910_106' },
+      { label: 'API 2218', value: 'api_2218' },
+      { label: 'NFPA 30', value: 'nfpa_30' },
+      { label: 'Local Fire Code', value: 'local_fire_code' },
+      { label: 'Insurance Requirements', value: 'insurance_requirements' },
+      { label: 'Corporate Standards', value: 'corporate_standards' }
     ]},
 
      // Substrate information
@@ -296,5 +296,4 @@ The report must be **client-ready, detailed, and include structured tables, calc
    - Always provide **transparent assumptions**  
    - Emphasize **regulatory compliance** and **fire safety performance**  `
 };
-
 

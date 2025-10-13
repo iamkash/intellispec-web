@@ -54,6 +54,7 @@
 - Prefer editing files within `api/`, `src/`, or docs. Do not delete or rewrite files outside the workspace without explicit instruction.
 - Never commit secrets; use `.env` locally and keep example values generic.
 - After touching any route or middleware, rerun `npm run validate-auth` and address failures before handing work off.
+- Calculator metadata must follow the flat `uiDefinition` schema documented in `scripts/calculators/README.md`. For `checkbox_group` fields, always provide `options` as an array of `{ label, value }` objects (never bare strings) so widgets render correctly and pass validation.
 - Avoid direct mutations in `node_modules/` or generated assets; use scripts or configuration files instead.
 - Coordinate with maintainers before altering legacy scripts under `api/scripts/` or introducing new background services.
 

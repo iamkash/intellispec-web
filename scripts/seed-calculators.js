@@ -9,6 +9,74 @@ const mongoose = require('mongoose');
 
 const MONGODB_URI = process.env.MONGODB_URI || process.env.MONGODB_ATLAS_URI || 'mongodb://localhost:27017/intellispec-dev';
 
+const isObject = (value) => typeof value === 'object' && value !== null;
+
+const extractFields = (uiDefinition) => {
+  if (!uiDefinition) return [];
+
+  if (Array.isArray(uiDefinition)) {
+    return uiDefinition.filter(
+      (item) => item && item.type && item.type !== 'section' && item.type !== 'group'
+    );
+  }
+
+  if (Array.isArray(uiDefinition.fields)) {
+    return uiDefinition.fields;
+  }
+
+  if (Array.isArray(uiDefinition.sections)) {
+    const fields = [];
+    uiDefinition.sections.forEach((section) => {
+      if (Array.isArray(section?.fields)) {
+        fields.push(...section.fields);
+      }
+      if (Array.isArray(section?.groups)) {
+        section.groups.forEach((group) => {
+          if (Array.isArray(group?.fields)) {
+            fields.push(...group.fields);
+          }
+        });
+      }
+    });
+    return fields;
+  }
+
+  return [];
+};
+
+const validateCalculatorMetadata = (calculator, sourceFile) => {
+  const fields = extractFields(calculator.uiDefinition);
+  const context = `${calculator.id}${sourceFile ? ` (${sourceFile})` : ''}`;
+
+  fields.forEach((field) => {
+    if (String(field.type).toLowerCase() === 'checkbox_group') {
+      if (!Array.isArray(field.options) || field.options.length === 0) {
+        throw new Error(
+          `Calculator ${context} has checkbox_group "${field.id}" without options array.`
+        );
+      }
+
+      field.options.forEach((option, index) => {
+        if (!isObject(option)) {
+          throw new Error(
+            `Calculator ${context} has checkbox_group "${field.id}" option at index ${index} that is not an object. Expected { label, value }.`
+          );
+        }
+        if (!Object.prototype.hasOwnProperty.call(option, 'label') || option.label === undefined) {
+          throw new Error(
+            `Calculator ${context} has checkbox_group "${field.id}" option at index ${index} missing "label".`
+          );
+        }
+        if (!Object.prototype.hasOwnProperty.call(option, 'value') || option.value === undefined) {
+          throw new Error(
+            `Calculator ${context} has checkbox_group "${field.id}" option at index ${index} missing "value".`
+          );
+        }
+      });
+    }
+  });
+};
+
 async function run() {
   await mongoose.connect(MONGODB_URI, { maxPoolSize: 5 });
 
@@ -51,6 +119,7 @@ async function run() {
       try {
         const mod = require(file);
         if (mod && typeof mod === 'object' && mod.id) {
+          mod.__sourceFile = rel;
           calculators.push(mod);
         }
       } catch (err) {
@@ -60,10 +129,15 @@ async function run() {
   } catch (e) {
     console.warn('⚠️  Error scanning calculators directory:', e.message);
   }
+
+  // Validate metadata before seeding to enforce schema consistency
+  calculators.forEach((calculator) =>
+    validateCalculatorMetadata(calculator, calculator.__sourceFile)
+  );
 // Seed calculators (upsert + update existing)
   for (const calculator of calculators) {
     const now = new Date();
-    const { id, ...rest } = calculator;
+    const { id, __sourceFile, ...rest } = calculator;
 
     // Only set fields provided by the calculator definition + maintenance fields
     const setPayload = {
