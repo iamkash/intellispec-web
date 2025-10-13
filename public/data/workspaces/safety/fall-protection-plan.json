@@ -9,18 +9,154 @@
       "title": "Fall Protection Plan",
       "config": {
         "sections": [
-          { "id": "image_capture", "title": "Image Capture", "sectionType": "image", "includeInPdf": false },
-          { "id": "image_analysis", "title": "Scene Analysis", "imageAnalysisPromptRef": "deepImageAnalysis", "promptSourceIds": ["image_capture"], "includeInPdf": true, "pdf": { "includeOverview": true, "includeImages": false } },
-          { "id": "plan_controls", "title": "Plan Controls", "includeInPdf": true, "grid": { "title": "Controls", "dataKey": "controls", "columns": [ { "key": "hazard", "title": "Hazard", "editable": true }, { "key": "control", "title": "Control", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "controlsPopulate", "btnLabel": "Populate from AI" } }
+          {
+            "id": "image_capture",
+            "title": "Image Capture",
+            "sectionType": "image",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_analysis",
+            "title": "Scene Analysis",
+            "imageAnalysisPromptRef": "deepImageAnalysis",
+            "promptSourceIds": [
+              "image_capture"
+            ],
+            "includeInPdf": true,
+            "pdf": {
+              "includeOverview": true,
+              "includeImages": false
+            }
+          },
+          {
+            "id": "plan_controls",
+            "title": "Plan Controls",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Controls",
+              "dataKey": "controls",
+              "columns": [
+                {
+                  "key": "hazard",
+                  "title": "Hazard",
+                  "editable": true
+                },
+                {
+                  "key": "control",
+                  "title": "Control",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true
+                }
+              ],
+              "promptRef": "controlsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          }
         ],
         "groups": [],
         "fields": [],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Fall Protection", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
-        "prompts": { "deepImageAnalysis": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000 }, "promptConfig": { "systemPrompt": "Analyze for fall hazards and anchors. JSON only.", "userPrompt": "JSON only" } }, "controlsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000, "temperature": 0.3 }, "promptConfig": { "systemPrompt": "Derive fall hazards and controls.", "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"hazard\": \"string\", \"control\": \"string\", \"notes\": \"string\" } ]" } } }
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety"
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Fall Protection",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          }
+        },
+        "prompts": {
+          "deepImageAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 1000
+            },
+            "promptConfig": {
+              "systemPrompt": "Analyze for fall hazards and anchors. JSON only.",
+              "userPrompt": "JSON only"
+            }
+          },
+          "controlsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 1000,
+              "temperature": 0.3
+            },
+            "promptConfig": {
+              "systemPrompt": "Derive fall hazards and controls.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"hazard\": \"string\", \"control\": \"string\", \"notes\": \"string\" } ]"
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
+        }
       },
       "position": 24
     }
   ]
 }
-
-

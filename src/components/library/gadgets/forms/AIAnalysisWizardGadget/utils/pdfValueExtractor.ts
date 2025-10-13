@@ -275,8 +275,95 @@ export function formatPdfValue(value: string, fieldType?: string): string {
  * @param fieldType - Optional field type for special handling
  * @returns Properly formatted string for PDF display
  */
-export function safePdfValue(value: any, fieldType?: string): string {
-  const extracted = extractPdfValue(value, fieldType);
+const normalizeOptions = (options: any): Array<{ label: string; value: any }> => {
+  if (!Array.isArray(options)) return [];
+  return options
+    .map((option) => {
+      if (option === null || option === undefined) {
+        return null;
+      }
+      if (typeof option === 'string') {
+        return { label: option, value: option };
+      }
+      if (typeof option === 'object') {
+        const optLabel = option.label ?? option.name ?? option.title ?? option.text ?? option.value;
+        const optValue = option.value ?? option.id ?? option.key ?? optLabel;
+        if (optLabel === undefined && optValue === undefined) {
+          return null;
+        }
+        return {
+          label: normalizeForPdf(String(optLabel ?? '')),
+          value: optValue
+        };
+      }
+      return null;
+    })
+    .filter(Boolean) as Array<{ label: string; value: any }>;
+};
+
+const mapValueToOptionLabel = (rawValue: any, fieldType?: string, fieldConfig?: any): any => {
+  if (!fieldConfig) return rawValue;
+
+  const optionSources = [
+    fieldConfig.options,
+    fieldConfig.props?.options,
+    fieldConfig.meta?.options
+  ].find((opts) => Array.isArray(opts));
+
+  const normalizedOptions = normalizeOptions(optionSources);
+  if (!normalizedOptions.length) {
+    return rawValue;
+  }
+
+  const toLabeledObject = (val: any) => {
+    if (val === null || val === undefined) return val;
+
+    if (typeof val === 'object') {
+      if (typeof val.label === 'string') {
+        return { label: normalizeForPdf(val.label), value: val.value ?? val.id ?? val.key ?? val.label };
+      }
+      if (val.name || val.title || val.text) {
+        const label = val.name ?? val.title ?? val.text;
+        return { label: normalizeForPdf(String(label)), value: val.value ?? val.id ?? val.key ?? label };
+      }
+    }
+
+    const match = normalizedOptions.find((opt) => {
+      if (Array.isArray(opt.value)) {
+        return opt.value.includes(val);
+      }
+      if (typeof opt.value === 'string' || typeof opt.value === 'number' || typeof opt.value === 'boolean') {
+        return String(opt.value) === String(val);
+      }
+      return opt.value === val;
+    });
+
+    if (match) {
+      return {
+        label: match.label,
+        value: match.value
+      };
+    }
+
+    return val;
+  };
+
+  if (Array.isArray(rawValue)) {
+    return rawValue.map((item) => toLabeledObject(item));
+  }
+
+  // checkbox_group can sometimes be stored as object with keys true/false
+  if (fieldType === 'checkbox_group' && rawValue && typeof rawValue === 'object' && !Array.isArray(rawValue)) {
+    const keys = Object.keys(rawValue).filter((key) => rawValue[key]);
+    return keys.map((key) => toLabeledObject(key));
+  }
+
+  return toLabeledObject(rawValue);
+};
+
+export function safePdfValue(value: any, fieldType?: string, fieldConfig?: any): string {
+  const valueWithLabels = mapValueToOptionLabel(value, fieldType, fieldConfig);
+  const extracted = extractPdfValue(valueWithLabels, fieldType);
   const formatted = formatPdfValue(extracted, fieldType);
   // Final normalization pass to ensure any formatted values are also normalized
   return normalizeForPdf(formatted);

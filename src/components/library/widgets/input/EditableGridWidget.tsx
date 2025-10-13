@@ -96,7 +96,7 @@ export const EditableGridWidget: React.FC<EditableGridWidgetProps> = ({ rows, on
           console.log(`[EditableGridWidget] Resolved URL for ${col.key}:`, optionsUrl);
           
           const url = new URL(optionsUrl, window.location.origin);
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('authToken') || localStorage.getItem('token');
           const response = await fetch(url.toString(), {
             method: 'GET',
             headers: {
@@ -420,5 +420,4 @@ export const EditableGridWidget: React.FC<EditableGridWidgetProps> = ({ rows, on
 };
 
 export default EditableGridWidget;
-
 

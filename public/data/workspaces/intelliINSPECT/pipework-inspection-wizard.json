@@ -42,22 +42,51 @@
               "showThumbnails": true,
               "thumbnailSize": 150,
               "drawingEnabled": true,
-              "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow", "measurement"],
-              "drawingColors": ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"],
-              "strokeWidths": [1, 2, 3, 5, 8],
+              "drawingTools": [
+                "pen",
+                "line",
+                "circle",
+                "rectangle",
+                "text",
+                "arrow",
+                "measurement"
+              ],
+              "drawingColors": [
+                "#FF0000",
+                "#00FF00",
+                "#0000FF",
+                "#FFFF00",
+                "#FF00FF",
+                "#00FFFF"
+              ],
+              "strokeWidths": [
+                1,
+                2,
+                3,
+                5,
+                8
+              ],
               "uploadText": "Click or drag images here to upload",
               "dragText": "Drop images here to upload"
             },
             "required": false,
             "disabled": false,
-            "gridLayout": { "xs": 24, "sm": 24, "md": 24, "lg": 24 }
+            "gridLayout": {
+              "xs": 24,
+              "sm": 24,
+              "md": 24,
+              "lg": 24
+            }
           },
           {
             "id": "ai_analysis",
             "title": "AI Piping Analysis",
             "description": "Detailed AI analysis of captured images and voice notes including piping system assessment and CUI evaluation.",
             "imageAnalysisPromptRef": "detailedPipingAnalysis",
-            "promptSourceIds": ["image_capture", "voice_capture"],
+            "promptSourceIds": [
+              "image_capture",
+              "voice_capture"
+            ],
             "includeInPdf": true,
             "analysisWidget": "simple",
             "pdf": {
@@ -73,7 +102,11 @@
             "title": "General Information",
             "description": "Basic inspection and piping system information.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 3,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate General Info",
             "promptRef": "generalInfoPopulate",
             "includeInPdf": true
@@ -83,7 +116,11 @@
             "title": "Piping System Details & Specifications",
             "description": "Detailed piping specifications and design data.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Piping Details",
             "promptRef": "pipingDetailsPopulate",
             "includeInPdf": true
@@ -93,7 +130,11 @@
             "title": "Inspection Scope & Methodology",
             "description": "Scope description and inspection methods used.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Scope",
             "promptRef": "scopePopulate",
             "includeInPdf": true
@@ -103,7 +144,11 @@
             "title": "Background Information",
             "description": "Circuit background and environmental conditions.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 3,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Background Info",
             "promptRef": "backgroundInfoPopulate",
             "includeInPdf": true
@@ -113,7 +158,11 @@
             "title": "Location Categories",
             "description": "External and internal location category assessment.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Location Categories",
             "promptRef": "locationCategoriesPopulate",
             "includeInPdf": true
@@ -127,10 +176,37 @@
               "title": "General Piping Observations",
               "dataKey": "generalPipingObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "generalPipingObservationsPopulate",
               "btnLabel": "Populate General Piping Observations"
@@ -145,10 +221,37 @@
               "title": "Support System Observations",
               "dataKey": "supportObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "supportObservationsPopulate",
               "btnLabel": "Populate Support Observations"
@@ -163,10 +266,37 @@
               "title": "Connections & Components Observations",
               "dataKey": "connectionObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "connectionObservationsPopulate",
               "btnLabel": "Populate Connection Observations"
@@ -181,10 +311,37 @@
               "title": "Insulation System Observations",
               "dataKey": "insulationObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "insulationObservationsPopulate",
               "btnLabel": "Populate Insulation Observations"
@@ -195,7 +352,11 @@
             "title": "Summary of Inspection",
             "description": "Comprehensive inspection summary and conclusions.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 1,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Inspection Summary",
             "promptRef": "inspectionSummaryPopulate",
             "includeInPdf": true
@@ -209,12 +370,39 @@
               "title": "CUI Assessment",
               "dataKey": "cuiFindings",
               "columns": [
-                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
-                { "key": "susceptibility", "title": "CUI Susceptibility", "editable": true, "summary": "uniqueCount" },
-                { "key": "insulationType", "title": "Insulation Type", "editable": true },
-                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "findings", "title": "Findings", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "susceptibility",
+                  "title": "CUI Susceptibility",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "insulationType",
+                  "title": "Insulation Type",
+                  "editable": true
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "findings",
+                  "title": "Findings",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "cuiAssessmentPopulate",
               "btnLabel": "Populate CUI Assessment"
@@ -229,12 +417,41 @@
               "title": "Thickness Measurements",
               "dataKey": "measurements",
               "columns": [
-                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
-                { "key": "cmlNumber", "title": "CML Number", "editable": true },
-                { "key": "nominalThickness", "title": "Nominal Thickness (in)", "editable": true, "summary": "average" },
-                { "key": "actualThickness", "title": "Actual Thickness (in)", "editable": true, "summary": "average" },
-                { "key": "corrosionRate", "title": "Corrosion Rate (mpy)", "editable": true, "summary": "average" },
-                { "key": "remainingLife", "title": "Remaining Life (years)", "editable": true, "summary": "minimum" }
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "cmlNumber",
+                  "title": "CML Number",
+                  "editable": true
+                },
+                {
+                  "key": "nominalThickness",
+                  "title": "Nominal Thickness (in)",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "actualThickness",
+                  "title": "Actual Thickness (in)",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "corrosionRate",
+                  "title": "Corrosion Rate (mpy)",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "remainingLife",
+                  "title": "Remaining Life (years)",
+                  "editable": true,
+                  "summary": "minimum"
+                }
               ],
               "promptRef": "thicknessPopulate",
               "btnLabel": "Populate Measurements"
@@ -245,7 +462,11 @@
             "title": "Evaluation & Compliance",
             "description": "Fitness-for-service and code compliance assessment per API 570.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 1,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Evaluation",
             "promptRef": "evaluationPopulate",
             "includeInPdf": true
@@ -259,11 +480,34 @@
               "title": "Recommendations",
               "dataKey": "recommendations",
               "columns": [
-                { "key": "priority", "title": "Priority", "editable": true, "summary": "uniqueCount" },
-                { "key": "type", "title": "Type", "editable": true, "summary": "uniqueCount" },
-                { "key": "description", "title": "Description", "editable": true, "summary": "countMissing" },
-                { "key": "method", "title": "Method/Standard", "editable": true },
-                { "key": "timeline", "title": "Timeline", "editable": true }
+                {
+                  "key": "priority",
+                  "title": "Priority",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "type",
+                  "title": "Type",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "description",
+                  "title": "Description",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "method",
+                  "title": "Method/Standard",
+                  "editable": true
+                },
+                {
+                  "key": "timeline",
+                  "title": "Timeline",
+                  "editable": true
+                }
               ],
               "promptRef": "recommendationsPopulate",
               "btnLabel": "Populate Recommendations"
@@ -274,7 +518,11 @@
             "title": "Next Inspection Requirements",
             "description": "Next inspection interval and requirements.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Next Inspection",
             "promptRef": "nextInspectionPopulate",
             "includeInPdf": true
@@ -284,124 +532,865 @@
             "title": "Inspector Signoff",
             "description": "Inspector certification and approval.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "includeInPdf": true
           }
         ],
         "groups": [
-          { "id": "equipment_selection", "title": "Equipment Selection", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "inspection_details", "title": "Inspection Details", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "piping_identification", "title": "Piping System Identification", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "piping_specifications", "title": "Piping Specifications", "sectionId": "piping_details", "lgSpan": 24 },
-          { "id": "design_data", "title": "Design Data", "sectionId": "piping_details", "lgSpan": 24 },
-          { "id": "operating_conditions", "title": "Operating Conditions", "sectionId": "piping_details", "lgSpan": 24 },
-          { "id": "scope_details", "title": "Scope Details", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "inspection_methods", "title": "Inspection Methods", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "background_info", "title": "Background Information", "sectionId": "background_information", "lgSpan": 24 },
-          { "id": "external_location_categories", "title": "External Location Categories", "sectionId": "location_categories", "lgSpan": 24 },
-          { "id": "internal_location_categories", "title": "Internal Location Categories", "sectionId": "location_categories", "lgSpan": 24 },
-          { "id": "summary_details", "title": "Summary Details", "sectionId": "inspection_summary", "lgSpan": 24 },
-          { "id": "calculations", "title": "Calculations", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "compliance_assessment", "title": "Compliance Assessment", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "next_inspection_details", "title": "Next Inspection Details", "sectionId": "next_inspection", "lgSpan": 24 },
-          { "id": "inspector_info", "title": "Inspector Information", "sectionId": "inspector_signoff", "lgSpan": 24 }
+          {
+            "id": "equipment_selection",
+            "title": "Equipment Selection",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_details",
+            "title": "Inspection Details",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "piping_identification",
+            "title": "Piping System Identification",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "piping_specifications",
+            "title": "Piping Specifications",
+            "sectionId": "piping_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "design_data",
+            "title": "Design Data",
+            "sectionId": "piping_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "operating_conditions",
+            "title": "Operating Conditions",
+            "sectionId": "piping_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_details",
+            "title": "Scope Details",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_methods",
+            "title": "Inspection Methods",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "background_info",
+            "title": "Background Information",
+            "sectionId": "background_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "external_location_categories",
+            "title": "External Location Categories",
+            "sectionId": "location_categories",
+            "lgSpan": 24
+          },
+          {
+            "id": "internal_location_categories",
+            "title": "Internal Location Categories",
+            "sectionId": "location_categories",
+            "lgSpan": 24
+          },
+          {
+            "id": "summary_details",
+            "title": "Summary Details",
+            "sectionId": "inspection_summary",
+            "lgSpan": 24
+          },
+          {
+            "id": "calculations",
+            "title": "Calculations",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "compliance_assessment",
+            "title": "Compliance Assessment",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "next_inspection_details",
+            "title": "Next Inspection Details",
+            "sectionId": "next_inspection",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_info",
+            "title": "Inspector Information",
+            "sectionId": "inspector_signoff",
+            "lgSpan": 24
+          }
         ],
         "fields": [
-          { "id": "company_id", "label": "Company", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select company...", "optionsUrl": "/api/options/companies", "labelField": "label", "valueField": "value", "required": true },
-          { "id": "site_id", "label": "Facility/Site", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select facility...", "optionsUrl": "/api/options/sites", "labelField": "label", "valueField": "value", "dependsOn": "company_id", "required": true },
-          { "id": "asset_group_id", "label": "Asset Group", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset group...", "optionsUrl": "/api/options/asset-groups", "labelField": "label", "valueField": "value", "dependsOn": "site_id", "required": false },
-          { "id": "asset_id", "label": "Asset", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset...", "optionsUrl": "/api/options/assets", "labelField": "label", "valueField": "value", "dependsOn": ["company_id", "site_id", "asset_group_id"], "required": false },
-          { "id": "detected_piping_type", "label": "Piping Type", "type": "select", "readonly": false, "groupId": "piping_identification", "lgSpan": 12, "placeholder": "Select or auto-detect piping type", "options": [ { "label": "Process Piping - High Temperature", "value": "process_high_temp" }, { "label": "Process Piping - Low Temperature", "value": "process_low_temp" }, { "label": "Utility Piping - Steam", "value": "utility_steam" }, { "label": "Utility Piping - Cooling Water", "value": "utility_cooling" }, { "label": "Fuel Gas Piping", "value": "fuel_gas" }, { "label": "Instrument Air Piping", "value": "instrument_air" }, { "label": "Fire Water Piping", "value": "fire_water" }, { "label": "Corrosive Service Piping", "value": "corrosive_service" } ] },
-          { "id": "applicable_standard", "label": "Applicable Standard", "type": "select", "groupId": "piping_identification", "lgSpan": 12, "options": [ { "label": "API 570 - Piping Inspection", "value": "API 570" }, { "label": "ASME B31.3 - Process Piping", "value": "ASME B31.3" } ] },
-          { "id": "inspection_type", "label": "Inspection Type", "type": "dropdown", "options": ["External", "Internal", "Internal & External", "On-stream", "RBI", "Turnaround", "Post-repair", "Post-alteration", "Pre-service"], "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "circuit_number", "label": "Piping Circuit Number", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "inspection_date", "label": "Inspection Date", "type": "date", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "piping_description", "label": "Description (Service, Fluid, Design Code)", "type": "textarea", "required": true, "groupId": "piping_identification", "lgSpan": 24 },
-          { "id": "owner_user", "label": "Owner/User", "type": "text", "required": true, "groupId": "piping_identification", "lgSpan": 12 },
-          { "id": "location", "label": "Location", "type": "text", "required": true, "groupId": "piping_identification", "lgSpan": 12 },
-          { "id": "pipe_size", "label": "Pipe Size (inches)", "type": "text", "groupId": "piping_specifications", "lgSpan": 8 },
-          { "id": "pipe_schedule", "label": "Pipe Schedule/Wall Thickness", "type": "text", "groupId": "piping_specifications", "lgSpan": 8 },
-          { "id": "material_grade", "label": "Material Grade", "type": "text", "groupId": "piping_specifications", "lgSpan": 8 },
-          { "id": "installation_year", "label": "Installation Year", "type": "number", "groupId": "piping_specifications", "lgSpan": 12 },
-          { "id": "design_pressure", "label": "Design Pressure (psig)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "design_temp", "label": "Design Temperature (°F)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "corrosion_allowance", "label": "Corrosion Allowance (in)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "original_thickness", "label": "Original Thickness (in)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "operating_pressure", "label": "Operating Pressure (psig)", "type": "number", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "operating_temperature", "label": "Operating Temperature (°F)", "type": "number", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "insulation_type", "label": "Insulation Type", "type": "text", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "inspector_name", "label": "Inspector Name", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "api_certification", "label": "API Certification #", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "other_personnel", "label": "Other Personnel (NDE techs, support staff)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "references", "label": "References (API 570, ASME B31.3, drawings)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "scope_description", "label": "Scope Description (areas inspected, limitations)", "type": "textarea", "required": true, "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "inspection_preparation", "label": "Inspection Preparation (cleaning, isolation, permits, safety)", "type": "textarea", "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "inspection_methods_used", "label": "Inspection Methods Used", "type": "checkbox_group", "options": ["External Visual", "UT Thickness", "CUI Assessment", "Weld Inspection", "Support Check", "PMI", "Other"], "groupId": "inspection_methods", "lgSpan": 24 },
-          { "id": "rbi_interval_method", "label": "RBI or Interval Determination Method", "type": "text", "groupId": "inspection_methods", "lgSpan": 24 },
-          { "id": "inspection_confidence", "label": "Inspection Confidence", "type": "select", "options": [{"label": "High", "value": "high"}, {"label": "Medium", "value": "medium"}, {"label": "Low", "value": "low"}], "groupId": "background_info", "lgSpan": 8 },
-          { "id": "insulated", "label": "Insulated (Y/N)", "type": "select", "options": [{"label": "Yes", "value": "Y"}, {"label": "No", "value": "N"}], "groupId": "background_info", "lgSpan": 8 },
-          { "id": "metal_temp_below_dew_point", "label": "Metal Temp. < Dew Point (Y/N)", "type": "select", "options": [{"label": "Yes", "value": "Y"}, {"label": "No", "value": "N"}], "groupId": "background_info", "lgSpan": 8 },
-          { "id": "barrier_penetrations", "label": "Barrier Penetrations", "type": "select", "options": [{"label": "Damaged", "value": "damaged"}, {"label": "Good", "value": "good"}, {"label": "N/A", "value": "na"}], "groupId": "external_location_categories", "lgSpan": 8 },
-          { "id": "insulation_termination", "label": "Insulation Termination", "type": "select", "options": [{"label": "Vertical", "value": "vertical"}, {"label": "Horizontal", "value": "horizontal"}, {"label": "N/A", "value": "na"}], "groupId": "external_location_categories", "lgSpan": 8 },
-          { "id": "horizontal_runs", "label": "Horizontal Runs", "type": "select", "options": [{"label": "Yes", "value": "Y"}, {"label": "No", "value": "N"}], "groupId": "external_location_categories", "lgSpan": 8 },
-          { "id": "low_points", "label": "Low Points", "type": "select", "options": [{"label": "Present", "value": "present"}, {"label": "None", "value": "none"}], "groupId": "external_location_categories", "lgSpan": 8 },
-          { "id": "soil_air_interface", "label": "Soil-Air Interface", "type": "select", "options": [{"label": "Present", "value": "present"}, {"label": "None", "value": "none"}], "groupId": "external_location_categories", "lgSpan": 8 },
-          { "id": "dead_legs", "label": "Dead Legs", "type": "select", "options": [{"label": "Present", "value": "present"}, {"label": "None", "value": "none"}], "groupId": "internal_location_categories", "lgSpan": 8 },
-          { "id": "long_horizontal_runs", "label": "Long Horizontal Runs", "type": "select", "options": [{"label": "Yes", "value": "Y"}, {"label": "No", "value": "N"}], "groupId": "internal_location_categories", "lgSpan": 8 },
-          { "id": "erosion_zones", "label": "Erosion Zones", "type": "select", "options": [{"label": "Present", "value": "present"}, {"label": "None", "value": "none"}], "groupId": "internal_location_categories", "lgSpan": 8 },
-          { "id": "elbows", "label": "Elbows", "type": "select", "options": [{"label": "Present", "value": "present"}, {"label": "None", "value": "none"}], "groupId": "internal_location_categories", "lgSpan": 6 },
-          { "id": "tees", "label": "Tees", "type": "select", "options": [{"label": "Present", "value": "present"}, {"label": "None", "value": "none"}], "groupId": "internal_location_categories", "lgSpan": 6 },
-          { "id": "reducers", "label": "Reducers", "type": "select", "options": [{"label": "Present", "value": "present"}, {"label": "None", "value": "none"}], "groupId": "internal_location_categories", "lgSpan": 6 },
-          { "id": "inspection_summary_text", "label": "Summary of Inspection", "type": "textarea", "rows": 10, "groupId": "summary_details", "lgSpan": 24 },
-          { "id": "min_required_thickness", "label": "Minimum Required Thickness per ASME (in)", "type": "number", "groupId": "calculations", "lgSpan": 8 },
-          { "id": "mawp_calculation", "label": "MAWP Calculation Result (psi)", "type": "number", "groupId": "calculations", "lgSpan": 8 },
-          { "id": "rbi_risk_factor", "label": "RBI Risk Factor Update", "type": "text", "groupId": "calculations", "lgSpan": 8 },
-          { "id": "fitness_service_results", "label": "Fitness-for-Service (API 579) Results", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "code_compliance", "label": "Code Compliance Assessment (deviations from API 570)", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "service_suitability", "label": "Service Suitability Determination", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "next_inspection_interval", "label": "Next Inspection Interval (per code)", "type": "text", "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "next_inspection_date", "label": "Next Inspection Due Date", "type": "date", "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "next_inspection_type", "label": "Next Inspection Type", "type": "select", "options": [ { "label": "External", "value": "external" }, { "label": "Internal", "value": "internal" }, { "label": "On-stream", "value": "on_stream" }, { "label": "RBI", "value": "rbi" } ], "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "next_inspection_scope", "label": "Next Inspection Scope Requirements", "type": "textarea", "groupId": "next_inspection_details", "lgSpan": 24 },
-          { "id": "inspector_signature", "label": "Inspector's Signature", "type": "signature", "required": true, "groupId": "inspector_info", "lgSpan": 24, "props": { "width": 400, "height": 150, "showTools": true, "showTimestamp": true, "showSignedBy": true, "enableUndo": true, "placeholder": "Please sign here to certify this piping inspection", "penColor": "#000080", "backgroundColor": "#ffffff" } },
-          { "id": "signature_date", "label": "Date", "type": "date", "required": true, "groupId": "inspector_info", "lgSpan": 12 }
+          {
+            "id": "company_id",
+            "label": "Company",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select company...",
+            "optionsUrl": "/api/options/companies",
+            "labelField": "label",
+            "valueField": "value",
+            "required": true
+          },
+          {
+            "id": "site_id",
+            "label": "Facility/Site",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select facility...",
+            "optionsUrl": "/api/options/sites",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": "company_id",
+            "required": true
+          },
+          {
+            "id": "asset_group_id",
+            "label": "Asset Group",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select asset group...",
+            "optionsUrl": "/api/options/asset-groups",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": "site_id",
+            "required": false
+          },
+          {
+            "id": "asset_id",
+            "label": "Asset",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select asset...",
+            "optionsUrl": "/api/options/assets",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": [
+              "company_id",
+              "site_id",
+              "asset_group_id"
+            ],
+            "required": false
+          },
+          {
+            "id": "detected_piping_type",
+            "label": "Piping Type",
+            "type": "select",
+            "readonly": false,
+            "groupId": "piping_identification",
+            "lgSpan": 12,
+            "placeholder": "Select or auto-detect piping type",
+            "options": [
+              {
+                "label": "Process Piping - High Temperature",
+                "value": "process_high_temp"
+              },
+              {
+                "label": "Process Piping - Low Temperature",
+                "value": "process_low_temp"
+              },
+              {
+                "label": "Utility Piping - Steam",
+                "value": "utility_steam"
+              },
+              {
+                "label": "Utility Piping - Cooling Water",
+                "value": "utility_cooling"
+              },
+              {
+                "label": "Fuel Gas Piping",
+                "value": "fuel_gas"
+              },
+              {
+                "label": "Instrument Air Piping",
+                "value": "instrument_air"
+              },
+              {
+                "label": "Fire Water Piping",
+                "value": "fire_water"
+              },
+              {
+                "label": "Corrosive Service Piping",
+                "value": "corrosive_service"
+              }
+            ]
+          },
+          {
+            "id": "applicable_standard",
+            "label": "Applicable Standard",
+            "type": "select",
+            "groupId": "piping_identification",
+            "lgSpan": 12,
+            "options": [
+              {
+                "label": "API 570 - Piping Inspection",
+                "value": "API 570"
+              },
+              {
+                "label": "ASME B31.3 - Process Piping",
+                "value": "ASME B31.3"
+              }
+            ]
+          },
+          {
+            "id": "inspection_type",
+            "label": "Inspection Type",
+            "type": "dropdown",
+            "options": [
+              "External",
+              "Internal",
+              "Internal & External",
+              "On-stream",
+              "RBI",
+              "Turnaround",
+              "Post-repair",
+              "Post-alteration",
+              "Pre-service"
+            ],
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "circuit_number",
+            "label": "Piping Circuit Number",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "inspection_date",
+            "label": "Inspection Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "piping_description",
+            "label": "Description (Service, Fluid, Design Code)",
+            "type": "textarea",
+            "required": true,
+            "groupId": "piping_identification",
+            "lgSpan": 24
+          },
+          {
+            "id": "owner_user",
+            "label": "Owner/User",
+            "type": "text",
+            "required": true,
+            "groupId": "piping_identification",
+            "lgSpan": 12
+          },
+          {
+            "id": "location",
+            "label": "Location",
+            "type": "text",
+            "required": true,
+            "groupId": "piping_identification",
+            "lgSpan": 12
+          },
+          {
+            "id": "pipe_size",
+            "label": "Pipe Size (inches)",
+            "type": "text",
+            "groupId": "piping_specifications",
+            "lgSpan": 8
+          },
+          {
+            "id": "pipe_schedule",
+            "label": "Pipe Schedule/Wall Thickness",
+            "type": "text",
+            "groupId": "piping_specifications",
+            "lgSpan": 8
+          },
+          {
+            "id": "material_grade",
+            "label": "Material Grade",
+            "type": "text",
+            "groupId": "piping_specifications",
+            "lgSpan": 8
+          },
+          {
+            "id": "installation_year",
+            "label": "Installation Year",
+            "type": "number",
+            "groupId": "piping_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "design_pressure",
+            "label": "Design Pressure (psig)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "design_temp",
+            "label": "Design Temperature (\u00b0F)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "corrosion_allowance",
+            "label": "Corrosion Allowance (in)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "original_thickness",
+            "label": "Original Thickness (in)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "operating_pressure",
+            "label": "Operating Pressure (psig)",
+            "type": "number",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "operating_temperature",
+            "label": "Operating Temperature (\u00b0F)",
+            "type": "number",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "insulation_type",
+            "label": "Insulation Type",
+            "type": "text",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "inspector_name",
+            "label": "Inspector Name",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "api_certification",
+            "label": "API Certification #",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "other_personnel",
+            "label": "Other Personnel (NDE techs, support staff)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "references",
+            "label": "References (API 570, ASME B31.3, drawings)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_description",
+            "label": "Scope Description (areas inspected, limitations)",
+            "type": "textarea",
+            "required": true,
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_preparation",
+            "label": "Inspection Preparation (cleaning, isolation, permits, safety)",
+            "type": "textarea",
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_methods_used",
+            "label": "Inspection Methods Used",
+            "type": "checkbox_group",
+            "options": [
+              "External Visual",
+              "UT Thickness",
+              "CUI Assessment",
+              "Weld Inspection",
+              "Support Check",
+              "PMI",
+              "Other"
+            ],
+            "groupId": "inspection_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "rbi_interval_method",
+            "label": "RBI or Interval Determination Method",
+            "type": "text",
+            "groupId": "inspection_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_confidence",
+            "label": "Inspection Confidence",
+            "type": "select",
+            "options": [
+              {
+                "label": "High",
+                "value": "high"
+              },
+              {
+                "label": "Medium",
+                "value": "medium"
+              },
+              {
+                "label": "Low",
+                "value": "low"
+              }
+            ],
+            "groupId": "background_info",
+            "lgSpan": 8
+          },
+          {
+            "id": "insulated",
+            "label": "Insulated (Y/N)",
+            "type": "select",
+            "options": [
+              {
+                "label": "Yes",
+                "value": "Y"
+              },
+              {
+                "label": "No",
+                "value": "N"
+              }
+            ],
+            "groupId": "background_info",
+            "lgSpan": 8
+          },
+          {
+            "id": "metal_temp_below_dew_point",
+            "label": "Metal Temp. < Dew Point (Y/N)",
+            "type": "select",
+            "options": [
+              {
+                "label": "Yes",
+                "value": "Y"
+              },
+              {
+                "label": "No",
+                "value": "N"
+              }
+            ],
+            "groupId": "background_info",
+            "lgSpan": 8
+          },
+          {
+            "id": "barrier_penetrations",
+            "label": "Barrier Penetrations",
+            "type": "select",
+            "options": [
+              {
+                "label": "Damaged",
+                "value": "damaged"
+              },
+              {
+                "label": "Good",
+                "value": "good"
+              },
+              {
+                "label": "N/A",
+                "value": "na"
+              }
+            ],
+            "groupId": "external_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "insulation_termination",
+            "label": "Insulation Termination",
+            "type": "select",
+            "options": [
+              {
+                "label": "Vertical",
+                "value": "vertical"
+              },
+              {
+                "label": "Horizontal",
+                "value": "horizontal"
+              },
+              {
+                "label": "N/A",
+                "value": "na"
+              }
+            ],
+            "groupId": "external_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "horizontal_runs",
+            "label": "Horizontal Runs",
+            "type": "select",
+            "options": [
+              {
+                "label": "Yes",
+                "value": "Y"
+              },
+              {
+                "label": "No",
+                "value": "N"
+              }
+            ],
+            "groupId": "external_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "low_points",
+            "label": "Low Points",
+            "type": "select",
+            "options": [
+              {
+                "label": "Present",
+                "value": "present"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "groupId": "external_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "soil_air_interface",
+            "label": "Soil-Air Interface",
+            "type": "select",
+            "options": [
+              {
+                "label": "Present",
+                "value": "present"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "groupId": "external_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "dead_legs",
+            "label": "Dead Legs",
+            "type": "select",
+            "options": [
+              {
+                "label": "Present",
+                "value": "present"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "groupId": "internal_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "long_horizontal_runs",
+            "label": "Long Horizontal Runs",
+            "type": "select",
+            "options": [
+              {
+                "label": "Yes",
+                "value": "Y"
+              },
+              {
+                "label": "No",
+                "value": "N"
+              }
+            ],
+            "groupId": "internal_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "erosion_zones",
+            "label": "Erosion Zones",
+            "type": "select",
+            "options": [
+              {
+                "label": "Present",
+                "value": "present"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "groupId": "internal_location_categories",
+            "lgSpan": 8
+          },
+          {
+            "id": "elbows",
+            "label": "Elbows",
+            "type": "select",
+            "options": [
+              {
+                "label": "Present",
+                "value": "present"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "groupId": "internal_location_categories",
+            "lgSpan": 6
+          },
+          {
+            "id": "tees",
+            "label": "Tees",
+            "type": "select",
+            "options": [
+              {
+                "label": "Present",
+                "value": "present"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "groupId": "internal_location_categories",
+            "lgSpan": 6
+          },
+          {
+            "id": "reducers",
+            "label": "Reducers",
+            "type": "select",
+            "options": [
+              {
+                "label": "Present",
+                "value": "present"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              }
+            ],
+            "groupId": "internal_location_categories",
+            "lgSpan": 6
+          },
+          {
+            "id": "inspection_summary_text",
+            "label": "Summary of Inspection",
+            "type": "textarea",
+            "rows": 10,
+            "groupId": "summary_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "min_required_thickness",
+            "label": "Minimum Required Thickness per ASME (in)",
+            "type": "number",
+            "groupId": "calculations",
+            "lgSpan": 8
+          },
+          {
+            "id": "mawp_calculation",
+            "label": "MAWP Calculation Result (psi)",
+            "type": "number",
+            "groupId": "calculations",
+            "lgSpan": 8
+          },
+          {
+            "id": "rbi_risk_factor",
+            "label": "RBI Risk Factor Update",
+            "type": "text",
+            "groupId": "calculations",
+            "lgSpan": 8
+          },
+          {
+            "id": "fitness_service_results",
+            "label": "Fitness-for-Service (API 579) Results",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "code_compliance",
+            "label": "Code Compliance Assessment (deviations from API 570)",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "service_suitability",
+            "label": "Service Suitability Determination",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "next_inspection_interval",
+            "label": "Next Inspection Interval (per code)",
+            "type": "text",
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "next_inspection_date",
+            "label": "Next Inspection Due Date",
+            "type": "date",
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "next_inspection_type",
+            "label": "Next Inspection Type",
+            "type": "select",
+            "options": [
+              {
+                "label": "External",
+                "value": "external"
+              },
+              {
+                "label": "Internal",
+                "value": "internal"
+              },
+              {
+                "label": "On-stream",
+                "value": "on_stream"
+              },
+              {
+                "label": "RBI",
+                "value": "rbi"
+              }
+            ],
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "next_inspection_scope",
+            "label": "Next Inspection Scope Requirements",
+            "type": "textarea",
+            "groupId": "next_inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_signature",
+            "label": "Inspector's Signature",
+            "type": "signature",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 24,
+            "props": {
+              "width": 400,
+              "height": 150,
+              "showTools": true,
+              "showTimestamp": true,
+              "showSignedBy": true,
+              "enableUndo": true,
+              "placeholder": "Please sign here to certify this piping inspection",
+              "penColor": "#000080",
+              "backgroundColor": "#ffffff"
+            }
+          },
+          {
+            "id": "signature_date",
+            "label": "Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 12
+          }
         ],
-        "pdfStyling": { 
-          "header": { 
-            "backgroundColor": [24,24,27], 
-            "textColor": [255,255,255], 
-            "fontSize": 12, 
-            "companyName": "Pipework Inspection Report", 
-            "companyAddress": "" 
-          }, 
-          "footer": { 
-            "textColor": [100,116,139], 
-            "fontSize": 6, 
-            "leftText": "API 570 Inspection", 
-            "centerText": "Confidential", 
-            "rightText": "Page {page} of {pages}" 
-          }, 
-          "sections": { 
-            "headerFontSize": 10, 
-            "contentFontSize": 8, 
-            "lineSpacing": 3.5, 
-            "margins": { "left": 15, "right": 195 } 
-          }, 
-          "tables": { 
-            "headerBackground": [2,6,23], 
-            "headerTextColor": [255,255,255], 
-            "headerFontSize": 8, 
-            "contentFontSize": 7, 
-            "cellPadding": 3 
-          }, 
-          "images": { 
-            "dpi": 400, 
-            "format": "JPEG", 
-            "quality": 0.92, 
-            "fit": "contain", 
-            "align": "center", 
-            "widthPercent": 1 
-          } 
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "Pipework Inspection Report",
+            "companyAddress": ""
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "API 570 Inspection",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
+          },
+          "tables": {
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
+            "headerFontSize": 8,
+            "contentFontSize": 7,
+            "cellPadding": 3
+          },
+          "images": {
+            "dpi": 400,
+            "format": "JPEG",
+            "quality": 0.92,
+            "fit": "contain",
+            "align": "center",
+            "widthPercent": 1
+          }
         },
         "prompts": {
           "detailedPipingAnalysis": {
@@ -412,7 +1401,7 @@
             },
             "promptConfig": {
               "systemPrompt": "Generate standard API 570 piping inspection report. Use only factual data from voice transcript and images. Do not include disclaimers about 'not provided', 'photographic evidence', or 'insufficient data'. If data is not available, leave field blank or use 'N/A'. Standard report format only.",
-              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard API 570 piping inspection report using voice data and images:\n\n**PIPING INSPECTION REPORT**\n**API 570 STANDARD**\n\n**PIPING SYSTEM IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Circuit Number | [from voice/drawings] |\n| Pipe Size | [from voice/visual] |\n| Schedule/Wall Thickness | [from voice/visual] |\n| Material Grade | [from voice/visual] |\n| Service | [fluid from voice] |\n| Operating Pressure | [psig from voice] |\n| Operating Temperature | [°F from voice] |\n| Installation Year | [from voice/records] |\n\n**INSPECTION SCOPE:**\n| Parameter | Value |\n|-----------|-------|\n| Inspection Type | [External/Internal from voice] |\n| Inspection Date | [today] |\n| Inspector | [name from voice] |\n| API 570 Certification | [number from voice] |\n| Methods Used | [from voice] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Pipe Body | [condition from voice/visual] | [details] |\n| Welds | [condition from voice/visual] | [details] |\n| Supports/Hangers | [condition from voice/visual] | [details] |\n| Insulation | [condition from voice/visual] | [details] |\n| Connections | [flange/joint condition from voice/visual] | [details] |\n| CUI Assessment | [corrosion under insulation from voice/visual] | [details] |\n\n**THICKNESS MEASUREMENTS:**\n| Parameter | Value | Unit |\n|-----------|-------|------|\n| Location | [CML from voice] | - |\n| Nominal Thickness | [design thickness from voice] | in |\n| Actual Thickness | [measured thickness from voice] | in |\n| Minimum Required | [calculated from voice] | in |\n| Corrosion Rate | [mpy from voice] | mpy |\n| Remaining Life | [years from voice] | years |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per API 570] |\n| Next Inspection Due | [Date per API 570 interval] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| API 570 Certification | [Number from voice] |"
+              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard API 570 piping inspection report using voice data and images:\n\n**PIPING INSPECTION REPORT**\n**API 570 STANDARD**\n\n**PIPING SYSTEM IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Circuit Number | [from voice/drawings] |\n| Pipe Size | [from voice/visual] |\n| Schedule/Wall Thickness | [from voice/visual] |\n| Material Grade | [from voice/visual] |\n| Service | [fluid from voice] |\n| Operating Pressure | [psig from voice] |\n| Operating Temperature | [\u00b0F from voice] |\n| Installation Year | [from voice/records] |\n\n**INSPECTION SCOPE:**\n| Parameter | Value |\n|-----------|-------|\n| Inspection Type | [External/Internal from voice] |\n| Inspection Date | [today] |\n| Inspector | [name from voice] |\n| API 570 Certification | [number from voice] |\n| Methods Used | [from voice] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Pipe Body | [condition from voice/visual] | [details] |\n| Welds | [condition from voice/visual] | [details] |\n| Supports/Hangers | [condition from voice/visual] | [details] |\n| Insulation | [condition from voice/visual] | [details] |\n| Connections | [flange/joint condition from voice/visual] | [details] |\n| CUI Assessment | [corrosion under insulation from voice/visual] | [details] |\n\n**THICKNESS MEASUREMENTS:**\n| Parameter | Value | Unit |\n|-----------|-------|------|\n| Location | [CML from voice] | - |\n| Nominal Thickness | [design thickness from voice] | in |\n| Actual Thickness | [measured thickness from voice] | in |\n| Minimum Required | [calculated from voice] | in |\n| Corrosion Rate | [mpy from voice] | mpy |\n| Remaining Life | [years from voice] | years |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per API 570] |\n| Next Inspection Due | [Date per API 570 interval] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| API 570 Certification | [Number from voice] |"
             },
             "streaming": {
               "enabled": true,
@@ -587,6 +1576,61 @@
             "promptConfig": {
               "systemPrompt": "Determine next inspection requirements per API 570 interval requirements. Return JSON only."
             }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "piping",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          },
+          "typeMap": {
+            "pressure_vessel": "Pressure Vessel",
+            "storage_tank": "Storage Tank",
+            "heat_exchanger": "Heat Exchanger",
+            "piping": "Piping System",
+            "pump": "Pump",
+            "compressor": "Compressor",
+            "turbine": "Turbine"
           }
         }
       },

@@ -202,6 +202,26 @@ const interpolate = (template: string, data: any): string => {
   return normalizeForPdf(interpolated);
 };
 
+const resolveImageUrl = (rawUrl?: string): string => {
+  if (!rawUrl) return '';
+  if (typeof window === 'undefined') return rawUrl;
+
+  const token = localStorage.getItem('authToken') || localStorage.getItem('token');
+  if (!token) return rawUrl;
+
+  try {
+    const isAbsolute = /^https?:\/\//i.test(rawUrl);
+    const url = new URL(rawUrl, window.location.origin);
+    if (!url.searchParams.get('authToken')) {
+      url.searchParams.set('authToken', token);
+    }
+    return isAbsolute ? url.toString() : `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    const separator = rawUrl.includes('?') ? '&' : '?';
+    return `${rawUrl}${separator}authToken=${encodeURIComponent(token)}`;
+  }
+};
+
 export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, metadata, gadgetData }) => {
   const [previewUrl, setPreviewUrl] = React.useState<string>('');
 
@@ -527,10 +547,22 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
           hasContent = dataRows.length > 0;
         } else if (c.type === 'labelTopGrid') {
           const items = c.items || [];
-          hasContent = items.some(item => item.value && item.value.trim().length > 0);
+          hasContent = items.some((item: any) => {
+            const valueText = typeof item?.value === 'string' ? item.value : String(item?.value ?? '');
+            const hasText = valueText.trim().length > 0;
+            const hasSignature = Boolean(item?.signatureData?.dataURL);
+            return hasText || hasSignature;
+          });
         } else if (c.type === 'formGrid') {
           const rows = c.rows || [];
-          hasContent = rows.some(row => row.some(cell => cell.value && cell.value.trim().length > 0));
+          hasContent = rows.some((row: any[]) =>
+            row.some(cell => {
+              const valueText = typeof cell?.value === 'string' ? cell.value : String(cell?.value ?? '');
+              const hasText = valueText.trim().length > 0;
+              const hasSignature = Boolean(cell?.signatureData?.dataURL);
+              return hasText || hasSignature;
+            })
+          );
         } else if (c.type === 'image') {
           hasContent = true; // Always show images if they exist
         } else {
@@ -603,77 +635,112 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
           currentY = (pdf as any).lastAutoTable.finalY + 6;
         } else if (c.type === 'labelTopGrid') {
           try {
-            // Manual grid rendering to support bold labels and spacing between label/value
             const margins = sectionCfg.margins || { left: 15, right: 195 };
             const availableWidth = (margins.right || 195) - (margins.left || 15);
             const columns = Math.max(1, Number((c as any).columnsCount || 4));
-          const gap = Number((c as any).gap || 4);
-          const cellPadding = Number((c as any).cellPadding || 2);
-          const colWidth = (availableWidth - gap * (columns - 1)) / columns;
-          const itemsRaw = Array.isArray((c as any).items) ? (c as any).items as Array<{ label: string; value: string }> : [];
-          const items = itemsRaw.map(item => ({
-            label: normalizeForPdf(item.label || ''),
-            value: normalizeForPdf(item.value || '')
-          }));
-          
-          const labelFs = Number((c as any).labelFontSize || (sectionCfg.contentFontSize || 8) + 1);
-          const valueFs = Number((c as any).valueFontSize || sectionCfg.contentFontSize || 8);
-          const labelLineHeight = (pdf.getLineHeightFactor() * labelFs) / pdf.internal.scaleFactor;
-          const valueLineHeight = (pdf.getLineHeightFactor() * valueFs) / pdf.internal.scaleFactor;
-          const spacing = Number((c as any).labelValueSpacing || 2);
-          
-          let i = 0;
-          while (i < items.length) {
-            // Calculate row height by max of cells
-            let maxCellHeight = 0;
-            // Pre-calc heights for this row
-            const rowItems = items.slice(i, i + columns);
-            for (let ci = 0; ci < rowItems.length; ci++) {
-              const it = rowItems[ci];
-              // label
-              pdf.setFontSize(labelFs);
-              pdf.setFont('helvetica', 'bold');
-              const labelLines = pdf.splitTextToSize(String(it.label || ''), colWidth - cellPadding * 2);
-              const labelHeight = Math.max(labelLineHeight, labelLines.length * labelLineHeight);
-              // value
-              pdf.setFontSize(valueFs);
-              pdf.setFont('helvetica', 'normal');
-              const valueLines = pdf.splitTextToSize(String(it.value || ''), colWidth - cellPadding * 2);
-              const valueHeight = Math.max(valueLineHeight, valueLines.length * valueLineHeight);
-              const cellHeight = cellPadding + labelHeight + spacing + valueHeight + cellPadding;
-              if (cellHeight > maxCellHeight) maxCellHeight = cellHeight;
-            }
-            // Page break if needed
-            if (currentY + maxCellHeight > contentBottomY) {
-              pdf.addPage();
-              addHeader();
-              currentY = 30;
-              if (!sec.hideHeader) {
-                addSectionHeader(sec.title, currentY);
-                currentY += 8;
+            const gap = Number((c as any).gap || 4);
+            const cellPadding = Number((c as any).cellPadding || 2);
+            const colWidth = (availableWidth - gap * (columns - 1)) / columns;
+            const itemsRaw = Array.isArray((c as any).items)
+              ? (c as any).items as Array<{ label: string; value: string; signatureData?: any }>
+              : [];
+            const items = itemsRaw.map(item => ({
+              label: normalizeForPdf(item.label || ''),
+              valueText: normalizeForPdf(item.value || ''),
+              signatureData: item.signatureData
+            }));
+
+            const labelFs = Number((c as any).labelFontSize || (sectionCfg.contentFontSize || 8) + 1);
+            const valueFs = Number((c as any).valueFontSize || sectionCfg.contentFontSize || 8);
+            const labelLineHeight = (pdf.getLineHeightFactor() * labelFs) / pdf.internal.scaleFactor;
+            const valueLineHeight = (pdf.getLineHeightFactor() * valueFs) / pdf.internal.scaleFactor;
+            const spacing = Number((c as any).labelValueSpacing || 2);
+            const signatureHeightSetting = Number((c as any).signatureHeight || 25);
+
+            let i = 0;
+            while (i < items.length) {
+              let maxCellHeight = 0;
+              const rowItems = items.slice(i, i + columns);
+              for (let ci = 0; ci < rowItems.length; ci++) {
+                const it = rowItems[ci];
+                pdf.setFontSize(labelFs);
+                pdf.setFont('helvetica', 'bold');
+                const labelLines = pdf.splitTextToSize(String(it.label || ''), colWidth - cellPadding * 2);
+                const labelHeight = Math.max(labelLineHeight, labelLines.length * labelLineHeight);
+
+                const hasValueText = Boolean(it.valueText && it.valueText.trim().length > 0);
+                let valueHeight = 0;
+                if (hasValueText) {
+                  pdf.setFontSize(valueFs);
+                  pdf.setFont('helvetica', 'normal');
+                  const valueLines = pdf.splitTextToSize(it.valueText, colWidth - cellPadding * 2);
+                  valueHeight = Math.max(valueLineHeight, valueLines.length * valueLineHeight);
+                }
+
+                const signatureHeight = it.signatureData?.dataURL ? signatureHeightSetting : 0;
+                let cellHeight = cellPadding + labelHeight;
+                if (signatureHeight > 0) {
+                  cellHeight += spacing + signatureHeight;
+                }
+                if (valueHeight > 0) {
+                  cellHeight += spacing + valueHeight;
+                }
+                cellHeight += cellPadding;
+                if (cellHeight > maxCellHeight) maxCellHeight = cellHeight;
               }
+
+              if (currentY + maxCellHeight > contentBottomY) {
+                pdf.addPage();
+                addHeader();
+                currentY = 30;
+                if (!sec.hideHeader) {
+                  addSectionHeader(sec.title, currentY);
+                  currentY += 8;
+                }
+              }
+
+              for (let ci = 0; ci < rowItems.length; ci++) {
+                const it = rowItems[ci];
+                const x = (margins.left || 15) + ci * (colWidth + gap);
+                let y = currentY + cellPadding;
+
+                pdf.setFontSize(labelFs);
+                pdf.setFont('helvetica', 'bold');
+                const labelLines = pdf.splitTextToSize(String(it.label || ''), colWidth - cellPadding * 2);
+                pdf.text(labelLines, x + cellPadding, y);
+                y += Math.max(labelLineHeight, labelLines.length * labelLineHeight);
+
+                if (it.signatureData?.dataURL) {
+                  y += spacing;
+                  const imgWidth = Math.max(1, colWidth - cellPadding * 2);
+                  const imgHeight = signatureHeightSetting;
+                  try {
+                    pdf.addImage(it.signatureData.dataURL, 'PNG', x + cellPadding, y, imgWidth, imgHeight);
+                    y += imgHeight;
+                  } catch (error) {
+                    console.error('Failed to render signature in PDF label grid:', error);
+                  }
+                }
+
+                if (it.valueText && it.valueText.trim().length > 0) {
+                  y += spacing;
+                  pdf.setFontSize(valueFs);
+                  pdf.setFont('helvetica', 'normal');
+                  const valueLines = pdf.splitTextToSize(it.valueText, colWidth - cellPadding * 2);
+                  pdf.text(valueLines, x + cellPadding, y);
+                  y += Math.max(valueLineHeight, valueLines.length * valueLineHeight);
+                }
+
+                y += cellPadding;
+              }
+
+              currentY += maxCellHeight + 4;
+              i += columns;
             }
-            // Draw cells
-            for (let ci = 0; ci < rowItems.length; ci++) {
-              const it = rowItems[ci];
-              const x = (margins.left || 15) + ci * (colWidth + gap);
-              let y = currentY + cellPadding;
-              pdf.setFontSize(labelFs);
-              pdf.setFont('helvetica', 'bold');
-              const labelLines = pdf.splitTextToSize(String(it.label || ''), colWidth - cellPadding * 2);
-              pdf.text(labelLines, x + cellPadding, y);
-              y += Math.max(labelLineHeight, labelLines.length * labelLineHeight) + spacing;
-              pdf.setFontSize(valueFs);
-              pdf.setFont('helvetica', 'normal');
-              const valueLines = pdf.splitTextToSize(String(it.value || ''), colWidth - cellPadding * 2);
-              pdf.text(valueLines, x + cellPadding, y);
-            }
-            currentY += maxCellHeight + 4;
-            i += columns;
+          } catch (labelGridError) {
+            console.error('Failed to render label grid in PDF:', labelGridError);
+            currentY += 20;
           }
-        } catch (labelGridError) {
-          currentY += 20;
-        }
         } else if (c.type === 'formGrid') {
           // Variable-span grid: rows of cells with span out of 24
           const margins = sectionCfg.margins || { left: 15, right: 195 };
@@ -685,11 +752,14 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
           const labelLineHeight = (pdf.getLineHeightFactor() * labelFs) / pdf.internal.scaleFactor;
           const valueLineHeight = (pdf.getLineHeightFactor() * valueFs) / pdf.internal.scaleFactor;
           const spacing = Number((c as any).labelValueSpacing || 2);
-          const rowsRaw = Array.isArray((c as any).rows) ? (c as any).rows as Array<Array<{ label: string; value: string; span: number }>> : [];
+          const rowsRaw = Array.isArray((c as any).rows)
+            ? (c as any).rows as Array<Array<{ label: string; value: string; span: number; signatureData?: any }>>
+            : [];
           const rows = rowsRaw.map(row => row.map(cell => ({
             label: normalizeForPdf(cell.label || ''),
-            value: normalizeForPdf(cell.value || ''),
-            span: cell.span
+            valueText: normalizeForPdf(cell.value || ''),
+            span: cell.span,
+            signatureData: cell.signatureData
           })));
           const unitWidth = availableWidth / 24;
           for (const row of rows) {
@@ -702,11 +772,23 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
               pdf.setFont('helvetica', 'bold');
               const labelLines = pdf.splitTextToSize(String(cell.label || ''), width - cellPadding * 2);
               const labelHeight = Math.max(labelLineHeight, labelLines.length * labelLineHeight);
-              pdf.setFontSize(valueFs);
-              pdf.setFont('helvetica', 'normal');
-              const valueLines = pdf.splitTextToSize(String(cell.value || ''), width - cellPadding * 2);
-              const valueHeight = Math.max(valueLineHeight, valueLines.length * valueLineHeight);
-              const cellHeight = cellPadding + labelHeight + spacing + valueHeight + cellPadding;
+              const hasValueText = Boolean(cell.valueText && cell.valueText.trim().length > 0);
+              let valueHeight = 0;
+              if (hasValueText) {
+                pdf.setFontSize(valueFs);
+                pdf.setFont('helvetica', 'normal');
+                const valueLines = pdf.splitTextToSize(cell.valueText, width - cellPadding * 2);
+                valueHeight = Math.max(valueLineHeight, valueLines.length * valueLineHeight);
+              }
+              const signatureHeight = cell.signatureData?.dataURL ? Number((c as any).signatureHeight || 25) : 0;
+              let cellHeight = cellPadding + labelHeight;
+              if (signatureHeight > 0) {
+                cellHeight += spacing + signatureHeight;
+              }
+              if (valueHeight > 0) {
+                cellHeight += spacing + valueHeight;
+              }
+              cellHeight += cellPadding;
               if (cellHeight > maxCellHeight) maxCellHeight = cellHeight;
             }
             // Page break
@@ -726,18 +808,41 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
               pdf.setFont('helvetica', 'bold');
               const labelLines = pdf.splitTextToSize(String(cell.label || ''), width - cellPadding * 2);
               pdf.text(labelLines, x + cellPadding, y);
-              y += Math.max(labelLineHeight, labelLines.length * labelLineHeight) + spacing;
-              pdf.setFontSize(valueFs);
-              pdf.setFont('helvetica', 'normal');
-              const valueLines = pdf.splitTextToSize(String(cell.value || ''), width - cellPadding * 2);
-              pdf.text(valueLines, x + cellPadding, y);
+              y += Math.max(labelLineHeight, labelLines.length * labelLineHeight);
+
+              if (cell.signatureData?.dataURL) {
+                y += spacing;
+                const imgWidth = Math.max(1, width - cellPadding * 2);
+                const imgHeight = Number((c as any).signatureHeight || 25);
+                try {
+                  pdf.addImage(cell.signatureData.dataURL, 'PNG', x + cellPadding, y, imgWidth, imgHeight);
+                  y += imgHeight;
+                } catch (error) {
+                  console.error('Failed to render signature in PDF form grid:', error);
+                }
+              }
+
+              if (cell.valueText && cell.valueText.trim().length > 0) {
+                y += spacing;
+                pdf.setFontSize(valueFs);
+                pdf.setFont('helvetica', 'normal');
+                const valueLines = pdf.splitTextToSize(cell.valueText, width - cellPadding * 2);
+                pdf.text(valueLines, x + cellPadding, y);
+                y += Math.max(valueLineHeight, valueLines.length * valueLineHeight);
+              }
+
+              y += cellPadding;
               x += width + gap;
             }
             currentY += maxCellHeight + 4;
           }
         } else if (c.type === 'image') {
           const imgsFromPath = c.dataPath ? getByPath(gadgetData, c.dataPath) : undefined;
-          const images: any[] = Array.isArray(imgsFromPath) ? imgsFromPath : (Array.isArray(c.data) ? c.data : []);
+          const imagesRaw: any[] = Array.isArray(imgsFromPath) ? imgsFromPath : (Array.isArray(c.data) ? c.data : []);
+          const images = imagesRaw.map((img) => ({
+            ...img,
+            url: resolveImageUrl((img && (img.url || img.src)) || '')
+          }));
           const marginsSection = sectionCfg.margins || { left: 15, right: 195 };
           const availableW = (marginsSection.right || 195) - (marginsSection.left || 15);
           const imgSty = metadata.pdfStyling?.images || {};
@@ -837,7 +942,12 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
                   
                   setTimeout(() => resolve(), 3000);
                   
-                  img.src = String(it.url || it.src || '');
+                  const sourceUrl = resolveImageUrl(it.url || it.src || '');
+                  if (sourceUrl) {
+                    img.src = sourceUrl;
+                  } else {
+                    resolve();
+                  }
                 });
               } catch (error) {
                 // Image processing error, continue

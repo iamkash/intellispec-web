@@ -132,6 +132,28 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
     const drawingContext = useRef<CanvasRenderingContext2D | null>(null);
     const lastPoint = useRef<{ x: number; y: number } | null>(null);
 
+    const resolveDisplayUrl = useCallback((rawUrl?: string) => {
+        if (!rawUrl) return rawUrl || '';
+
+        const token = (typeof window !== 'undefined')
+            ? (localStorage.getItem('authToken') || localStorage.getItem('token'))
+            : null;
+
+        if (!token) {
+            return rawUrl;
+        }
+
+        try {
+            const isAbsolute = /^https?:\/\//i.test(rawUrl);
+            const urlObj = new URL(rawUrl, window.location.origin);
+            urlObj.searchParams.set('authToken', token);
+            return isAbsolute ? urlObj.toString() : `${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+        } catch (err) {
+            const separator = rawUrl.includes('?') ? '&' : '?';
+            return `${rawUrl}${separator}authToken=${encodeURIComponent(token)}`;
+        }
+    }, []);
+
     // Sync with parent value
     useEffect(() => {
         if (value && JSON.stringify(value) !== JSON.stringify(fileList)) {
@@ -153,11 +175,12 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
             formData.append('file', file);
             formData.append('type', 'inspection');
 
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token');
             const response = await fetch('/api/uploads/image', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
+                headers: token ? {
+                    'Authorization': `Bearer ${token}`
+                } : undefined,
                 body: formData
             });
 
@@ -286,11 +309,12 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
         if (imageToRemove?.gridfsId && !imageToRemove.hasModifications) {
             try {
                 // Call delete API to decrement reference count or delete file
+                const token = localStorage.getItem('authToken') || localStorage.getItem('token');
                 const response = await fetch(`/api/uploads/image/${imageToRemove.gridfsId}`, {
                     method: 'DELETE',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
+                    headers: token ? {
+                        'Authorization': `Bearer ${token}`
+                    } : undefined
                 });
                 
                 if (response.ok) {
@@ -449,19 +473,19 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
                         <Text>Total images: {fileList.length}</Text>
                     </div>
                     <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
-                        {fileList.map((image, index) => (
-                            <Col key={image.uid} xs={24} sm={12} md={8} lg={6} xl={4}>
-                            <Card
-                                hoverable
-                                cover={
-                                    <img
-                                        alt={image.name}
-                                        src={image.url}
-                                        style={{ height: thumbnailSize, objectFit: 'cover' }}
-                                        onError={(e) => {
-                                            console.error(`Failed to load image: ${image.name}`, {
-                                                url: image.url,
-                                                gridfsId: image.gridfsId,
+        {fileList.map((image, index) => (
+            <Col key={image.uid} xs={24} sm={12} md={8} lg={6} xl={4}>
+            <Card
+                hoverable
+                cover={
+                    <img
+                        alt={image.name}
+                        src={resolveDisplayUrl(image.url)}
+                        style={{ height: thumbnailSize, objectFit: 'cover' }}
+                        onError={(e) => {
+                            console.error(`Failed to load image: ${image.name}`, {
+                                url: image.url,
+                                gridfsId: image.gridfsId,
                                                 uid: image.uid
                                             });
                                             // Set a fallback image or placeholder
@@ -476,13 +500,13 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
                                     />
                                 }
                                 actions={[
-                                    <Tooltip title="Preview">
-                                        <EyeOutlined onClick={() => {
-                                            setPreviewImage(image.url);
-                                            setPreviewTitle(image.name);
-                                            setPreviewOpen(true);
-                                        }} />
-                                    </Tooltip>,
+                    <Tooltip title="Preview">
+                        <EyeOutlined onClick={() => {
+                            setPreviewImage(resolveDisplayUrl(image.url));
+                            setPreviewTitle(image.name);
+                            setPreviewOpen(true);
+                        }} />
+                    </Tooltip>,
                                     drawingEnabled && (
                                         <Tooltip title="Draw">
                                             <EditOutlined onClick={() => setEditingImage(image)} />
@@ -616,7 +640,7 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
                         <div style={{ position: 'relative', display: 'inline-block' }}>
                             <img
                                 ref={imageRef}
-                                src={editingImage.url}
+                                src={resolveDisplayUrl(editingImage.url)}
                                 alt={editingImage.name}
                                 onLoad={() => initializeDrawingCanvas(editingImage)}
                                 style={{ display: 'none' }}

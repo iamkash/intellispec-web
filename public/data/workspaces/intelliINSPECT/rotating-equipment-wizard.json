@@ -42,22 +42,51 @@
               "showThumbnails": true,
               "thumbnailSize": 150,
               "drawingEnabled": true,
-              "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow", "measurement"],
-              "drawingColors": ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"],
-              "strokeWidths": [1, 2, 3, 5, 8],
+              "drawingTools": [
+                "pen",
+                "line",
+                "circle",
+                "rectangle",
+                "text",
+                "arrow",
+                "measurement"
+              ],
+              "drawingColors": [
+                "#FF0000",
+                "#00FF00",
+                "#0000FF",
+                "#FFFF00",
+                "#FF00FF",
+                "#00FFFF"
+              ],
+              "strokeWidths": [
+                1,
+                2,
+                3,
+                5,
+                8
+              ],
               "uploadText": "Click or drag images here to upload",
               "dragText": "Drop images here to upload"
             },
             "required": false,
             "disabled": false,
-            "gridLayout": { "xs": 24, "sm": 24, "md": 24, "lg": 24 }
+            "gridLayout": {
+              "xs": 24,
+              "sm": 24,
+              "md": 24,
+              "lg": 24
+            }
           },
           {
             "id": "ai_analysis",
             "title": "AI Equipment Analysis",
             "description": "Detailed AI analysis of captured images and voice notes including equipment condition and reliability assessment.",
             "imageAnalysisPromptRef": "detailedRotatingAnalysis",
-            "promptSourceIds": ["image_capture", "voice_capture"],
+            "promptSourceIds": [
+              "image_capture",
+              "voice_capture"
+            ],
             "includeInPdf": true,
             "analysisWidget": "simple",
             "pdf": {
@@ -73,7 +102,11 @@
             "title": "General Information",
             "description": "Basic inspection and equipment information.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 3,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate General Info",
             "promptRef": "generalInfoPopulate",
             "includeInPdf": true
@@ -83,7 +116,11 @@
             "title": "Equipment Details & Specifications",
             "description": "Detailed equipment specifications and design data.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Equipment Details",
             "promptRef": "equipmentDetailsPopulate",
             "includeInPdf": true
@@ -93,7 +130,11 @@
             "title": "Inspection Scope & Methodology",
             "description": "Scope description and inspection methods used.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Scope",
             "promptRef": "scopePopulate",
             "includeInPdf": true
@@ -107,10 +148,37 @@
               "title": "Mechanical Condition Observations",
               "dataKey": "mechanicalObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "mechanicalObservationsPopulate",
               "btnLabel": "Populate Mechanical Observations"
@@ -125,10 +193,37 @@
               "title": "Performance Monitoring Observations",
               "dataKey": "performanceObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "performanceObservationsPopulate",
               "btnLabel": "Populate Performance Observations"
@@ -143,12 +238,39 @@
               "title": "Vibration Analysis",
               "dataKey": "vibrationData",
               "columns": [
-                { "key": "location", "title": "Measurement Location", "editable": true, "summary": "countMissing" },
-                { "key": "direction", "title": "Direction", "editable": true },
-                { "key": "vibrationLevel", "title": "Vibration Level", "editable": true, "summary": "average" },
-                { "key": "frequency", "title": "Frequency (Hz)", "editable": true },
-                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Measurement Location",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "direction",
+                  "title": "Direction",
+                  "editable": true
+                },
+                {
+                  "key": "vibrationLevel",
+                  "title": "Vibration Level",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "frequency",
+                  "title": "Frequency (Hz)",
+                  "editable": true
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "vibrationAnalysisPopulate",
               "btnLabel": "Populate Vibration Data"
@@ -163,12 +285,38 @@
               "title": "Lubrication Analysis",
               "dataKey": "lubricationData",
               "columns": [
-                { "key": "component", "title": "Component", "editable": true, "summary": "countMissing" },
-                { "key": "oilType", "title": "Oil Type", "editable": true },
-                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "findings", "title": "Findings", "editable": true },
-                { "key": "changeRequired", "title": "Change Required", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "component",
+                  "title": "Component",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "oilType",
+                  "title": "Oil Type",
+                  "editable": true
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "findings",
+                  "title": "Findings",
+                  "editable": true
+                },
+                {
+                  "key": "changeRequired",
+                  "title": "Change Required",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "lubricationAnalysisPopulate",
               "btnLabel": "Populate Lubrication Data"
@@ -179,7 +327,11 @@
             "title": "Evaluation & Compliance",
             "description": "Reliability assessment and API standard compliance.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 1,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Evaluation",
             "promptRef": "evaluationPopulate",
             "includeInPdf": true
@@ -193,11 +345,34 @@
               "title": "Recommendations",
               "dataKey": "recommendations",
               "columns": [
-                { "key": "priority", "title": "Priority", "editable": true, "summary": "uniqueCount" },
-                { "key": "type", "title": "Type", "editable": true, "summary": "uniqueCount" },
-                { "key": "description", "title": "Description", "editable": true, "summary": "countMissing" },
-                { "key": "method", "title": "Method/Standard", "editable": true },
-                { "key": "timeline", "title": "Timeline", "editable": true }
+                {
+                  "key": "priority",
+                  "title": "Priority",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "type",
+                  "title": "Type",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "description",
+                  "title": "Description",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "method",
+                  "title": "Method/Standard",
+                  "editable": true
+                },
+                {
+                  "key": "timeline",
+                  "title": "Timeline",
+                  "editable": true
+                }
               ],
               "promptRef": "recommendationsPopulate",
               "btnLabel": "Populate Recommendations"
@@ -208,7 +383,11 @@
             "title": "Next Inspection Requirements",
             "description": "Next inspection interval and monitoring requirements.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Next Inspection",
             "promptRef": "nextInspectionPopulate",
             "includeInPdf": true
@@ -218,104 +397,595 @@
             "title": "Inspector Signoff",
             "description": "Inspector certification and approval.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "includeInPdf": true
           }
         ],
         "groups": [
-          { "id": "equipment_selection", "title": "Equipment Selection", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "inspection_details", "title": "Inspection Details", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "equipment_identification", "title": "Equipment Identification", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "equipment_specifications", "title": "Equipment Specifications", "sectionId": "equipment_details", "lgSpan": 24 },
-          { "id": "performance_data", "title": "Performance Data", "sectionId": "equipment_details", "lgSpan": 24 },
-          { "id": "operating_conditions", "title": "Operating Conditions", "sectionId": "equipment_details", "lgSpan": 24 },
-          { "id": "scope_details", "title": "Scope Details", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "inspection_methods", "title": "Inspection Methods", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "reliability_assessment", "title": "Reliability Assessment", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "compliance_assessment", "title": "Compliance Assessment", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "next_inspection_details", "title": "Next Inspection Details", "sectionId": "next_inspection", "lgSpan": 24 },
-          { "id": "inspector_info", "title": "Inspector Information", "sectionId": "inspector_signoff", "lgSpan": 24 }
+          {
+            "id": "equipment_selection",
+            "title": "Equipment Selection",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_details",
+            "title": "Inspection Details",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "equipment_identification",
+            "title": "Equipment Identification",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "equipment_specifications",
+            "title": "Equipment Specifications",
+            "sectionId": "equipment_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "performance_data",
+            "title": "Performance Data",
+            "sectionId": "equipment_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "operating_conditions",
+            "title": "Operating Conditions",
+            "sectionId": "equipment_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_details",
+            "title": "Scope Details",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_methods",
+            "title": "Inspection Methods",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "reliability_assessment",
+            "title": "Reliability Assessment",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "compliance_assessment",
+            "title": "Compliance Assessment",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "next_inspection_details",
+            "title": "Next Inspection Details",
+            "sectionId": "next_inspection",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_info",
+            "title": "Inspector Information",
+            "sectionId": "inspector_signoff",
+            "lgSpan": 24
+          }
         ],
         "fields": [
-          { "id": "company_id", "label": "Company", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select company...", "optionsUrl": "/api/options/companies", "labelField": "label", "valueField": "value", "required": true },
-          { "id": "site_id", "label": "Facility/Site", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select facility...", "optionsUrl": "/api/options/sites", "labelField": "label", "valueField": "value", "dependsOn": "company_id", "required": true },
-          { "id": "asset_group_id", "label": "Asset Group", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset group...", "optionsUrl": "/api/options/asset-groups", "labelField": "label", "valueField": "value", "dependsOn": "site_id", "required": false },
-          { "id": "asset_id", "label": "Asset", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset...", "optionsUrl": "/api/options/assets", "labelField": "label", "valueField": "value", "dependsOn": ["company_id", "site_id", "asset_group_id"], "required": false },
-          { "id": "detected_equipment_type", "label": "Equipment Type", "type": "select", "readonly": false, "groupId": "equipment_identification", "lgSpan": 12, "placeholder": "Select or auto-detect equipment type", "options": [ { "label": "Centrifugal Pump", "value": "centrifugal_pump" }, { "label": "Positive Displacement Pump", "value": "pd_pump" }, { "label": "Centrifugal Compressor", "value": "centrifugal_compressor" }, { "label": "Reciprocating Compressor", "value": "reciprocating_compressor" }, { "label": "Steam Turbine", "value": "steam_turbine" }, { "label": "Gas Turbine", "value": "gas_turbine" }, { "label": "Electric Motor", "value": "electric_motor" }, { "label": "Gearbox", "value": "gearbox" }, { "label": "Blower/Fan", "value": "blower_fan" }, { "label": "Agitator/Mixer", "value": "agitator" } ] },
-          { "id": "applicable_standard", "label": "Applicable Standard", "type": "select", "groupId": "equipment_identification", "lgSpan": 12, "options": [ { "label": "API 610 - Centrifugal Pumps", "value": "API 610" }, { "label": "API 617 - Centrifugal Compressors", "value": "API 617" }, { "label": "API 618 - Reciprocating Compressors", "value": "API 618" }, { "label": "API 611/612 - Steam Turbines", "value": "API 611/612" }, { "label": "ISO 10816 - Vibration Standards", "value": "ISO 10816" } ] },
-          { "id": "inspection_type", "label": "Inspection Type", "type": "dropdown", "options": ["External", "Internal", "Internal & External", "On-stream", "Predictive Maintenance", "Turnaround", "Post-repair", "Pre-service"], "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "equipment_tag", "label": "Equipment Tag Number", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "inspection_date", "label": "Inspection Date", "type": "date", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "service_description", "label": "Service Description", "type": "textarea", "required": true, "groupId": "equipment_identification", "lgSpan": 24 },
-          { "id": "owner_user", "label": "Owner/User", "type": "text", "required": true, "groupId": "equipment_identification", "lgSpan": 12 },
-          { "id": "location", "label": "Location", "type": "text", "required": true, "groupId": "equipment_identification", "lgSpan": 12 },
-          { "id": "manufacturer", "label": "Manufacturer", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "model_number", "label": "Model Number", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "serial_number", "label": "Serial Number", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "installation_date", "label": "Installation Date", "type": "date", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "rated_capacity", "label": "Rated Capacity", "type": "text", "groupId": "performance_data", "lgSpan": 8 },
-          { "id": "rated_speed", "label": "Rated Speed (RPM)", "type": "number", "groupId": "performance_data", "lgSpan": 8 },
-          { "id": "power_rating", "label": "Power Rating (HP/kW)", "type": "text", "groupId": "performance_data", "lgSpan": 8 },
-          { "id": "operating_speed", "label": "Operating Speed (RPM)", "type": "number", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "bearing_type", "label": "Bearing Type", "type": "text", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "coupling_type", "label": "Coupling Type", "type": "text", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "lubrication_system", "label": "Lubrication System", "type": "text", "groupId": "operating_conditions", "lgSpan": 12 },
-          { "id": "last_overhaul", "label": "Last Overhaul Date", "type": "date", "groupId": "operating_conditions", "lgSpan": 12 },
-          { "id": "inspector_name", "label": "Inspector Name", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "certification", "label": "Certification #", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "other_personnel", "label": "Other Personnel (Reliability engineers, technicians)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "references", "label": "References (API Standards, OEM manuals, drawings)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "scope_description", "label": "Scope Description (components inspected, limitations)", "type": "textarea", "required": true, "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "inspection_preparation", "label": "Inspection Preparation (shutdown, isolation, safety)", "type": "textarea", "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "inspection_methods_used", "label": "Inspection Methods Used", "type": "checkbox_group", "options": ["Visual", "Vibration Analysis", "Temperature Monitoring", "Oil Analysis", "Alignment Check", "Performance Test", "Other"], "groupId": "inspection_methods", "lgSpan": 24 },
-          { "id": "monitoring_program", "label": "Monitoring Program/Schedule", "type": "text", "groupId": "inspection_methods", "lgSpan": 24 },
-          { "id": "reliability_assessment_results", "label": "Reliability Assessment Results", "type": "textarea", "groupId": "reliability_assessment", "lgSpan": 24 },
-          { "id": "performance_evaluation", "label": "Performance Evaluation", "type": "textarea", "groupId": "reliability_assessment", "lgSpan": 24 },
-          { "id": "code_compliance", "label": "API Standard Compliance Assessment", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "service_suitability", "label": "Service Suitability Determination", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "next_inspection_interval", "label": "Next Inspection Interval", "type": "text", "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "next_inspection_date", "label": "Next Inspection Due Date", "type": "date", "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "next_inspection_type", "label": "Next Inspection Type", "type": "select", "options": [ { "label": "External", "value": "external" }, { "label": "Internal", "value": "internal" }, { "label": "Predictive Maintenance", "value": "predictive" }, { "label": "Performance Test", "value": "performance" } ], "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "monitoring_requirements", "label": "Monitoring Requirements", "type": "textarea", "groupId": "next_inspection_details", "lgSpan": 24 },
-          { "id": "inspector_signature", "label": "Inspector's Signature", "type": "signature", "required": true, "groupId": "inspector_info", "lgSpan": 24, "props": { "width": 400, "height": 150, "showTools": true, "showTimestamp": true, "showSignedBy": true, "enableUndo": true, "placeholder": "Please sign here to certify this rotating equipment inspection", "penColor": "#000080", "backgroundColor": "#ffffff" } },
-          { "id": "signature_date", "label": "Date", "type": "date", "required": true, "groupId": "inspector_info", "lgSpan": 12 }
+          {
+            "id": "company_id",
+            "label": "Company",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select company...",
+            "optionsUrl": "/api/options/companies",
+            "labelField": "label",
+            "valueField": "value",
+            "required": true
+          },
+          {
+            "id": "site_id",
+            "label": "Facility/Site",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select facility...",
+            "optionsUrl": "/api/options/sites",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": "company_id",
+            "required": true
+          },
+          {
+            "id": "asset_group_id",
+            "label": "Asset Group",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select asset group...",
+            "optionsUrl": "/api/options/asset-groups",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": "site_id",
+            "required": false
+          },
+          {
+            "id": "asset_id",
+            "label": "Asset",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select asset...",
+            "optionsUrl": "/api/options/assets",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": [
+              "company_id",
+              "site_id",
+              "asset_group_id"
+            ],
+            "required": false
+          },
+          {
+            "id": "detected_equipment_type",
+            "label": "Equipment Type",
+            "type": "select",
+            "readonly": false,
+            "groupId": "equipment_identification",
+            "lgSpan": 12,
+            "placeholder": "Select or auto-detect equipment type",
+            "options": [
+              {
+                "label": "Centrifugal Pump",
+                "value": "centrifugal_pump"
+              },
+              {
+                "label": "Positive Displacement Pump",
+                "value": "pd_pump"
+              },
+              {
+                "label": "Centrifugal Compressor",
+                "value": "centrifugal_compressor"
+              },
+              {
+                "label": "Reciprocating Compressor",
+                "value": "reciprocating_compressor"
+              },
+              {
+                "label": "Steam Turbine",
+                "value": "steam_turbine"
+              },
+              {
+                "label": "Gas Turbine",
+                "value": "gas_turbine"
+              },
+              {
+                "label": "Electric Motor",
+                "value": "electric_motor"
+              },
+              {
+                "label": "Gearbox",
+                "value": "gearbox"
+              },
+              {
+                "label": "Blower/Fan",
+                "value": "blower_fan"
+              },
+              {
+                "label": "Agitator/Mixer",
+                "value": "agitator"
+              }
+            ]
+          },
+          {
+            "id": "applicable_standard",
+            "label": "Applicable Standard",
+            "type": "select",
+            "groupId": "equipment_identification",
+            "lgSpan": 12,
+            "options": [
+              {
+                "label": "API 610 - Centrifugal Pumps",
+                "value": "API 610"
+              },
+              {
+                "label": "API 617 - Centrifugal Compressors",
+                "value": "API 617"
+              },
+              {
+                "label": "API 618 - Reciprocating Compressors",
+                "value": "API 618"
+              },
+              {
+                "label": "API 611/612 - Steam Turbines",
+                "value": "API 611/612"
+              },
+              {
+                "label": "ISO 10816 - Vibration Standards",
+                "value": "ISO 10816"
+              }
+            ]
+          },
+          {
+            "id": "inspection_type",
+            "label": "Inspection Type",
+            "type": "dropdown",
+            "options": [
+              "External",
+              "Internal",
+              "Internal & External",
+              "On-stream",
+              "Predictive Maintenance",
+              "Turnaround",
+              "Post-repair",
+              "Pre-service"
+            ],
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "equipment_tag",
+            "label": "Equipment Tag Number",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "inspection_date",
+            "label": "Inspection Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "service_description",
+            "label": "Service Description",
+            "type": "textarea",
+            "required": true,
+            "groupId": "equipment_identification",
+            "lgSpan": 24
+          },
+          {
+            "id": "owner_user",
+            "label": "Owner/User",
+            "type": "text",
+            "required": true,
+            "groupId": "equipment_identification",
+            "lgSpan": 12
+          },
+          {
+            "id": "location",
+            "label": "Location",
+            "type": "text",
+            "required": true,
+            "groupId": "equipment_identification",
+            "lgSpan": 12
+          },
+          {
+            "id": "manufacturer",
+            "label": "Manufacturer",
+            "type": "text",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "model_number",
+            "label": "Model Number",
+            "type": "text",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "serial_number",
+            "label": "Serial Number",
+            "type": "text",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "installation_date",
+            "label": "Installation Date",
+            "type": "date",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "rated_capacity",
+            "label": "Rated Capacity",
+            "type": "text",
+            "groupId": "performance_data",
+            "lgSpan": 8
+          },
+          {
+            "id": "rated_speed",
+            "label": "Rated Speed (RPM)",
+            "type": "number",
+            "groupId": "performance_data",
+            "lgSpan": 8
+          },
+          {
+            "id": "power_rating",
+            "label": "Power Rating (HP/kW)",
+            "type": "text",
+            "groupId": "performance_data",
+            "lgSpan": 8
+          },
+          {
+            "id": "operating_speed",
+            "label": "Operating Speed (RPM)",
+            "type": "number",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "bearing_type",
+            "label": "Bearing Type",
+            "type": "text",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "coupling_type",
+            "label": "Coupling Type",
+            "type": "text",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "lubrication_system",
+            "label": "Lubrication System",
+            "type": "text",
+            "groupId": "operating_conditions",
+            "lgSpan": 12
+          },
+          {
+            "id": "last_overhaul",
+            "label": "Last Overhaul Date",
+            "type": "date",
+            "groupId": "operating_conditions",
+            "lgSpan": 12
+          },
+          {
+            "id": "inspector_name",
+            "label": "Inspector Name",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "certification",
+            "label": "Certification #",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "other_personnel",
+            "label": "Other Personnel (Reliability engineers, technicians)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "references",
+            "label": "References (API Standards, OEM manuals, drawings)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_description",
+            "label": "Scope Description (components inspected, limitations)",
+            "type": "textarea",
+            "required": true,
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_preparation",
+            "label": "Inspection Preparation (shutdown, isolation, safety)",
+            "type": "textarea",
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_methods_used",
+            "label": "Inspection Methods Used",
+            "type": "checkbox_group",
+            "options": [
+              "Visual",
+              "Vibration Analysis",
+              "Temperature Monitoring",
+              "Oil Analysis",
+              "Alignment Check",
+              "Performance Test",
+              "Other"
+            ],
+            "groupId": "inspection_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "monitoring_program",
+            "label": "Monitoring Program/Schedule",
+            "type": "text",
+            "groupId": "inspection_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "reliability_assessment_results",
+            "label": "Reliability Assessment Results",
+            "type": "textarea",
+            "groupId": "reliability_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "performance_evaluation",
+            "label": "Performance Evaluation",
+            "type": "textarea",
+            "groupId": "reliability_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "code_compliance",
+            "label": "API Standard Compliance Assessment",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "service_suitability",
+            "label": "Service Suitability Determination",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "next_inspection_interval",
+            "label": "Next Inspection Interval",
+            "type": "text",
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "next_inspection_date",
+            "label": "Next Inspection Due Date",
+            "type": "date",
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "next_inspection_type",
+            "label": "Next Inspection Type",
+            "type": "select",
+            "options": [
+              {
+                "label": "External",
+                "value": "external"
+              },
+              {
+                "label": "Internal",
+                "value": "internal"
+              },
+              {
+                "label": "Predictive Maintenance",
+                "value": "predictive"
+              },
+              {
+                "label": "Performance Test",
+                "value": "performance"
+              }
+            ],
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "monitoring_requirements",
+            "label": "Monitoring Requirements",
+            "type": "textarea",
+            "groupId": "next_inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_signature",
+            "label": "Inspector's Signature",
+            "type": "signature",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 24,
+            "props": {
+              "width": 400,
+              "height": 150,
+              "showTools": true,
+              "showTimestamp": true,
+              "showSignedBy": true,
+              "enableUndo": true,
+              "placeholder": "Please sign here to certify this rotating equipment inspection",
+              "penColor": "#000080",
+              "backgroundColor": "#ffffff"
+            }
+          },
+          {
+            "id": "signature_date",
+            "label": "Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 12
+          }
         ],
-        "pdfStyling": { 
-          "header": { 
-            "backgroundColor": [24,24,27], 
-            "textColor": [255,255,255], 
-            "fontSize": 12, 
-            "companyName": "Rotating Equipment Inspection Report", 
-            "companyAddress": "" 
-          }, 
-          "footer": { 
-            "textColor": [100,116,139], 
-            "fontSize": 6, 
-            "leftText": "Rotating Equipment Inspection", 
-            "centerText": "Confidential", 
-            "rightText": "Page {page} of {pages}" 
-          }, 
-          "sections": { 
-            "headerFontSize": 10, 
-            "contentFontSize": 8, 
-            "lineSpacing": 3.5, 
-            "margins": { "left": 15, "right": 195 } 
-          }, 
-          "tables": { 
-            "headerBackground": [2,6,23], 
-            "headerTextColor": [255,255,255], 
-            "headerFontSize": 8, 
-            "contentFontSize": 7, 
-            "cellPadding": 3 
-          }, 
-          "images": { 
-            "dpi": 400, 
-            "format": "JPEG", 
-            "quality": 0.92, 
-            "fit": "contain", 
-            "align": "center", 
-            "widthPercent": 1 
-          } 
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "Rotating Equipment Inspection Report",
+            "companyAddress": ""
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Rotating Equipment Inspection",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
+          },
+          "tables": {
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
+            "headerFontSize": 8,
+            "contentFontSize": 7,
+            "cellPadding": 3
+          },
+          "images": {
+            "dpi": 400,
+            "format": "JPEG",
+            "quality": 0.92,
+            "fit": "contain",
+            "align": "center",
+            "widthPercent": 1
+          }
         },
         "prompts": {
           "detailedRotatingAnalysis": {
@@ -326,7 +996,7 @@
             },
             "promptConfig": {
               "systemPrompt": "Generate standard API 610/617/618 inspection report. Use only factual data from voice transcript and images. Do not include disclaimers about 'not provided', 'photographic evidence', or 'insufficient data'. If data is not available, leave field blank or use 'N/A'. Standard report format only.",
-              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard API inspection report using voice data and images:\n\n**ROTATING EQUIPMENT INSPECTION REPORT**\n**API 610/617/618 STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [pump/compressor/motor] |\n| Manufacturer | [from nameplate] |\n| Model | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Rated Capacity | [from nameplate/voice] |\n| Rated Speed | [RPM from nameplate/voice] |\n| Power Rating | [HP/kW from nameplate/voice] |\n| Bearing Type | [from voice/visual] |\n| Coupling Type | [from voice/visual] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Casing/Housing | [condition from voice/visual] | [details] |\n| Bearings | [condition from voice/visual] | [details] |\n| Coupling | [alignment status from voice/visual] | [details] |\n| Foundation | [condition from voice/visual] | [details] |\n| Seals | [leakage status from voice/visual] | [details] |\n| Lubrication | [oil condition from voice/visual] | [details] |\n\n**MEASUREMENTS:**\n| Parameter | Reading | Unit |\n|-----------|---------|------|\n| Vibration | [reading from voice] | mils |\n| Temperature | [reading from voice] | °F |\n| Noise Level | [reading from voice] | dB |\n| Alignment | [status from voice] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per API standards] |\n| Next Inspection Due | [Date per API interval] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| API Certification | [API 610/617/618] |"
+              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard API inspection report using voice data and images:\n\n**ROTATING EQUIPMENT INSPECTION REPORT**\n**API 610/617/618 STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [pump/compressor/motor] |\n| Manufacturer | [from nameplate] |\n| Model | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Rated Capacity | [from nameplate/voice] |\n| Rated Speed | [RPM from nameplate/voice] |\n| Power Rating | [HP/kW from nameplate/voice] |\n| Bearing Type | [from voice/visual] |\n| Coupling Type | [from voice/visual] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Casing/Housing | [condition from voice/visual] | [details] |\n| Bearings | [condition from voice/visual] | [details] |\n| Coupling | [alignment status from voice/visual] | [details] |\n| Foundation | [condition from voice/visual] | [details] |\n| Seals | [leakage status from voice/visual] | [details] |\n| Lubrication | [oil condition from voice/visual] | [details] |\n\n**MEASUREMENTS:**\n| Parameter | Reading | Unit |\n|-----------|---------|------|\n| Vibration | [reading from voice] | mils |\n| Temperature | [reading from voice] | \u00b0F |\n| Noise Level | [reading from voice] | dB |\n| Alignment | [status from voice] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per API standards] |\n| Next Inspection Due | [Date per API interval] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| API Certification | [API 610/617/618] |"
             },
             "streaming": {
               "enabled": true,
@@ -438,6 +1108,61 @@
             "promptConfig": {
               "systemPrompt": "Determine next inspection and monitoring requirements for rotating equipment. Return JSON only."
             }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "rotating_equipment",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          },
+          "typeMap": {
+            "pressure_vessel": "Pressure Vessel",
+            "storage_tank": "Storage Tank",
+            "heat_exchanger": "Heat Exchanger",
+            "piping": "Piping System",
+            "pump": "Pump",
+            "compressor": "Compressor",
+            "turbine": "Turbine"
           }
         }
       },

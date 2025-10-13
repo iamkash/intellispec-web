@@ -594,7 +594,22 @@
                     "status": "status"
                   },
                   "groupBy": {
-                    "_id": "$inspectionType",
+                    "_id": {
+                      "$ifNull": [
+                        "$inspectionType",
+                        {
+                          "$ifNull": [
+                            "$documentSummary.inspectionType",
+                            {
+                              "$ifNull": [
+                                "$wizardState.documentSummary.inspectionType",
+                                "Unknown"
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
                     "fields": {
                       "count": { "expression": { "$sum": 1 } }
                     }

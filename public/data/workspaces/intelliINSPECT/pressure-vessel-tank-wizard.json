@@ -19,12 +19,60 @@
         "description": "Intelligent pressure vessel and storage tank inspection workflow with AI-powered analysis and documentation",
         "inspectionType": "pressure_vessel",
         "equipmentType": "pressure_vessel",
-        "assetDataPopulation": {
+        "recordDataPopulation": {
           "enabled": true,
-          "apiEndpoint": "/api/documents",
-          "assetIdParam": "asset_id",
           "populateOnLoad": true,
-          "disablePopulatedFields": true
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "pressure_vessel",
+          "typeMap": {
+            "pressure_vessel": "Pressure Vessel",
+            "storage_tank": "Storage Tank",
+            "heat_exchanger": "Heat Exchanger",
+            "piping": "Piping System",
+            "pump": "Pump",
+            "compressor": "Compressor",
+            "turbine": "Turbine"
+          },
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
         },
         "sections": [
           {

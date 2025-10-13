@@ -2,7 +2,6 @@
   "id": "rescue-preplan",
   "title": "Rescue Pre-Plan Wizard",
   "description": "Prepopulate and generate a comprehensive Confined Space Rescue Pre-Plan for printing or digital attachment",
-
   "gadgets": [
     {
       "id": "rescue-preplan-gadget",
@@ -30,7 +29,9 @@
             "title": "Space Analysis",
             "description": "Analyze captured images to generate actionable rescue recommendations and safety assessments.",
             "imageAnalysisPromptRef": "deepImageAnalysis",
-            "promptSourceIds": ["image_capture"],
+            "promptSourceIds": [
+              "image_capture"
+            ],
             "includeInPdf": true,
             "analysisWidget": "simple",
             "pdf": {
@@ -46,7 +47,11 @@
             "title": "General",
             "description": "General entry details and communications.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 4, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate General",
             "promptRef": "generalPopulate",
             "includeInPdf": true
@@ -60,10 +65,33 @@
               "title": "Resources",
               "dataKey": "resources",
               "columns": [
-                { "key": "name", "title": "Name", "editable": true, "summary": "countMissing", "type": "text" },
-                { "key": "type", "title": "Type", "editable": true, "summary": "uniqueCount", "type": "text" },
-                { "key": "quantity", "title": "Quantity", "editable": true, "summary": "sum", "type": "number" },
-                { "key": "notes", "title": "Notes", "editable": true, "type": "text" }
+                {
+                  "key": "name",
+                  "title": "Name",
+                  "editable": true,
+                  "summary": "countMissing",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "title": "Type",
+                  "editable": true,
+                  "summary": "uniqueCount",
+                  "type": "text"
+                },
+                {
+                  "key": "quantity",
+                  "title": "Quantity",
+                  "editable": true,
+                  "summary": "sum",
+                  "type": "number"
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true,
+                  "type": "text"
+                }
               ],
               "promptRef": "resourcesPopulate",
               "btnLabel": "Populate from AI"
@@ -78,15 +106,31 @@
               "title": "Rescue Personnel",
               "dataKey": "personnel",
               "columns": [
-                { "key": "role", "title": "Role", "editable": true, "summary": "uniqueCount", "type": "text" },
-                { "key": "name", "title": "Name", "editable": true, "summary": "countMissing", "type": "text" },
-                { "key": "notes", "title": "Notes", "editable": true, "type": "text" }
+                {
+                  "key": "role",
+                  "title": "Role",
+                  "editable": true,
+                  "summary": "uniqueCount",
+                  "type": "text"
+                },
+                {
+                  "key": "name",
+                  "title": "Name",
+                  "editable": true,
+                  "summary": "countMissing",
+                  "type": "text"
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true,
+                  "type": "text"
+                }
               ],
               "promptRef": "personnelPopulate",
               "btnLabel": "Populate from AI"
             }
           },
-
           {
             "id": "action_plan",
             "title": "Rescue Action Plan",
@@ -96,9 +140,26 @@
               "title": "Action Steps",
               "dataKey": "actionPlan",
               "columns": [
-                { "key": "stepNo", "title": "Step #", "editable": true, "summary": "sum", "type": "number" },
-                { "key": "step", "title": "Step", "editable": true, "summary": "countMissing", "type": "text" },
-                { "key": "actions", "title": "Actions", "editable": true, "type": "text" }
+                {
+                  "key": "stepNo",
+                  "title": "Step #",
+                  "editable": true,
+                  "summary": "sum",
+                  "type": "number"
+                },
+                {
+                  "key": "step",
+                  "title": "Step",
+                  "editable": true,
+                  "summary": "countMissing",
+                  "type": "text"
+                },
+                {
+                  "key": "actions",
+                  "title": "Actions",
+                  "editable": true,
+                  "type": "text"
+                }
               ],
               "promptRef": "actionPlanPopulate",
               "btnLabel": "Populate from AI"
@@ -113,15 +174,61 @@
               "title": "Rescue Methods",
               "dataKey": "rescueMethods",
               "columns": [
-                { "key": "method", "title": "Method", "editable": true, "summary": "uniqueCount", "type": "text" },
-                { "key": "actions", "title": "Actions", "editable": true, "type": "text" },
-                { "key": "notes", "title": "Notes", "editable": true, "type": "text" },
-                { "key": "external", "title": "External", "editable": true, "type": "yesno" },
-                { "key": "internal", "title": "Internal", "editable": true, "type": "yesno" },
-                { "key": "haulingRequired", "title": "Hauling System Required", "editable": true, "type": "yesno" },
-                { "key": "lowerRequired", "title": "Lower System Required", "editable": true, "type": "yesno" },
-                { "key": "anchorageAvailable", "title": "Anchorage Available", "editable": true, "type": "yesno" },
-                { "key": "preRiggingRequired", "title": "Pre-rigging Required", "editable": true, "type": "yesno" }
+                {
+                  "key": "method",
+                  "title": "Method",
+                  "editable": true,
+                  "summary": "uniqueCount",
+                  "type": "text"
+                },
+                {
+                  "key": "actions",
+                  "title": "Actions",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "external",
+                  "title": "External",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "internal",
+                  "title": "Internal",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "haulingRequired",
+                  "title": "Hauling System Required",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "lowerRequired",
+                  "title": "Lower System Required",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "anchorageAvailable",
+                  "title": "Anchorage Available",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "preRiggingRequired",
+                  "title": "Pre-rigging Required",
+                  "editable": true,
+                  "type": "yesno"
+                }
               ],
               "promptRef": "rescueMethodsPopulate",
               "btnLabel": "Populate from AI"
@@ -136,9 +243,25 @@
               "title": "Rescue Requirements",
               "dataKey": "rescueRequirements",
               "columns": [
-                { "key": "type", "title": "Rescue Type", "editable": true, "summary": "uniqueCount", "type": "text" },
-                { "key": "required", "title": "Required (Yes/No)", "editable": true, "type": "yesno" },
-                { "key": "rationale", "title": "Rationale", "editable": true, "type": "text" }
+                {
+                  "key": "type",
+                  "title": "Rescue Type",
+                  "editable": true,
+                  "summary": "uniqueCount",
+                  "type": "text"
+                },
+                {
+                  "key": "required",
+                  "title": "Required (Yes/No)",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "rationale",
+                  "title": "Rationale",
+                  "editable": true,
+                  "type": "text"
+                }
               ],
               "promptRef": "rescueRequirementsPopulate",
               "btnLabel": "Populate from AI"
@@ -170,14 +293,12 @@
             "sectionId": "project_permit_details",
             "lgSpan": 24
           },
-
           {
             "id": "special_instructions_group",
             "title": "Special Instructions",
             "sectionId": "attachments_signoff",
             "lgSpan": 24
           },
-
           {
             "id": "supervisor_signoff",
             "title": "Supervisor Signoff",
@@ -194,7 +315,6 @@
             "groupId": "entry_details",
             "lgSpan": 6
           },
-          
           {
             "id": "plant_location",
             "label": "Plant/Entry Location",
@@ -269,22 +389,28 @@
             "id": "rescue_status",
             "label": "Rescue Team Status",
             "type": "radio",
-            "options": ["Standby", "Available"],
+            "options": [
+              "Standby",
+              "Available"
+            ],
             "required": true,
             "groupId": "entry_details",
             "lgSpan": 24
           },
-
           {
             "id": "entry_description",
             "label": "Entry Description",
             "type": "checkbox_group",
-            "options": ["Elevated", "Congested", "Vertical", "Horizontal"],
+            "options": [
+              "Elevated",
+              "Congested",
+              "Vertical",
+              "Horizontal"
+            ],
             "required": false,
             "groupId": "entry_description_group",
             "lgSpan": 24
           },
-
           {
             "id": "plant_contact",
             "label": "Plant Contact",
@@ -297,12 +423,17 @@
             "id": "rescue_communication",
             "label": "Means to Summon Rescue Services",
             "type": "checkbox_group",
-            "options": ["Phone", "Radio", "Air Horn", "Other", "Verbal"],
+            "options": [
+              "Phone",
+              "Radio",
+              "Air Horn",
+              "Other",
+              "Verbal"
+            ],
             "required": true,
             "groupId": "contacts_comm",
             "lgSpan": 12
           },
-
           {
             "id": "special_instructions",
             "label": "Special Instructions",
@@ -317,7 +448,6 @@
             "groupId": "special_instructions_group",
             "lgSpan": 24
           },
-
           {
             "id": "supervisor_name",
             "label": "Entry Supervisor Name",
@@ -350,19 +480,30 @@
             "lgSpan": 12
           }
         ],
-
         "pdfStyling": {
           "header": {
-            "backgroundColor": [24, 24, 27],
-            "textColor": [255, 255, 255],
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
             "fontSize": 12,
             "companyName": "PK Safety",
             "companyAddress": ""
           },
           "footer": {
-            "textColor": [100, 116, 139],
+            "textColor": [
+              100,
+              116,
+              139
+            ],
             "fontSize": 6,
-            "leftText": "Rescue Pre‑Plan",
+            "leftText": "Rescue Pre\u2011Plan",
             "centerText": "Confidential",
             "rightText": "Page {page} of {pages}"
           },
@@ -370,11 +511,22 @@
             "headerFontSize": 10,
             "contentFontSize": 8,
             "lineSpacing": 3.5,
-            "margins": { "left": 15, "right": 195 }
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
           },
           "tables": {
-            "headerBackground": [2, 6, 23],
-            "headerTextColor": [255, 255, 255],
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
             "headerFontSize": 8,
             "contentFontSize": 7,
             "cellPadding": 3
@@ -395,8 +547,8 @@
               "maxCompletionTokens": 16000
             },
             "promptConfig": {
-              "systemPrompt": "ROLE: You are a confined‑space rescue safety expert. GOAL: Produce a complete, professional rescue pre‑plan in Markdown using the provided IMAGES and any USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS: Use each of these headings exactly once, only if applicable: # Overview, ## Space Assessment, ## Rescue Access Points, ## Hazard Identification, ## Equipment Requirements, ## Rescue Team Assignments, ## Rescue Action Plan, ## Rescue Methods, ## Rescue Requirements, ## Critical Safety Considerations. TABLES: Where data is structured, use Markdown tables with clear columns as specified below. CONTENT GUIDANCE: - Overview: space type, service/context, general conditions. - Space Assessment: dimensions (est.), internal configuration, surfaces, obstructions, atmosphere indications. - Rescue Access Points: entries/exits, vertical/horizontal, ladders/platforms, access constraints. - Hazard Identification: atmospheric, physical, mechanical, electrical, engulfment; include mitigations. - Equipment Requirements: safety equipment, rescue tools, monitoring devices, comms. - Rescue Team Assignments: roles and quals. - Rescue Action Plan: sequential, actionable steps. - Rescue Methods: techniques (external/internal), hauling/lower, anchorage, pre‑rigging. - Rescue Requirements: yes/no operational requirements with rationale. - Critical Safety Considerations: permits, isolation/LOTO, ventilation, standby, communication. RULES: No duplicate headings; concise, field‑ready tone; prefer bullets and tables.",
-              "userPrompt": "Context (transcript and notes):\n{text}\n\nCreate a comprehensive Markdown rescue pre‑plan from these images and notes. Use the specified headings. Where possible, convert lists to tables with these formats: - ## Hazard Identification: | Hazard | Category | Severity | Mitigation | - ## Equipment Requirements: | Item | Category | Qty | Notes | - ## Rescue Team Assignments: | Role | Qty | Qualifications | Notes | - ## Rescue Action Plan: | Step # | Step | Actions | Notes | - ## Rescue Methods: | Method | Actions | External | Internal | Hauling | Lower | Anchorage | Pre‑rigging | - ## Rescue Requirements: | Rescue Type | Required (Yes/No) | Rationale | Keep language clear, concise, and operational. Return Markdown only."
+              "systemPrompt": "ROLE: You are a confined\u2011space rescue safety expert. GOAL: Produce a complete, professional rescue pre\u2011plan in Markdown using the provided IMAGES and any USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS: Use each of these headings exactly once, only if applicable: # Overview, ## Space Assessment, ## Rescue Access Points, ## Hazard Identification, ## Equipment Requirements, ## Rescue Team Assignments, ## Rescue Action Plan, ## Rescue Methods, ## Rescue Requirements, ## Critical Safety Considerations. TABLES: Where data is structured, use Markdown tables with clear columns as specified below. CONTENT GUIDANCE: - Overview: space type, service/context, general conditions. - Space Assessment: dimensions (est.), internal configuration, surfaces, obstructions, atmosphere indications. - Rescue Access Points: entries/exits, vertical/horizontal, ladders/platforms, access constraints. - Hazard Identification: atmospheric, physical, mechanical, electrical, engulfment; include mitigations. - Equipment Requirements: safety equipment, rescue tools, monitoring devices, comms. - Rescue Team Assignments: roles and quals. - Rescue Action Plan: sequential, actionable steps. - Rescue Methods: techniques (external/internal), hauling/lower, anchorage, pre\u2011rigging. - Rescue Requirements: yes/no operational requirements with rationale. - Critical Safety Considerations: permits, isolation/LOTO, ventilation, standby, communication. RULES: No duplicate headings; concise, field\u2011ready tone; prefer bullets and tables.",
+              "userPrompt": "Context (transcript and notes):\n{text}\n\nCreate a comprehensive Markdown rescue pre\u2011plan from these images and notes. Use the specified headings. Where possible, convert lists to tables with these formats: - ## Hazard Identification: | Hazard | Category | Severity | Mitigation | - ## Equipment Requirements: | Item | Category | Qty | Notes | - ## Rescue Team Assignments: | Role | Qty | Qualifications | Notes | - ## Rescue Action Plan: | Step # | Step | Actions | Notes | - ## Rescue Methods: | Method | Actions | External | Internal | Hauling | Lower | Anchorage | Pre\u2011rigging | - ## Rescue Requirements: | Rescue Type | Required (Yes/No) | Rationale | Keep language clear, concise, and operational. Return Markdown only."
             },
             "streaming": {
               "enabled": true,
@@ -405,7 +557,10 @@
             }
           },
           "deepAnalysis": {
-            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 2000 },
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
             "promptConfig": {
               "systemPrompt": "You are a confined-space rescue planning assistant. Review our conversation history - you recently analyzed rescue space images and provided detailed safety assessments. Use that analysis to populate the form fields with actual rescue planning data you identified. Extract location details, space characteristics, and safety requirements from your previous analysis. Avoid N/A values when you have relevant information from the conversation. Return valid JSON with the rescue planning data you found.",
               "userPrompt": "Based on your previous rescue space analysis in this conversation, populate the form fields with the rescue planning data you identified. Use the specific findings, space characteristics, safety requirements, and operational details from your analysis."
@@ -413,7 +568,10 @@
             "autoPrompt": true
           },
           "personnelPopulate": {
-            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 2000 },
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
             "promptConfig": {
               "systemPrompt": "You are a rescue team specialist. Generate rescue personnel assignments based on the conversation context."
             },
@@ -431,32 +589,90 @@
             "autoPrompt": true
           },
           "actionPlanPopulate": {
-            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 2000 },
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
             "promptConfig": {
               "systemPrompt": "You are a rescue action plan specialist. Generate sequential rescue steps based on the conversation context."
             },
             "autoPrompt": true
           },
           "rescueMethodsPopulate": {
-            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 2000 },
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
             "promptConfig": {
               "systemPrompt": "You are a rescue methods specialist. Generate rescue methods based on the conversation context."
             },
             "autoPrompt": true
           },
           "rescueRequirementsPopulate": {
-            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1500 },
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1500
+            },
             "promptConfig": {
               "systemPrompt": "You are a rescue requirements specialist. Generate rescue requirements based on the conversation context."
             },
             "autoPrompt": true
           },
           "resourcesPopulate": {
-            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 2000 },
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
             "promptConfig": {
               "systemPrompt": "You are a rescue equipment specialist. Generate rescue equipment based on the conversation context."
             },
             "autoPrompt": true
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
           }
         }
       },

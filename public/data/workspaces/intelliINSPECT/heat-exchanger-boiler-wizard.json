@@ -42,22 +42,51 @@
               "showThumbnails": true,
               "thumbnailSize": 150,
               "drawingEnabled": true,
-              "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow", "measurement"],
-              "drawingColors": ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"],
-              "strokeWidths": [1, 2, 3, 5, 8],
+              "drawingTools": [
+                "pen",
+                "line",
+                "circle",
+                "rectangle",
+                "text",
+                "arrow",
+                "measurement"
+              ],
+              "drawingColors": [
+                "#FF0000",
+                "#00FF00",
+                "#0000FF",
+                "#FFFF00",
+                "#FF00FF",
+                "#00FFFF"
+              ],
+              "strokeWidths": [
+                1,
+                2,
+                3,
+                5,
+                8
+              ],
               "uploadText": "Click or drag images here to upload",
               "dragText": "Drop images here to upload"
             },
             "required": false,
             "disabled": false,
-            "gridLayout": { "xs": 24, "sm": 24, "md": 24, "lg": 24 }
+            "gridLayout": {
+              "xs": 24,
+              "sm": 24,
+              "md": 24,
+              "lg": 24
+            }
           },
           {
             "id": "ai_analysis",
             "title": "AI Equipment Analysis",
             "description": "Detailed AI analysis of captured images and voice notes including thermal performance and condition assessment.",
             "imageAnalysisPromptRef": "detailedHeatTransferAnalysis",
-            "promptSourceIds": ["image_capture", "voice_capture"],
+            "promptSourceIds": [
+              "image_capture",
+              "voice_capture"
+            ],
             "includeInPdf": true,
             "analysisWidget": "simple",
             "pdf": {
@@ -73,7 +102,11 @@
             "title": "General Information",
             "description": "Basic inspection and equipment information.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 3,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate General Info",
             "promptRef": "generalInfoPopulate",
             "includeInPdf": true
@@ -83,7 +116,11 @@
             "title": "Equipment Details & Specifications",
             "description": "Detailed equipment specifications and thermal design data.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Equipment Details",
             "promptRef": "equipmentDetailsPopulate",
             "includeInPdf": true
@@ -93,7 +130,11 @@
             "title": "Inspection Scope & Methodology",
             "description": "Scope description and inspection methods used.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Scope",
             "promptRef": "scopePopulate",
             "includeInPdf": true
@@ -107,10 +148,37 @@
               "title": "Thermal Performance Observations",
               "dataKey": "thermalObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "thermalObservationsPopulate",
               "btnLabel": "Populate Thermal Observations"
@@ -125,10 +193,37 @@
               "title": "Mechanical Integrity Observations",
               "dataKey": "mechanicalObservations",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true, "summary": "countMissing" },
-                { "key": "item", "title": "Item", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "type": "select", "options": ["Good", "Fair", "Poor", "N/A"], "summary": "conditionStats" },
-                { "key": "comments", "title": "Comments", "editable": true, "summary": "countMissing" }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "type": "select",
+                  "options": [
+                    "Good",
+                    "Fair",
+                    "Poor",
+                    "N/A"
+                  ],
+                  "summary": "conditionStats"
+                },
+                {
+                  "key": "comments",
+                  "title": "Comments",
+                  "editable": true,
+                  "summary": "countMissing"
+                }
               ],
               "promptRef": "mechanicalObservationsPopulate",
               "btnLabel": "Populate Mechanical Observations"
@@ -143,11 +238,32 @@
               "title": "Internal Components Assessment",
               "dataKey": "internalFindings",
               "columns": [
-                { "key": "component", "title": "Component", "editable": true },
-                { "key": "condition", "title": "Condition", "editable": true },
-                { "key": "finding", "title": "Finding/Anomaly", "editable": true },
-                { "key": "severity", "title": "Severity", "editable": true, "summary": "severityStats" },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "component",
+                  "title": "Component",
+                  "editable": true
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true
+                },
+                {
+                  "key": "finding",
+                  "title": "Finding/Anomaly",
+                  "editable": true
+                },
+                {
+                  "key": "severity",
+                  "title": "Severity",
+                  "editable": true,
+                  "summary": "severityStats"
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "internalComponentsPopulate",
               "btnLabel": "Populate Internal Components"
@@ -158,7 +274,11 @@
             "title": "NDT Plan",
             "description": "Non-Destructive Testing plan and requirements (Always Required).",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 1,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate NDT Plan",
             "promptRef": "ndtPlanPopulate",
             "includeInPdf": true
@@ -168,7 +288,11 @@
             "title": "Maintenance Plan",
             "description": "Maintenance planning and scheduling (Always Required).",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Maintenance Plan",
             "promptRef": "maintenancePlanPopulate",
             "includeInPdf": true
@@ -184,12 +308,38 @@
               "title": "Eddy Current Tube Assessment",
               "dataKey": "eddyCurrentFindings",
               "columns": [
-                { "key": "tubeNumber", "title": "Tube Number", "editable": true, "summary": "countMissing" },
-                { "key": "location", "title": "Location", "editable": true },
-                { "key": "defectType", "title": "Defect Type", "editable": true },
-                { "key": "severity", "title": "Severity (%)", "editable": true, "summary": "average" },
-                { "key": "plugRequired", "title": "Plug Required", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "tubeNumber",
+                  "title": "Tube Number",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true
+                },
+                {
+                  "key": "defectType",
+                  "title": "Defect Type",
+                  "editable": true
+                },
+                {
+                  "key": "severity",
+                  "title": "Severity (%)",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "plugRequired",
+                  "title": "Plug Required",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "eddyCurrentPopulate",
               "btnLabel": "Populate Eddy Current Results"
@@ -206,12 +356,38 @@
               "title": "Tube Sheet PT Assessment",
               "dataKey": "tubeSheetPTFindings",
               "columns": [
-                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
-                { "key": "defectType", "title": "Defect Type", "editable": true },
-                { "key": "size", "title": "Defect Size", "editable": true },
-                { "key": "severity", "title": "Severity", "editable": true, "summary": "uniqueCount" },
-                { "key": "repairRequired", "title": "Repair Required", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "defectType",
+                  "title": "Defect Type",
+                  "editable": true
+                },
+                {
+                  "key": "size",
+                  "title": "Defect Size",
+                  "editable": true
+                },
+                {
+                  "key": "severity",
+                  "title": "Severity",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "repairRequired",
+                  "title": "Repair Required",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "tubeSheetPTPopulate",
               "btnLabel": "Populate Tube Sheet PT"
@@ -228,12 +404,38 @@
               "title": "Fin & Fan Assessment",
               "dataKey": "finFanFindings",
               "columns": [
-                { "key": "component", "title": "Component", "editable": true, "summary": "countMissing" },
-                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "vibrationLevel", "title": "Vibration Level", "editable": true },
-                { "key": "finding", "title": "Finding/Anomaly", "editable": true },
-                { "key": "performance", "title": "Performance Impact", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "component",
+                  "title": "Component",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "vibrationLevel",
+                  "title": "Vibration Level",
+                  "editable": true
+                },
+                {
+                  "key": "finding",
+                  "title": "Finding/Anomaly",
+                  "editable": true
+                },
+                {
+                  "key": "performance",
+                  "title": "Performance Impact",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "finFanPopulate",
               "btnLabel": "Populate Fin & Fan Condition"
@@ -250,12 +452,39 @@
               "title": "IR Hot Spot & Refractory Assessment",
               "dataKey": "irRefractoryFindings",
               "columns": [
-                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
-                { "key": "temperature", "title": "Temperature (°F)", "editable": true, "summary": "average" },
-                { "key": "hotSpotSeverity", "title": "Hot Spot Severity", "editable": true },
-                { "key": "refractoryCondition", "title": "Refractory Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "repairUrgency", "title": "Repair Urgency", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "temperature",
+                  "title": "Temperature (\u00b0F)",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "hotSpotSeverity",
+                  "title": "Hot Spot Severity",
+                  "editable": true
+                },
+                {
+                  "key": "refractoryCondition",
+                  "title": "Refractory Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "repairUrgency",
+                  "title": "Repair Urgency",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "irRefractoryPopulate",
               "btnLabel": "Populate IR & Refractory"
@@ -272,12 +501,38 @@
               "title": "Steam Drum & Scale Assessment",
               "dataKey": "steamDrumFindings",
               "columns": [
-                { "key": "component", "title": "Component", "editable": true, "summary": "countMissing" },
-                { "key": "scaleLevel", "title": "Scale Level", "editable": true },
-                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "waterTreatment", "title": "Water Treatment Impact", "editable": true },
-                { "key": "cleaningRequired", "title": "Cleaning Required", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "component",
+                  "title": "Component",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "scaleLevel",
+                  "title": "Scale Level",
+                  "editable": true
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "waterTreatment",
+                  "title": "Water Treatment Impact",
+                  "editable": true
+                },
+                {
+                  "key": "cleaningRequired",
+                  "title": "Cleaning Required",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "steamDrumPopulate",
               "btnLabel": "Populate Steam Drum Assessment"
@@ -292,12 +547,39 @@
               "title": "Thermal Performance",
               "dataKey": "thermalData",
               "columns": [
-                { "key": "parameter", "title": "Parameter", "editable": true, "summary": "countMissing" },
-                { "key": "design", "title": "Design Value", "editable": true },
-                { "key": "actual", "title": "Actual Value", "editable": true },
-                { "key": "deviation", "title": "Deviation (%)", "editable": true, "summary": "average" },
-                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "parameter",
+                  "title": "Parameter",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "design",
+                  "title": "Design Value",
+                  "editable": true
+                },
+                {
+                  "key": "actual",
+                  "title": "Actual Value",
+                  "editable": true
+                },
+                {
+                  "key": "deviation",
+                  "title": "Deviation (%)",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "thermalPerformancePopulate",
               "btnLabel": "Populate Thermal Data"
@@ -314,12 +596,38 @@
               "title": "Tube Bundle Assessment",
               "dataKey": "tubeData",
               "columns": [
-                { "key": "location", "title": "Location/Zone", "editable": true, "summary": "countMissing" },
-                { "key": "tubeCondition", "title": "Tube Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "foulingLevel", "title": "Fouling Level", "editable": true },
-                { "key": "pluggedTubes", "title": "Plugged Tubes", "editable": true },
-                { "key": "cleaningRequired", "title": "Cleaning Required", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location/Zone",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "tubeCondition",
+                  "title": "Tube Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "foulingLevel",
+                  "title": "Fouling Level",
+                  "editable": true
+                },
+                {
+                  "key": "pluggedTubes",
+                  "title": "Plugged Tubes",
+                  "editable": true
+                },
+                {
+                  "key": "cleaningRequired",
+                  "title": "Cleaning Required",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "tubeBundlePopulate",
               "btnLabel": "Populate Tube Data"
@@ -336,12 +644,38 @@
               "title": "Refractory Assessment",
               "dataKey": "refractoryData",
               "columns": [
-                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
-                { "key": "refractoryType", "title": "Refractory Type", "editable": true },
-                { "key": "condition", "title": "Condition", "editable": true, "summary": "uniqueCount" },
-                { "key": "findings", "title": "Findings", "editable": true },
-                { "key": "repairRequired", "title": "Repair Required", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "refractoryType",
+                  "title": "Refractory Type",
+                  "editable": true
+                },
+                {
+                  "key": "condition",
+                  "title": "Condition",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "findings",
+                  "title": "Findings",
+                  "editable": true
+                },
+                {
+                  "key": "repairRequired",
+                  "title": "Repair Required",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "refractoryAssessmentPopulate",
               "btnLabel": "Populate Refractory Data"
@@ -352,7 +686,11 @@
             "title": "Evaluation & Compliance",
             "description": "Thermal efficiency and code compliance assessment per TEMA/ASME/API standards.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 1,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Evaluation",
             "promptRef": "evaluationPopulate",
             "includeInPdf": true
@@ -366,11 +704,34 @@
               "title": "Recommendations",
               "dataKey": "recommendations",
               "columns": [
-                { "key": "priority", "title": "Priority", "editable": true, "summary": "uniqueCount" },
-                { "key": "type", "title": "Type", "editable": true, "summary": "uniqueCount" },
-                { "key": "description", "title": "Description", "editable": true, "summary": "countMissing" },
-                { "key": "method", "title": "Method/Standard", "editable": true },
-                { "key": "timeline", "title": "Timeline", "editable": true }
+                {
+                  "key": "priority",
+                  "title": "Priority",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "type",
+                  "title": "Type",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "description",
+                  "title": "Description",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "method",
+                  "title": "Method/Standard",
+                  "editable": true
+                },
+                {
+                  "key": "timeline",
+                  "title": "Timeline",
+                  "editable": true
+                }
               ],
               "promptRef": "recommendationsPopulate",
               "btnLabel": "Populate Recommendations"
@@ -381,7 +742,11 @@
             "title": "Next Inspection Requirements",
             "description": "Next inspection interval and cleaning schedule.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Next Inspection",
             "promptRef": "nextInspectionPopulate",
             "includeInPdf": true
@@ -391,114 +756,672 @@
             "title": "Inspector Signoff",
             "description": "Inspector certification and approval.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "includeInPdf": true
           }
         ],
         "groups": [
-          { "id": "equipment_selection", "title": "Equipment Selection", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "inspection_details", "title": "Inspection Details", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "equipment_identification", "title": "Equipment Identification", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "equipment_specifications", "title": "Equipment Specifications", "sectionId": "equipment_details", "lgSpan": 24 },
-          { "id": "thermal_design", "title": "Thermal Design Data", "sectionId": "equipment_details", "lgSpan": 24 },
-          { "id": "operating_conditions", "title": "Operating Conditions", "sectionId": "equipment_details", "lgSpan": 24 },
-          { "id": "scope_details", "title": "Scope Details", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "inspection_methods", "title": "Inspection Methods", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "ndt_planning", "title": "NDT Planning", "sectionId": "ndt_plan", "lgSpan": 24 },
-          { "id": "maintenance_planning", "title": "Maintenance Planning", "sectionId": "maintenance_plan", "lgSpan": 24 },
-          { "id": "thermal_evaluation", "title": "Thermal Evaluation", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "compliance_assessment", "title": "Compliance Assessment", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "next_inspection_details", "title": "Next Inspection Details", "sectionId": "next_inspection", "lgSpan": 24 },
-          { "id": "inspector_info", "title": "Inspector Information", "sectionId": "inspector_signoff", "lgSpan": 24 }
+          {
+            "id": "equipment_selection",
+            "title": "Equipment Selection",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_details",
+            "title": "Inspection Details",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "equipment_identification",
+            "title": "Equipment Identification",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "equipment_specifications",
+            "title": "Equipment Specifications",
+            "sectionId": "equipment_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "thermal_design",
+            "title": "Thermal Design Data",
+            "sectionId": "equipment_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "operating_conditions",
+            "title": "Operating Conditions",
+            "sectionId": "equipment_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_details",
+            "title": "Scope Details",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_methods",
+            "title": "Inspection Methods",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "ndt_planning",
+            "title": "NDT Planning",
+            "sectionId": "ndt_plan",
+            "lgSpan": 24
+          },
+          {
+            "id": "maintenance_planning",
+            "title": "Maintenance Planning",
+            "sectionId": "maintenance_plan",
+            "lgSpan": 24
+          },
+          {
+            "id": "thermal_evaluation",
+            "title": "Thermal Evaluation",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "compliance_assessment",
+            "title": "Compliance Assessment",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "next_inspection_details",
+            "title": "Next Inspection Details",
+            "sectionId": "next_inspection",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_info",
+            "title": "Inspector Information",
+            "sectionId": "inspector_signoff",
+            "lgSpan": 24
+          }
         ],
         "fields": [
-          { "id": "company_id", "label": "Company", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select company...", "optionsUrl": "/api/options/companies", "labelField": "label", "valueField": "value", "required": true },
-          { "id": "site_id", "label": "Facility/Site", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select facility...", "optionsUrl": "/api/options/sites", "labelField": "label", "valueField": "value", "dependsOn": "company_id", "required": true },
-          { "id": "asset_group_id", "label": "Asset Group", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset group...", "optionsUrl": "/api/options/asset-groups", "labelField": "label", "valueField": "value", "dependsOn": "site_id", "required": false },
-          { "id": "asset_id", "label": "Asset", "type": "select", "groupId": "equipment_selection", "lgSpan": 6, "placeholder": "Select asset...", "optionsUrl": "/api/options/assets", "labelField": "label", "valueField": "value", "dependsOn": ["company_id", "site_id", "asset_group_id"], "required": false },
-          { "id": "detected_equipment_type", "label": "Equipment Type", "type": "select", "readonly": false, "groupId": "equipment_identification", "lgSpan": 12, "placeholder": "Select or auto-detect equipment type", "options": [ { "label": "Shell-and-Tube Heat Exchanger", "value": "shell_tube_exchanger" }, { "label": "Air Fin Cooler", "value": "air_fin_cooler" }, { "label": "Plate Heat Exchanger", "value": "plate_exchanger" }, { "label": "Steam Boiler", "value": "steam_boiler" }, { "label": "Fired Heater/Furnace", "value": "fired_heater" }, { "label": "Waste Heat Boiler", "value": "waste_heat_boiler" }, { "label": "Reboiler", "value": "reboiler" }, { "label": "Condenser", "value": "condenser" }, { "label": "Cooler", "value": "cooler" }, { "label": "Steam Drum", "value": "steam_drum" } ] },
-          { "id": "applicable_standard", "label": "Applicable Standard", "type": "select", "groupId": "equipment_identification", "lgSpan": 12, "options": [ { "label": "TEMA - Heat Exchangers", "value": "TEMA" }, { "label": "API 560 - Fired Heaters", "value": "API 560" }, { "label": "API 661 - Air Coolers", "value": "API 661" }, { "label": "ASME - Boilers", "value": "ASME" }, { "label": "NBIC - Boiler Inspection", "value": "NBIC" } ] },
-          { "id": "inspection_type", "label": "Inspection Type", "type": "dropdown", "options": ["External", "Internal", "Internal & External", "On-stream", "Performance Test", "Turnaround", "Post-cleaning", "Pre-service"], "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "equipment_tag", "label": "Equipment Tag Number", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "inspection_date", "label": "Inspection Date", "type": "date", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "service_description", "label": "Service Description", "type": "textarea", "required": true, "groupId": "equipment_identification", "lgSpan": 24 },
-          { "id": "owner_user", "label": "Owner/User", "type": "text", "required": true, "groupId": "equipment_identification", "lgSpan": 12 },
-          { "id": "location", "label": "Location", "type": "text", "required": true, "groupId": "equipment_identification", "lgSpan": 12 },
-          { "id": "manufacturer", "label": "Manufacturer", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "model_number", "label": "Model Number", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "serial_number", "label": "Serial Number", "type": "text", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "installation_date", "label": "Installation Date", "type": "date", "groupId": "equipment_specifications", "lgSpan": 12 },
-          { "id": "heat_duty", "label": "Heat Duty (MMBtu/hr)", "type": "number", "groupId": "thermal_design", "lgSpan": 8 },
-          { "id": "design_pressure_shell", "label": "Design Pressure Shell (psig)", "type": "number", "groupId": "thermal_design", "lgSpan": 8 },
-          { "id": "design_pressure_tube", "label": "Design Pressure Tube (psig)", "type": "number", "groupId": "thermal_design", "lgSpan": 8 },
-          { "id": "design_temperature", "label": "Design Temperature (°F)", "type": "number", "groupId": "thermal_design", "lgSpan": 8 },
-          { "id": "shell_material", "label": "Shell Material", "type": "text", "groupId": "thermal_design", "lgSpan": 8 },
-          { "id": "tube_material", "label": "Tube Material", "type": "text", "groupId": "thermal_design", "lgSpan": 8 },
-          { "id": "tube_count", "label": "Number of Tubes", "type": "number", "groupId": "thermal_design", "lgSpan": 8 },
-          { "id": "operating_temperature", "label": "Operating Temperature (°F)", "type": "number", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "operating_pressure", "label": "Operating Pressure (psig)", "type": "number", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "last_cleaning", "label": "Last Cleaning Date", "type": "date", "groupId": "operating_conditions", "lgSpan": 8 },
-          { "id": "inspector_name", "label": "Inspector Name", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "certification", "label": "Certification #", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "other_personnel", "label": "Other Personnel (NDE techs, process engineers)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "references", "label": "References (TEMA, API, ASME standards, drawings)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "scope_description", "label": "Scope Description (areas inspected, limitations)", "type": "textarea", "required": true, "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "inspection_preparation", "label": "Inspection Preparation (cleaning, isolation, safety)", "type": "textarea", "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "inspection_methods_used", "label": "Inspection Methods Used", "type": "checkbox_group", "options": ["Visual", "Performance Test", "Tube Inspection", "Refractory Check", "Thermal Imaging", "Fouling Assessment", "Other"], "groupId": "inspection_methods", "lgSpan": 24 },
-          { "id": "cleaning_methods", "label": "Cleaning Methods Used", "type": "text", "groupId": "inspection_methods", "lgSpan": 24 },
-          { "id": "ndt_methods_required", "label": "NDT Methods Required", "type": "checkbox_group", "options": ["Eddy Current Testing", "Penetrant Testing", "Ultrasonic Testing", "Radiographic Testing", "Magnetic Particle Testing", "Visual Testing", "Infrared Thermography"], "groupId": "ndt_planning", "lgSpan": 24 },
-          { "id": "ndt_locations", "label": "NDT Locations", "type": "textarea", "groupId": "ndt_planning", "lgSpan": 24 },
-          { "id": "ndt_schedule", "label": "NDT Schedule", "type": "text", "groupId": "ndt_planning", "lgSpan": 24 },
-          { "id": "cleaning_frequency", "label": "Cleaning Frequency", "type": "text", "groupId": "maintenance_planning", "lgSpan": 12 },
-          { "id": "maintenance_tasks", "label": "Maintenance Tasks", "type": "textarea", "groupId": "maintenance_planning", "lgSpan": 12 },
-          { "id": "maintenance_schedule", "label": "Maintenance Schedule", "type": "text", "groupId": "maintenance_planning", "lgSpan": 24 },
-          { "id": "thermal_efficiency", "label": "Thermal Efficiency Assessment", "type": "textarea", "groupId": "thermal_evaluation", "lgSpan": 24 },
-          { "id": "fouling_evaluation", "label": "Fouling Evaluation", "type": "textarea", "groupId": "thermal_evaluation", "lgSpan": 24 },
-          { "id": "code_compliance", "label": "Code Compliance Assessment (TEMA/ASME/API)", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "service_suitability", "label": "Service Suitability Determination", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "next_inspection_interval", "label": "Next Inspection Interval", "type": "text", "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "next_inspection_date", "label": "Next Inspection Due Date", "type": "date", "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "next_inspection_type", "label": "Next Inspection Type", "type": "select", "options": [ { "label": "External", "value": "external" }, { "label": "Internal", "value": "internal" }, { "label": "Performance Test", "value": "performance" }, { "label": "Cleaning Required", "value": "cleaning" } ], "groupId": "next_inspection_details", "lgSpan": 12 },
-          { "id": "cleaning_schedule", "label": "Cleaning Schedule Requirements", "type": "textarea", "groupId": "next_inspection_details", "lgSpan": 24 },
-          { "id": "inspector_signature", "label": "Inspector's Signature", "type": "signature", "required": true, "groupId": "inspector_info", "lgSpan": 24, "props": { "width": 400, "height": 150, "showTools": true, "showTimestamp": true, "showSignedBy": true, "enableUndo": true, "placeholder": "Please sign here to certify this heat transfer equipment inspection", "penColor": "#000080", "backgroundColor": "#ffffff" } },
-          { "id": "signature_date", "label": "Date", "type": "date", "required": true, "groupId": "inspector_info", "lgSpan": 12 }
+          {
+            "id": "company_id",
+            "label": "Company",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select company...",
+            "optionsUrl": "/api/options/companies",
+            "labelField": "label",
+            "valueField": "value",
+            "required": true
+          },
+          {
+            "id": "site_id",
+            "label": "Facility/Site",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select facility...",
+            "optionsUrl": "/api/options/sites",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": "company_id",
+            "required": true
+          },
+          {
+            "id": "asset_group_id",
+            "label": "Asset Group",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select asset group...",
+            "optionsUrl": "/api/options/asset-groups",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": "site_id",
+            "required": false
+          },
+          {
+            "id": "asset_id",
+            "label": "Asset",
+            "type": "select",
+            "groupId": "equipment_selection",
+            "lgSpan": 6,
+            "placeholder": "Select asset...",
+            "optionsUrl": "/api/options/assets",
+            "labelField": "label",
+            "valueField": "value",
+            "dependsOn": [
+              "company_id",
+              "site_id",
+              "asset_group_id"
+            ],
+            "required": false
+          },
+          {
+            "id": "detected_equipment_type",
+            "label": "Equipment Type",
+            "type": "select",
+            "readonly": false,
+            "groupId": "equipment_identification",
+            "lgSpan": 12,
+            "placeholder": "Select or auto-detect equipment type",
+            "options": [
+              {
+                "label": "Shell-and-Tube Heat Exchanger",
+                "value": "shell_tube_exchanger"
+              },
+              {
+                "label": "Air Fin Cooler",
+                "value": "air_fin_cooler"
+              },
+              {
+                "label": "Plate Heat Exchanger",
+                "value": "plate_exchanger"
+              },
+              {
+                "label": "Steam Boiler",
+                "value": "steam_boiler"
+              },
+              {
+                "label": "Fired Heater/Furnace",
+                "value": "fired_heater"
+              },
+              {
+                "label": "Waste Heat Boiler",
+                "value": "waste_heat_boiler"
+              },
+              {
+                "label": "Reboiler",
+                "value": "reboiler"
+              },
+              {
+                "label": "Condenser",
+                "value": "condenser"
+              },
+              {
+                "label": "Cooler",
+                "value": "cooler"
+              },
+              {
+                "label": "Steam Drum",
+                "value": "steam_drum"
+              }
+            ]
+          },
+          {
+            "id": "applicable_standard",
+            "label": "Applicable Standard",
+            "type": "select",
+            "groupId": "equipment_identification",
+            "lgSpan": 12,
+            "options": [
+              {
+                "label": "TEMA - Heat Exchangers",
+                "value": "TEMA"
+              },
+              {
+                "label": "API 560 - Fired Heaters",
+                "value": "API 560"
+              },
+              {
+                "label": "API 661 - Air Coolers",
+                "value": "API 661"
+              },
+              {
+                "label": "ASME - Boilers",
+                "value": "ASME"
+              },
+              {
+                "label": "NBIC - Boiler Inspection",
+                "value": "NBIC"
+              }
+            ]
+          },
+          {
+            "id": "inspection_type",
+            "label": "Inspection Type",
+            "type": "dropdown",
+            "options": [
+              "External",
+              "Internal",
+              "Internal & External",
+              "On-stream",
+              "Performance Test",
+              "Turnaround",
+              "Post-cleaning",
+              "Pre-service"
+            ],
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "equipment_tag",
+            "label": "Equipment Tag Number",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "inspection_date",
+            "label": "Inspection Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "service_description",
+            "label": "Service Description",
+            "type": "textarea",
+            "required": true,
+            "groupId": "equipment_identification",
+            "lgSpan": 24
+          },
+          {
+            "id": "owner_user",
+            "label": "Owner/User",
+            "type": "text",
+            "required": true,
+            "groupId": "equipment_identification",
+            "lgSpan": 12
+          },
+          {
+            "id": "location",
+            "label": "Location",
+            "type": "text",
+            "required": true,
+            "groupId": "equipment_identification",
+            "lgSpan": 12
+          },
+          {
+            "id": "manufacturer",
+            "label": "Manufacturer",
+            "type": "text",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "model_number",
+            "label": "Model Number",
+            "type": "text",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "serial_number",
+            "label": "Serial Number",
+            "type": "text",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "installation_date",
+            "label": "Installation Date",
+            "type": "date",
+            "groupId": "equipment_specifications",
+            "lgSpan": 12
+          },
+          {
+            "id": "heat_duty",
+            "label": "Heat Duty (MMBtu/hr)",
+            "type": "number",
+            "groupId": "thermal_design",
+            "lgSpan": 8
+          },
+          {
+            "id": "design_pressure_shell",
+            "label": "Design Pressure Shell (psig)",
+            "type": "number",
+            "groupId": "thermal_design",
+            "lgSpan": 8
+          },
+          {
+            "id": "design_pressure_tube",
+            "label": "Design Pressure Tube (psig)",
+            "type": "number",
+            "groupId": "thermal_design",
+            "lgSpan": 8
+          },
+          {
+            "id": "design_temperature",
+            "label": "Design Temperature (\u00b0F)",
+            "type": "number",
+            "groupId": "thermal_design",
+            "lgSpan": 8
+          },
+          {
+            "id": "shell_material",
+            "label": "Shell Material",
+            "type": "text",
+            "groupId": "thermal_design",
+            "lgSpan": 8
+          },
+          {
+            "id": "tube_material",
+            "label": "Tube Material",
+            "type": "text",
+            "groupId": "thermal_design",
+            "lgSpan": 8
+          },
+          {
+            "id": "tube_count",
+            "label": "Number of Tubes",
+            "type": "number",
+            "groupId": "thermal_design",
+            "lgSpan": 8
+          },
+          {
+            "id": "operating_temperature",
+            "label": "Operating Temperature (\u00b0F)",
+            "type": "number",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "operating_pressure",
+            "label": "Operating Pressure (psig)",
+            "type": "number",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "last_cleaning",
+            "label": "Last Cleaning Date",
+            "type": "date",
+            "groupId": "operating_conditions",
+            "lgSpan": 8
+          },
+          {
+            "id": "inspector_name",
+            "label": "Inspector Name",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "certification",
+            "label": "Certification #",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "other_personnel",
+            "label": "Other Personnel (NDE techs, process engineers)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "references",
+            "label": "References (TEMA, API, ASME standards, drawings)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_description",
+            "label": "Scope Description (areas inspected, limitations)",
+            "type": "textarea",
+            "required": true,
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_preparation",
+            "label": "Inspection Preparation (cleaning, isolation, safety)",
+            "type": "textarea",
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_methods_used",
+            "label": "Inspection Methods Used",
+            "type": "checkbox_group",
+            "options": [
+              "Visual",
+              "Performance Test",
+              "Tube Inspection",
+              "Refractory Check",
+              "Thermal Imaging",
+              "Fouling Assessment",
+              "Other"
+            ],
+            "groupId": "inspection_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "cleaning_methods",
+            "label": "Cleaning Methods Used",
+            "type": "text",
+            "groupId": "inspection_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "ndt_methods_required",
+            "label": "NDT Methods Required",
+            "type": "checkbox_group",
+            "options": [
+              "Eddy Current Testing",
+              "Penetrant Testing",
+              "Ultrasonic Testing",
+              "Radiographic Testing",
+              "Magnetic Particle Testing",
+              "Visual Testing",
+              "Infrared Thermography"
+            ],
+            "groupId": "ndt_planning",
+            "lgSpan": 24
+          },
+          {
+            "id": "ndt_locations",
+            "label": "NDT Locations",
+            "type": "textarea",
+            "groupId": "ndt_planning",
+            "lgSpan": 24
+          },
+          {
+            "id": "ndt_schedule",
+            "label": "NDT Schedule",
+            "type": "text",
+            "groupId": "ndt_planning",
+            "lgSpan": 24
+          },
+          {
+            "id": "cleaning_frequency",
+            "label": "Cleaning Frequency",
+            "type": "text",
+            "groupId": "maintenance_planning",
+            "lgSpan": 12
+          },
+          {
+            "id": "maintenance_tasks",
+            "label": "Maintenance Tasks",
+            "type": "textarea",
+            "groupId": "maintenance_planning",
+            "lgSpan": 12
+          },
+          {
+            "id": "maintenance_schedule",
+            "label": "Maintenance Schedule",
+            "type": "text",
+            "groupId": "maintenance_planning",
+            "lgSpan": 24
+          },
+          {
+            "id": "thermal_efficiency",
+            "label": "Thermal Efficiency Assessment",
+            "type": "textarea",
+            "groupId": "thermal_evaluation",
+            "lgSpan": 24
+          },
+          {
+            "id": "fouling_evaluation",
+            "label": "Fouling Evaluation",
+            "type": "textarea",
+            "groupId": "thermal_evaluation",
+            "lgSpan": 24
+          },
+          {
+            "id": "code_compliance",
+            "label": "Code Compliance Assessment (TEMA/ASME/API)",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "service_suitability",
+            "label": "Service Suitability Determination",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "next_inspection_interval",
+            "label": "Next Inspection Interval",
+            "type": "text",
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "next_inspection_date",
+            "label": "Next Inspection Due Date",
+            "type": "date",
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "next_inspection_type",
+            "label": "Next Inspection Type",
+            "type": "select",
+            "options": [
+              {
+                "label": "External",
+                "value": "external"
+              },
+              {
+                "label": "Internal",
+                "value": "internal"
+              },
+              {
+                "label": "Performance Test",
+                "value": "performance"
+              },
+              {
+                "label": "Cleaning Required",
+                "value": "cleaning"
+              }
+            ],
+            "groupId": "next_inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "cleaning_schedule",
+            "label": "Cleaning Schedule Requirements",
+            "type": "textarea",
+            "groupId": "next_inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_signature",
+            "label": "Inspector's Signature",
+            "type": "signature",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 24,
+            "props": {
+              "width": 400,
+              "height": 150,
+              "showTools": true,
+              "showTimestamp": true,
+              "showSignedBy": true,
+              "enableUndo": true,
+              "placeholder": "Please sign here to certify this heat transfer equipment inspection",
+              "penColor": "#000080",
+              "backgroundColor": "#ffffff"
+            }
+          },
+          {
+            "id": "signature_date",
+            "label": "Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 12
+          }
         ],
-        "pdfStyling": { 
-          "header": { 
-            "backgroundColor": [24,24,27], 
-            "textColor": [255,255,255], 
-            "fontSize": 12, 
-            "companyName": "Heat Transfer Equipment Inspection Report", 
-            "companyAddress": "" 
-          }, 
-          "footer": { 
-            "textColor": [100,116,139], 
-            "fontSize": 6, 
-            "leftText": "TEMA/ASME/API Inspection", 
-            "centerText": "Confidential", 
-            "rightText": "Page {page} of {pages}" 
-          }, 
-          "sections": { 
-            "headerFontSize": 10, 
-            "contentFontSize": 8, 
-            "lineSpacing": 3.5, 
-            "margins": { "left": 15, "right": 195 } 
-          }, 
-          "tables": { 
-            "headerBackground": [2,6,23], 
-            "headerTextColor": [255,255,255], 
-            "headerFontSize": 8, 
-            "contentFontSize": 7, 
-            "cellPadding": 3 
-          }, 
-          "images": { 
-            "dpi": 400, 
-            "format": "JPEG", 
-            "quality": 0.92, 
-            "fit": "contain", 
-            "align": "center", 
-            "widthPercent": 1 
-          } 
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "Heat Transfer Equipment Inspection Report",
+            "companyAddress": ""
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "TEMA/ASME/API Inspection",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
+          },
+          "tables": {
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
+            "headerFontSize": 8,
+            "contentFontSize": 7,
+            "cellPadding": 3
+          },
+          "images": {
+            "dpi": 400,
+            "format": "JPEG",
+            "quality": 0.92,
+            "fit": "contain",
+            "align": "center",
+            "widthPercent": 1
+          }
         },
         "prompts": {
           "detailedHeatTransferAnalysis": {
@@ -509,7 +1432,7 @@
             },
             "promptConfig": {
               "systemPrompt": "Generate standard TEMA/ASME/API heat transfer equipment inspection report. Use only factual data from voice transcript and images. Do not include disclaimers about 'not provided', 'photographic evidence', or 'insufficient data'. If data is not available, leave field blank or use 'N/A'. Standard report format only.",
-              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard heat transfer equipment inspection report using voice data and images:\n\n**HEAT TRANSFER EQUIPMENT INSPECTION REPORT**\n**TEMA/ASME/API STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [exchanger/boiler/heater type from voice/visual] |\n| Manufacturer | [from nameplate] |\n| Model Number | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Heat Duty | [MMBtu/hr from nameplate/voice] |\n| Design Pressure Shell | [psi from nameplate/voice] |\n| Design Pressure Tube | [psi from nameplate/voice] |\n| Design Temperature | [°F from nameplate/voice] |\n| Tube Count | [from nameplate/voice] |\n| Shell Material | [from nameplate/voice] |\n| Tube Material | [from nameplate/voice] |\n\n**INSPECTION SCOPE:**\n| Parameter | Value |\n|-----------|-------|\n| Inspection Type | [External/Internal from voice] |\n| Inspection Date | [today] |\n| Inspector | [name from voice] |\n| Certification | [TEMA/ASME/API from voice] |\n| Methods Used | [from voice] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Shell/Casing | [condition from voice/visual] | [details] |\n| Tube Bundle | [condition from voice/visual] | [details] |\n| Tube Sheet | [condition from voice/visual] | [details] |\n| Refractory | [condition from voice/visual - fired heaters] | [details] |\n| Fins/Air System | [condition from voice/visual - air coolers] | [details] |\n| Support Structure | [condition from voice/visual] | [details] |\n\n**THERMAL PERFORMANCE:**\n| Parameter | Value | Unit |\n|-----------|-------|------|\n| Heat Duty | [actual vs design from voice] | MMBtu/hr |\n| Inlet Temperature | [°F from voice] | °F |\n| Outlet Temperature | [°F from voice] | °F |\n| Pressure Drop | [psi from voice] | psi |\n| Fouling Factor | [observed from voice/visual] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per TEMA/ASME/API] |\n| Next Inspection Due | [Date per standards] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| Certification | [TEMA/ASME/API from voice] |"
+              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard heat transfer equipment inspection report using voice data and images:\n\n**HEAT TRANSFER EQUIPMENT INSPECTION REPORT**\n**TEMA/ASME/API STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [exchanger/boiler/heater type from voice/visual] |\n| Manufacturer | [from nameplate] |\n| Model Number | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Heat Duty | [MMBtu/hr from nameplate/voice] |\n| Design Pressure Shell | [psi from nameplate/voice] |\n| Design Pressure Tube | [psi from nameplate/voice] |\n| Design Temperature | [\u00b0F from nameplate/voice] |\n| Tube Count | [from nameplate/voice] |\n| Shell Material | [from nameplate/voice] |\n| Tube Material | [from nameplate/voice] |\n\n**INSPECTION SCOPE:**\n| Parameter | Value |\n|-----------|-------|\n| Inspection Type | [External/Internal from voice] |\n| Inspection Date | [today] |\n| Inspector | [name from voice] |\n| Certification | [TEMA/ASME/API from voice] |\n| Methods Used | [from voice] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Shell/Casing | [condition from voice/visual] | [details] |\n| Tube Bundle | [condition from voice/visual] | [details] |\n| Tube Sheet | [condition from voice/visual] | [details] |\n| Refractory | [condition from voice/visual - fired heaters] | [details] |\n| Fins/Air System | [condition from voice/visual - air coolers] | [details] |\n| Support Structure | [condition from voice/visual] | [details] |\n\n**THERMAL PERFORMANCE:**\n| Parameter | Value | Unit |\n|-----------|-------|------|\n| Heat Duty | [actual vs design from voice] | MMBtu/hr |\n| Inlet Temperature | [\u00b0F from voice] | \u00b0F |\n| Outlet Temperature | [\u00b0F from voice] | \u00b0F |\n| Pressure Drop | [psi from voice] | psi |\n| Fouling Factor | [observed from voice/visual] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per TEMA/ASME/API] |\n| Next Inspection Due | [Date per standards] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| Certification | [TEMA/ASME/API from voice] |"
             },
             "streaming": {
               "enabled": true,
@@ -718,6 +1641,61 @@
             "promptConfig": {
               "systemPrompt": "Determine next inspection and cleaning requirements for heat transfer equipment. Return JSON only."
             }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "heat_exchanger",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          },
+          "typeMap": {
+            "pressure_vessel": "Pressure Vessel",
+            "storage_tank": "Storage Tank",
+            "heat_exchanger": "Heat Exchanger",
+            "piping": "Piping System",
+            "pump": "Pump",
+            "compressor": "Compressor",
+            "turbine": "Turbine"
           }
         }
       },

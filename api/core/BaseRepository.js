@@ -19,7 +19,7 @@
 
 const TenantContext = require('./TenantContext');
 const { AuditTrail } = require('./AuditTrail');
-const { NotFoundError, DatabaseError } = require('./ErrorHandler');
+const { NotFoundError, DatabaseError, ValidationError } = require('./ErrorHandler');
 const { RequestContextManager } = require('./RequestContext');
 
 class BaseRepository {
@@ -175,9 +175,16 @@ class BaseRepository {
         last_updated: new Date()
       };
 
-      // Assign tenant if not platform admin
-      if (!this.context.isPlatformAdmin && this.context.tenantId) {
+      // Assign tenant if not already provided
+      if (!doc.tenantId && this.context.tenantId) {
         doc.tenantId = this.context.tenantId;
+      }
+
+      // Ensure tenantId is always present (Mongo schema requires it)
+      if (!doc.tenantId) {
+        throw new ValidationError('Tenant ID is required to create this record', {
+          model: this.model.modelName
+        });
       }
 
       // Assign creator
@@ -204,6 +211,9 @@ class BaseRepository {
       
       return result;
     } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      }
       throw new DatabaseError(`Failed to create ${this.model.modelName}`, {
         originalError: error.message
       });
@@ -368,4 +378,3 @@ class BaseRepository {
 }
 
 module.exports = BaseRepository;
-

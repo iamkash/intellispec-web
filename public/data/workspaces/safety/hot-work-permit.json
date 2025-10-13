@@ -9,19 +9,211 @@
       "title": "Hot Work Permit",
       "config": {
         "sections": [
-          { "id": "permit_details", "title": "Permit Details", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 4 }, "btnLabel": "Populate Details", "promptRef": "detailsPopulate", "includeInPdf": true },
-          { "id": "hazards_controls", "title": "Hazards & Controls", "includeInPdf": true, "grid": { "title": "Hazards & Controls", "dataKey": "controls", "columns": [ { "key": "hazard", "title": "Hazard", "editable": true }, { "key": "control", "title": "Control", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "controlsPopulate", "btnLabel": "Populate from AI" } },
-          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+          {
+            "id": "permit_details",
+            "title": "Permit Details",
+            "sectionType": "form",
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4
+            },
+            "btnLabel": "Populate Details",
+            "promptRef": "detailsPopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "hazards_controls",
+            "title": "Hazards & Controls",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Hazards & Controls",
+              "dataKey": "controls",
+              "columns": [
+                {
+                  "key": "hazard",
+                  "title": "Hazard",
+                  "editable": true
+                },
+                {
+                  "key": "control",
+                  "title": "Control",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true
+                }
+              ],
+              "promptRef": "controlsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "attachments_signoff",
+            "title": "Sign-Off",
+            "includeInPdf": true
+          }
         ],
-        "groups": [ { "id": "permit_group", "title": "Permit", "sectionId": "permit_details", "lgSpan": 24 }, { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
-        "fields": [ { "id": "work_location", "label": "Work Location", "type": "text", "required": true, "groupId": "permit_group", "lgSpan": 12 }, { "id": "permit_number", "label": "Permit #", "type": "text", "required": true, "groupId": "permit_group", "lgSpan": 6 }, { "id": "date", "label": "Date", "type": "date", "required": true, "groupId": "permit_group", "lgSpan": 6 }, { "id": "requester", "label": "Requester", "type": "text", "groupId": "permit_group", "lgSpan": 12 }, { "id": "supervisor", "label": "Supervisor", "type": "text", "groupId": "signoff_group", "lgSpan": 12 }, { "id": "signoff_date", "label": "Date", "type": "date", "groupId": "signoff_group", "lgSpan": 12 } ],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Hot Work", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
-        "prompts": { "detailsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "Populate permit details.", "userPrompt": "Transcript:\n{{transcript}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn only JSON." } }, "controlsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000, "temperature": 0.3 }, "promptConfig": { "systemPrompt": "Derive hazards and controls.", "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"hazard\": \"string\", \"control\": \"string\", \"notes\": \"string\" } ]" } } }
+        "groups": [
+          {
+            "id": "permit_group",
+            "title": "Permit",
+            "sectionId": "permit_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "signoff_group",
+            "title": "Signoff",
+            "sectionId": "attachments_signoff",
+            "lgSpan": 24
+          }
+        ],
+        "fields": [
+          {
+            "id": "work_location",
+            "label": "Work Location",
+            "type": "text",
+            "required": true,
+            "groupId": "permit_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "permit_number",
+            "label": "Permit #",
+            "type": "text",
+            "required": true,
+            "groupId": "permit_group",
+            "lgSpan": 6
+          },
+          {
+            "id": "date",
+            "label": "Date",
+            "type": "date",
+            "required": true,
+            "groupId": "permit_group",
+            "lgSpan": 6
+          },
+          {
+            "id": "requester",
+            "label": "Requester",
+            "type": "text",
+            "groupId": "permit_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "supervisor",
+            "label": "Supervisor",
+            "type": "text",
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "signoff_date",
+            "label": "Date",
+            "type": "date",
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          }
+        ],
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety"
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Hot Work",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          }
+        },
+        "prompts": {
+          "detailsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800
+            },
+            "promptConfig": {
+              "systemPrompt": "Populate permit details.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn only JSON."
+            }
+          },
+          "controlsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 1000,
+              "temperature": 0.3
+            },
+            "promptConfig": {
+              "systemPrompt": "Derive hazards and controls.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"hazard\": \"string\", \"control\": \"string\", \"notes\": \"string\" } ]"
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
+        }
       },
       "position": 24
     }
   ]
 }
-
-
-

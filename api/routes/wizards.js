@@ -20,7 +20,7 @@
 const DocumentRepository = require('../repositories/DocumentRepository');
 const TenantContextFactory = require('../core/TenantContextFactory');
 const { requireAuth } = require('../core/AuthMiddleware');
-const { NotFoundError, ValidationError, DatabaseError, APIError, ErrorTypes } = require('../core/ErrorHandler');
+const { APIError, ErrorTypes } = require('../core/ErrorHandler');
 const { nanoid } = require('nanoid');
 
 /**
@@ -96,16 +96,7 @@ async function registerWizardRoutes(fastify) {
     }
   });
 
-  /**
-   * GET /api/wizards/:id
-   * Get specific wizard by ID
-   * 
-   * Path params:
-   * - id: Wizard ID
-   * 
-   * Tenant validation: AUTOMATIC - returns 404 if not in user's tenant
-   */
-  fastify.get('/wizards/:id', { preHandler: requireAuth }, async (request, reply) => {
+  const getWizardById = async (request, reply) => {
     try {
       const { id } = request.params;
 
@@ -113,8 +104,20 @@ async function registerWizardRoutes(fastify) {
       const repository = new DocumentRepository(tenantContext, 'wizard', request.context);
 
       // findById automatically checks tenant access
-      const wizard = await repository.findById(id);
+      let wizard = await repository.findById(id);
       
+      if (!wizard && id && id.startsWith('insp')) {
+        const inspectionRepository = new DocumentRepository(tenantContext, 'inspection', request.context);
+        const inspectionRecord = await inspectionRepository.findById(id);
+        if (inspectionRecord) {
+          wizard = {
+            ...inspectionRecord,
+            sourceType: 'inspection',
+            isWizardFallback: true
+          };
+        }
+      }
+
       if (!wizard) {
         throw new APIError('Wizard not found', ErrorTypes.NOT_FOUND, 404);
       }
@@ -131,7 +134,19 @@ async function registerWizardRoutes(fastify) {
         error: error.message
       });
     }
-  });
+  };
+
+  /**
+   * GET /api/wizards/:id
+   * Get specific wizard by ID
+   */
+  fastify.get('/wizards/:id', { preHandler: requireAuth }, getWizardById);
+
+  /**
+   * Legacy alias: GET /api/wizard/:id
+   * Maintained for backward compatibility with older clients
+   */
+  fastify.get('/wizard/:id', { preHandler: requireAuth }, getWizardById);
 
   /**
    * POST /api/wizards

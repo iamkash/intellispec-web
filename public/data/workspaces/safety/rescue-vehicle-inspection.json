@@ -9,19 +9,210 @@
       "title": "Rescue Vehicle Inspection",
       "config": {
         "sections": [
-          { "id": "vehicle_details", "title": "Vehicle Details", "sectionType": "form", "pdfLayout": { "type": "grid", "columns": 4 }, "btnLabel": "Populate Details", "promptRef": "detailsPopulate", "includeInPdf": true },
-          { "id": "inspection_items", "title": "Inspection Items", "includeInPdf": true, "grid": { "title": "Checklist", "dataKey": "items", "columns": [ { "key": "item", "title": "Item", "editable": true }, { "key": "status", "title": "Status", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "itemsPopulate", "btnLabel": "Populate from AI" } },
-          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+          {
+            "id": "vehicle_details",
+            "title": "Vehicle Details",
+            "sectionType": "form",
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4
+            },
+            "btnLabel": "Populate Details",
+            "promptRef": "detailsPopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "inspection_items",
+            "title": "Inspection Items",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Checklist",
+              "dataKey": "items",
+              "columns": [
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true
+                },
+                {
+                  "key": "status",
+                  "title": "Status",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true
+                }
+              ],
+              "promptRef": "itemsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "attachments_signoff",
+            "title": "Sign-Off",
+            "includeInPdf": true
+          }
         ],
-        "groups": [ { "id": "vehicle_group", "title": "Vehicle", "sectionId": "vehicle_details", "lgSpan": 24 }, { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
-        "fields": [ { "id": "unit_id", "label": "Unit ID", "type": "text", "required": true, "groupId": "vehicle_group", "lgSpan": 6 }, { "id": "make_model", "label": "Make/Model", "type": "text", "required": true, "groupId": "vehicle_group", "lgSpan": 6 }, { "id": "mileage", "label": "Mileage", "type": "number", "groupId": "vehicle_group", "lgSpan": 6 }, { "id": "last_service", "label": "Last Service Date", "type": "date", "groupId": "vehicle_group", "lgSpan": 6 }, { "id": "inspector", "label": "Inspector", "type": "text", "groupId": "signoff_group", "lgSpan": 12 }, { "id": "inspection_date", "label": "Date", "type": "date", "groupId": "signoff_group", "lgSpan": 12 } ],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Vehicle Inspection", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
-        "prompts": { "detailsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 600 }, "promptConfig": { "systemPrompt": "Populate vehicle details from transcript if present.", "userPrompt": "Transcript:\n{{transcript}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn only JSON." } }, "itemsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800, "temperature": 0.3 }, "promptConfig": { "systemPrompt": "Suggest a vehicle safety checklist. JSON array only.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"item\": \"string\", \"status\": \"OK|Repair|N/A\", \"notes\": \"string\" } ]" } } }
+        "groups": [
+          {
+            "id": "vehicle_group",
+            "title": "Vehicle",
+            "sectionId": "vehicle_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "signoff_group",
+            "title": "Signoff",
+            "sectionId": "attachments_signoff",
+            "lgSpan": 24
+          }
+        ],
+        "fields": [
+          {
+            "id": "unit_id",
+            "label": "Unit ID",
+            "type": "text",
+            "required": true,
+            "groupId": "vehicle_group",
+            "lgSpan": 6
+          },
+          {
+            "id": "make_model",
+            "label": "Make/Model",
+            "type": "text",
+            "required": true,
+            "groupId": "vehicle_group",
+            "lgSpan": 6
+          },
+          {
+            "id": "mileage",
+            "label": "Mileage",
+            "type": "number",
+            "groupId": "vehicle_group",
+            "lgSpan": 6
+          },
+          {
+            "id": "last_service",
+            "label": "Last Service Date",
+            "type": "date",
+            "groupId": "vehicle_group",
+            "lgSpan": 6
+          },
+          {
+            "id": "inspector",
+            "label": "Inspector",
+            "type": "text",
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "inspection_date",
+            "label": "Date",
+            "type": "date",
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          }
+        ],
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety"
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Vehicle Inspection",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          }
+        },
+        "prompts": {
+          "detailsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 600
+            },
+            "promptConfig": {
+              "systemPrompt": "Populate vehicle details from transcript if present.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn only JSON."
+            }
+          },
+          "itemsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800,
+              "temperature": 0.3
+            },
+            "promptConfig": {
+              "systemPrompt": "Suggest a vehicle safety checklist. JSON array only.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"item\": \"string\", \"status\": \"OK|Repair|N/A\", \"notes\": \"string\" } ]"
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
+        }
       },
       "position": 24
     }
   ]
 }
-
-
-

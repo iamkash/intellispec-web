@@ -62,20 +62,46 @@ export const ImageUploadWithGridFS: React.FC<ImageUploadWithGridFSProps> = ({
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
 
+    const buildAuthenticatedUrl = useCallback((rawUrl?: string) => {
+        if (!rawUrl) return rawUrl || '';
+
+        const token = (typeof window !== 'undefined')
+            ? (localStorage.getItem('authToken') || localStorage.getItem('token'))
+            : null;
+
+        if (!token) {
+            return rawUrl;
+        }
+
+        try {
+            const isAbsolute = /^https?:\/\//i.test(rawUrl);
+            const urlObj = new URL(rawUrl, window.location.origin);
+            urlObj.searchParams.set('authToken', token);
+            return isAbsolute ? urlObj.toString() : `${urlObj.pathname}${urlObj.search}${urlObj.hash}`;
+        } catch (err) {
+            const separator = rawUrl.includes('?') ? '&' : '?';
+            return `${rawUrl}${separator}authToken=${encodeURIComponent(token)}`;
+        }
+    }, []);
+
     // Convert GridFS images to Upload file list
     useEffect(() => {
-        const uploadFiles: UploadFile[] = (value || []).map(img => ({
-            uid: img.uid,
-            name: img.name,
-            status: 'done' as const,
-            url: img.url,
-            response: {
-                gridfsId: img.gridfsId,
-                url: img.url
-            }
-        }));
+        const uploadFiles: UploadFile[] = (value || []).map(img => {
+            const displayUrl = buildAuthenticatedUrl(img.url);
+            return {
+                uid: img.uid,
+                name: img.name,
+                status: 'done' as const,
+                url: displayUrl,
+                thumbUrl: displayUrl,
+                response: {
+                    gridfsId: img.gridfsId,
+                    url: img.url
+                }
+            };
+        });
         setFileList(uploadFiles);
-    }, [value]);
+    }, [value, buildAuthenticatedUrl]);
 
     // Custom upload to GridFS
     const customRequest = useCallback(async (options: any) => {
@@ -92,11 +118,12 @@ export const ImageUploadWithGridFS: React.FC<ImageUploadWithGridFSProps> = ({
             formData.append('type', 'inspection');
 
             // Upload to GridFS
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token');
             const response = await fetch('/api/uploads/image', {
                 method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
+                headers: token ? {
+                    'Authorization': `Bearer ${token}`
+                } : undefined,
                 body: formData
             });
 
@@ -176,11 +203,12 @@ export const ImageUploadWithGridFS: React.FC<ImageUploadWithGridFSProps> = ({
         
         if (gridfsId) {
             // Optionally delete from GridFS
+            const token = localStorage.getItem('authToken') || localStorage.getItem('token');
             fetch(`/api/uploads/image/${gridfsId}`, {
                 method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                headers: token ? {
+                    'Authorization': `Bearer ${token}`
+                } : undefined
             }).catch(err => console.error('Failed to delete from GridFS:', err));
         }
 
@@ -197,10 +225,11 @@ export const ImageUploadWithGridFS: React.FC<ImageUploadWithGridFSProps> = ({
             return;
         }
 
-        setPreviewImage(file.url || file.preview || '');
+        const displayUrl = file.url ? buildAuthenticatedUrl(file.url) : (file.preview || '');
+        setPreviewImage(displayUrl);
         setPreviewOpen(true);
         setPreviewTitle(file.name || file.url?.substring(file.url.lastIndexOf('/') + 1) || '');
-    }, []);
+    }, [buildAuthenticatedUrl]);
 
     const uploadProps: UploadProps = {
         fileList,

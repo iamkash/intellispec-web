@@ -9,17 +9,167 @@
       "title": "Emergency Contacts & Muster Plan",
       "config": {
         "sections": [
-          { "id": "contacts", "title": "Contacts", "includeInPdf": true, "grid": { "title": "Contacts", "dataKey": "contacts", "columns": [ { "key": "name", "title": "Name", "editable": true }, { "key": "role", "title": "Role", "editable": true }, { "key": "phone", "title": "Phone", "editable": true }, { "key": "email", "title": "Email", "editable": true } ], "promptRef": "contactsPopulate", "btnLabel": "Populate from AI" } },
-          { "id": "muster_plan", "title": "Muster Plan", "includeInPdf": true, "grid": { "title": "Muster Steps", "dataKey": "musterSteps", "columns": [ { "key": "stepNo", "title": "#", "editable": true }, { "key": "step", "title": "Step", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "musterPopulate", "btnLabel": "Populate from AI" } }
+          {
+            "id": "contacts",
+            "title": "Contacts",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Contacts",
+              "dataKey": "contacts",
+              "columns": [
+                {
+                  "key": "name",
+                  "title": "Name",
+                  "editable": true
+                },
+                {
+                  "key": "role",
+                  "title": "Role",
+                  "editable": true
+                },
+                {
+                  "key": "phone",
+                  "title": "Phone",
+                  "editable": true
+                },
+                {
+                  "key": "email",
+                  "title": "Email",
+                  "editable": true
+                }
+              ],
+              "promptRef": "contactsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "muster_plan",
+            "title": "Muster Plan",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Muster Steps",
+              "dataKey": "musterSteps",
+              "columns": [
+                {
+                  "key": "stepNo",
+                  "title": "#",
+                  "editable": true
+                },
+                {
+                  "key": "step",
+                  "title": "Step",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true
+                }
+              ],
+              "promptRef": "musterPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          }
         ],
         "groups": [],
         "fields": [],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Emergency Contacts", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
-        "prompts": { "contactsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "Draft an emergency contact roster from transcript. JSON array only.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"name\": \"string\", \"role\": \"string\", \"phone\": \"string\", \"email\": \"string\" } ]" } }, "musterPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "Draft a muster plan (steps). JSON array only.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"stepNo\": \"string|number\", \"step\": \"string\", \"notes\": \"string\" } ]" } } }
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety"
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Emergency Contacts",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          }
+        },
+        "prompts": {
+          "contactsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800
+            },
+            "promptConfig": {
+              "systemPrompt": "Draft an emergency contact roster from transcript. JSON array only.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"name\": \"string\", \"role\": \"string\", \"phone\": \"string\", \"email\": \"string\" } ]"
+            }
+          },
+          "musterPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800
+            },
+            "promptConfig": {
+              "systemPrompt": "Draft a muster plan (steps). JSON array only.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"stepNo\": \"string|number\", \"step\": \"string\", \"notes\": \"string\" } ]"
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
+        }
       },
       "position": 24
     }
   ]
 }
-
-

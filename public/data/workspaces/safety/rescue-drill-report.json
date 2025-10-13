@@ -10,14 +10,39 @@
       "description": "Voice/text notes, optional image analysis, AAR grids, and PDF.",
       "config": {
         "sections": [
-          { "id": "voice_capture", "title": "Voice Capture", "sectionType": "voice", "includeInPdf": false },
-          { "id": "image_capture", "title": "Image Capture", "sectionType": "image", "includeInPdf": false },
-          { "id": "image_analysis", "title": "Scene Analysis", "imageAnalysisPromptRef": "deepImageAnalysis", "promptSourceIds": ["image_capture"], "includeInPdf": true, "pdf": { "includeOverview": true, "includeImages": false } },
+          {
+            "id": "voice_capture",
+            "title": "Voice Capture",
+            "sectionType": "voice",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_capture",
+            "title": "Image Capture",
+            "sectionType": "image",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_analysis",
+            "title": "Scene Analysis",
+            "imageAnalysisPromptRef": "deepImageAnalysis",
+            "promptSourceIds": [
+              "image_capture"
+            ],
+            "includeInPdf": true,
+            "pdf": {
+              "includeOverview": true,
+              "includeImages": false
+            }
+          },
           {
             "id": "drill_overview",
             "title": "Drill Overview",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 4 },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4
+            },
             "btnLabel": "Populate Overview",
             "promptRef": "overviewPopulate",
             "includeInPdf": true
@@ -29,7 +54,23 @@
             "grid": {
               "title": "Timeline",
               "dataKey": "timeline",
-              "columns": [ { "key": "time", "title": "Time", "editable": true }, { "key": "event", "title": "Event", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ],
+              "columns": [
+                {
+                  "key": "time",
+                  "title": "Time",
+                  "editable": true
+                },
+                {
+                  "key": "event",
+                  "title": "Event",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true
+                }
+              ],
               "promptRef": "timelinePopulate",
               "btnLabel": "Populate from AI"
             }
@@ -41,34 +82,236 @@
             "grid": {
               "title": "Lessons Learned",
               "dataKey": "lessons",
-              "columns": [ { "key": "topic", "title": "Topic", "editable": true }, { "key": "observation", "title": "Observation", "editable": true }, { "key": "action", "title": "Action", "editable": true } ],
+              "columns": [
+                {
+                  "key": "topic",
+                  "title": "Topic",
+                  "editable": true
+                },
+                {
+                  "key": "observation",
+                  "title": "Observation",
+                  "editable": true
+                },
+                {
+                  "key": "action",
+                  "title": "Action",
+                  "editable": true
+                }
+              ],
               "promptRef": "lessonsPopulate",
               "btnLabel": "Populate from AI"
             }
           },
-          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+          {
+            "id": "attachments_signoff",
+            "title": "Sign-Off",
+            "includeInPdf": true
+          }
         ],
-        "groups": [ { "id": "drill_core", "title": "Drill Core", "sectionId": "drill_overview", "lgSpan": 24 }, { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
+        "groups": [
+          {
+            "id": "drill_core",
+            "title": "Drill Core",
+            "sectionId": "drill_overview",
+            "lgSpan": 24
+          },
+          {
+            "id": "signoff_group",
+            "title": "Signoff",
+            "sectionId": "attachments_signoff",
+            "lgSpan": 24
+          }
+        ],
         "fields": [
-          { "id": "drill_date", "label": "Drill Date", "type": "date", "required": true, "groupId": "drill_core", "lgSpan": 6 },
-          { "id": "location", "label": "Location", "type": "text", "required": true, "groupId": "drill_core", "lgSpan": 6 },
-          { "id": "scenario", "label": "Scenario", "type": "text", "groupId": "drill_core", "lgSpan": 12 },
-          { "id": "objectives", "label": "Objectives", "type": "textarea", "groupId": "drill_core", "lgSpan": 24 },
-          { "id": "supervisor_name", "label": "Supervisor Name", "type": "text", "required": true, "groupId": "signoff_group", "lgSpan": 12 },
-          { "id": "signoff_date", "label": "Date", "type": "date", "required": true, "groupId": "signoff_group", "lgSpan": 12 }
+          {
+            "id": "drill_date",
+            "label": "Drill Date",
+            "type": "date",
+            "required": true,
+            "groupId": "drill_core",
+            "lgSpan": 6
+          },
+          {
+            "id": "location",
+            "label": "Location",
+            "type": "text",
+            "required": true,
+            "groupId": "drill_core",
+            "lgSpan": 6
+          },
+          {
+            "id": "scenario",
+            "label": "Scenario",
+            "type": "text",
+            "groupId": "drill_core",
+            "lgSpan": 12
+          },
+          {
+            "id": "objectives",
+            "label": "Objectives",
+            "type": "textarea",
+            "groupId": "drill_core",
+            "lgSpan": 24
+          },
+          {
+            "id": "supervisor_name",
+            "label": "Supervisor Name",
+            "type": "text",
+            "required": true,
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "signoff_date",
+            "label": "Date",
+            "type": "date",
+            "required": true,
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          }
         ],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Drill Report", "centerText": "Confidential", "rightText": "Page {page} of {pages}" }, "sections": { "headerFontSize": 10, "contentFontSize": 8, "lineSpacing": 3.5, "margins": { "left": 15, "right": 195 } }, "tables": { "headerBackground": [2,6,23], "headerTextColor": [255,255,255], "headerFontSize": 8, "contentFontSize": 7, "cellPadding": 3 } },
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety"
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Drill Report",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
+          },
+          "tables": {
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
+            "headerFontSize": 8,
+            "contentFontSize": 7,
+            "cellPadding": 3
+          }
+        },
         "prompts": {
-          "deepImageAnalysis": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000 }, "promptConfig": { "systemPrompt": "Analyze images for drill context. JSON only.", "userPrompt": "JSON only" } },
-          "overviewPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "Populate drill overview fields from transcript and analysis.", "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn only JSON." } },
-          "timelinePopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "Create a concise timeline of drill events.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"time\": \"string\", \"event\": \"string\", \"notes\": \"string\" } ]" } },
-          "lessonsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "Summarize lessons learned with actions.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"topic\": \"string\", \"observation\": \"string\", \"action\": \"string\" } ]" } }
+          "deepImageAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 1000
+            },
+            "promptConfig": {
+              "systemPrompt": "Analyze images for drill context. JSON only.",
+              "userPrompt": "JSON only"
+            }
+          },
+          "overviewPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800
+            },
+            "promptConfig": {
+              "systemPrompt": "Populate drill overview fields from transcript and analysis.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn only JSON."
+            }
+          },
+          "timelinePopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800
+            },
+            "promptConfig": {
+              "systemPrompt": "Create a concise timeline of drill events.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"time\": \"string\", \"event\": \"string\", \"notes\": \"string\" } ]"
+            }
+          },
+          "lessonsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800
+            },
+            "promptConfig": {
+              "systemPrompt": "Summarize lessons learned with actions.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"topic\": \"string\", \"observation\": \"string\", \"action\": \"string\" } ]"
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
         }
       },
       "position": 24
     }
   ]
 }
-
-
-

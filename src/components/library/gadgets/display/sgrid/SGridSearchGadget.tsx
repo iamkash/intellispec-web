@@ -10,8 +10,8 @@ import {
   SortingState,
   useReactTable
 } from '@tanstack/react-table';
-import { Button, Dropdown, Form, Input, message, Modal, Popconfirm, Segmented, Select, Space, Typography } from 'antd';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Dropdown, Form, Input, message, Modal, Popconfirm, Segmented, Select, Space } from 'antd';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as XLSX from 'xlsx';
 import WorkspaceFilterContext, { WorkspaceFilterContextValue } from '../../../../../contexts/WorkspaceFilterContext';
 import { BaseGadgetContainer } from '../../../../ui/workspace/BaseGadgetContainer';
@@ -19,8 +19,6 @@ import { DatePickerWidget } from '../../../widgets/input/DatePickerWidget';
 import { InputFieldWidget } from '../../../widgets/input/InputFieldWidget';
 import { InputNumberWidget } from '../../../widgets/input/InputNumberWidget';
 import { BaseGadget, GadgetConfig, GadgetMetadata, GadgetSchema, GadgetType } from '../../base';
-
-const { Text } = Typography;
 
 // Helper function to get nested values from objects
 const getNestedValue = (obj: any, path: string): any => {
@@ -154,6 +152,21 @@ interface ViewFilter {
   filter: Record<string, any>;
 }
 
+interface RecordWorkspacePatternMapping {
+  matchType?: 'includes' | 'regex';
+  value: string | string[];
+  workspace: string;
+}
+
+interface RecordWorkspaceRoutingConfig {
+  sourceField?: string;
+  defaultWorkspace?: string;
+  caseInsensitive?: boolean;
+  trimWhitespace?: boolean;
+  mappings?: Record<string, string>;
+  patternMappings?: RecordWorkspacePatternMapping[];
+}
+
 interface SGridSearchViewProps {
   dataUrl?: string;
   data?: any[];
@@ -169,7 +182,8 @@ interface SGridSearchViewProps {
   onNavigate?: (action: string, payload?: any) => void;
   fieldMappings?: Record<string, string>; // Maps filter IDs to API parameter names
   defaultSort?: { field: string; order: 'asc' | 'desc' }; // Default sorting configuration
-  assetTypeWizardMapping?: Record<string, string>; // Maps asset types to wizard workspaces
+  recordWorkspaceRouting?: RecordWorkspaceRoutingConfig;
+  legacyWorkspaceMapping?: Record<string, string>;
 }
 
 const SGridSearchView: React.FC<SGridSearchViewProps> = ({
@@ -187,7 +201,8 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
   fieldMappings,
   defaultSort,
   pagination: paginationConfig,
-  assetTypeWizardMapping = {},
+  recordWorkspaceRouting,
+  legacyWorkspaceMapping = {},
 }) => {
   const [data, setData] = useState<any[]>(Array.isArray(injectedData) ? injectedData : []);
   const [loading, setLoading] = useState(false);
@@ -200,6 +215,113 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
     pages: 0,
     currentPage: 1
   });
+
+  const resolveWizardWorkspace = useCallback(
+    (record: any): string | undefined => {
+      const routing = recordWorkspaceRouting;
+      const sourceField = routing?.sourceField;
+
+      if (!routing || !sourceField) {
+        console.warn('[SGridSearchGadget] recordWorkspaceRouting.sourceField not configured. Provide a sourceField in metadata to enable workspace mapping.');
+        return routing?.defaultWorkspace;
+      }
+
+      let recordValue = getNestedValue(record, sourceField);
+      if (recordValue === undefined && !sourceField.includes('.')) {
+        recordValue = record?.[sourceField];
+      }
+
+      const valueString =
+        recordValue !== undefined && recordValue !== null
+          ? String(recordValue)
+          : undefined;
+
+      if (routing && valueString) {
+        const shouldTrim = routing.trimWhitespace !== false;
+        const trimmedValue = shouldTrim ? valueString.trim() : valueString;
+        const normalizedValue = routing.caseInsensitive ? trimmedValue.toLowerCase() : trimmedValue;
+
+        if (routing.mappings) {
+          if (routing.caseInsensitive) {
+            for (const [candidate, workspace] of Object.entries(routing.mappings)) {
+              if (candidate.toLowerCase().trim() === normalizedValue) {
+                return workspace;
+              }
+            }
+          }
+
+          const directMatch = routing.mappings[trimmedValue] ?? routing.mappings[normalizedValue];
+          if (directMatch) {
+            return directMatch;
+          }
+        }
+
+        if (routing.patternMappings) {
+          for (const pattern of routing.patternMappings) {
+            if (!pattern?.workspace || pattern.value === undefined || pattern.value === null) {
+              continue;
+            }
+
+            const matchType = pattern.matchType || 'includes';
+            if (matchType === 'regex') {
+              const patternSource = Array.isArray(pattern.value)
+                ? pattern.value.join('|')
+                : String(pattern.value);
+              try {
+                const regex = new RegExp(patternSource, routing.caseInsensitive ? 'i' : undefined);
+                if (regex.test(valueString)) {
+                  return pattern.workspace;
+                }
+              } catch (err) {
+                console.warn('[SGridSearchGadget] Invalid regex in recordWorkspaceRouting.patternMappings:', patternSource, err);
+              }
+            } else {
+              const values = Array.isArray(pattern.value) ? pattern.value : [pattern.value];
+              const processedNeedles = values
+                .map((needle) => {
+                  if (needle === undefined || needle === null) return null;
+                  const text = String(needle);
+                  const prepared = routing.caseInsensitive ? text.toLowerCase() : text;
+                  return routing.trimWhitespace !== false ? prepared.trim() : prepared;
+                })
+                .filter((needle): needle is string => Boolean(needle));
+
+              const haystack = routing.caseInsensitive ? normalizedValue : trimmedValue;
+              if (processedNeedles.length > 0 && processedNeedles.some((needle) => haystack.includes(needle))) {
+                return pattern.workspace;
+              }
+            }
+          }
+        }
+
+        if (routing.defaultWorkspace) {
+          return routing.defaultWorkspace;
+        }
+      }
+
+      if (valueString && legacyWorkspaceMapping) {
+        const trimmedLegacyValue = valueString.trim();
+        const directLegacy =
+          legacyWorkspaceMapping[valueString] ||
+          legacyWorkspaceMapping[trimmedLegacyValue];
+        if (directLegacy) {
+          return directLegacy;
+        }
+
+        const lower = valueString.toLowerCase();
+        if (lower) {
+          for (const [key, workspace] of Object.entries(legacyWorkspaceMapping)) {
+            if (key.toLowerCase() === lower) {
+              return workspace;
+            }
+          }
+        }
+      }
+
+      return routing?.defaultWorkspace;
+    },
+    [recordWorkspaceRouting, legacyWorkspaceMapping]
+  );
 
   // Initialize sorting with default sort if provided
   const initialSorting = useMemo<SortingState>(() => {
@@ -220,6 +342,8 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
 
   // Get workspace filter context
   const filterContext = useContext(WorkspaceFilterContext) as WorkspaceFilterContextValue | undefined;
+  const refreshTrigger = filterContext?.refreshTrigger;
+  const getFilterQuery = filterContext?.getFilterQuery;
 
   // Refs to maintain focus in column filter inputs
   const columnFilterRefs = useRef<Record<string, any>>({});
@@ -269,7 +393,7 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
           url.searchParams.set('limit', String(pagination.pageSize));
           
           // Add filter parameters
-          const filterQuery = filterContext?.getFilterQuery?.() || {};
+          const filterQuery = getFilterQuery?.() || {};
           Object.entries(filterQuery).forEach(([filterId, value]) => {
             if (value !== undefined && value !== null && value !== '') {
               // Map filter ID to API parameter name using fieldMappings
@@ -331,13 +455,13 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
       }
     };
     load();
-  }, [dataUrl, injectedData, fieldMappings, pagination.pageIndex, pagination.pageSize, activeViewFilter]); // Include pagination in dependencies
+  }, [dataUrl, injectedData, fieldMappings, pagination.pageIndex, pagination.pageSize, activeViewFilter, viewFilters, getFilterQuery]);
 
   // Listen to filter changes via refreshTrigger
   useEffect(() => {
     if (Array.isArray(injectedData)) return; // data provided by container
-    if (filterContext?.refreshTrigger !== undefined && filterContext.refreshTrigger > 0) {
-      console.log('[SGridSearchGadget] Filter changed, triggering reload:', filterContext.refreshTrigger);
+    if (refreshTrigger !== undefined && refreshTrigger > 0) {
+      console.log('[SGridSearchGadget] Filter changed, triggering reload:', refreshTrigger);
       const load = async () => {
         setLoading(true);
         try {
@@ -359,7 +483,7 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
             url.searchParams.set('limit', String(pagination.pageSize));
             
             // Add filter parameters
-            const filterQuery = filterContext?.getFilterQuery?.() || {};
+            const filterQuery = getFilterQuery?.() || {};
             Object.entries(filterQuery).forEach(([filterId, value]) => {
               if (value !== undefined && value !== null && value !== '') {
                 // Map filter ID to API parameter name using fieldMappings
@@ -423,11 +547,181 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
       };
       load();
     }
-  }, [dataUrl, injectedData, fieldMappings, filterContext?.refreshTrigger, activeViewFilter]);
+  }, [dataUrl, injectedData, fieldMappings, refreshTrigger, activeViewFilter, viewFilters, pagination.pageIndex, pagination.pageSize, getFilterQuery]);
 
   // TanStack Table handles filtering automatically - no custom filtered data needed
 
   // Using TanStack Table's built-in column filtering - no custom handler needed
+
+  const loadDynamicOptions = useCallback(async (col: ColumnMeta) => {
+    if (!col.field?.optionsUrl || dynamicOptions[col.key]) {
+      return;
+    }
+
+    try {
+      const response = await BaseGadget.makeAuthenticatedFetch(col.field.optionsUrl);
+      if (!response.ok) {
+        console.error(`Failed to load options for ${col.key}: ${response.status} ${response.statusText}`);
+        return;
+      }
+
+      const options = await response.json();
+      setDynamicOptions(prev => ({
+        ...prev,
+        [col.key]: Array.isArray(options) ? options : options.data || []
+      }));
+    } catch (error) {
+      console.error(`Failed to load options for ${col.key}:`, error);
+    }
+  }, [dynamicOptions]);
+
+  const loadAllDynamicOptions = useCallback(async () => {
+    const selectColumns = columns.filter(col => col.field?.type === 'select' && col.field?.optionsUrl);
+    await Promise.all(selectColumns.map(col => loadDynamicOptions(col)));
+  }, [columns, loadDynamicOptions]);
+
+  const resolveDisplayValues = useCallback((record: any) => {
+    const resolvedRecord = { ...record };
+
+    columns.forEach(col => {
+      if (col.field?.type === 'select' && col.field?.optionsUrl && dynamicOptions[col.key]) {
+        const options = dynamicOptions[col.key];
+        const currentValue = record[col.key];
+        const matchingOption = options.find((opt: any) =>
+          (typeof opt === 'string' ? opt : opt.value) === currentValue
+        );
+
+        if (matchingOption) {
+          resolvedRecord[col.key] = currentValue;
+        }
+      }
+    });
+
+    return resolvedRecord;
+  }, [columns, dynamicOptions]);
+
+  const handleRowAction = useCallback(async (action: string, record: any) => {
+    const normalizedDataUrl = dataUrl?.split('?')[0] || '';
+    const baseUrl = normalizedDataUrl.replace(/\/$/, '') || '';
+    const actionConfig = rowActions.find(a => a.key === action);
+
+    if (actionConfig?.workspace && onNavigate) {
+      const params = { ...actionConfig.params };
+
+      Object.keys(params).forEach(key => {
+        if (typeof params[key] === 'string') {
+          params[key] = params[key].replace(/{(\w+)}/g, (match: string, field: string) => {
+            return record[field] || match;
+          });
+        }
+      });
+
+      onNavigate('navigate', {
+        workspace: actionConfig.workspace,
+        params
+      });
+      return;
+    }
+
+    if (actionConfig?.conditional && onNavigate) {
+      const { conditional } = actionConfig;
+      let targetWorkspace: string | null = null;
+
+      if (conditional.workspaceMapping) {
+        if (record.workspaceId && conditional.workspaceMapping[record.workspaceId]) {
+          targetWorkspace = conditional.workspaceMapping[record.workspaceId];
+        } else if (conditional.field && record[conditional.field] && conditional.workspaceMapping[record[conditional.field]]) {
+          targetWorkspace = conditional.workspaceMapping[record[conditional.field]];
+        } else if (
+          conditional.field &&
+          record.formData &&
+          record.formData[conditional.field] &&
+          conditional.workspaceMapping[record.formData[conditional.field]]
+        ) {
+          targetWorkspace = conditional.workspaceMapping[record.formData[conditional.field]];
+        }
+      }
+
+      if (targetWorkspace) {
+        const params = { ...actionConfig.params };
+        Object.keys(params).forEach(key => {
+          if (typeof params[key] === 'string') {
+            params[key] = params[key].replace(/{(\w+)}/g, (match: string, field: string) => {
+              return record[field] || match;
+            });
+          }
+        });
+
+        onNavigate('navigate', {
+          workspace: targetWorkspace,
+          params
+        });
+        return;
+      }
+    }
+
+    switch (action) {
+      case 'edit':
+        setModalMode('edit');
+        setCurrentRecord(record);
+        setIsModalVisible(true);
+        loadAllDynamicOptions().then(() => {
+          const resolvedValues = resolveDisplayValues(record);
+          form.setFieldsValue(resolvedValues);
+        });
+        break;
+      case 'delete':
+        try {
+          const targetId = record.id || record._id;
+          if (!targetId) {
+            message.error('Unable to delete: record is missing an identifier');
+            return;
+          }
+          const deleteUrl = `${baseUrl}/${targetId}`;
+          setData(prev => prev.filter((item: any) => (item.id || item._id) !== targetId));
+
+          const response = await BaseGadget.makeAuthenticatedFetch(deleteUrl, {
+            method: 'DELETE'
+          });
+
+          if (response.ok) {
+            message.success('Deleted successfully');
+          } else {
+            setData(prev => [...prev, record]);
+            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+            console.error('Delete error response:', errorData);
+            message.error(`Delete failed: ${errorData.error || 'Unknown error'}`);
+          }
+        } catch (error) {
+          setData(prev => [...prev, record]);
+          console.error('Delete error:', error);
+          message.error(`Failed to delete: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        break;
+      case 'view':
+        setModalMode('view');
+        setCurrentRecord(record);
+        setIsModalVisible(true);
+        loadAllDynamicOptions().then(() => {
+          const resolvedValues = resolveDisplayValues(record);
+          form.setFieldsValue(resolvedValues);
+        });
+        break;
+      default:
+        
+    }
+  }, [
+    dataUrl,
+    rowActions,
+    onNavigate,
+    setModalMode,
+    setCurrentRecord,
+    setIsModalVisible,
+    loadAllDynamicOptions,
+    resolveDisplayValues,
+    form,
+    setData
+  ]);
 
   const tanCols = useMemo<ColumnDef<any, any>[]>(() => {
     // Add selection column if bulk delete is enabled
@@ -520,112 +814,71 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
                   if (!shouldShow) return null;
                 }
 
-                // Get wizard mapping for create action
-                let workspace = action.onClick?.workspace;
-                if (action.key === 'create_inspection' && workspace === '{wizard_mapping}') {
-                  const assetType = record.asset_type;
-                  const wizardMapping = assetTypeWizardMapping || {};
-                  
-                  // Try exact match first
-                  let mappedWorkspace = wizardMapping[assetType];
-                  
-                  // If no exact match, try case-insensitive match
-                  if (!mappedWorkspace) {
-                    const lowerAssetType = assetType?.toLowerCase();
-                    for (const [key, value] of Object.entries(wizardMapping)) {
-                      if (key.toLowerCase() === lowerAssetType) {
-                        mappedWorkspace = value;
-                        break;
+                const runAction = () => {
+                  if (action.onClick?.type === 'workspace') {
+                    let workspaceTarget = action.onClick.workspace;
+                    if (workspaceTarget === '{wizard_mapping}') {
+                      workspaceTarget = resolveWizardWorkspace(record);
+                      if (!workspaceTarget) {
+                        const descriptor =
+                          getNestedValue(record, recordWorkspaceRouting?.sourceField || '') ||
+                          record?.name ||
+                          'unknown record';
+                        message.warning(`No wizard workspace configured for "${descriptor}".`);
+                        return;
                       }
                     }
-                  }
-                  
-                  // If still no match, try partial matching for common patterns
-                  if (!mappedWorkspace && assetType) {
-                    const lowerAssetType = assetType.toLowerCase();
-                    
-                    // Heat exchanger patterns
-                    if (lowerAssetType.includes('exchanger') || lowerAssetType.includes('boiler') || 
-                        lowerAssetType.includes('heater') || lowerAssetType.includes('condenser') ||
-                        lowerAssetType.includes('evaporator') || lowerAssetType.includes('cooler')) {
-                      mappedWorkspace = 'intelliINSPECT/heat-exchanger-boiler-wizard';
-                    }
-                    // Pressure vessel patterns
-                    else if (lowerAssetType.includes('vessel') || lowerAssetType.includes('tank') || 
-                             lowerAssetType.includes('separator') || lowerAssetType.includes('drum') ||
-                             lowerAssetType.includes('reactor') || lowerAssetType.includes('column') ||
-                             lowerAssetType.includes('tower') || lowerAssetType.includes('scrubber') ||
-                             lowerAssetType.includes('absorber')) {
-                      mappedWorkspace = 'intelliINSPECT/pressure-vessel-tank-wizard';
-                    }
-                    // Piping patterns
-                    else if (lowerAssetType.includes('pipe') || lowerAssetType.includes('pipeline') ||
-                             lowerAssetType.includes('ducting')) {
-                      mappedWorkspace = 'intelliINSPECT/pipework-inspection-wizard';
-                    }
-                    // Rotating equipment patterns
-                    else if (lowerAssetType.includes('pump') || lowerAssetType.includes('compressor') ||
-                             lowerAssetType.includes('turbine') || lowerAssetType.includes('motor') ||
-                             lowerAssetType.includes('fan') || lowerAssetType.includes('blower')) {
-                      mappedWorkspace = 'intelliINSPECT/rotating-equipment-wizard';
-                    }
-                  }
-                  
-                  workspace = mappedWorkspace || 'intelliINSPECT/pressure-vessel-tank-wizard'; // default fallback
-                }
 
-                const buttonProps = {
+                    if (!workspaceTarget) {
+                      message.warning('Workspace target is not configured for this action.');
+                      return;
+                    }
+
+                    const params = action.onClick.params || {};
+                    const resolvedParams = Object.entries(params).reduce<Record<string, string>>((acc, [paramKey, paramValue]) => {
+                      if (typeof paramValue === 'string' && paramValue.startsWith('{') && paramValue.endsWith('}')) {
+                        const fieldName = paramValue.slice(1, -1);
+                        const resolvedValue = getNestedValue(record, fieldName);
+                        if (resolvedValue !== undefined && resolvedValue !== null && resolvedValue !== '') {
+                          acc[paramKey] = String(resolvedValue);
+                        }
+                      } else if (paramValue !== undefined && paramValue !== null && paramValue !== '') {
+                        acc[paramKey] = String(paramValue);
+                      }
+                      return acc;
+                    }, {});
+
+                    const searchParams = new URLSearchParams();
+                    searchParams.set('workspace', workspaceTarget);
+                    Object.entries(resolvedParams).forEach(([paramKey, paramValue]) => {
+                      searchParams.append(paramKey, paramValue);
+                    });
+
+                    const queryString = searchParams.toString();
+                    window.location.href = queryString ? `/?${queryString}` : '/';
+                  } else {
+                    handleRowAction(action.key, record);
+                  }
+                };
+
+                const buttonProps: any = {
                   key: action.key,
                   size: 'small' as const,
                   type: action.type === 'danger' ? 'default' as const : (action.type as any),
                   danger: action.type === 'danger',
                   icon: action.icon ? React.createElement(require('@ant-design/icons')[action.icon]) : undefined,
-                  onClick: () => {
-                    if (action.onClick?.type === 'workspace') {
-                      // Handle workspace navigation with parameters
-                      const params = action.onClick.params || {};
-                      const resolvedParams = Object.keys(params).reduce((acc, key) => {
-                        const paramValue = params[key];
-                        if (typeof paramValue === 'string' && paramValue.startsWith('{') && paramValue.endsWith('}')) {
-                          const fieldName = paramValue.slice(1, -1);
-                          acc[key] = getNestedValue(record, fieldName);
-                        } else {
-                          acc[key] = paramValue;
-                        }
-                        return acc;
-                      }, {} as any);
-
-                      // Navigate to workspace with parameters
-                      window.location.href = `/?workspace=${workspace}&${new URLSearchParams(resolvedParams).toString()}`;
-                    } else {
-                      handleRowAction(action.key, record);
-                    }
-                  }
                 };
+
+                if (!action.confirmText) {
+                  buttonProps.onClick = runAction;
+                }
 
                 if (action.confirmText) {
                   return (
                     <Popconfirm
                       key={action.key}
                       title={action.confirmText}
-                      onConfirm={() => {
-                        if (action.onClick?.type === 'workspace') {
-                          const params = action.onClick.params || {};
-                          const resolvedParams = Object.keys(params).reduce((acc, key) => {
-                            const paramValue = params[key];
-                            if (typeof paramValue === 'string' && paramValue.startsWith('{') && paramValue.endsWith('}')) {
-                              const fieldName = paramValue.slice(1, -1);
-                              acc[key] = getNestedValue(record, fieldName);
-                            } else {
-                              acc[key] = paramValue;
-                            }
-                            return acc;
-                          }, {} as any);
-                          window.location.href = `/?workspace=${workspace}&${new URLSearchParams(resolvedParams).toString()}`;
-                        } else {
-                          handleRowAction(action.key, record);
-                        }
-                      }}
+                      onConfirm={runAction}
                     >
                       <Button {...buttonProps}>
                         {action.label || action.key}
@@ -737,7 +990,17 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
       });
     }
     return defs;
-  }, [columns, rowActions, toolbar?.enableBulkDelete, search?.enableColumnFilters, selectedRows, columnFilters, StableColumnFilter, columnFilterRefs, focusedColumn, setFocusedColumn]);
+  }, [
+    columns,
+    rowActions,
+    search,
+    toolbar?.enableBulkDelete,
+    selectedRows,
+    focusedColumn,
+    resolveWizardWorkspace,
+    recordWorkspaceRouting,
+    handleRowAction
+  ]);
 
   const table = useReactTable({
     data: data,
@@ -761,61 +1024,6 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
     manualPagination: true,
     pageCount: serverPagination.pages
   });
-
-  // Load dynamic options for select fields
-  const loadDynamicOptions = async (col: ColumnMeta) => {
-    if (col.field?.optionsUrl && !dynamicOptions[col.key]) {
-      try {
-        
-        const response = await BaseGadget.makeAuthenticatedFetch(col.field.optionsUrl);
-        if (response.ok) {
-          const options = await response.json();
-          
-          setDynamicOptions(prev => ({
-            ...prev,
-            [col.key]: Array.isArray(options) ? options : options.data || []
-          }));
-        } else {
-          console.error(`Failed to load options for ${col.key}: ${response.status} ${response.statusText}`);
-        }
-      } catch (error) {
-        console.error(`Failed to load options for ${col.key}:`, error);
-      }
-    }
-  };
-
-  // Load all dynamic options when modal opens
-  const loadAllDynamicOptions = async () => {
-    const selectColumns = columns.filter(col => 
-      col.field?.type === 'select' && col.field?.optionsUrl
-    );
-    
-    await Promise.all(selectColumns.map(col => loadDynamicOptions(col)));
-  };
-
-  // Resolve display values for form fields (convert IDs to display names)
-  const resolveDisplayValues = (record: any) => {
-    const resolvedRecord = { ...record };
-    
-    columns.forEach(col => {
-      if (col.field?.type === 'select' && col.field?.optionsUrl && dynamicOptions[col.key]) {
-        const options = dynamicOptions[col.key];
-        const currentValue = record[col.key];
-        
-        // Find the option that matches the current value
-        const matchingOption = options.find((opt: any) => 
-          (typeof opt === 'string' ? opt : opt.value) === currentValue
-        );
-        
-        if (matchingOption) {
-          // Keep the original value for form submission
-          resolvedRecord[col.key] = currentValue;
-        }
-      }
-    });
-    
-    return resolvedRecord;
-  };
 
   // Generate form fields based on column metadata
   const generateFormFields = () => {
@@ -1291,131 +1499,6 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
     }
   };
 
-  // Handle row actions
-  const handleRowAction = async (action: string, record: any) => {
-    const baseUrl = dataUrl?.split('/').slice(0, -1).join('/') || '';
-    
-    // Find the action configuration
-    const actionConfig = rowActions.find(a => a.key === action);
-
-    if (actionConfig?.workspace && onNavigate) {
-      // Navigate to workspace with parameters
-      const params = { ...actionConfig.params };
-
-      // Substitute parameter placeholders
-      Object.keys(params).forEach(key => {
-        if (typeof params[key] === 'string') {
-          params[key] = params[key].replace(/{(\w+)}/g, (match: string, field: string) => {
-            return record[field] || match;
-          });
-        }
-      });
-
-      onNavigate('navigate', {
-        workspace: actionConfig.workspace,
-        params
-      });
-      return;
-    }
-
-    // Handle conditional workspace mapping based on workspaceId
-    if (actionConfig?.conditional && onNavigate) {
-      const { conditional } = actionConfig;
-      let targetWorkspace = null;
-
-      if (conditional.workspaceMapping) {
-        // Check if we have a workspaceId field that directly matches
-        if (record.workspaceId && conditional.workspaceMapping[record.workspaceId]) {
-          targetWorkspace = conditional.workspaceMapping[record.workspaceId];
-        }
-        // Fallback to field-based mapping if workspaceId doesn't match
-        else if (conditional.field && record[conditional.field] && conditional.workspaceMapping[record[conditional.field]]) {
-          targetWorkspace = conditional.workspaceMapping[record[conditional.field]];
-        }
-        // Fallback to formData field-based mapping
-        else if (conditional.field && record.formData && record.formData[conditional.field] && conditional.workspaceMapping[record.formData[conditional.field]]) {
-          targetWorkspace = conditional.workspaceMapping[record.formData[conditional.field]];
-        }
-      }
-
-      if (targetWorkspace) {
-        // Add inspection ID as parameter for opening existing document
-        const params = { ...actionConfig.params };
-        
-        // Substitute parameter placeholders (same as regular workspace routing)
-        Object.keys(params).forEach(key => {
-          if (typeof params[key] === 'string') {
-            params[key] = params[key].replace(/{(\w+)}/g, (match: string, field: string) => {
-              return record[field] || match;
-            });
-          }
-        });
-
-        onNavigate('navigate', {
-          workspace: targetWorkspace,
-          params
-        });
-        return;
-      }
-    }
-    
-    switch (action) {
-      case 'edit':
-        setModalMode('edit');
-        setCurrentRecord(record);
-        setIsModalVisible(true);
-        // Load dynamic options first, then set form values
-        loadAllDynamicOptions().then(() => {
-          const resolvedValues = resolveDisplayValues(record);
-          form.setFieldsValue(resolvedValues);
-        });
-        break;
-      case 'delete':
-        try {
-          const deleteUrl = `${baseUrl}/${record._id}`;
-          
-          
-          // Optimistically remove from UI first for instant feedback
-          setData(prev => prev.filter((item: any) => item._id !== record._id));
-          
-          const response = await BaseGadget.makeAuthenticatedFetch(deleteUrl, {
-            method: 'DELETE'
-          });
-          
-          
-          
-          if (response.ok) {
-            message.success('Deleted successfully');
-          } else {
-            // If API call failed, restore the record to the grid
-            setData(prev => [...prev, record]);
-            const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-            console.error('Delete error response:', errorData);
-            message.error(`Delete failed: ${errorData.error || 'Unknown error'}`);
-          }
-        } catch (error) {
-          // If API call failed, restore the record to the grid
-          setData(prev => [...prev, record]);
-          console.error('Delete error:', error);
-          message.error(`Failed to delete: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        }
-        break;
-      case 'view':
-        // Open in modal for viewing
-        setModalMode('view');
-        setCurrentRecord(record);
-        setIsModalVisible(true);
-        // Load dynamic options first, then set form values
-        loadAllDynamicOptions().then(() => {
-          const resolvedValues = resolveDisplayValues(record);
-          form.setFieldsValue(resolvedValues);
-        });
-        break;
-      default:
-        
-    }
-  };
-
   return (
     <BaseGadgetContainer title={title} subtitle={description} loading={loading} noPadding>
       <div style={{ padding: '12px' }}>
@@ -1611,6 +1694,33 @@ export default class SGridSearchGadget extends BaseGadget {
           order: { type: 'string', enum: ['asc', 'desc'] }
         },
         description: 'Default sorting configuration for the grid'
+      },
+      recordWorkspaceRouting: {
+        type: 'object',
+        properties: {
+          sourceField: { type: 'string' },
+          defaultWorkspace: { type: 'string' },
+          caseInsensitive: { type: 'boolean' },
+          trimWhitespace: { type: 'boolean' },
+          mappings: { type: 'object' },
+          patternMappings: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                matchType: { type: 'string', enum: ['includes', 'regex'] },
+                value: { type: 'array', items: { type: 'string' } },
+                workspace: { type: 'string' }
+              },
+              required: ['workspace']
+            }
+          }
+        },
+        description: 'Metadata-driven configuration for resolving wizard workspaces per record'
+      },
+      legacyWorkspaceMapping: {
+        type: 'object',
+        description: 'Legacy record type to workspace mapping (deprecated in favor of recordWorkspaceRouting)'
       }
     },
     required: [],
@@ -1627,13 +1737,14 @@ export default class SGridSearchGadget extends BaseGadget {
     const { config, context, ...otherProps } = props;
     
     // SGridSearchView expects props directly, so spread config properties
-    return <SGridSearchView 
-      {...(config || props)} 
-      context={context} 
-      assetTypeWizardMapping={config?.assetTypeWizardMapping || {}}
-      {...otherProps} 
-    />;
+    return (
+      <SGridSearchView
+        {...(config || props)}
+        context={context}
+        recordWorkspaceRouting={(config || props)?.recordWorkspaceRouting}
+        legacyWorkspaceMapping={(config || props)?.legacyWorkspaceMapping}
+        {...otherProps}
+      />
+    );
   }
 }
-
-

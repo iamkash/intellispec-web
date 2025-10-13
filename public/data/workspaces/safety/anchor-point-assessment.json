@@ -10,8 +10,25 @@
       "description": "Image analysis to identify anchors, form to capture ratings, and PDF.",
       "config": {
         "sections": [
-          { "id": "image_capture", "title": "Image Capture", "sectionType": "image", "includeInPdf": false },
-          { "id": "image_analysis", "title": "Anchor Analysis", "imageAnalysisPromptRef": "deepImageAnalysis", "promptSourceIds": ["image_capture"], "includeInPdf": true, "pdf": { "includeOverview": true, "includeImages": true } },
+          {
+            "id": "image_capture",
+            "title": "Image Capture",
+            "sectionType": "image",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_analysis",
+            "title": "Anchor Analysis",
+            "imageAnalysisPromptRef": "deepImageAnalysis",
+            "promptSourceIds": [
+              "image_capture"
+            ],
+            "includeInPdf": true,
+            "pdf": {
+              "includeOverview": true,
+              "includeImages": true
+            }
+          },
           {
             "id": "anchor_list",
             "title": "Anchor List",
@@ -20,12 +37,36 @@
               "title": "Anchors",
               "dataKey": "anchors",
               "columns": [
-                { "key": "id", "title": "ID", "editable": true },
-                { "key": "location", "title": "Location", "editable": true },
-                { "key": "type", "title": "Type", "editable": true },
-                { "key": "rating", "title": "Rated (kN)", "editable": true },
-                { "key": "status", "title": "Status", "editable": true },
-                { "key": "notes", "title": "Notes", "editable": true }
+                {
+                  "key": "id",
+                  "title": "ID",
+                  "editable": true
+                },
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true
+                },
+                {
+                  "key": "type",
+                  "title": "Type",
+                  "editable": true
+                },
+                {
+                  "key": "rating",
+                  "title": "Rated (kN)",
+                  "editable": true
+                },
+                {
+                  "key": "status",
+                  "title": "Status",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true
+                }
               ],
               "promptRef": "anchorsPopulate",
               "btnLabel": "Populate from AI"
@@ -34,15 +75,127 @@
         ],
         "groups": [],
         "fields": [],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "Anchor Assessment", "centerText": "Confidential", "rightText": "Page {page} of {pages}" }, "sections": { "headerFontSize": 10, "contentFontSize": 8, "lineSpacing": 3.5, "margins": { "left": 15, "right": 195 } }, "tables": { "headerBackground": [2,6,23], "headerTextColor": [255,255,255], "headerFontSize": 8, "contentFontSize": 7, "cellPadding": 3 } },
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety"
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Anchor Assessment",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
+          },
+          "tables": {
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
+            "headerFontSize": 8,
+            "contentFontSize": 7,
+            "cellPadding": 3
+          }
+        },
         "prompts": {
-          "deepImageAnalysis": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 1000 }, "promptConfig": { "systemPrompt": "Identify potential anchor points with rationale. Output JSON only.", "userPrompt": "JSON only" } },
-          "anchorsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800 }, "promptConfig": { "systemPrompt": "List anchors with location, type, approximate rating, and status.", "userPrompt": "Image Overview:\n{{image_overview}}\n\nReturn array: [ { \"id\": \"string\", \"location\": \"string\", \"type\": \"string\", \"rating\": \"string|number\", \"status\": \"OK|Evaluate|N/A\", \"notes\": \"string\" } ]" } }
+          "deepImageAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 1000
+            },
+            "promptConfig": {
+              "systemPrompt": "Identify potential anchor points with rationale. Output JSON only.",
+              "userPrompt": "JSON only"
+            }
+          },
+          "anchorsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800
+            },
+            "promptConfig": {
+              "systemPrompt": "List anchors with location, type, approximate rating, and status.",
+              "userPrompt": "Image Overview:\n{{image_overview}}\n\nReturn array: [ { \"id\": \"string\", \"location\": \"string\", \"type\": \"string\", \"rating\": \"string|number\", \"status\": \"OK|Evaluate|N/A\", \"notes\": \"string\" } ]"
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
         }
       },
       "position": 24
     }
   ]
 }
-
-

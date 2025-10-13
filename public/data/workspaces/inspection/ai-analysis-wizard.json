@@ -18,19 +18,46 @@
         "autoAdvance": true,
         "steps": {
           "input": {
-                      "enabled": true,
-          "title": "Input Data",
-          "description": "",
+            "enabled": true,
+            "title": "Input Data",
+            "description": "",
             "inspectionTypes": [
-              { "label": "API 510 - Pressure Vessel Inspection", "value": "api510" },
-              { "label": "API 570 - Piping Inspection", "value": "api570" },
-              { "label": "API 653 - Aboveground Storage Tank Inspection", "value": "api653" },
-              { "label": "API 580 - Risk-Based Inspection", "value": "api580" },
-              { "label": "API 581 - Risk-Based Inspection Methodology", "value": "api581" },
-              { "label": "General Equipment Inspection", "value": "general" },
-              { "label": "Safety Inspection", "value": "safety" },
-              { "label": "Quality Control Inspection", "value": "quality" },
-              { "label": "Compliance Audit", "value": "compliance" }
+              {
+                "label": "API 510 - Pressure Vessel Inspection",
+                "value": "api510"
+              },
+              {
+                "label": "API 570 - Piping Inspection",
+                "value": "api570"
+              },
+              {
+                "label": "API 653 - Aboveground Storage Tank Inspection",
+                "value": "api653"
+              },
+              {
+                "label": "API 580 - Risk-Based Inspection",
+                "value": "api580"
+              },
+              {
+                "label": "API 581 - Risk-Based Inspection Methodology",
+                "value": "api581"
+              },
+              {
+                "label": "General Equipment Inspection",
+                "value": "general"
+              },
+              {
+                "label": "Safety Inspection",
+                "value": "safety"
+              },
+              {
+                "label": "Quality Control Inspection",
+                "value": "quality"
+              },
+              {
+                "label": "Compliance Audit",
+                "value": "compliance"
+              }
             ],
             "voice": {
               "enabled": true,
@@ -43,7 +70,14 @@
               "maxCount": 10,
               "maxSize": 10485760,
               "drawingEnabled": true,
-              "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow"]
+              "drawingTools": [
+                "pen",
+                "line",
+                "circle",
+                "rectangle",
+                "text",
+                "arrow"
+              ]
             },
             "text": {
               "enabled": true,
@@ -141,9 +175,55 @@
               }
             }
           }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
         }
       },
       "position": 24
     }
   ]
-} 
+}

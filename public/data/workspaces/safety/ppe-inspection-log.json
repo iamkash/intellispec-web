@@ -9,18 +9,157 @@
       "title": "PPE Inspection Log",
       "config": {
         "sections": [
-          { "id": "inspection_items", "title": "PPE Items", "includeInPdf": true, "grid": { "title": "Items", "dataKey": "items", "columns": [ { "key": "category", "title": "Category", "editable": true }, { "key": "item", "title": "Item", "editable": true }, { "key": "status", "title": "Status", "editable": true }, { "key": "notes", "title": "Notes", "editable": true } ], "promptRef": "itemsPopulate", "btnLabel": "Populate from AI" } },
-          { "id": "attachments_signoff", "title": "Sign-Off", "includeInPdf": true }
+          {
+            "id": "inspection_items",
+            "title": "PPE Items",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Items",
+              "dataKey": "items",
+              "columns": [
+                {
+                  "key": "category",
+                  "title": "Category",
+                  "editable": true
+                },
+                {
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true
+                },
+                {
+                  "key": "status",
+                  "title": "Status",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true
+                }
+              ],
+              "promptRef": "itemsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "attachments_signoff",
+            "title": "Sign-Off",
+            "includeInPdf": true
+          }
         ],
-        "groups": [ { "id": "signoff_group", "title": "Signoff", "sectionId": "attachments_signoff", "lgSpan": 24 } ],
-        "fields": [ { "id": "inspector", "label": "Inspector", "type": "text", "groupId": "signoff_group", "lgSpan": 12 }, { "id": "inspection_date", "label": "Date", "type": "date", "groupId": "signoff_group", "lgSpan": 12 } ],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "PK Safety" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "PPE Log", "centerText": "Confidential", "rightText": "Page {page} of {pages}" } },
-        "prompts": { "itemsPopulate": { "modelConfig": { "model": "gpt-5-nano", "max_completion_tokens": 800, "temperature": 0.3 }, "promptConfig": { "systemPrompt": "Propose PPE inspection items with statuses. JSON array only.", "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"category\": \"string\", \"item\": \"string\", \"status\": \"OK|Replace|Clean|N/A\", \"notes\": \"string\" } ]" } } }
+        "groups": [
+          {
+            "id": "signoff_group",
+            "title": "Signoff",
+            "sectionId": "attachments_signoff",
+            "lgSpan": 24
+          }
+        ],
+        "fields": [
+          {
+            "id": "inspector",
+            "label": "Inspector",
+            "type": "text",
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "inspection_date",
+            "label": "Date",
+            "type": "date",
+            "groupId": "signoff_group",
+            "lgSpan": 12
+          }
+        ],
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety"
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "PPE Log",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          }
+        },
+        "prompts": {
+          "itemsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800,
+              "temperature": 0.3
+            },
+            "promptConfig": {
+              "systemPrompt": "Propose PPE inspection items with statuses. JSON array only.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"category\": \"string\", \"item\": \"string\", \"status\": \"OK|Replace|Clean|N/A\", \"notes\": \"string\" } ]"
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
+        }
       },
       "position": 24
     }
   ]
 }
-
-
-

@@ -7,8 +7,14 @@ export interface AIAnalysisWizardData {
   currentStep: number;
   completedSteps: number[];
   inspectionType?: string;
+  inspectionTypeLabel?: string;
+  detectedEquipmentType?: string;
   globalFormData?: Record<string, any>;
   disabledFields?: string[];
+  recordContext?: Record<string, any>;
+  recordParams?: Record<string, any>;
+  documentSummary?: Record<string, any>;
+  grids?: Record<string, any>;
   sections?: Array<{
     id: string;
     title: string;
@@ -64,7 +70,7 @@ export interface AIAnalysisWizardConfig {
       title: string;
       description?: string;
       nextLabel?: string;
-      form?: { groups?: Array<{ name?: string; title?: string; id?: string; lgSpan?: number; fields: Array<{ id: string; label: string; type: 'text' | 'number' | 'date' | 'dropdown' | 'radio' | 'checkbox_group' | 'multi-select' | 'textarea' | 'file' | 'static_checklist' | 'signature' | 'select'; options?: Array<string | {label: string, value: any}>; required?: boolean; showWhen?: string | string[]; watchField?: string; showOnMatch?: boolean; lgSpan?: number; props?: Record<string, any>; optionsUrl?: string; dependsOn?: string; labelField?: string; valueField?: string; placeholder?: string; description?: string; defaultValue?: any; disabled?: boolean; readOnly?: boolean; calculated?: boolean; formula?: string }>; }>; };
+      form?: { groups?: Array<{ name?: string; title?: string; id?: string; lgSpan?: number; fields: Array<{ id: string; label: string; type: 'text' | 'number' | 'date' | 'dropdown' | 'radio' | 'checkbox_group' | 'multi-select' | 'textarea' | 'file' | 'static_checklist' | 'signature' | 'select'; options?: Array<string | {label: string, value: any}>; required?: boolean; showWhen?: string | string[]; watchField?: string; showOnMatch?: boolean; lgSpan?: number; props?: Record<string, any>; optionsUrl?: string; dependsOn?: string; labelField?: string; valueField?: string; placeholder?: string; description?: string; defaultValue?: any; disabled?: boolean; readOnly?: boolean; calculated?: boolean; formula?: string; populateFromAsset?: string }>; }>; };
       voiceExtractionPrompt?: { modelConfig?: { model: string; temperature?: number; maxTokens?: number }; promptConfig?: { systemPrompt?: string; userPrompt?: string } };
       recommendationMappings?: Array<{ match: string; set: Array<{ fieldId: string; value: any }> }>;
       voice?: { enabled: boolean; maxDuration?: number; showVisualization?: boolean; transcriptionModel?: string };
@@ -90,13 +96,58 @@ export interface AIAnalysisWizardConfig {
   editModalTitle?: string;
   minimumRequirements?: { onsiteOnly?: string[]; prepopulation?: string[] };
   validation?: { required?: string[] };
-  assetDataPopulation?: {
+  recordDataPopulation?: {
     enabled: boolean;
-    apiEndpoint: string;
-    assetIdParam: string;
-    populateOnLoad: boolean;
-    disablePopulatedFields: boolean;
+    populateOnLoad?: boolean;
+    disablePopulatedFields?: boolean;
+    urlParams?: Array<{
+      name: string;
+      queryParam?: string;
+      required?: boolean;
+      allowMultiple?: boolean;
+      defaultValue?: string | number | boolean | Array<string | number | boolean>;
+    }>;
+    /**
+     * @deprecated Use request.url instead.
+     */
+    apiEndpoint?: string;
+    request?: {
+      url: string;
+      method?: 'GET' | 'POST' | 'PUT' | 'PATCH';
+      query?: Record<string, any>;
+      headers?: Record<string, string>;
+      body?: Record<string, any> | string;
+    };
+    responseSelector?: string;
+    cache?: boolean;
+  };
+  domainConfig?: {
+    payloadType?: string;
+    defaultType?: string;
+    typeMap?: Record<string, string>;
+    fields?: {
+      type?: string;
+      detectedType?: string;
+      id?: string;
+      name?: string;
+      owner?: string;
+      date?: string;
+    };
+    outputKeys?: {
+      type?: string;
+      id?: string;
+      owner?: string;
+      date?: string;
+    };
+    payloadKeys?: {
+      type?: string;
+      id?: string;
+      owner?: string;
+      date?: string;
+    };
+    navigation?: {
+      listingSuffix?: string;
+      homeSuffix?: string;
+    };
   };
 }
-
-

@@ -5,6 +5,8 @@ import type { AIAnalysisWizardData } from '../AIAnalysisWizardGadget.types';
 const VisionAnalysisWidget = React.lazy(() => import('../../../../widgets/input').then(m => ({ default: m.VisionAnalysisWidget })));
 const SimpleAnalysisWidget = React.lazy(() => import('../../../../widgets/input').then(m => ({ default: m.SimpleAnalysisWidget })));
 
+const EMPTY_IMAGE_LIST: any[] = [];
+
 interface SectionImageAnalysisProps {
   sectionIndex: number;
   sections: any[];
@@ -23,10 +25,10 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
   triggerRerender
 }) => {
   const section = sections[sectionIndex];
-  const data = (wizardData.sections || [])[sectionIndex] || {};
-  
+  const sectionData = React.useMemo(() => (wizardData.sections || [])[sectionIndex] || {}, [wizardData.sections, sectionIndex]);
+
   // CRITICAL FIX: Check both section-specific and global AI analysis data
-  let analysisData = (data as any)?.imageAnalysis;
+  let analysisData = (sectionData as any)?.imageAnalysis;
   
   // If no section-specific analysis, check multiple global sources
   if (!analysisData) {
@@ -94,8 +96,8 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
   console.log(`[SectionImageAnalysis] Rendering AI analysis for ${section?.id}:`, {
     sectionId: section?.id,
     sectionIndex,
-    hasData: !!data,
-    hasSectionImageAnalysis: !!(data as any)?.imageAnalysis,
+    hasData: !!sectionData,
+    hasSectionImageAnalysis: !!(sectionData as any)?.imageAnalysis,
     hasGlobalAnalysisData: !!wizardData.analysisData,
     finalAnalysisData: !!analysisData,
     hasOverview: !!(analysisData?.overview),
@@ -104,46 +106,48 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
     suggestionsCount: (analysisData?.suggestions)?.length || 0
   });
   
-  let sourceImages = ((data as any).images || []) as any[];
+  const sourceImages = React.useMemo(() => {
+    const currentSectionData = sectionData || {};
+    let resolved = ((currentSectionData as any).images || []) as any[];
 
-  // Allow analysis section to reference images strictly from configured sources
-  try {
-    const promptSourceIds = Array.isArray((section as any)?.promptSourceIds) ? (section as any)?.promptSourceIds as string[] : [];
-    let srcIdx = -1;
-    // Prefer promptSourceIds if provided
-    if ((sourceImages == null || sourceImages.length === 0) && promptSourceIds.length > 0) {
-      for (const sid of promptSourceIds) {
-        const idx = (sections || []).findIndex((s) => (s as any)?.id === sid);
-        if (idx >= 0) {
-          const srcData = (wizardData.sections || [])[idx] || {};
-          const imgs = ((srcData as any).images || []) as any[];
-          if (imgs && imgs.length > 0) { srcIdx = idx; break; }
+    try {
+      const promptSourceIds = Array.isArray((section as any)?.promptSourceIds)
+        ? ((section as any).promptSourceIds as string[])
+        : [];
+
+      if ((resolved == null || resolved.length === 0) && promptSourceIds.length > 0) {
+        for (const sid of promptSourceIds) {
+          const idx = (sections || []).findIndex((s) => (s as any)?.id === sid);
+          if (idx >= 0) {
+            const srcData = (wizardData.sections || [])[idx] || {};
+            const imgs = ((srcData as any).images || []) as any[];
+            if (imgs && imgs.length > 0) {
+              resolved = imgs;
+              break;
+            }
+          }
         }
       }
-    }
-    // legacy imageSourceSectionId mapping removed
-    if (srcIdx >= 0) {
-      const srcData = (wizardData.sections || [])[srcIdx] || {};
-      sourceImages = ((srcData as any).images || []) as any[];
-    }
-  } catch {}
+    } catch {}
 
-  // Fallback: If no images found in sections, use the main imageData from the widget
-  if ((!sourceImages || sourceImages.length === 0) && wizardData.imageData && wizardData.imageData.length > 0) {
-    sourceImages = wizardData.imageData;
-    console.log(`[SectionImageAnalysis] Using global imageData:`, {
-      globalImageCount: wizardData.imageData.length,
-      sampleImage: wizardData.imageData[0] ? {
-        name: wizardData.imageData[0].name,
-        url: wizardData.imageData[0].url,
-        uid: wizardData.imageData[0].uid
-      } : null
-    });
-  }
+    if ((!resolved || resolved.length === 0) && wizardData.imageData && wizardData.imageData.length > 0) {
+      console.log(`[SectionImageAnalysis] Using global imageData:`, {
+        globalImageCount: wizardData.imageData.length,
+        sampleImage: wizardData.imageData[0] ? {
+          name: wizardData.imageData[0].name,
+          url: wizardData.imageData[0].url,
+          uid: wizardData.imageData[0].uid
+        } : null
+      });
+      resolved = wizardData.imageData;
+    }
+
+    return resolved && resolved.length > 0 ? resolved : EMPTY_IMAGE_LIST;
+  }, [section, sectionData, sections, wizardData.sections, wizardData.imageData]);
   
   // ADDITIONAL DEBUG: Check what imageData is available
   console.log(`[SectionImageAnalysis] Image sources check:`, {
-    sectionImages: ((data as any).images || []).length,
+    sectionImages: ((sectionData as any).images || []).length,
     globalImageData: (wizardData.imageData || []).length,
     hasGlobalImageData: !!(wizardData.imageData && wizardData.imageData.length > 0),
     wizardDataKeys: Object.keys(wizardData),
@@ -156,14 +160,21 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
   const [imagesConverting, setImagesConverting] = React.useState(false);
 
   React.useEffect(() => {
+    let isCancelled = false;
+
     const convertImagesToBase64 = async () => {
       if (!sourceImages || sourceImages.length === 0) {
-        setConvertedImages([]);
+        setImagesConverting(prev => (prev ? false : prev));
+        setConvertedImages(prev => (prev.length === 0 ? prev : []));
         return;
       }
 
-      setImagesConverting(true);
-      const converted = [];
+      setImagesConverting(prev => (prev ? prev : true));
+      const converted: any[] = [];
+
+      const authToken = (typeof window !== 'undefined')
+        ? (localStorage.getItem('authToken') || localStorage.getItem('token'))
+        : null;
 
       for (const img of sourceImages) {
         try {
@@ -178,7 +189,11 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
             console.log(`[SectionImageAnalysis] Converting GridFS image to base64: ${img.name}`);
             
             try {
-              const response = await fetch(img.url);
+              const response = await fetch(img.url, authToken ? {
+                headers: {
+                  'Authorization': `Bearer ${authToken}`
+                }
+              } : undefined);
               if (response.ok) {
                 const arrayBuffer = await response.arrayBuffer();
                 
@@ -215,18 +230,28 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
             }
           }
 
-          converted.push({
-            url: imageUrl,
-            name: img.name,
-            drawingData: img.drawingData
-          });
+          if (!isCancelled) {
+            converted.push({
+              url: imageUrl,
+              name: img.name,
+              drawingData: img.drawingData
+            });
+          }
         } catch (error) {
           console.error(`[SectionImageAnalysis] Error processing image ${img.name}:`, error);
         }
       }
 
-      setConvertedImages(converted);
-      setImagesConverting(false);
+      if (isCancelled) {
+        return;
+      }
+
+      setConvertedImages(prev => {
+        const sameLength = prev.length === converted.length;
+        const sameUrls = sameLength && prev.every((item, idx) => item.url === converted[idx]?.url);
+        return sameLength && sameUrls ? prev : converted;
+      });
+      setImagesConverting(prev => (prev ? false : prev));
       
       console.log(`[SectionImageAnalysis] Image conversion complete:`, {
         originalCount: sourceImages.length,
@@ -240,6 +265,10 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
     };
 
     convertImagesToBase64();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [sourceImages]);
 
   const images = convertedImages;
@@ -273,14 +302,119 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
   } catch {}
 
   // Build a combined transcript/text context from voice + notes across the wizard
+  const recordDetailsText = (() => {
+    try {
+      const details = (wizardData as any)?.globalFormData || {};
+      if (!details || Object.keys(details).length === 0) return '';
+      return `Record Data (from metadata and prefill):\n${JSON.stringify(details, null, 2)}`;
+    } catch {
+      return '';
+    }
+  })();
+
+  const recordContextSummary = React.useMemo(() => {
+    const context = (wizardData as any)?.recordContext;
+    if (!context || typeof context !== 'object') {
+      return '';
+    }
+
+    const rows: Array<{ path: string; value: string }> = [];
+
+    const formatValue = (value: any): string => {
+      if (value === null || value === undefined) return '';
+      if (typeof value === 'string') return value;
+      if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+      if (value instanceof Date) return value.toISOString();
+      return JSON.stringify(value);
+    };
+
+    const walk = (value: any, path: string[]) => {
+      if (value === null || value === undefined) {
+        return;
+      }
+
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          walk(item, [...path, `${path.length === 0 ? '' : ''}[${index}]`]);
+        });
+        return;
+      }
+
+      if (typeof value === 'object') {
+        Object.entries(value).forEach(([key, child]) => {
+          walk(child, [...path, key]);
+        });
+        return;
+      }
+
+      const keyPath = path
+        .filter(Boolean)
+        .map(segment => segment.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase()))
+        .join(' > ');
+
+      const formattedValue = formatValue(value);
+      if (!keyPath || !formattedValue) {
+        return;
+      }
+
+      rows.push({
+        path: keyPath,
+        value: formattedValue
+      });
+    };
+
+    walk(context, []);
+
+    if (rows.length === 0) {
+      return '';
+    }
+
+    const uniqueRows = rows.reduce<Array<{ path: string; value: string }>>((acc, row) => {
+      if (!acc.some(existing => existing.path === row.path && existing.value === row.value)) {
+        acc.push(row);
+      }
+      return acc;
+    }, []);
+
+    const tableRows = uniqueRows
+      .map(row => {
+        const safeValue = row.value.replace(/\s+/g, ' ').trim();
+        return `| ${row.path} | ${safeValue} |`;
+      })
+      .filter(line => line.length > 0);
+
+    if (tableRows.length === 0) {
+      return '';
+    }
+
+    return [
+      '## Asset Record Details',
+      '| Field | Value |',
+      '|-------|-------|',
+      ...tableRows
+    ].join('\n');
+  }, [wizardData]);
+
   const combinedText = (() => {
     try {
-      return [
+      const primaryRecordDetails = recordContextSummary || recordDetailsText;
+
+      const textFragments = [
         (wizardData as any)?.voiceData?.transcription || '',
         (wizardData as any)?.textData || '',
-        ...((wizardData.sections || []).flatMap(s => [((s as any)?.voiceData?.transcription) || '', ((s as any)?.textData) || '']))
-      ].filter(Boolean).join('\n\n');
-    } catch { return (data as any).textData || ''; }
+        ...((wizardData.sections || []).flatMap(s => [
+          ((s as any)?.voiceData?.transcription) || '',
+          ((s as any)?.textData) || ''
+        ])),
+        primaryRecordDetails
+      ].filter(Boolean);
+
+      return textFragments.join('\n\n');
+    } catch {
+      const fallback = (sectionData as any).textData || '';
+      const extras = [recordContextSummary || recordDetailsText].filter(Boolean).join('\n\n');
+      return extras ? [fallback, extras].filter(Boolean).join('\n\n') : fallback;
+    }
   })();
 
   const analysisWidgetType = String((section as any)?.analysisWidget || 'vision');

@@ -47,14 +47,14 @@ export async function tryFetchRecordFromApi(id: string): Promise<any | null> {
   }
 }
 
-/** Convert inspection data to wizard data format */
-export function convertInspectionToWizardData(inspectionData: any): Partial<AIAnalysisWizardData> {
+/** Convert record data to wizard data format */
+export function convertRecordToWizardData(recordData: any): Partial<AIAnalysisWizardData> {
   console.log('[convertInspectionToWizardData] Starting conversion with:', {
-    hasInspectionData: !!inspectionData,
-    inspectionKeys: inspectionData ? Object.keys(inspectionData) : [],
-    hasFormData: !!inspectionData?.formData,
-    hasSections: !!inspectionData?.sections,
-    hasWizardState: !!inspectionData?.wizardState
+    hasInspectionData: !!recordData,
+    inspectionKeys: recordData ? Object.keys(recordData) : [],
+    hasFormData: !!recordData?.formData,
+    hasSections: !!recordData?.sections,
+    hasWizardState: !!recordData?.wizardState
   });
 
   const wizardData: Partial<AIAnalysisWizardData> = {
@@ -63,21 +63,62 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
     sections: [],
     voiceData: {},
     imageData: [],
-    analysisData: {}
+    analysisData: {},
+    grids: {}
   };
 
-  if (!inspectionData) {
+  if (!recordData) {
     console.log('[convertInspectionToWizardData] No inspection data provided');
     return wizardData;
   }
 
+  const restoreGrids = (sourceGrids: Record<string, any> | undefined, sectionId?: string) => {
+    if (!sourceGrids || typeof sourceGrids !== 'object') return;
+    wizardData.grids = wizardData.grids || {};
+    (wizardData as any).globalFormData = (wizardData as any).globalFormData || {};
+
+    Object.entries(sourceGrids).forEach(([key, value]) => {
+      if (!Array.isArray(value)) return;
+
+      wizardData.grids![key] = value;
+      (wizardData as any).globalFormData[key] = value;
+
+      if (Array.isArray(wizardData.sections)) {
+        const targetIndex = sectionId
+          ? wizardData.sections.findIndex((s: any) => s?.id === sectionId)
+          : wizardData.sections.findIndex((s: any) => (s?.formData || {})[key] !== undefined);
+
+        if (targetIndex >= 0 && wizardData.sections[targetIndex]) {
+          const sectionFormData = (wizardData.sections[targetIndex] as any).formData || {};
+          (wizardData.sections as any)[targetIndex] = {
+            ...(wizardData.sections as any)[targetIndex],
+            formData: {
+              ...sectionFormData,
+              [key]: value
+            }
+          };
+        } else {
+          wizardData.sections.push({
+            id: sectionId || key,
+            title: sectionId || key,
+            formData: { [key]: value },
+            textData: '',
+            voiceData: {},
+            images: [],
+            imageAnalysis: undefined
+          });
+        }
+      }
+    });
+  };
+
   // CRITICAL FIX: Handle both section-based data AND top-level formData
   
   // First, try to restore sections from the sections array
-  if (inspectionData.sections && Array.isArray(inspectionData.sections)) {
+  if (recordData.sections && Array.isArray(recordData.sections)) {
     console.log('[convertInspectionToWizardData] Converting sections:', {
-      sectionsCount: inspectionData.sections.length,
-      sectionsData: inspectionData.sections.map((s: any, i: number) => ({ 
+      sectionsCount: recordData.sections.length,
+      sectionsData: recordData.sections.map((s: any, i: number) => ({ 
         index: i, 
         isNull: s === null, 
         id: s?.id, 
@@ -86,7 +127,7 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
       }))
     });
 
-    wizardData.sections = inspectionData.sections
+    wizardData.sections = recordData.sections
       .map((section: any) => {
         if (section === null) {
           // Preserve null sections to maintain indexing
@@ -101,6 +142,14 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
           images: section.images || [],
           imageAnalysis: section.imageAnalysis || undefined
         };
+
+        if (section.grids && typeof section.grids === 'object') {
+          restoredSection.formData = {
+            ...restoredSection.formData,
+            ...section.grids
+          };
+          restoreGrids(section.grids, section.id);
+        }
         
         // Debug image restoration for image sections
         if (section.id === 'image_capture' && section.images?.length > 0) {
@@ -132,7 +181,7 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
       });
     
     console.log('[convertInspectionToWizardData] Converted sections:', {
-      originalCount: inspectionData.sections.length,
+      originalCount: recordData.sections.length,
       restoredCount: wizardData.sections?.length || 0,
       convertedSections: wizardData.sections?.map((s: any, i: number) => ({ 
         index: i,
@@ -145,25 +194,25 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
   }
 
   // CRITICAL FIX: Store top-level formData as globalFormData for field value lookup
-  if (inspectionData.formData && Object.keys(inspectionData.formData).length > 0) {
-    (wizardData as any).globalFormData = inspectionData.formData;
+  if (recordData.formData && Object.keys(recordData.formData).length > 0) {
+    (wizardData as any).globalFormData = recordData.formData;
     
     console.log('[convertInspectionToWizardData] Stored global formData for field lookup:', {
-      formDataKeys: Object.keys(inspectionData.formData),
+      formDataKeys: Object.keys(recordData.formData),
       sampleData: {
-        company_id: inspectionData.formData.company_id,
-        companyName: inspectionData.formData.companyName,
-        detected_equipment_type: inspectionData.formData.detected_equipment_type,
-        inspection_type: inspectionData.formData.inspection_type,
-        equipment_description: inspectionData.formData.equipment_description?.substring(0, 50) + '...'
+        company_id: recordData.formData.company_id,
+        companyName: recordData.formData.companyName,
+        detected_equipment_type: recordData.formData.detected_equipment_type,
+        inspection_type: recordData.formData.inspection_type,
+        equipment_description: recordData.formData.equipment_description?.substring(0, 50) + '...'
       }
     });
   }
 
   // CRITICAL FIX: Handle AI analysis data that might be stored in wizardState.sections
   // Look for AI analysis data in wizardState sections (with both old and new IDs)
-  if (inspectionData.wizardState?.sections && Array.isArray(inspectionData.wizardState.sections)) {
-    const aiAnalysisSection = inspectionData.wizardState.sections.find((s: any) => 
+  if (recordData.wizardState?.sections && Array.isArray(recordData.wizardState.sections)) {
+    const aiAnalysisSection = recordData.wizardState.sections.find((s: any) => 
       s?.id === 'ai_analysis' || s?.id === 'section_2'
     );
     
@@ -202,20 +251,121 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
         (wizardData.sections[aiSectionIndex] as any).imageAnalysis = aiAnalysisSection.imageAnalysis;
         console.log(`[convertInspectionToWizardData] Restored AI analysis data to section index ${aiSectionIndex}`);
       }
+  }
+}
+
+  const documentSummary = recordData.documentSummary || {};
+  const normalizedInspectionType = documentSummary.inspectionType
+    || recordData.inspectionType
+    || recordData.sectionData?.inspectionType
+    || recordData.formData?.inspectionType
+    || recordData.wizardState?.inspectionType;
+
+  if (normalizedInspectionType) {
+    (wizardData as any).inspectionType = normalizedInspectionType;
+  }
+
+  const inspectionTypeLabel = documentSummary.inspectionTypeLabel
+    || recordData.inspectionTypeLabel
+    || recordData.sectionData?.inspectionTypeLabel
+    || recordData.formData?.inspectionTypeLabel
+    || recordData.wizardState?.inspectionTypeLabel;
+
+  if (inspectionTypeLabel) {
+    (wizardData as any).inspectionTypeLabel = inspectionTypeLabel;
+  }
+
+  const detectedEquipmentType = documentSummary.detectedEquipmentType
+    || recordData.detectedEquipmentType
+    || recordData.sectionData?.detectedEquipmentType
+    || recordData.formData?.detectedEquipmentType
+    || recordData.wizardState?.detectedEquipmentType;
+
+  if (detectedEquipmentType) {
+    (wizardData as any).detectedEquipmentType = detectedEquipmentType;
+  }
+
+  (wizardData as any).recordContext = recordData.recordContext || recordData.formData || wizardData.recordContext;
+
+  // Fallback: single section snapshot stored in sectionData
+  if (recordData.sectionData && recordData.sectionData.sectionId) {
+    const sectionId = recordData.sectionData.sectionId;
+    const baseSection = {
+      id: sectionId,
+      title: recordData.sectionData.title || sectionId,
+      formData: recordData.sectionData.formData || {},
+      textData: recordData.sectionData.textData || '',
+      voiceData: recordData.sectionData.voiceData || {},
+      images: recordData.sectionData.images || [],
+      imageAnalysis: recordData.sectionData.imageAnalysis
+    };
+
+    if (!wizardData.sections) {
+      wizardData.sections = [];
+    }
+
+    const existingIndex = wizardData.sections.findIndex((s: any) => s?.id === sectionId);
+    if (existingIndex >= 0 && wizardData.sections[existingIndex]) {
+      wizardData.sections[existingIndex] = {
+        ...wizardData.sections[existingIndex],
+        ...baseSection,
+        formData: {
+          ...(wizardData.sections[existingIndex] as any).formData,
+          ...baseSection.formData
+        }
+      };
+    } else {
+      wizardData.sections.push(baseSection);
+    }
+  }
+
+  wizardData.currentStep = recordData.currentStep
+    || recordData.sectionData?.currentStep
+    || recordData.wizardState?.currentStep
+    || wizardData.currentStep;
+
+  wizardData.completedSteps = recordData.completedSteps
+    || recordData.wizardState?.completedSteps
+    || wizardData.completedSteps;
+
+  restoreGrids(recordData.grids);
+  restoreGrids(recordData.sectionData?.grids, recordData.sectionData?.sectionId);
+  restoreGrids(recordData.wizardState?.grids);
+
+  if (recordData.sectionData?.formData && typeof recordData.sectionData.formData === 'object') {
+    const sectionFormData = recordData.sectionData.formData;
+    (wizardData as any).globalFormData = {
+      ...((wizardData as any).globalFormData || {}),
+      ...sectionFormData
+    };
+
+    const targetIndex = Array.isArray(wizardData.sections)
+      ? wizardData.sections.findIndex((s: any) => s?.id === recordData.sectionData.sectionId)
+      : -1;
+
+    if (targetIndex >= 0 && wizardData.sections) {
+      const existingFormData = (wizardData.sections[targetIndex] as any).formData || {};
+      (wizardData.sections as any)[targetIndex] = {
+        ...(wizardData.sections as any)[targetIndex],
+        formData: {
+          ...existingFormData,
+          ...sectionFormData
+        }
+      };
     }
   }
 
   // Convert voice data
-  if (inspectionData.aiAnalysis && inspectionData.aiAnalysis.voice) {
-    wizardData.voiceData = inspectionData.aiAnalysis.voice;
+  if (recordData.aiAnalysis && recordData.aiAnalysis.voice) {
+    wizardData.voiceData = recordData.aiAnalysis.voice;
   }
 
   // Convert image data from multiple sources
   const allImages: any[] = [];
   
   // Source 1: attachments array
-  if (inspectionData.attachments && Array.isArray(inspectionData.attachments)) {
-    const attachmentImages = inspectionData.attachments
+  if (recordData.attachments && Array.isArray(recordData.attachments)) {
+    const attachmentImages = recordData.attachments
       .filter((att: any) => att.type === 'image')
       .map((att: any) => ({
         url: att.url,
@@ -227,8 +377,8 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
   }
   
   // Source 2: sections[].images arrays  
-  if (inspectionData.sections && Array.isArray(inspectionData.sections)) {
-    inspectionData.sections.forEach((section: any) => {
+  if (recordData.sections && Array.isArray(recordData.sections)) {
+    recordData.sections.forEach((section: any) => {
       if (section?.images && Array.isArray(section.images)) {
         const sectionImages = section.images.map((img: any) => ({
           url: img.url,
@@ -244,8 +394,8 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
   }
   
   // Source 3: wizardState.sections[].images arrays
-  if (inspectionData.wizardState?.sections && Array.isArray(inspectionData.wizardState.sections)) {
-    inspectionData.wizardState.sections.forEach((section: any, index: number) => {
+  if (recordData.wizardState?.sections && Array.isArray(recordData.wizardState.sections)) {
+    recordData.wizardState.sections.forEach((section: any, index: number) => {
       if (section?.images && Array.isArray(section.images)) {
         console.log(`[convertInspectionToWizardData] Found images in wizardState section ${index} (${section.id}):`, {
           imagesCount: section.images.length,
@@ -283,35 +433,41 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
     if (!wizardData.sections) {
       wizardData.sections = [];
     }
-    
-    // Ensure we have an image_capture section at index 1
-    while (wizardData.sections.length <= 1) {
-      wizardData.sections.push({
-        id: wizardData.sections.length === 0 ? 'voice_capture' : 'image_capture',
-        title: wizardData.sections.length === 0 ? 'Voice Capture' : 'Equipment Images',
+
+    let imageSectionIndex = wizardData.sections.findIndex((s: any) => s?.id === 'image_capture');
+
+    if (imageSectionIndex === -1) {
+      imageSectionIndex = 1;
+      if (wizardData.sections.length <= imageSectionIndex) {
+        wizardData.sections.length = imageSectionIndex + 1;
+      }
+      wizardData.sections[imageSectionIndex] = {
+        id: 'image_capture',
+        title: 'Equipment Images',
         formData: {},
         textData: '',
         voiceData: {},
         images: [],
         imageAnalysis: undefined
-      });
+      };
     }
-    
-    // Add images to the image_capture section (index 1)
-    if (wizardData.sections[1]) {
-      (wizardData.sections[1] as any).images = uniqueImages;
-      console.log(`[convertInspectionToWizardData] Restored images to image_capture section:`, {
-        sectionIndex: 1,
-        sectionId: wizardData.sections[1].id,
-        imagesCount: uniqueImages.length
-      });
-    }
+
+    (wizardData.sections as any)[imageSectionIndex] = {
+      ...(wizardData.sections as any)[imageSectionIndex],
+      images: uniqueImages
+    };
+
+    console.log(`[convertInspectionToWizardData] Restored images to image_capture section:`, {
+      sectionIndex: imageSectionIndex,
+      sectionId: (wizardData.sections as any)[imageSectionIndex]?.id,
+      imagesCount: uniqueImages.length
+    });
   }
   
   console.log('[convertInspectionToWizardData] Image restoration:', {
-    attachmentImages: inspectionData.attachments?.filter((att: any) => att.type === 'image')?.length || 0,
-    sectionImages: inspectionData.sections?.reduce((count: number, s: any) => count + (s?.images?.length || 0), 0) || 0,
-    wizardStateImages: inspectionData.wizardState?.sections?.reduce((count: number, s: any) => count + (s?.images?.length || 0), 0) || 0,
+    attachmentImages: recordData.attachments?.filter((att: any) => att.type === 'image')?.length || 0,
+    sectionImages: recordData.sections?.reduce((count: number, s: any) => count + (s?.images?.length || 0), 0) || 0,
+    wizardStateImages: recordData.wizardState?.sections?.reduce((count: number, s: any) => count + (s?.images?.length || 0), 0) || 0,
     totalUniqueImages: uniqueImages.length,
     restoredToSection: uniqueImages.length > 0 ? 'image_capture (index 1)' : 'none',
     sampleImage: uniqueImages[0] ? {
@@ -323,35 +479,35 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
   });
 
   // Convert analysis data
-  if (inspectionData.aiAnalysis) {
+  if (recordData.aiAnalysis) {
     console.log('[convertInspectionToWizardData] Converting aiAnalysis data:', {
-      hasAiAnalysis: !!inspectionData.aiAnalysis,
-      aiAnalysisKeys: Object.keys(inspectionData.aiAnalysis),
-      hasResults: !!inspectionData.aiAnalysis.results,
-      resultsLength: inspectionData.aiAnalysis.results?.length || 0,
-      hasMarkdownReport: !!inspectionData.aiAnalysis.markdownReport,
-      markdownLength: inspectionData.aiAnalysis.markdownReport?.length || 0,
-      hasPreviousResponseId: !!inspectionData.aiAnalysis.previousResponseId
+      hasAiAnalysis: !!recordData.aiAnalysis,
+      aiAnalysisKeys: Object.keys(recordData.aiAnalysis),
+      hasResults: !!recordData.aiAnalysis.results,
+      resultsLength: recordData.aiAnalysis.results?.length || 0,
+      hasMarkdownReport: !!recordData.aiAnalysis.markdownReport,
+      markdownLength: recordData.aiAnalysis.markdownReport?.length || 0,
+      hasPreviousResponseId: !!recordData.aiAnalysis.previousResponseId
     });
     
     wizardData.analysisData = {
-      analysisResults: inspectionData.aiAnalysis.results || [],
-      markdownReport: inspectionData.aiAnalysis.markdownReport || '',
-      previousResponseId: inspectionData.aiAnalysis.previousResponseId
+      analysisResults: recordData.aiAnalysis.results || [],
+      markdownReport: recordData.aiAnalysis.markdownReport || '',
+      previousResponseId: recordData.aiAnalysis.previousResponseId
     };
 
     // Convert transcription to voiceData
-    if (inspectionData.aiAnalysis.transcription) {
+    if (recordData.aiAnalysis.transcription) {
       wizardData.voiceData = {
         ...wizardData.voiceData,
-        transcription: inspectionData.aiAnalysis.transcription
+        transcription: recordData.aiAnalysis.transcription
       };
     }
     
     // Restore response ID to window for immediate use
-    if (inspectionData.aiAnalysis.previousResponseId) {
-      (window as any).__previousResponseId = inspectionData.aiAnalysis.previousResponseId;
-      console.log(`🔄 Restored response ID for conversation continuity: ${inspectionData.aiAnalysis.previousResponseId}`);
+    if (recordData.aiAnalysis.previousResponseId) {
+      (window as any).__previousResponseId = recordData.aiAnalysis.previousResponseId;
+      console.log(`🔄 Restored response ID for conversation continuity: ${recordData.aiAnalysis.previousResponseId}`);
     }
   }
   
@@ -377,9 +533,9 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
   }
 
   // Convert wizard state
-  if (inspectionData.wizardState) {
-    wizardData.currentStep = inspectionData.wizardState.currentStep || 0;
-    wizardData.completedSteps = inspectionData.wizardState.completedSteps || [];
+  if (recordData.wizardState) {
+    wizardData.currentStep = recordData.wizardState.currentStep || 0;
+    wizardData.completedSteps = recordData.wizardState.completedSteps || [];
     console.log('[convertInspectionToWizardData] Restored wizard state:', {
       currentStep: wizardData.currentStep,
       completedSteps: wizardData.completedSteps
@@ -430,6 +586,9 @@ export function convertInspectionToWizardData(inspectionData: any): Partial<AIAn
 
   return wizardData;
 }
+
+// Legacy export retained for compatibility
+export const convertInspectionToWizardData = convertRecordToWizardData;
 
 export function normalizeRestoredSections(config: AIAnalysisWizardConfig, savedSections: Array<any> | undefined): NonNullable<AIAnalysisWizardData['sections']> {
   const cfgSections = (config.steps.sections || []).map(s => ({ id: s.id, title: s.title }));

@@ -223,11 +223,12 @@ const BulkOperationsComponent: React.FC<{ config: BulkOperationsConfig }> = ({ c
       const formData = new FormData();
       formData.append('csvFile', file as any);
 
+      const token = localStorage.getItem('authToken') || localStorage.getItem('token');
       const response = await fetch(`/api/bulk/import/${selectedType}`, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+        headers: token ? {
+          'Authorization': `Bearer ${token}`
+        } : undefined,
         body: formData
       });
 

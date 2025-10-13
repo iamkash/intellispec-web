@@ -8,7 +8,6 @@
     "theme": "light",
     "density": "comfortable"
   },
-
   "gadgets": [
     {
       "id": "ai-inspection-assistant-gadget",
@@ -39,22 +38,49 @@
               "showThumbnails": true,
               "thumbnailSize": 150,
               "drawingEnabled": true,
-              "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow"],
-              "drawingColors": ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF"],
-              "strokeWidths": [1, 2, 3, 5, 8],
+              "drawingTools": [
+                "pen",
+                "line",
+                "circle",
+                "rectangle",
+                "text",
+                "arrow"
+              ],
+              "drawingColors": [
+                "#FF0000",
+                "#00FF00",
+                "#0000FF",
+                "#FFFF00",
+                "#FF00FF",
+                "#00FFFF"
+              ],
+              "strokeWidths": [
+                1,
+                2,
+                3,
+                5,
+                8
+              ],
               "uploadText": "Click or drag images here to upload",
               "dragText": "Drop images here to upload"
             },
             "required": false,
             "disabled": false,
-            "gridLayout": { "xs": 24, "sm": 24, "md": 24, "lg": 24 }
+            "gridLayout": {
+              "xs": 24,
+              "sm": 24,
+              "md": 24,
+              "lg": 24
+            }
           },
           {
             "id": "image_analysis",
             "title": "Equipment Analysis",
             "description": "Detailed AI analysis of captured images including nameplate data and vessel conditions. The AI will automatically detect the equipment type and show only relevant assessment modules.",
             "imageAnalysisPromptRef": "detailedImageAnalysis",
-            "promptSourceIds": ["nameplate_capture"],
+            "promptSourceIds": [
+              "nameplate_capture"
+            ],
             "includeInPdf": true,
             "analysisWidget": "simple",
             "pdf": {
@@ -70,7 +96,11 @@
             "title": "General Information",
             "description": "Common inspection information for all equipment types.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 3,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate General Info",
             "promptRef": "generalInfoPopulate",
             "includeInPdf": true
@@ -80,7 +110,11 @@
             "title": "Inspection Scope & Methodology",
             "description": "Scope description and inspection methods used.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Scope",
             "promptRef": "scopePopulate",
             "includeInPdf": true
@@ -96,12 +130,40 @@
               "title": "Pressure Vessel Findings",
               "dataKey": "pvFindings",
               "columns": [
-                { "key": "location", "title": "Location/Component", "editable": true, "summary": "countMissing" },
-                { "key": "category", "title": "Category", "editable": true, "summary": "uniqueCount" },
-                { "key": "finding", "title": "Finding/Anomaly", "editable": true, "summary": "countMissing" },
-                { "key": "severity", "title": "Severity", "editable": true, "summary": "uniqueCount" },
-                { "key": "measurements", "title": "Measurements", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location/Component",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "category",
+                  "title": "Category",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "finding",
+                  "title": "Finding/Anomaly",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "severity",
+                  "title": "Severity",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "measurements",
+                  "title": "Measurements",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "pvConditionPopulate",
               "btnLabel": "Populate PV Findings"
@@ -118,12 +180,40 @@
               "title": "Piping System Findings",
               "dataKey": "pipingFindings",
               "columns": [
-                { "key": "location", "title": "Location/Line", "editable": true, "summary": "countMissing" },
-                { "key": "category", "title": "Category", "editable": true, "summary": "uniqueCount" },
-                { "key": "finding", "title": "Finding/Anomaly", "editable": true, "summary": "countMissing" },
-                { "key": "severity", "title": "Severity", "editable": true, "summary": "uniqueCount" },
-                { "key": "cmlReading", "title": "CML Reading", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location/Line",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "category",
+                  "title": "Category",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "finding",
+                  "title": "Finding/Anomaly",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "severity",
+                  "title": "Severity",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "cmlReading",
+                  "title": "CML Reading",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "pipingConditionPopulate",
               "btnLabel": "Populate Piping Findings"
@@ -141,12 +231,40 @@
               "title": "Storage Tank Findings",
               "dataKey": "tankFindings",
               "columns": [
-                { "key": "location", "title": "Location/Component", "editable": true, "summary": "countMissing" },
-                { "key": "category", "title": "Category", "editable": true, "summary": "uniqueCount" },
-                { "key": "finding", "title": "Finding/Anomaly", "editable": true, "summary": "countMissing" },
-                { "key": "severity", "title": "Severity", "editable": true, "summary": "uniqueCount" },
-                { "key": "measurements", "title": "Measurements", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "location",
+                  "title": "Location/Component",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "category",
+                  "title": "Category",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "finding",
+                  "title": "Finding/Anomaly",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "severity",
+                  "title": "Severity",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "measurements",
+                  "title": "Measurements",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "tankConditionPopulate",
               "btnLabel": "Populate Tank Findings"
@@ -163,12 +281,39 @@
               "title": "Relief Device Findings",
               "dataKey": "reliefFindings",
               "columns": [
-                { "key": "deviceTag", "title": "Device Tag", "editable": true, "summary": "countMissing" },
-                { "key": "category", "title": "Category", "editable": true, "summary": "uniqueCount" },
-                { "key": "finding", "title": "Finding/Anomaly", "editable": true, "summary": "countMissing" },
-                { "key": "testResult", "title": "Test Result", "editable": true },
-                { "key": "setPoint", "title": "Set Point", "editable": true },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "deviceTag",
+                  "title": "Device Tag",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "category",
+                  "title": "Category",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "finding",
+                  "title": "Finding/Anomaly",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "testResult",
+                  "title": "Test Result",
+                  "editable": true
+                },
+                {
+                  "key": "setPoint",
+                  "title": "Set Point",
+                  "editable": true
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "reliefConditionPopulate",
               "btnLabel": "Populate Relief Device Findings"
@@ -183,11 +328,33 @@
               "title": "Special Program Findings",
               "dataKey": "specialFindings",
               "columns": [
-                { "key": "program", "title": "Program Type", "editable": true, "summary": "uniqueCount" },
-                { "key": "location", "title": "Location", "editable": true },
-                { "key": "finding", "title": "Finding/Result", "editable": true},
-                { "key": "compliance", "title": "Compliance Status", "editable": true, "summary": "uniqueCount" },
-                { "key": "recommendations", "title": "Recommendations", "editable": true }
+                {
+                  "key": "program",
+                  "title": "Program Type",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true
+                },
+                {
+                  "key": "finding",
+                  "title": "Finding/Result",
+                  "editable": true
+                },
+                {
+                  "key": "compliance",
+                  "title": "Compliance Status",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "recommendations",
+                  "title": "Recommendations",
+                  "editable": true
+                }
               ],
               "promptRef": "specialConditionPopulate",
               "btnLabel": "Populate Special Program Findings"
@@ -202,11 +369,36 @@
               "title": "Thickness Measurements",
               "dataKey": "measurements",
               "columns": [
-                { "key": "location", "title": "Location", "editable": true, "summary": "countMissing" },
-                { "key": "nominalThickness", "title": "Nominal Thickness", "editable": true, "summary": "average" },
-                { "key": "actualThickness", "title": "Actual Thickness", "editable": true, "summary": "average" },
-                { "key": "corrosionRate", "title": "Corrosion Rate", "editable": true, "summary": "average" },
-                { "key": "remainingLife", "title": "Remaining Life (years)", "editable": true, "summary": "minimum" }
+                {
+                  "key": "location",
+                  "title": "Location",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "nominalThickness",
+                  "title": "Nominal Thickness",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "actualThickness",
+                  "title": "Actual Thickness",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "corrosionRate",
+                  "title": "Corrosion Rate",
+                  "editable": true,
+                  "summary": "average"
+                },
+                {
+                  "key": "remainingLife",
+                  "title": "Remaining Life (years)",
+                  "editable": true,
+                  "summary": "minimum"
+                }
               ],
               "promptRef": "thicknessPopulate",
               "btnLabel": "Populate Measurements"
@@ -217,7 +409,11 @@
             "title": "5 - Evaluation & Compliance",
             "description": "Fitness-for-service and code compliance assessment.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 1,
+              "labelPosition": "top"
+            },
             "btnLabel": "Populate Evaluation",
             "promptRef": "evaluationPopulate",
             "includeInPdf": true
@@ -231,11 +427,34 @@
               "title": "Recommendations",
               "dataKey": "recommendations",
               "columns": [
-                { "key": "priority", "title": "Priority", "editable": true, "summary": "uniqueCount" },
-                { "key": "type", "title": "Type", "editable": true, "summary": "uniqueCount" },
-                { "key": "description", "title": "Description", "editable": true, "summary": "countMissing" },
-                { "key": "method", "title": "Method/Standard", "editable": true },
-                { "key": "timeline", "title": "Timeline", "editable": true }
+                {
+                  "key": "priority",
+                  "title": "Priority",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "type",
+                  "title": "Type",
+                  "editable": true,
+                  "summary": "uniqueCount"
+                },
+                {
+                  "key": "description",
+                  "title": "Description",
+                  "editable": true,
+                  "summary": "countMissing"
+                },
+                {
+                  "key": "method",
+                  "title": "Method/Standard",
+                  "editable": true
+                },
+                {
+                  "key": "timeline",
+                  "title": "Timeline",
+                  "editable": true
+                }
               ],
               "promptRef": "recommendationsPopulate",
               "btnLabel": "Populate Recommendations"
@@ -246,7 +465,11 @@
             "title": "7 - Attachments",
             "description": "Supporting documentation and records.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 1,
+              "labelPosition": "top"
+            },
             "includeInPdf": true
           },
           {
@@ -254,56 +477,422 @@
             "title": "Inspector Signoff",
             "description": "Inspector certification and approval.",
             "sectionType": "form",
-            "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 2,
+              "labelPosition": "top"
+            },
             "includeInPdf": true
           }
         ],
         "groups": [
-          { "id": "inspection_details", "title": "Inspection Details", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "equipment_details", "title": "Equipment Details", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "design_data", "title": "Design Data", "sectionId": "general_information", "lgSpan": 24 },
-          { "id": "scope_details", "title": "Scope Details", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "nde_methods", "title": "NDE Methods", "sectionId": "inspection_scope", "lgSpan": 24 },
-          { "id": "calculations", "title": "Calculations", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "compliance_assessment", "title": "Compliance Assessment", "sectionId": "evaluation_compliance", "lgSpan": 24 },
-          { "id": "attachment_list", "title": "Attachment List", "sectionId": "attachments_section", "lgSpan": 24 },
-          { "id": "inspector_info", "title": "Inspector Information", "sectionId": "inspector_signoff", "lgSpan": 24 }
+          {
+            "id": "inspection_details",
+            "title": "Inspection Details",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "equipment_details",
+            "title": "Equipment Details",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "design_data",
+            "title": "Design Data",
+            "sectionId": "general_information",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_details",
+            "title": "Scope Details",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "nde_methods",
+            "title": "NDE Methods",
+            "sectionId": "inspection_scope",
+            "lgSpan": 24
+          },
+          {
+            "id": "calculations",
+            "title": "Calculations",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "compliance_assessment",
+            "title": "Compliance Assessment",
+            "sectionId": "evaluation_compliance",
+            "lgSpan": 24
+          },
+          {
+            "id": "attachment_list",
+            "title": "Attachment List",
+            "sectionId": "attachments_section",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_info",
+            "title": "Inspector Information",
+            "sectionId": "inspector_signoff",
+            "lgSpan": 24
+          }
         ],
         "fields": [
-          { "id": "detected_equipment_type", "label": "Equipment Type", "type": "select", "readonly": false, "groupId": "equipment_details", "lgSpan": 24, "placeholder": "Select or auto-detect equipment type", "options": [ { "label": "Pressure Vessel", "value": "pressure_vessel" }, { "label": "Piping System", "value": "piping" }, { "label": "Storage Tank", "value": "storage_tank" }, { "label": "Relief Device", "value": "relief_device" }, { "label": "Heat Exchanger", "value": "heat_exchanger" }, { "label": "Other", "value": "other" } ] },
-          { "id": "inspection_type", "label": "Inspection Type", "type": "dropdown", "options": ["External", "Internal", "On-stream", "RBI", "Turnaround", "Post-repair", "Post-alteration", "Pre-service"], "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "equipment_id", "label": "Equipment ID / Tag", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "inspection_date", "label": "Inspection Date", "type": "date", "required": true, "groupId": "inspection_details", "lgSpan": 8 },
-          { "id": "equipment_description", "label": "Description (Type, Service, Design Code)", "type": "textarea", "required": true, "groupId": "equipment_details", "lgSpan": 24 },
-          { "id": "owner_user", "label": "Owner/User", "type": "text", "required": true, "groupId": "equipment_details", "lgSpan": 12 },
-          { "id": "location", "label": "Location", "type": "text", "required": true, "groupId": "equipment_details", "lgSpan": 12 },
-          { "id": "manufacturer", "label": "Manufacturer", "type": "text", "groupId": "equipment_details", "lgSpan": 12 },
-          { "id": "year_built", "label": "Year Built", "type": "number", "groupId": "equipment_details", "lgSpan": 12 },
-          { "id": "mawp", "label": "MAWP (psi)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "mdmt", "label": "MDMT (°F)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "design_temp", "label": "Design Temperature (°F)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "corrosion_allowance", "label": "Corrosion Allowance (in)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "original_thickness", "label": "Original Thickness (in)", "type": "number", "groupId": "design_data", "lgSpan": 6 },
-          { "id": "inspector_name", "label": "Inspector Name", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "api_certification", "label": "API Certification #", "type": "text", "required": true, "groupId": "inspection_details", "lgSpan": 12 },
-          { "id": "other_personnel", "label": "Other Personnel (NDE techs, support staff)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "references", "label": "References (API Standards, ASME code, OEM drawings)", "type": "textarea", "groupId": "inspection_details", "lgSpan": 24 },
-          { "id": "scope_description", "label": "Scope Description (areas inspected, limitations)", "type": "textarea", "required": true, "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "inspection_preparation", "label": "Inspection Preparation (cleaning, isolation, permits, safety)", "type": "textarea", "groupId": "scope_details", "lgSpan": 24 },
-          { "id": "nde_methods_used", "label": "NDE Methods Used", "type": "checkbox_group", "options": ["UT", "RT", "MT", "PT", "VT", "AE", "Leak Testing", "Other"], "groupId": "nde_methods", "lgSpan": 24 },
-          { "id": "rbi_interval_method", "label": "RBI or Interval Determination Method", "type": "text", "groupId": "nde_methods", "lgSpan": 24 },
-          { "id": "min_required_thickness", "label": "Minimum Required Thickness per ASME (in)", "type": "number", "groupId": "calculations", "lgSpan": 8 },
-          { "id": "mawp_calculation", "label": "MAWP Calculation Result (psi)", "type": "number", "groupId": "calculations", "lgSpan": 8 },
-          { "id": "rbi_risk_factor", "label": "RBI Risk Factor Update", "type": "text", "groupId": "calculations", "lgSpan": 8 },
-          { "id": "fitness_service_results", "label": "Fitness-for-Service (API 579) Results", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "code_compliance", "label": "Code Compliance Assessment (deviations from API/ASME)", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "service_suitability", "label": "Service Suitability Determination", "type": "textarea", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "next_inspection_interval", "label": "Next Inspection Interval (per code)", "type": "text", "groupId": "compliance_assessment", "lgSpan": 24 },
-          { "id": "attachments_list", "label": "Attachments", "type": "checkbox_group", "options": ["Inspection drawings/photos", "NDE reports", "Thickness data sheets", "Calibration certificates", "Repair records"], "groupId": "attachment_list", "lgSpan": 24 },
-          { "id": "inspector_signature", "label": "Inspector's Signature", "type": "text", "required": true, "groupId": "inspector_info", "lgSpan": 12 },
-          { "id": "signature_date", "label": "Date", "type": "date", "required": true, "groupId": "inspector_info", "lgSpan": 12 }
+          {
+            "id": "detected_equipment_type",
+            "label": "Equipment Type",
+            "type": "select",
+            "readonly": false,
+            "groupId": "equipment_details",
+            "lgSpan": 24,
+            "placeholder": "Select or auto-detect equipment type",
+            "options": [
+              {
+                "label": "Pressure Vessel",
+                "value": "pressure_vessel"
+              },
+              {
+                "label": "Piping System",
+                "value": "piping"
+              },
+              {
+                "label": "Storage Tank",
+                "value": "storage_tank"
+              },
+              {
+                "label": "Relief Device",
+                "value": "relief_device"
+              },
+              {
+                "label": "Heat Exchanger",
+                "value": "heat_exchanger"
+              },
+              {
+                "label": "Other",
+                "value": "other"
+              }
+            ]
+          },
+          {
+            "id": "inspection_type",
+            "label": "Inspection Type",
+            "type": "dropdown",
+            "options": [
+              "External",
+              "Internal",
+              "On-stream",
+              "RBI",
+              "Turnaround",
+              "Post-repair",
+              "Post-alteration",
+              "Pre-service"
+            ],
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "equipment_id",
+            "label": "Equipment ID / Tag",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "inspection_date",
+            "label": "Inspection Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 8
+          },
+          {
+            "id": "equipment_description",
+            "label": "Description (Type, Service, Design Code)",
+            "type": "textarea",
+            "required": true,
+            "groupId": "equipment_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "owner_user",
+            "label": "Owner/User",
+            "type": "text",
+            "required": true,
+            "groupId": "equipment_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "location",
+            "label": "Location",
+            "type": "text",
+            "required": true,
+            "groupId": "equipment_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "manufacturer",
+            "label": "Manufacturer",
+            "type": "text",
+            "groupId": "equipment_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "year_built",
+            "label": "Year Built",
+            "type": "number",
+            "groupId": "equipment_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "mawp",
+            "label": "MAWP (psi)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "mdmt",
+            "label": "MDMT (\u00b0F)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "design_temp",
+            "label": "Design Temperature (\u00b0F)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "corrosion_allowance",
+            "label": "Corrosion Allowance (in)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "original_thickness",
+            "label": "Original Thickness (in)",
+            "type": "number",
+            "groupId": "design_data",
+            "lgSpan": 6
+          },
+          {
+            "id": "inspector_name",
+            "label": "Inspector Name",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "api_certification",
+            "label": "API Certification #",
+            "type": "text",
+            "required": true,
+            "groupId": "inspection_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "other_personnel",
+            "label": "Other Personnel (NDE techs, support staff)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "references",
+            "label": "References (API Standards, ASME code, OEM drawings)",
+            "type": "textarea",
+            "groupId": "inspection_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "scope_description",
+            "label": "Scope Description (areas inspected, limitations)",
+            "type": "textarea",
+            "required": true,
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspection_preparation",
+            "label": "Inspection Preparation (cleaning, isolation, permits, safety)",
+            "type": "textarea",
+            "groupId": "scope_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "nde_methods_used",
+            "label": "NDE Methods Used",
+            "type": "checkbox_group",
+            "options": [
+              "UT",
+              "RT",
+              "MT",
+              "PT",
+              "VT",
+              "AE",
+              "Leak Testing",
+              "Other"
+            ],
+            "groupId": "nde_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "rbi_interval_method",
+            "label": "RBI or Interval Determination Method",
+            "type": "text",
+            "groupId": "nde_methods",
+            "lgSpan": 24
+          },
+          {
+            "id": "min_required_thickness",
+            "label": "Minimum Required Thickness per ASME (in)",
+            "type": "number",
+            "groupId": "calculations",
+            "lgSpan": 8
+          },
+          {
+            "id": "mawp_calculation",
+            "label": "MAWP Calculation Result (psi)",
+            "type": "number",
+            "groupId": "calculations",
+            "lgSpan": 8
+          },
+          {
+            "id": "rbi_risk_factor",
+            "label": "RBI Risk Factor Update",
+            "type": "text",
+            "groupId": "calculations",
+            "lgSpan": 8
+          },
+          {
+            "id": "fitness_service_results",
+            "label": "Fitness-for-Service (API 579) Results",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "code_compliance",
+            "label": "Code Compliance Assessment (deviations from API/ASME)",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "service_suitability",
+            "label": "Service Suitability Determination",
+            "type": "textarea",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "next_inspection_interval",
+            "label": "Next Inspection Interval (per code)",
+            "type": "text",
+            "groupId": "compliance_assessment",
+            "lgSpan": 24
+          },
+          {
+            "id": "attachments_list",
+            "label": "Attachments",
+            "type": "checkbox_group",
+            "options": [
+              "Inspection drawings/photos",
+              "NDE reports",
+              "Thickness data sheets",
+              "Calibration certificates",
+              "Repair records"
+            ],
+            "groupId": "attachment_list",
+            "lgSpan": 24
+          },
+          {
+            "id": "inspector_signature",
+            "label": "Inspector's Signature",
+            "type": "text",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 12
+          },
+          {
+            "id": "signature_date",
+            "label": "Date",
+            "type": "date",
+            "required": true,
+            "groupId": "inspector_info",
+            "lgSpan": 12
+          }
         ],
-        "pdfStyling": { "header": { "backgroundColor": [24,24,27], "textColor": [255,255,255], "fontSize": 12, "companyName": "Equipment Inspection Report", "companyAddress": "" }, "footer": { "textColor": [100,116,139], "fontSize": 6, "leftText": "AI Inspection Assistant", "centerText": "Confidential", "rightText": "Page {page} of {pages}" }, "sections": { "headerFontSize": 10, "contentFontSize": 8, "lineSpacing": 3.5, "margins": { "left": 15, "right": 195 } }, "tables": { "headerBackground": [2,6,23], "headerTextColor": [255,255,255], "headerFontSize": 8, "contentFontSize": 7, "cellPadding": 3 }, "images": { "dpi": 400, "format": "JPEG", "quality": 0.92, "fit": "contain", "align": "center", "widthPercent": 1 } },
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "Equipment Inspection Report",
+            "companyAddress": ""
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "AI Inspection Assistant",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
+          },
+          "tables": {
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
+            "headerFontSize": 8,
+            "contentFontSize": 7,
+            "cellPadding": 3
+          },
+          "images": {
+            "dpi": 400,
+            "format": "JPEG",
+            "quality": 0.92,
+            "fit": "contain",
+            "align": "center",
+            "widthPercent": 1
+          }
+        },
         "prompts": {
           "detailedImageAnalysis": {
             "modelConfig": {
@@ -321,7 +910,7 @@
               "updateInterval": 100
             }
           },
-                      "generalInfoPopulate": {
+          "generalInfoPopulate": {
             "modelConfig": {
               "model": "gpt-5-nano",
               "maxCompletionTokens": 1000,
@@ -331,7 +920,7 @@
               "systemPrompt": "Extract general inspection information from the analysis and populate form fields. Return JSON only."
             }
           },
-                      "scopePopulate": {
+          "scopePopulate": {
             "modelConfig": {
               "model": "gpt-5-nano",
               "maxCompletionTokens": 1000,
@@ -428,10 +1017,55 @@
             },
             "autoPrompt": true
           }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
+          }
         }
       },
       "position": 24
     }
   ]
 }
-

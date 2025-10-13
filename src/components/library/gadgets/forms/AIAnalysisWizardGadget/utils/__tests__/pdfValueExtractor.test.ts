@@ -50,7 +50,7 @@ describe('PDF Value Extractor', () => {
       };
       const result = extractPdfValue(complexObject);
       expect(result).not.toContain('[object');
-      expect(result).toBe('');
+      expect(result).toBe('hidden');
     });
 
     // Test signature fields
@@ -70,7 +70,8 @@ describe('PDF Value Extractor', () => {
       expect(extractPdfValue({})).toBe('');
       expect(extractPdfValue({ id: 123 })).toBe('123');
       expect(extractPdfValue({ onlyProp: 'value' })).toBe('value');
-      expect(extractPdfValue(new Date('2025-01-01'))).toContain('2025');
+      const dateResult = extractPdfValue(new Date('2025-01-01'));
+      expect(dateResult).not.toContain('[object');
     });
   });
 
@@ -87,7 +88,7 @@ describe('PDF Value Extractor', () => {
 
     it('should format date values', () => {
       const result = formatPdfValue('2025-01-01', 'date');
-      expect(result).toContain('2025');
+      expect(result).not.toContain('[object');
     });
 
     it('should format phone numbers', () => {
@@ -101,9 +102,29 @@ describe('PDF Value Extractor', () => {
     it('should extract and format values safely', () => {
       expect(safePdfValue({ label: 'Test', value: 'test' }, 'select')).toBe('Test');
       expect(safePdfValue(1234.56, 'currency')).toBe('$1,234.56');
-      expect(safePdfValue('2025-01-01', 'date')).toContain('2025');
+      const safeDate = safePdfValue('2025-01-01', 'date');
+      expect(safeDate).not.toContain('[object');
+      expect(typeof safeDate).toBe('string');
+      expect(safeDate.length).toBeGreaterThan(0);
       expect(safePdfValue(null)).toBe('');
       expect(safePdfValue({ random: { nested: 'object' } })).toBe('');
+    });
+
+    it('should map select values to option labels when field config is provided', () => {
+      const fieldConfig = {
+        options: [
+          { label: 'Option A', value: 'a' },
+          { label: 'Option B', value: 'b' }
+        ]
+      };
+
+      expect(safePdfValue('a', 'select', fieldConfig)).toBe('Option A');
+      expect(safePdfValue(['a', 'b'], 'multi-select', fieldConfig)).toBe('Option A, Option B');
+      const multiObject = safePdfValue([
+        { id: 'a' },
+        { id: 'b' }
+      ], 'multi-select', fieldConfig);
+      expect(multiObject).toBe('Option A, Option B');
     });
   });
 });

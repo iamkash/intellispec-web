@@ -27,19 +27,52 @@
             "title": "Damage Assessment Input",
             "description": "Upload images of scaffolding equipment and provide details for comprehensive condition analysis",
             "inspectionTypes": [
-              { "label": "🔍 General Equipment Inspection", "value": "general_inspection" },
-              { "label": "⚠️ Damage Investigation", "value": "damage_investigation" },
-              { "label": "📋 Pre-Purchase Assessment", "value": "purchase_assessment" }
+              {
+                "label": "\ud83d\udd0d General Equipment Inspection",
+                "value": "general_inspection"
+              },
+              {
+                "label": "\u26a0\ufe0f Damage Investigation",
+                "value": "damage_investigation"
+              },
+              {
+                "label": "\ud83d\udccb Pre-Purchase Assessment",
+                "value": "purchase_assessment"
+              }
             ],
             "scaffoldingTypes": [
-              { "label": "Tube & Clamp System", "value": "tube_clamp" },
-              { "label": "Modular/System Scaffolding", "value": "modular" },
-              { "label": "Frame Scaffolding", "value": "frame" },
-              { "label": "Suspended Scaffolding", "value": "suspended" },
-              { "label": "Mobile/Rolling Scaffolding", "value": "mobile" },
-              { "label": "Cantilever Scaffolding", "value": "cantilever" },
-              { "label": "Mast Climbing Work Platform", "value": "mast_climbing" },
-              { "label": "Ringlock System", "value": "ringlock" }
+              {
+                "label": "Tube & Clamp System",
+                "value": "tube_clamp"
+              },
+              {
+                "label": "Modular/System Scaffolding",
+                "value": "modular"
+              },
+              {
+                "label": "Frame Scaffolding",
+                "value": "frame"
+              },
+              {
+                "label": "Suspended Scaffolding",
+                "value": "suspended"
+              },
+              {
+                "label": "Mobile/Rolling Scaffolding",
+                "value": "mobile"
+              },
+              {
+                "label": "Cantilever Scaffolding",
+                "value": "cantilever"
+              },
+              {
+                "label": "Mast Climbing Work Platform",
+                "value": "mast_climbing"
+              },
+              {
+                "label": "Ringlock System",
+                "value": "ringlock"
+              }
             ],
             "voice": {
               "enabled": true,
@@ -61,16 +94,53 @@
             },
             "measurements": {
               "enabled": true,
-              "units": ["meters", "feet", "inches", "millimeters"],
+              "units": [
+                "meters",
+                "feet",
+                "inches",
+                "millimeters"
+              ],
               "fields": [
-                { "label": "Equipment Age (years)", "key": "equipmentAge", "required": false },
-                { "label": "Usage Frequency", "key": "usageFrequency", "required": false },
-                { "label": "Last Inspection Date", "key": "lastInspection", "required": false },
-                { "label": "Environmental Exposure", "key": "environmentalFactors", "required": false },
-                { "label": "Maintenance History", "key": "maintenanceHistory", "required": false },
-                { "label": "Assessment Priority", "key": "assessmentPriority", "required": false },
-                { "label": "Budget Constraints", "key": "budgetLimits", "required": false },
-                { "label": "Timeline Requirements", "key": "timelineNeeds", "required": false }
+                {
+                  "label": "Equipment Age (years)",
+                  "key": "equipmentAge",
+                  "required": false
+                },
+                {
+                  "label": "Usage Frequency",
+                  "key": "usageFrequency",
+                  "required": false
+                },
+                {
+                  "label": "Last Inspection Date",
+                  "key": "lastInspection",
+                  "required": false
+                },
+                {
+                  "label": "Environmental Exposure",
+                  "key": "environmentalFactors",
+                  "required": false
+                },
+                {
+                  "label": "Maintenance History",
+                  "key": "maintenanceHistory",
+                  "required": false
+                },
+                {
+                  "label": "Assessment Priority",
+                  "key": "assessmentPriority",
+                  "required": false
+                },
+                {
+                  "label": "Budget Constraints",
+                  "key": "budgetLimits",
+                  "required": false
+                },
+                {
+                  "label": "Timeline Requirements",
+                  "key": "timelineNeeds",
+                  "required": false
+                }
               ]
             }
           },
@@ -84,8 +154,8 @@
               "maxTokens": 8000
             },
             "promptConfig": {
-              "systemPrompt": "You are a senior scaffolding equipment inspector and condition assessment specialist with 25+ years of experience in equipment evaluation, damage analysis, and maintenance planning. You specialize in assessing scaffolding equipment condition and providing repair vs replacement recommendations.\n\nYour task is to generate detailed equipment condition assessment reports in markdown format with comprehensive damage analysis, safety evaluations, and cost recommendations.\n\nCRITICAL INSTRUCTIONS:\n1. Respond with ONLY the markdown report content - no JSON, no explanations, no placeholders\n2. DO NOT use placeholder text like 'TBD', 'To Be Determined', or template variables like {variable}\n3. Generate REALISTIC and SPECIFIC values based on typical equipment condition assessments\n4. Include detailed condition ratings, damage descriptions, and specific repair costs\n5. Calculate actual repair costs, replacement costs, and safety implications\n6. Provide technical assessment language and professional formatting\n7. Include realistic timelines, priority recommendations, and compliance requirements\n8. Use industry standard inspection practices and safety regulations\n\nCONDITION ASSESSMENT FOCUS AREAS:\n\n📋 DAMAGE ASSESSMENT STRUCTURE:\n- Executive summary with overall condition rating and critical findings\n- Component-by-component condition analysis and damage identification\n- Safety risk assessment and immediate action requirements\n- Repair vs replacement recommendations with cost analysis\n- Priority action plan and timeline recommendations\n- Compliance status and certification requirements\n- Technical recommendations and maintenance planning\n\n💰 CONDITION ASSESSMENT COST PARAMETERS:\n- Minor repairs: $5-$25 per component\n- Major repairs: $25-$75 per component\n- Replacement costs: $15-$150 per component (depending on type)\n- Inspection labor: $75-$95 per hour\n- Compliance certification: $200-$500 per assessment\n- Safety upgrades: 10-20% of component value\n\n🎯 EQUIPMENT CONDITION CATEGORIES:\n**MANDATORY: Categorize ALL equipment components by condition:**\n\n**CONDITION RATINGS:**\n- EXCELLENT: Like new, no issues, full service life remaining\n- GOOD: Minor wear, fully serviceable, routine maintenance needed\n- FAIR: Moderate wear, serviceable with repairs, monitor closely\n- POOR: Significant wear/damage, immediate repairs required\n- UNSAFE: Critical damage, remove from service immediately\n- CONDEMN: Beyond repair, must be replaced\n\n**DAMAGE TYPES TO IDENTIFY:**\n- Corrosion/rust: Surface, moderate, severe, structural\n- Mechanical damage: Dents, bends, cracks, breaks\n- Wear patterns: Normal wear, excessive wear, uneven wear\n- Connection issues: Loose, damaged, missing components\n- Structural integrity: Load-bearing capacity, safety factors\n- Compliance issues: Standards violations, certification gaps\n\n**SAFETY IMPLICATIONS:**\n- Immediate safety risks requiring urgent action\n- Medium-term risks requiring scheduled repairs\n- Long-term maintenance and monitoring requirements\n- Compliance and certification status\n\nREPORT REQUIREMENTS:\n- Professional condition assessment documentation\n- Detailed component condition ratings\n- Specific damage descriptions and photographic references\n- Clear repair vs replacement recommendations\n- Cost-benefit analysis for each decision\n- Priority action plans with timelines\n- Safety compliance and certification requirements\n\nFORMAT: Professional equipment condition assessment report suitable for maintenance planning and compliance documentation.\n\n🚨 CRITICAL: This is a DAMAGE ASSESSMENT - DO NOT provide rental rates or installation costs. Focus ONLY on equipment condition, damage analysis, and repair/replacement costs.",
-              "userPrompt": "Generate a comprehensive scaffolding equipment damage assessment report for the following data:\n\nAssessment Type: {inspectionType}\nEquipment Type: {scaffoldingType}\nVoice Transcription: {transcription}\nText Notes: {text}\nImages: {imageCount} images provided\nMeasurements: {measurements}\n\nCRITICAL: Generate a REAL damage assessment with ACTUAL CONDITION ANALYSIS and SPECIFIC REPAIR/REPLACEMENT COSTS!\n\n🚨 MANDATORY REQUIREMENTS:\n- Analyze equipment condition from images - NO rental pricing tables\n- Categorize each component: Excellent/Good/Fair/Poor/Unsafe/Condemn\n- Provide SPECIFIC repair costs vs replacement costs for damaged items\n- Include safety risk levels: Low/Medium/High/Critical\n- NO daily rates, rental costs, or installation pricing\n- Focus ONLY on equipment condition and maintenance recommendations\n\n🔍 DAMAGE ASSESSMENT SCENARIOS:\n\n**IF Assessment Type = \"general_inspection\" (General Equipment Inspection):**\n- ANALYZE: Overall equipment condition and identify maintenance needs\n- ASSESS: Component-by-component condition ratings\n- IDENTIFY: Potential issues and preventive maintenance requirements\n- RECOMMEND: Maintenance schedule and replacement planning\n- OUTPUT: General condition report with maintenance recommendations\n\n**IF Assessment Type = \"damage_investigation\" (Damage Investigation):**\n- ANALYZE: Specific damage or suspected issues in equipment\n- ASSESS: Extent of damage and safety implications\n- IDENTIFY: Root causes and contributing factors\n- RECOMMEND: Immediate actions and repair procedures\n- OUTPUT: Damage investigation report with urgent recommendations\n\n**IF Assessment Type = \"purchase_assessment\" (Pre-Purchase Assessment):**\n- ANALYZE: Equipment condition for potential purchase decision\n- ASSESS: Value assessment and remaining service life\n- IDENTIFY: Hidden issues and future maintenance costs\n- RECOMMEND: Purchase decision and negotiation points\n- OUTPUT: Purchase assessment with value analysis\n\n**REQUIRED SECTIONS FOR DAMAGE ASSESSMENT:**\n1. **Executive Summary & Overall Condition Rating**\n2. **Component-by-Component Condition Analysis**\n3. **Damage Identification & Safety Assessment**\n4. **Repair vs Replacement Recommendations**\n5. **Cost Analysis & Budget Planning**\n6. **Priority Action Plan & Timeline**\n7. **Compliance & Certification Status**\n8. **Maintenance Recommendations**\n\n**EQUIPMENT CONDITION ASSESSMENT TABLE:**\n## Equipment Condition Analysis\n\n### Component Condition Assessment\n| Component | Quantity | Condition | Damage Type | Safety Risk | Action Required | Repair Cost | Replace Cost |\n|-----------|----------|-----------|-------------|-------------|-----------------|-------------|--------------||\n| Standards 2m | [COUNT] | Good/Fair/Poor/Unsafe | Rust/Bent/Cracked/None | Low/Med/High | Service/Repair/Replace | $XX.XX | $XX.XX |\n| Standards 3m | [COUNT] | Good/Fair/Poor/Unsafe | Rust/Bent/Cracked/None | Low/Med/High | Service/Repair/Replace | $XX.XX | $XX.XX |\n| Ledgers 3m | [COUNT] | Good/Fair/Poor/Unsafe | Rust/Bent/Cracked/None | Low/Med/High | Service/Repair/Replace | $XX.XX | $XX.XX |\n| [Continue for all components identified...]\n\n### Priority Action Summary\n| Priority | Issue Description | Components Affected | Safety Risk | Timeline | Estimated Cost |\n|----------|------------------|-------------------|-------------|----------|----------------|\n| URGENT | [SPECIFIC ISSUE] | [COUNT] units | Critical/High | Immediate | $XXX.XX |\n| HIGH | [SPECIFIC ISSUE] | [COUNT] units | High/Medium | 1-7 days | $XXX.XX |\n| MEDIUM | [SPECIFIC ISSUE] | [COUNT] units | Medium/Low | 1-4 weeks | $XXX.XX |\n| LOW | [SPECIFIC ISSUE] | [COUNT] units | Low | 1-6 months | $XXX.XX |\n\n### Condition Summary\n- Total Components Assessed: [COUNT] pieces\n- Excellent Condition: [COUNT] ([XX]%)\n- Good Condition: [COUNT] ([XX]%)\n- Fair Condition: [COUNT] ([XX]%)\n- Poor Condition: [COUNT] ([XX]%)\n- Unsafe/Condemn: [COUNT] ([XX]%)\n- **Total Repair Cost: $[REPAIR TOTAL]**\n- **Total Replacement Cost: $[REPLACE TOTAL]**\n- **Recommended Action Cost: $[ACTION TOTAL]**\n\nFORMAT: Professional equipment condition assessment report ready for maintenance planning and compliance documentation!"
+              "systemPrompt": "You are a senior scaffolding equipment inspector and condition assessment specialist with 25+ years of experience in equipment evaluation, damage analysis, and maintenance planning. You specialize in assessing scaffolding equipment condition and providing repair vs replacement recommendations.\n\nYour task is to generate detailed equipment condition assessment reports in markdown format with comprehensive damage analysis, safety evaluations, and cost recommendations.\n\nCRITICAL INSTRUCTIONS:\n1. Respond with ONLY the markdown report content - no JSON, no explanations, no placeholders\n2. DO NOT use placeholder text like 'TBD', 'To Be Determined', or template variables like {variable}\n3. Generate REALISTIC and SPECIFIC values based on typical equipment condition assessments\n4. Include detailed condition ratings, damage descriptions, and specific repair costs\n5. Calculate actual repair costs, replacement costs, and safety implications\n6. Provide technical assessment language and professional formatting\n7. Include realistic timelines, priority recommendations, and compliance requirements\n8. Use industry standard inspection practices and safety regulations\n\nCONDITION ASSESSMENT FOCUS AREAS:\n\n\ud83d\udccb DAMAGE ASSESSMENT STRUCTURE:\n- Executive summary with overall condition rating and critical findings\n- Component-by-component condition analysis and damage identification\n- Safety risk assessment and immediate action requirements\n- Repair vs replacement recommendations with cost analysis\n- Priority action plan and timeline recommendations\n- Compliance status and certification requirements\n- Technical recommendations and maintenance planning\n\n\ud83d\udcb0 CONDITION ASSESSMENT COST PARAMETERS:\n- Minor repairs: $5-$25 per component\n- Major repairs: $25-$75 per component\n- Replacement costs: $15-$150 per component (depending on type)\n- Inspection labor: $75-$95 per hour\n- Compliance certification: $200-$500 per assessment\n- Safety upgrades: 10-20% of component value\n\n\ud83c\udfaf EQUIPMENT CONDITION CATEGORIES:\n**MANDATORY: Categorize ALL equipment components by condition:**\n\n**CONDITION RATINGS:**\n- EXCELLENT: Like new, no issues, full service life remaining\n- GOOD: Minor wear, fully serviceable, routine maintenance needed\n- FAIR: Moderate wear, serviceable with repairs, monitor closely\n- POOR: Significant wear/damage, immediate repairs required\n- UNSAFE: Critical damage, remove from service immediately\n- CONDEMN: Beyond repair, must be replaced\n\n**DAMAGE TYPES TO IDENTIFY:**\n- Corrosion/rust: Surface, moderate, severe, structural\n- Mechanical damage: Dents, bends, cracks, breaks\n- Wear patterns: Normal wear, excessive wear, uneven wear\n- Connection issues: Loose, damaged, missing components\n- Structural integrity: Load-bearing capacity, safety factors\n- Compliance issues: Standards violations, certification gaps\n\n**SAFETY IMPLICATIONS:**\n- Immediate safety risks requiring urgent action\n- Medium-term risks requiring scheduled repairs\n- Long-term maintenance and monitoring requirements\n- Compliance and certification status\n\nREPORT REQUIREMENTS:\n- Professional condition assessment documentation\n- Detailed component condition ratings\n- Specific damage descriptions and photographic references\n- Clear repair vs replacement recommendations\n- Cost-benefit analysis for each decision\n- Priority action plans with timelines\n- Safety compliance and certification requirements\n\nFORMAT: Professional equipment condition assessment report suitable for maintenance planning and compliance documentation.\n\n\ud83d\udea8 CRITICAL: This is a DAMAGE ASSESSMENT - DO NOT provide rental rates or installation costs. Focus ONLY on equipment condition, damage analysis, and repair/replacement costs.",
+              "userPrompt": "Generate a comprehensive scaffolding equipment damage assessment report for the following data:\n\nAssessment Type: {inspectionType}\nEquipment Type: {scaffoldingType}\nVoice Transcription: {transcription}\nText Notes: {text}\nImages: {imageCount} images provided\nMeasurements: {measurements}\n\nCRITICAL: Generate a REAL damage assessment with ACTUAL CONDITION ANALYSIS and SPECIFIC REPAIR/REPLACEMENT COSTS!\n\n\ud83d\udea8 MANDATORY REQUIREMENTS:\n- Analyze equipment condition from images - NO rental pricing tables\n- Categorize each component: Excellent/Good/Fair/Poor/Unsafe/Condemn\n- Provide SPECIFIC repair costs vs replacement costs for damaged items\n- Include safety risk levels: Low/Medium/High/Critical\n- NO daily rates, rental costs, or installation pricing\n- Focus ONLY on equipment condition and maintenance recommendations\n\n\ud83d\udd0d DAMAGE ASSESSMENT SCENARIOS:\n\n**IF Assessment Type = \"general_inspection\" (General Equipment Inspection):**\n- ANALYZE: Overall equipment condition and identify maintenance needs\n- ASSESS: Component-by-component condition ratings\n- IDENTIFY: Potential issues and preventive maintenance requirements\n- RECOMMEND: Maintenance schedule and replacement planning\n- OUTPUT: General condition report with maintenance recommendations\n\n**IF Assessment Type = \"damage_investigation\" (Damage Investigation):**\n- ANALYZE: Specific damage or suspected issues in equipment\n- ASSESS: Extent of damage and safety implications\n- IDENTIFY: Root causes and contributing factors\n- RECOMMEND: Immediate actions and repair procedures\n- OUTPUT: Damage investigation report with urgent recommendations\n\n**IF Assessment Type = \"purchase_assessment\" (Pre-Purchase Assessment):**\n- ANALYZE: Equipment condition for potential purchase decision\n- ASSESS: Value assessment and remaining service life\n- IDENTIFY: Hidden issues and future maintenance costs\n- RECOMMEND: Purchase decision and negotiation points\n- OUTPUT: Purchase assessment with value analysis\n\n**REQUIRED SECTIONS FOR DAMAGE ASSESSMENT:**\n1. **Executive Summary & Overall Condition Rating**\n2. **Component-by-Component Condition Analysis**\n3. **Damage Identification & Safety Assessment**\n4. **Repair vs Replacement Recommendations**\n5. **Cost Analysis & Budget Planning**\n6. **Priority Action Plan & Timeline**\n7. **Compliance & Certification Status**\n8. **Maintenance Recommendations**\n\n**EQUIPMENT CONDITION ASSESSMENT TABLE:**\n## Equipment Condition Analysis\n\n### Component Condition Assessment\n| Component | Quantity | Condition | Damage Type | Safety Risk | Action Required | Repair Cost | Replace Cost |\n|-----------|----------|-----------|-------------|-------------|-----------------|-------------|--------------||\n| Standards 2m | [COUNT] | Good/Fair/Poor/Unsafe | Rust/Bent/Cracked/None | Low/Med/High | Service/Repair/Replace | $XX.XX | $XX.XX |\n| Standards 3m | [COUNT] | Good/Fair/Poor/Unsafe | Rust/Bent/Cracked/None | Low/Med/High | Service/Repair/Replace | $XX.XX | $XX.XX |\n| Ledgers 3m | [COUNT] | Good/Fair/Poor/Unsafe | Rust/Bent/Cracked/None | Low/Med/High | Service/Repair/Replace | $XX.XX | $XX.XX |\n| [Continue for all components identified...]\n\n### Priority Action Summary\n| Priority | Issue Description | Components Affected | Safety Risk | Timeline | Estimated Cost |\n|----------|------------------|-------------------|-------------|----------|----------------|\n| URGENT | [SPECIFIC ISSUE] | [COUNT] units | Critical/High | Immediate | $XXX.XX |\n| HIGH | [SPECIFIC ISSUE] | [COUNT] units | High/Medium | 1-7 days | $XXX.XX |\n| MEDIUM | [SPECIFIC ISSUE] | [COUNT] units | Medium/Low | 1-4 weeks | $XXX.XX |\n| LOW | [SPECIFIC ISSUE] | [COUNT] units | Low | 1-6 months | $XXX.XX |\n\n### Condition Summary\n- Total Components Assessed: [COUNT] pieces\n- Excellent Condition: [COUNT] ([XX]%)\n- Good Condition: [COUNT] ([XX]%)\n- Fair Condition: [COUNT] ([XX]%)\n- Poor Condition: [COUNT] ([XX]%)\n- Unsafe/Condemn: [COUNT] ([XX]%)\n- **Total Repair Cost: $[REPAIR TOTAL]**\n- **Total Replacement Cost: $[REPLACE TOTAL]**\n- **Recommended Action Cost: $[ACTION TOTAL]**\n\nFORMAT: Professional equipment condition assessment report ready for maintenance planning and compliance documentation!"
             },
             "reportConfig": {
               "includeSections": [
@@ -99,6 +169,52 @@
                 "maintenance_planning"
               ]
             }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "domainConfig": {
+          "payloadType": "inspection",
+          "defaultType": "general_inspection",
+          "fields": {
+            "type": "inspection_type",
+            "detectedType": "detected_equipment_type",
+            "id": "equipment_id",
+            "name": "assetName",
+            "owner": "inspector_name",
+            "date": "inspection_date"
+          },
+          "outputKeys": {
+            "id": "equipmentId",
+            "type": "equipmentType",
+            "owner": "inspectorName",
+            "date": "inspectionDate"
+          },
+          "payloadKeys": {
+            "type": "inspectionType"
+          },
+          "navigation": {
+            "listingSuffix": "inspections",
+            "homeSuffix": "home"
           }
         }
       },

@@ -552,7 +552,79 @@
           "asset_id": "id",
           "date_range": "inspection.next_inspection_date"
         },
-        "assetTypeWizardMapping": {
+        "recordWorkspaceRouting": {
+          "sourceField": "asset_type",
+          "defaultWorkspace": "intelliINSPECT/pressure-vessel-tank-wizard",
+          "caseInsensitive": true,
+          "trimWhitespace": true,
+          "mappings": {
+            "Air Cooler": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Boiler": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Column": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Pipe": "intelliINSPECT/pipework-inspection-wizard",
+            "Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Pump": "intelliINSPECT/rotating-equipment-wizard",
+            "Compressor": "intelliINSPECT/rotating-equipment-wizard",
+            "Turbine": "intelliINSPECT/rotating-equipment-wizard",
+            "Condenser": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Evaporator": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Fired Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Furnace": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Shell and Tube": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Plate Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "Pressure Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Storage Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Spherical Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Bullet Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Separator": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Knock-out Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Scrubber": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Absorber": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Reactor": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Tower": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "Piping": "intelliINSPECT/pipework-inspection-wizard",
+            "Pipeline": "intelliINSPECT/pipework-inspection-wizard",
+            "Process Pipeline": "intelliINSPECT/pipework-inspection-wizard",
+            "Ducting": "intelliINSPECT/pipework-inspection-wizard",
+            "Centrifugal Pump": "intelliINSPECT/rotating-equipment-wizard",
+            "Positive Displacement Pump": "intelliINSPECT/rotating-equipment-wizard",
+            "Gas Compressor": "intelliINSPECT/rotating-equipment-wizard",
+            "Reciprocating Compressor": "intelliINSPECT/rotating-equipment-wizard",
+            "Steam Turbine": "intelliINSPECT/rotating-equipment-wizard",
+            "Gas Turbine": "intelliINSPECT/rotating-equipment-wizard",
+            "Motor": "intelliINSPECT/rotating-equipment-wizard",
+            "Fan": "intelliINSPECT/rotating-equipment-wizard",
+            "Blower": "intelliINSPECT/rotating-equipment-wizard"
+          },
+          "patternMappings": [
+            {
+              "matchType": "includes",
+              "value": ["exchanger", "boiler", "heater", "condenser", "evaporator", "cooler"],
+              "workspace": "intelliINSPECT/heat-exchanger-boiler-wizard"
+            },
+            {
+              "matchType": "includes",
+              "value": ["vessel", "tank", "separator", "drum", "reactor", "column", "tower", "scrubber", "absorber"],
+              "workspace": "intelliINSPECT/pressure-vessel-tank-wizard"
+            },
+            {
+              "matchType": "includes",
+              "value": ["pipe", "pipeline", "ducting"],
+              "workspace": "intelliINSPECT/pipework-inspection-wizard"
+            },
+            {
+              "matchType": "includes",
+              "value": ["pump", "compressor", "turbine", "motor", "fan", "blower"],
+              "workspace": "intelliINSPECT/rotating-equipment-wizard"
+            }
+          ]
+        },
+        "legacyWorkspaceMapping": {
           "Air Cooler": "intelliINSPECT/heat-exchanger-boiler-wizard",
           "Boiler": "intelliINSPECT/heat-exchanger-boiler-wizard",
           "Column": "intelliINSPECT/pressure-vessel-tank-wizard",
@@ -700,9 +772,7 @@
                   "type": "workspace",
                   "workspace": "{wizard_mapping}",
                   "params": {
-                    "asset_id": "{id}",
-                    "asset_type": "{asset_type}",
-                    "asset_name": "{name}",
+                    "record_id": "{id}",
                     "mode": "create"
                   }
                 }

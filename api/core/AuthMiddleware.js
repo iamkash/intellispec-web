@@ -42,19 +42,38 @@ function getJwtSecret() {
 function extractAndVerifyToken(request) {
   // Extract token from Authorization header
   const authHeader = request.headers.authorization || request.headers.Authorization;
+  let token = null;
   
-  if (!authHeader) {
-    throw new AuthenticationError('No authorization header provided');
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.substring(7).trim();
   }
-  
-  if (!authHeader.startsWith('Bearer ')) {
-    throw new AuthenticationError('Invalid authorization format. Expected: Bearer <token>');
+
+  // Fallback to query string token for scenarios where headers can't be set (e.g. <img> tags)
+  if (!token && request.query) {
+    const tokenKeys = ['authToken', 'token', 'access_token', 'accessToken'];
+    for (const key of tokenKeys) {
+      const candidate = request.query[key];
+      if (Array.isArray(candidate)) {
+        if (candidate.length > 0 && typeof candidate[0] === 'string' && candidate[0].trim()) {
+          token = candidate[0].trim();
+          break;
+        }
+      } else if (typeof candidate === 'string' && candidate.trim()) {
+        token = candidate.trim();
+        break;
+      }
+    }
+
+    if (token) {
+      logger.debug('[Auth] Using token from query parameter', {
+        path: request.url,
+        source: 'query'
+      });
+    }
   }
-  
-  const token = authHeader.substring(7).trim();
   
   if (!token) {
-    throw new AuthenticationError('No token provided in authorization header');
+    throw new AuthenticationError('No authentication token provided');
   }
   
   // Verify JWT token
@@ -387,7 +406,6 @@ module.exports = {
   verifyPlatformAdmin: requirePlatformAdmin,
   requireSuperAdmin: requirePlatformAdmin
 };
-
 
 
 
