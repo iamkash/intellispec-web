@@ -103,7 +103,7 @@ export class AIAgenticWizardGadget extends BaseGadget {
     name: 'AI Agentic Wizard',
     description: 'Generic framework-level AI Agentic wizard supporting any inspection workflow via metadata',
     version: '2.0.0',
-    author: 'IntelliSpec Team',
+    author: 'intelliSPEC Team',
     category: 'ai',
     tags: ['ai', 'agentic', 'wizard', 'framework', 'generic', 'inspection', 'realtime', 'hitl'],
     gadgetType: GadgetType.FORM,

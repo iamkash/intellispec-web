@@ -155,7 +155,7 @@ export class GenericRAGChatbotGadget extends BaseGadget {
     name: 'Generic RAG Chatbot',
     description: 'AI-powered chatbot with RAG, voice capabilities, and tool calling',
     version: '1.0.0',
-    author: 'IntelliSpec Framework',
+    author: 'intelliSPEC Framework',
     tags: ['ai', 'chatbot', 'rag', 'voice', 'tools'],
     gadgetType: GadgetType.INTERACTIVE,
     widgetTypes: ['GenericRAGChatbotComponent'],
@@ -300,7 +300,7 @@ export class GenericRAGChatbotGadget extends BaseGadget {
       name: 'Generic RAG Chatbot',
       description: 'AI-powered chatbot with RAG, voice capabilities, and tool calling',
       version: '1.0.0',
-      author: 'IntelliSpec Framework',
+      author: 'intelliSPEC Framework',
       tags: ['ai', 'chatbot', 'rag', 'voice', 'tools'],
       configSchema: {
         type: 'object',

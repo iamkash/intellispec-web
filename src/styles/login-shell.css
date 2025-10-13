@@ -1,4 +1,53 @@
-/* Login Shell Styles - Imported from LoginShell component */
+/* intelliSPEC Auth Shell styling aligned with theme tokens */
+.brand-name {
+  display: inline-flex;
+  align-items: baseline;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.brand-name__prefix {
+  text-transform: lowercase;
+}
+
+.brand-name__spec {
+  color: hsl(var(--primary));
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+:where(.dark, [data-theme="dark"]) html,
+:where(.dark, [data-theme="dark"]) body {
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+
+:where(.dark, [data-theme="dark"]) .login-shell {
+  background: hsl(var(--background));
+}
+
+:where(.dark, [data-theme="dark"]) .login-shell::before,
+:where(.dark, [data-theme="dark"]) .login-shell::after {
+  content: none;
+}
+
+:where(.dark, [data-theme="dark"]) .login-shell__container,
+:where(.dark, [data-theme="dark"]) .login-shell__hero,
+:where(.dark, [data-theme="dark"]) .hero-stat,
+:where(.dark, [data-theme="dark"]) .hero-feature {
+  background: hsl(var(--card));
+  border-color: hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+
+:where(.dark, [data-theme="dark"]) .hero-feature::before {
+  opacity: 0.1;
+}
+
+:where(.dark, [data-theme="dark"]) .hero-feature::after {
+  background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--accent)));
+  opacity: 0.6;
+}
 
 .login-shell {
   --login-spacing-xs: 0.5rem;
@@ -28,66 +77,353 @@
   color: hsl(var(--foreground));
   font-family: var(--font-sans);
   position: relative;
+  overflow: hidden;
+  padding: clamp(1.5rem, 4vw, 3.25rem);
+  isolation: isolate;
+}
+
+.login-shell::before,
+.login-shell::after {
+  content: none;
 }
 
 .login-shell__container {
   width: 100%;
-  max-width: 400px;
-  padding: var(--login-spacing-lg);
-  background: hsl(var(--card));
-  border: var(--login-border-width) solid hsl(var(--border));
+  max-width: 420px;
+  padding: clamp(1.6rem, 2.8vw, 2.4rem);
+  background: hsl(var(--card) / 0.82);
+  border: 1px solid hsl(var(--border) / 0.4);
   border-radius: var(--login-border-radius);
-  box-shadow: var(--login-shadow-lg);
+  box-shadow: 0 30px 60px -35px hsl(var(--primary) / 0.45), var(--login-shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.75rem, 2vh, 1rem);
+  backdrop-filter: saturate(180%) blur(24px);
+  position: relative;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: panelSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.18s forwards;
 }
 
+.login-shell__container::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 4px;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, hsl(var(--primary) / 0.65), hsl(var(--accent) / 0.55), transparent);
+  opacity: 0.75;
+}
+
+.login-shell__container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid hsl(var(--border) / 0.35);
+  pointer-events: none;
+}
+
+.login-shell__hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  overflow: hidden;
+  min-height: clamp(360px, 66vh, 600px);
+  isolation: isolate;
+  border-radius: calc(var(--login-border-radius) * 2.4);
+  border: 1px solid hsl(var(--border));
+  box-shadow:
+    inset 0 1px 0 hsl(var(--background) / 0.6),
+    var(--login-shadow-lg);
+}
+
+.login-shell__hero::before {
+  display: none;
+}
+
+.login-shell__hero::after {
+  display: none;
+}
+
+.login-shell__hero-glow {
+  display: none;
+}
+
+.login-shell__hero-surface {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.7rem, 1.4vh, 1.2rem);
+  width: min(760px, 100%);
+  align-self: center;
+  padding: clamp(1rem, 2.3vh, 1.8rem) clamp(0.5rem, 1.4vw, 1rem);
+}
+
+.hero-badge,
+.hero-eyebrow,
+.hero-heading,
+.hero-tagline,
+.hero-body,
+.hero-stats,
+.hero-feature,
+.hero-stat {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroFadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hero-badge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  background: hsl(var(--primary) / 0.12);
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--primary) / 0.24);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  animation-delay: 0.08s;
+}
+
+.hero-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: hsl(var(--primary));
+  animation-delay: 0.12s;
+}
+
+.hero-heading {
+  font-size: clamp(2.1rem, 3.3vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0;
+  color: hsl(var(--foreground));
+  letter-spacing: -0.02em;
+  animation-delay: 0.18s;
+}
+
+.hero-tagline {
+  margin: 0;
+  font-size: clamp(1rem, 2.3vw, 1.4rem);
+  color: hsl(var(--muted-foreground));
+  animation-delay: 0.26s;
+}
+
+.hero-body {
+  margin: 0;
+  font-size: clamp(0.92rem, 1.9vw, 1.05rem);
+  line-height: 1.5;
+  color: hsl(var(--muted-foreground));
+  animation-delay: 0.32s;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.55rem;
+  animation-delay: 0.42s;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 1.05rem;
+  border-radius: calc(var(--login-border-radius) * 1.4);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  box-shadow: var(--login-shadow-sm);
+  animation-delay: 0.48s;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.hero-stat:hover,
+.hero-stat:focus-within {
+  transform: translateY(-3px);
+  border-color: hsl(var(--primary) / 0.35);
+  box-shadow: 0 16px 28px -24px hsl(var(--primary) / 0.45);
+}
+
+.hero-stat__value {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.hero-stat__label {
+  font-size: 0.8rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.35;
+}
+
+.hero-feature-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.hero-feature {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.95rem 1.2rem 1rem 1.35rem;
+  border-radius: calc(var(--login-border-radius) * 1.4);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--login-shadow-sm);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.hero-feature::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, hsl(var(--primary) / 0.16), hsl(var(--accent) / 0.14));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.hero-feature::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 4px;
+  background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--accent)));
+  opacity: 0.85;
+  border-top-left-radius: calc(var(--login-border-radius) * 1.4);
+  border-bottom-left-radius: calc(var(--login-border-radius) * 1.4);
+  z-index: 1;
+}
+
+.hero-feature:hover,
+.hero-feature:focus-within {
+  transform: translateY(-3px);
+  border-color: hsl(var(--primary) / 0.35);
+  box-shadow: 0 16px 28px -24px hsl(var(--primary) / 0.45);
+}
+
+.hero-feature:hover::before,
+.hero-feature:focus-within::before {
+  opacity: 1;
+}
+
+.hero-feature__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-feature__title {
+  font-weight: 600;
+  font-size: clamp(0.95rem, 2vw, 1.08rem);
+  color: hsl(var(--foreground));
+  letter-spacing: -0.01em;
+}
+
+.hero-feature__description {
+  font-size: 0.84rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.45;
+}
+
+.hero-feature:nth-child(1) { animation-delay: 0.6s; }
+.hero-feature:nth-child(2) { animation-delay: 0.68s; }
+.hero-feature:nth-child(3) { animation-delay: 0.76s; }
+.hero-feature:nth-child(4) { animation-delay: 0.84s; }
+
+.hero-stat:nth-child(1) { animation-delay: 0.48s; }
+.hero-stat:nth-child(2) { animation-delay: 0.56s; }
+.hero-stat:nth-child(3) { animation-delay: 0.64s; }
+.hero-stat:nth-child(4) { animation-delay: 0.72s; }
+
 .login-shell__branding {
-  text-align: center;
-  margin-bottom: var(--login-spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: clamp(0.4rem, 1.5vh, 0.8rem);
 }
 
 .branding-logo {
-  max-height: 60px;
+  max-height: 54px;
   max-width: 200px;
   width: auto;
   height: auto;
 }
 
 .login-shell__header {
-  text-align: center;
-  margin-bottom: var(--login-spacing-xl);
+  text-align: left;
+  margin-bottom: clamp(0.8rem, 2vh, 1.2rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
 }
 
 .login-title {
-  font-size: var(--login-font-size-2xl);
+  font-size: clamp(1.8rem, 3.2vw, 2.2rem);
   font-weight: 600;
   color: hsl(var(--foreground));
-  margin: 0 0 var(--login-spacing-sm) 0;
-  line-height: 1.2;
+  margin: 0;
+  line-height: 1.1;
 }
 
 .login-subtitle {
-  font-size: var(--login-font-size-base);
-  color: hsl(var(--muted-foreground));
-  margin: 0 0 var(--login-spacing-sm) 0;
-  line-height: 1.4;
-}
-
-.login-description {
-  font-size: var(--login-font-size-sm);
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
   color: hsl(var(--muted-foreground));
   margin: 0;
   line-height: 1.4;
 }
 
+.login-description {
+  font-size: 0.92rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+  line-height: 1.5;
+}
+
 .login-shell__form {
   width: 100%;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: panelSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.24s forwards;
 }
 
 .form-fields {
   display: flex;
   flex-direction: column;
-  gap: var(--login-spacing-md);
-  margin-bottom: var(--login-spacing-lg);
+  gap: clamp(0.55rem, 1.6vh, 0.9rem);
+  margin-bottom: clamp(0.9rem, 2.4vh, 1.2rem);
 }
 
 .field-group {
@@ -112,35 +448,47 @@
 
 .field-input {
   width: 100%;
-  padding: var(--login-spacing-sm);
+  padding: clamp(0.6rem, 1.9vh, 0.75rem);
   font-size: var(--login-font-size-base);
   line-height: 1.5;
   color: hsl(var(--foreground));
-  background: hsl(var(--background));
-  border: var(--login-border-width) solid hsl(var(--border));
+  background: hsl(var(--card) / 0.6);
+  border: 1px solid hsl(var(--border) / 0.6);
   border-radius: var(--login-border-radius);
-  transition: var(--login-transition);
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.4);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
   outline: none;
+}
+
+.field-input:hover {
+  border-color: hsl(var(--ring) / 0.7);
+  background: hsl(var(--card) / 0.7);
+}
+
+.field-input::placeholder {
+  color: hsl(var(--muted-foreground) / 0.8);
 }
 
 .field-input:focus {
   border-color: hsl(var(--ring));
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.18), 0 14px 28px -24px hsl(var(--ring) / 0.55);
 }
 
 .field-input:disabled {
-  opacity: 0.5;
+  opacity: 0.65;
   cursor: not-allowed;
-  background: hsl(var(--muted));
+  background: hsl(var(--muted) / 0.4);
+  border-color: hsl(var(--muted) / 0.6);
 }
 
 .field-input--error {
   border-color: hsl(var(--destructive));
+  background: hsl(var(--destructive) / 0.05);
 }
 
 .field-input--error:focus {
   border-color: hsl(var(--destructive));
-  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.2);
+  box-shadow: 0 0 0 3px hsl(var(--destructive) / 0.18);
 }
 
 .field-error {
@@ -151,18 +499,36 @@
 
 .form-error {
   padding: var(--login-spacing-sm);
-  background: hsl(var(--destructive) / 0.1);
-  border: var(--login-border-width) solid hsl(var(--destructive) / 0.2);
+  background: hsl(var(--destructive) / 0.12);
+  border: var(--login-border-width) solid hsl(var(--destructive) / 0.28);
   border-radius: var(--login-border-radius);
   color: hsl(var(--destructive));
   font-size: var(--login-font-size-sm);
   margin-bottom: var(--login-spacing-md);
+  box-shadow: 0 12px 24px -22px hsl(var(--destructive) / 0.5);
 }
 
 .form-actions {
   display: flex;
   flex-direction: column;
-  gap: var(--login-spacing-sm);
+  gap: clamp(0.65rem, 1.5vh, 0.9rem);
+  margin-top: 0.2rem;
+}
+
+.login-security-note {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: hsl(var(--muted-foreground));
+  margin-top: 0.6rem;
+}
+
+.login-security-note svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  color: hsl(var(--primary));
+  flex-shrink: 0;
 }
 
 .action-button {
@@ -196,6 +562,7 @@
 .action-button--primary {
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
+  box-shadow: 0 18px 32px -18px hsl(var(--primary) / 0.75), 0 14px 32px -20px hsl(var(--accent) / 0.65);
 }
 
 .action-button--primary:hover:not(:disabled) {
@@ -203,12 +570,13 @@
 }
 
 .action-button--secondary {
-  background: hsl(var(--secondary));
+  background: hsl(var(--secondary) / 0.9);
   color: hsl(var(--secondary-foreground));
+  border: 1px solid hsl(var(--secondary-foreground) / 0.2);
 }
 
 .action-button--secondary:hover:not(:disabled) {
-  background: hsl(var(--secondary) / 0.8);
+  background: hsl(var(--secondary) / 0.75);
 }
 
 .action-button--text {
@@ -258,8 +626,8 @@
 .login-shell__overlay {
   position: absolute;
   inset: 0;
-  background: hsl(var(--background) / 0.8);
-  backdrop-filter: blur(4px);
+  background: hsl(var(--background) / 0.82);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -272,9 +640,9 @@
   align-items: center;
   gap: var(--login-spacing-sm);
   padding: var(--login-spacing-lg);
-  background: hsl(var(--card));
+  background: hsl(var(--card) / 0.92);
   border-radius: var(--login-border-radius);
-  box-shadow: var(--login-shadow-lg);
+  box-shadow: 0 20px 40px -28px hsl(var(--primary) / 0.45);
 }
 
 .loading-text {
@@ -285,10 +653,11 @@
 .login-shell-error {
   max-width: 500px;
   padding: var(--login-spacing-lg);
-  background: hsl(var(--destructive) / 0.1);
-  border: var(--login-border-width) solid hsl(var(--destructive) / 0.2);
+  background: hsl(var(--destructive) / 0.12);
+  border: var(--login-border-width) solid hsl(var(--destructive) / 0.3);
   border-radius: var(--login-border-radius);
   color: hsl(var(--destructive));
+  box-shadow: 0 20px 40px -28px hsl(var(--destructive) / 0.55);
 }
 
 .login-shell-error h2 {
@@ -309,9 +678,31 @@
   to { transform: rotate(360deg); }
 }
 
+@keyframes heroGradientShift {
+  0% { transform: rotate(0deg) scale(1); opacity: 0.88; }
+  40% { transform: rotate(6deg) scale(1.05); opacity: 0.94; }
+  70% { transform: rotate(-4deg) scale(1.02); opacity: 0.9; }
+  100% { transform: rotate(0deg) scale(1); opacity: 0.88; }
+}
+
+@keyframes heroGlowPulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.55; }
+}
+
+@keyframes heroFadeUp {
+  0% { opacity: 0; transform: translateY(26px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes panelSlideIn {
+  0% { opacity: 0; transform: translateY(26px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 /* Theme Variations */
 .login-shell--modern {
-  background: linear-gradient(135deg, hsl(var(--primary) / 0.1), hsl(var(--secondary) / 0.1));
+  background: linear-gradient(160deg, hsl(var(--primary) / 0.06), hsl(var(--secondary) / 0.04));
 }
 
 .login-shell--minimal .login-shell__container {
@@ -323,8 +714,18 @@
 /* Layout Variations */
 .login-shell--split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
   min-height: 100vh;
+  padding: clamp(0.6rem, 2.2vh, 1.2rem);
+  align-items: stretch;
+  gap: clamp(0.9rem, 2vw, 1.4rem);
+}
+
+.login-shell--split .login-shell__container {
+  align-self: center;
+  justify-self: center;
+  margin: 0;
+  max-width: 420px;
 }
 
 .login-shell--sidebar .login-shell__container {
@@ -336,6 +737,20 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+  .login-shell--split {
+    grid-template-columns: 1fr;
+  }
+  
+  .login-shell__hero {
+    min-height: auto;
+  }
+  
+  .login-shell--split .login-shell__container {
+    margin: clamp(1.5rem, 4vw, 2.5rem);
+  }
+}
+
 @media (max-width: 768px) {
   .login-shell {
     padding: var(--login-spacing-md);
@@ -350,6 +765,19 @@
   
   .login-shell--split {
     grid-template-columns: 1fr;
+    gap: var(--login-spacing-lg);
+  }
+
+  .login-shell__hero {
+    display: none;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  
+  .login-shell--split .login-shell__container {
+    margin: 0;
   }
   
   .login-shell--sidebar .login-shell__container {
@@ -379,16 +807,135 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  
+  .login-shell__hero::before,
+  .login-shell__hero-glow {
+    animation: none !important;
+  }
+  
+  .hero-badge,
+  .hero-eyebrow,
+  .hero-heading,
+  .hero-tagline,
+  .hero-body,
+  .hero-stats,
+  .hero-stat,
+  .hero-feature,
+  .login-shell__container,
+  .login-shell__form {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
 }
 
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .login-shell {
     color-scheme: dark;
+    background: hsl(var(--background));
   }
 }
 
-/* Loading spinner animation for App.tsx */
-@keyframes spin {
-  to { transform: rotate(360deg); }
+/* Tenant Discovery & Selection Styles */
+.tenant-discovery-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--login-spacing-sm);
+  padding: var(--login-spacing-md);
+  background: hsl(var(--primary) / 0.05);
+  border: 1px solid hsl(var(--primary) / 0.2);
+  border-radius: var(--login-border-radius);
+  margin-top: var(--login-spacing-md);
+  color: hsl(var(--primary));
+  font-size: 0.875rem;
+}
+
+.discovery-spinner {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid hsl(var(--primary) / 0.3);
+  border-top-color: hsl(var(--primary));
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.discovery-text {
+  font-weight: 500;
+}
+
+.tenant-selector-container {
+  margin-top: clamp(0.5rem, 1.6vh, 0.9rem);
+  padding: clamp(0.55rem, 1.4vh, 0.85rem);
+  background: hsl(var(--muted) / 0.32);
+  border: 1px solid hsl(var(--border) / 0.9);
+  border-radius: calc(var(--login-border-radius) * 0.9);
+  box-shadow: inset 0 1px 0 hsl(var(--background) / 0.4);
+}
+
+.tenant-selector-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: var(--login-spacing-xs);
+}
+
+.tenant-selector {
+  width: 100%;
+  padding: clamp(0.5rem, 1.5vh, 0.65rem) var(--login-spacing-md);
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--input));
+  border-radius: calc(var(--login-border-radius) * 0.9);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.tenant-selector:hover {
+  border-color: hsl(var(--ring));
+}
+
+.tenant-selector:focus {
+  outline: none;
+  border-color: hsl(var(--ring));
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.12);
+}
+
+.tenant-selector-hint {
+  margin-top: clamp(0.35rem, 1vh, 0.5rem);
+  font-size: 0.76rem;
+  color: hsl(var(--muted-foreground));
+  line-height: 1.4;
+}
+
+.tenant-confirmed-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--login-spacing-sm);
+  padding: var(--login-spacing-sm) var(--login-spacing-md);
+  margin-top: var(--login-spacing-md);
+  background: hsl(var(--success) / 0.1);
+  border: 1px solid hsl(var(--success) / 0.3);
+  border-radius: var(--login-border-radius);
+  font-size: 0.875rem;
+  color: hsl(var(--success-foreground));
+}
+
+.tenant-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  color: hsl(var(--success));
+}
+
+.tenant-name {
+  color: hsl(var(--foreground));
+}
+
+.tenant-name strong {
+  font-weight: 600;
+  color: hsl(var(--primary));
 }

@@ -12,7 +12,7 @@ export class DataImportExportGadget extends BaseGadget {
     name: 'Data Import/Export Gadget',
     description: 'Enterprise-grade data import/export with Excel support and column mapping',
     version: '2.0.0',
-    author: 'IntelliSpec',
+    author: 'intelliSPEC',
     category: 'data',
     tags: ['import', 'export', 'excel', 'data', 'batch'],
     gadgetType: GadgetType.FORM,

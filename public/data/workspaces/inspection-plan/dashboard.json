@@ -335,7 +335,7 @@
     {
       "id": "rag-chatbot",
       "type": "GenericRAGChatbotGadget",
-      "title": "Ask IntelliSpec",
+      "title": "Ask intelliSPEC",
       "description": "Conversational AI to query inspection data in plain English.",
       "position": { "x": 6, "y": 3, "w": 6, "h": 2 },
       "config": {

@@ -1,4 +1,4 @@
-# IntelliSpec Platform Runbook
+# intelliSPEC Platform Runbook
 
 ## At a Glance
 - Multi-tenant inspection and AI workflow platform using a React/TypeScript frontend with a Fastify + MongoDB backend and LangGraph agent orchestration.

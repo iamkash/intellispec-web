@@ -82,7 +82,7 @@ export const PDFReportPreviewWidget: React.FC<PDFReportPreviewWidgetProps> = ({
   // Report configuration
   reportTitle = 'API 510 Pressure Vessel Inspection Report',
   reportSubtitle = 'Comprehensive Inspection Documentation',
-  companyName = 'IntelliSpec Inspection Services',
+  companyName = 'intelliSPEC Inspection Services',
   companyLogo,
   inspectorName,
   inspectionDate,

@@ -1,6 +1,6 @@
-# IntelliSpec Web
+# intelliSPEC Web
 
-This repository powers IntelliSpec’s AI-driven inspection platform: a React/TypeScript front end backed by a Fastify + MongoDB API, LangGraph workflows, and multi-tenant enterprise controls.
+This repository powers intelliSPEC’s AI-driven inspection platform: a React/TypeScript front end backed by a Fastify + MongoDB API, LangGraph workflows, and multi-tenant enterprise controls.
 
 ## Quick Start
 

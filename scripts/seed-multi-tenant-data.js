@@ -712,7 +712,7 @@ async function main() {
     
     await connectToDatabase();
     
-    console.log('\n🌱 IntelliSpec Multi-Tenant Seed Script');
+    console.log('\n🌱 intelliSPEC Multi-Tenant Seed Script');
     console.log('========================================\n');
     
     if (shouldClear) {

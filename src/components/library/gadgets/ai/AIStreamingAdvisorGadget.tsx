@@ -38,7 +38,7 @@ export class AIStreamingAdvisorGadget extends BaseGadget {
     name: 'AI Streaming Advisor Gadget',
     description: 'Generic AI advisor that fetches data and streams AI recommendations in real-time',
     version: '1.0.0',
-    author: 'IntelliSpec',
+    author: 'intelliSPEC',
     category: 'ai',
     tags: ['ai', 'streaming', 'recommendations', 'advisor'],
     gadgetType: GadgetType.DISPLAY,

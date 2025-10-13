@@ -287,7 +287,7 @@ export const PDFStep: React.FC<PDFStepProps> = ({
     }
   });
 
-  const companyName = (pdfStyling as any)?.header?.companyName || 'IntelliSpec';
+  const companyName = (pdfStyling as any)?.header?.companyName || 'intelliSPEC';
   const companyAddress = (pdfStyling as any)?.header?.companyAddress || '';
 
   const pdfMetadata = { 

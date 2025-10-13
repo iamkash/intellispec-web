@@ -1,4 +1,4 @@
-# Cursor IDE Rules for IntelliSpec Workspace & Document Management
+# Cursor IDE Rules for intelliSPEC Workspace & Document Management
 
 ## 🚨 ABSOLUTE REQUIREMENT #1: NO HARDCODED BUSINESS LOGIC 🚨
 
@@ -219,7 +219,7 @@ public/data/workspaces/<workspace>/<workspace>.json
    ```
 
 4. **When to use plain fetch (rare cases):**
-   - External APIs (non-IntelliSpec APIs)
+   - External APIs (non-intelliSPEC APIs)
    - Public endpoints that don't need auth
    - Use `skipAuth: true` option if needed:
      ```typescript

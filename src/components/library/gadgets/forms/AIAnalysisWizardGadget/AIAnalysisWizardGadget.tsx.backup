@@ -34,7 +34,7 @@ export class AIAnalysisWizardGadget extends BaseGadget {
   private lastPropsHash: string = '';
   private persistedId: string | null = null;
 
-  public metadata: GadgetMetadata = { id: 'ai-analysis-wizard', name: 'AI Analysis Wizard', description: 'Generic AI-powered inspection wizard with metadata-driven configuration', version: '1.0.0', author: 'IntelliSpec Team', category: 'forms', tags: ['wizard','ai','inspection','voice','image','analysis','markdown','generic'], gadgetType: GadgetType.FORM, widgetTypes: ['voice-recorder-widget','image-upload-with-drawing-widget','ai-analysis-widget'] };
+  public metadata: GadgetMetadata = { id: 'ai-analysis-wizard', name: 'AI Analysis Wizard', description: 'Generic AI-powered inspection wizard with metadata-driven configuration', version: '1.0.0', author: 'intelliSPEC Team', category: 'forms', tags: ['wizard','ai','inspection','voice','image','analysis','markdown','generic'], gadgetType: GadgetType.FORM, widgetTypes: ['voice-recorder-widget','image-upload-with-drawing-widget','ai-analysis-widget'] };
 
   public schema: GadgetSchema = { type: 'object', properties: { currentStep: { type: 'number', minimum: 0 }, completedSteps: { type: 'array', items: { type: 'number' } }, inspectionType: { type: 'string' }, voiceData: { type: 'object' }, textData: { type: 'string' }, imageData: { type: 'array' }, analysisData: { type: 'object' } }, required: ['currentStep','completedSteps'], widgetSchemas: {} };
 
@@ -2120,7 +2120,7 @@ console.log('[Grid Populate] Prompt ref:', promptRef);
       }
     });
 
-    const companyName = (pdfStyling as any)?.header?.companyName || 'IntelliSpec';
+    const companyName = (pdfStyling as any)?.header?.companyName || 'intelliSPEC';
     const companyAddress = (pdfStyling as any)?.header?.companyAddress || '';
     const pdfMetadata = { header: { title: String(config.steps.pdf.title || config.title || 'Report'), companyName, companyAddress }, pdfStyling, sections: contentSections } as any;
 

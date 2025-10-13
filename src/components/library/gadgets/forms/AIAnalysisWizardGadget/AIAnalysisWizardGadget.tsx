@@ -44,7 +44,7 @@ export class AIAnalysisWizardGadget extends BaseGadget {
     name: 'AI Analysis Wizard', 
     description: 'Generic AI-powered inspection wizard with metadata-driven configuration', 
     version: '1.0.0', 
-    author: 'IntelliSpec Team', 
+    author: 'intelliSPEC Team', 
     category: 'forms', 
     tags: ['wizard','ai','inspection','voice','image','analysis','markdown','generic'], 
     gadgetType: GadgetType.FORM, 

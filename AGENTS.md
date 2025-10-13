@@ -2,7 +2,7 @@
 
 ## Project overview
 
-- IntelliSpec Web couples a React/TypeScript SPA (`src/`) with a Fastify + MongoDB API (`api/`) that powers multi-tenant inspections, document management, and LangGraph-based workflows.
+- intelliSPEC Web couples a React/TypeScript SPA (`src/`) with a Fastify + MongoDB API (`api/`) that powers multi-tenant inspections, document management, and LangGraph-based workflows.
 - The API is layered: `core/` hosts framework services (auth, request context, metrics, logging), `routes/` defines Fastify plugins per feature, `repositories/` wrap Mongoose models, `services/` provide business orchestration, and `workflows/` contains LangGraph agents.
 - Cross-cutting concerns (audit trail, metrics, feature flags, tenant context) are centralized in `api/core` and expected to be consumed rather than reimplemented in feature code.
 - Legacy scripts live under `api/scripts/` and `scripts/`; prefer extending the framework modules before adding new ad-hoc utilities.
