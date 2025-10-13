@@ -500,6 +500,25 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
     >([]);
     const [isDiscoveringTenant, setIsDiscoveringTenant] = useState(false);
     const [showTenantSelector, setShowTenantSelector] = useState(false);
+    const [authView, setAuthView] = useState<
+      "login" | "forgot" | "forgot-success" | "reset" | "reset-success"
+    >("login");
+    const [forgotEmail, setForgotEmail] = useState("");
+    const [forgotLoading, setForgotLoading] = useState(false);
+    const [forgotError, setForgotError] = useState<string | null>(null);
+    const [resetToken, setResetToken] = useState<string | null>(null);
+    const [resetValidationStatus, setResetValidationStatus] = useState<
+      "idle" | "validating" | "valid" | "invalid"
+    >("idle");
+    const [resetContext, setResetContext] = useState<{
+      maskedEmail?: string;
+      tenantSlug?: string;
+      expiresAt?: string;
+    } | null>(null);
+    const [resetPassword, setResetPassword] = useState("");
+    const [resetPasswordConfirm, setResetPasswordConfirm] = useState("");
+    const [resetLoading, setResetLoading] = useState(false);
+    const [resetError, setResetError] = useState<string | null>(null);
 
     // Refs for accessibility and focus management
     const formRef = useRef<HTMLFormElement>(null);
@@ -766,7 +785,7 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
       return isValid;
     }, [metadata.fields, formData]);
 
-    const handleSubmit = useCallback(
+    const handleLoginSubmit = useCallback(
       async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -864,16 +883,289 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
       ]
     );
 
+    const clearResetTokenFromUrl = useCallback(() => {
+      try {
+        const url = new URL(window.location.href);
+        if (url.searchParams.has("token")) {
+          url.searchParams.delete("token");
+        }
+        if (url.searchParams.has("resetToken")) {
+          url.searchParams.delete("resetToken");
+        }
+        window.history.replaceState({}, document.title, url.toString());
+      } catch (error) {
+        console.error("Failed to clear reset token from URL:", error);
+      }
+    }, []);
+
+    const handleForgotPasswordClick = useCallback(() => {
+      setForgotError(null);
+      setAuthView("forgot");
+      setForgotEmail((formData["email"] as string) || "");
+      setResetError(null);
+      setResetPassword("");
+      setResetPasswordConfirm("");
+      setResetToken(null);
+      setResetValidationStatus("idle");
+      setResetContext(null);
+      clearResetTokenFromUrl();
+    }, [formData, clearResetTokenFromUrl]);
+
+    const handleReturnToLogin = useCallback(() => {
+      setAuthView("login");
+      setForgotError(null);
+      setResetError(null);
+      setForgotLoading(false);
+      setResetLoading(false);
+      setResetPassword("");
+      setResetPasswordConfirm("");
+      setResetToken(null);
+      setResetValidationStatus("idle");
+      setResetContext(null);
+      clearResetTokenFromUrl();
+    }, [clearResetTokenFromUrl]);
+
+    const handleForgotPasswordSubmit = useCallback(
+      async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (forgotLoading) return;
+
+        const emailToUse =
+          forgotEmail.trim() ||
+          ((formData["email"] as string) || "").trim();
+
+        if (!emailToUse) {
+          setForgotError("Please enter the email associated with your account.");
+          return;
+        }
+
+        setForgotLoading(true);
+        setForgotError(null);
+
+        try {
+          const response = await fetch(
+            getApiFullUrl("/api/auth/forgot-password"),
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                email: emailToUse,
+                tenantSlug: tenantDiscovered,
+              }),
+            }
+          );
+
+          const raw = await response.text();
+          let data: any = {};
+          try {
+            data = raw ? JSON.parse(raw) : {};
+          } catch {}
+
+          if (!response.ok) {
+            throw new Error(
+              data?.error ||
+                data?.message ||
+                raw ||
+                "Unable to process password reset request"
+            );
+          }
+
+          setAuthView("forgot-success");
+          setForgotEmail(emailToUse);
+        } catch (error) {
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Unable to process password reset request";
+          setForgotError(message);
+        } finally {
+          setForgotLoading(false);
+        }
+      },
+      [forgotEmail, forgotLoading, formData, tenantDiscovered]
+    );
+
+    const validateResetToken = useCallback(
+      async (tokenValue: string) => {
+        if (!tokenValue) return;
+
+        setResetValidationStatus("validating");
+        setResetError(null);
+
+        try {
+          const response = await fetch(
+            getApiFullUrl(`/api/auth/reset-password/${tokenValue}`)
+          );
+          const raw = await response.text();
+          let data: any = {};
+          try {
+            data = raw ? JSON.parse(raw) : {};
+          } catch {}
+
+          if (!response.ok) {
+            throw new Error(
+              data?.error ||
+                data?.message ||
+                raw ||
+                "Invalid or expired password reset link"
+            );
+          }
+
+          setResetValidationStatus("valid");
+          setResetContext({
+            maskedEmail: data?.maskedEmail,
+            tenantSlug: data?.tenantSlug,
+            expiresAt: data?.expiresAt,
+          });
+        } catch (error) {
+          setResetValidationStatus("invalid");
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Invalid or expired password reset link";
+          setResetError(message);
+        }
+      },
+      []
+    );
+
+    useEffect(() => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const tokenParam = params.get("token") || params.get("resetToken");
+        if (tokenParam) {
+          setResetToken(tokenParam);
+          setAuthView("reset");
+          setResetPassword("");
+          setResetPasswordConfirm("");
+          validateResetToken(tokenParam);
+        }
+      } catch (error) {
+        console.error("Failed to parse password reset token from URL:", error);
+      }
+    }, [validateResetToken]);
+
+    const handleResetPasswordSubmit = useCallback(
+      async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (resetLoading) return;
+
+        if (!resetToken) {
+          setResetError(
+            "This password reset link is invalid or has already been used."
+          );
+          setResetValidationStatus("invalid");
+          return;
+        }
+
+        if (!resetPassword || resetPassword.length < 8) {
+          setResetError("Password must be at least 8 characters long.");
+          return;
+        }
+
+        if (resetPassword !== resetPasswordConfirm) {
+          setResetError("Passwords do not match.");
+          return;
+        }
+
+        setResetLoading(true);
+        setResetError(null);
+
+        try {
+          const response = await fetch(
+            getApiFullUrl("/api/auth/reset-password"),
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                token: resetToken,
+                password: resetPassword,
+              }),
+            }
+          );
+
+          const raw = await response.text();
+          let data: any = {};
+          try {
+            data = raw ? JSON.parse(raw) : {};
+          } catch {}
+
+          if (!response.ok) {
+            throw new Error(
+              data?.error ||
+                data?.message ||
+                raw ||
+                "Unable to reset password. Request a new reset link and try again."
+            );
+          }
+
+          setAuthView("reset-success");
+          setResetPassword("");
+          setResetPasswordConfirm("");
+          setResetToken(null);
+          setResetValidationStatus("idle");
+          setResetContext(null);
+          clearResetTokenFromUrl();
+        } catch (error) {
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Unable to reset password. Request a new reset link and try again.";
+          setResetError(message);
+          if (message.toLowerCase().includes("invalid")) {
+            setResetValidationStatus("invalid");
+          }
+        } finally {
+          setResetLoading(false);
+        }
+      },
+      [
+        resetLoading,
+        resetToken,
+        resetPassword,
+        resetPasswordConfirm,
+        clearResetTokenFromUrl,
+      ]
+    );
+
     // ==================== EFFECTS ====================
 
     // Focus first field on mount
     useEffect(() => {
-      if (firstFieldRef.current) {
+      if (authView === "login" && firstFieldRef.current) {
         firstFieldRef.current.focus();
       }
-    }, []);
+      if (authView === "forgot") {
+        const forgotInput = document.getElementById(
+          "forgot-email"
+        ) as HTMLInputElement | null;
+        forgotInput?.focus();
+      }
+      if (authView === "reset" && resetValidationStatus === "valid") {
+        const resetInput = document.getElementById(
+          "reset-password"
+        ) as HTMLInputElement | null;
+        resetInput?.focus();
+      }
+    }, [authView, resetValidationStatus]);
 
     // ==================== RENDER HELPERS ====================
+
+    const actionsToRender = useMemo(() => {
+      return metadata.actions.map((action) => {
+        if (action.id === "forgot-password") {
+          return {
+            ...action,
+            onClick: handleForgotPasswordClick,
+          };
+        }
+        return action;
+      });
+    }, [metadata.actions, handleForgotPasswordClick]);
 
     /**
      * Render form field
@@ -1103,115 +1395,370 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
           </div>
 
           {/* Form Section */}
-          <form
-            ref={formRef}
-            className="login-shell__form"
-            onSubmit={handleSubmit}
-            noValidate
-          >
-            {/* Fields */}
-            <div className="form-fields">
-              {metadata.fields.map((field, index) => renderField(field, index))}
-            </div>
-
-            {/* Tenant Discovery Indicator */}
-            {isDiscoveringTenant && (
-              <div
-                className="tenant-discovery-indicator"
-                role="status"
-                aria-live="polite"
-              >
-                <span className="discovery-spinner"></span>
-                <span className="discovery-text">
-                  Finding your organization...
-                </span>
+          {authView === "login" && (
+            <form
+              ref={formRef}
+              className="login-shell__form"
+              onSubmit={handleLoginSubmit}
+              noValidate
+            >
+              <div className="form-fields">
+                {metadata.fields.map((field, index) =>
+                  renderField(field, index)
+                )}
               </div>
-            )}
 
-            {/* Tenant Selector Dropdown */}
-            {showTenantSelector && availableTenants.length > 0 && (
-              <div className="tenant-selector-container">
-                <label
-                  htmlFor="tenant-selector"
-                  className="tenant-selector-label"
+              {isDiscoveringTenant && (
+                <div
+                  className="tenant-discovery-indicator"
+                  role="status"
+                  aria-live="polite"
                 >
-                  Select Your Organization
-                </label>
-                <select
-                  id="tenant-selector"
-                  className="tenant-selector"
-                  value={tenantDiscovered || ""}
-                  onChange={(e) => handleTenantSelect(e.target.value)}
-                  aria-label="Select organization"
-                >
-                  <option value="">-- Select Organization --</option>
-                  {availableTenants.map((tenant) => (
-                    <option key={tenant.slug} value={tenant.slug}>
-                      {tenant.name}
-                    </option>
-                  ))}
-                </select>
-                <p className="tenant-selector-hint">
-                  You have access to multiple organizations. Please select one
-                  to continue.
-                </p>
+                  <span className="discovery-spinner"></span>
+                  <span className="discovery-text">
+                    Finding your organization...
+                  </span>
+                </div>
+              )}
+
+              {showTenantSelector && availableTenants.length > 0 && (
+                <div className="tenant-selector-container">
+                  <label
+                    htmlFor="tenant-selector"
+                    className="tenant-selector-label"
+                  >
+                    Select Your Organization
+                  </label>
+                  <select
+                    id="tenant-selector"
+                    className="tenant-selector"
+                    value={tenantDiscovered || ""}
+                    onChange={(e) => handleTenantSelect(e.target.value)}
+                    aria-label="Select organization"
+                  >
+                    <option value="">-- Select Organization --</option>
+                    {availableTenants.map((tenant) => (
+                      <option key={tenant.slug} value={tenant.slug}>
+                        {tenant.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="tenant-selector-hint">
+                    You have access to multiple organizations. Please select one
+                    to continue.
+                  </p>
+                </div>
+              )}
+
+              {tenantDiscovered &&
+                !showTenantSelector &&
+                formData["email"] && (
+                  <div className="tenant-confirmed-indicator" role="status">
+                    <svg
+                      className="tenant-icon"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span className="tenant-name">
+                      Organization:{" "}
+                      <strong>
+                        {availableTenants.find(
+                          (t) => t.slug === tenantDiscovered
+                        )?.name || tenantDiscovered}
+                      </strong>
+                    </span>
+                  </div>
+                )}
+
+              {submitError && (
+                <div className="form-error" role="alert" aria-live="polite">
+                  {submitError}
+                </div>
+              )}
+
+              <div className="form-actions">
+                {actionsToRender.map(renderAction)}
               </div>
-            )}
 
-            {/* Tenant Confirmed Indicator */}
-            {tenantDiscovered && !showTenantSelector && formData["email"] && (
-              <div className="tenant-confirmed-indicator" role="status">
+              {metadata.securityAssurance && (
+                <div className="login-security-note" role="note">
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5 8a5 5 0 1110 0v1h.5A1.5 1.5 0 0117 10.5v5A1.5 1.5 0 0115.5 17h-11A1.5 1.5 0 013 15.5v-5A1.5 1.5 0 014.5 9H5V8zm2 1h6V8a3 3 0 10-6 0v1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span>{renderBrandAwareText(metadata.securityAssurance)}</span>
+                </div>
+              )}
+            </form>
+          )}
+
+          {authView === "forgot" && (
+            <form
+              className="login-shell__form"
+              onSubmit={handleForgotPasswordSubmit}
+              noValidate
+            >
+              <div className="form-fields">
+                <div className="field-group">
+                  <label htmlFor="forgot-email" className="field-label">
+                    Email Address
+                  </label>
+                  <input
+                    id="forgot-email"
+                    name="forgot-email"
+                    type="email"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    autoComplete="email"
+                    required
+                    className="field-input"
+                    placeholder="you@company.com"
+                  />
+                  <p className="form-helper">
+                    We will email password reset instructions to the address on
+                    file.
+                  </p>
+                </div>
+              </div>
+
+              {forgotError && (
+                <div className="form-error" role="alert" aria-live="polite">
+                  {forgotError}
+                </div>
+              )}
+
+              <div className="form-actions">
+                <button
+                  type="submit"
+                  className={`action-button action-button--primary ${
+                    forgotLoading ? "action-button--loading" : ""
+                  }`}
+                  disabled={forgotLoading}
+                >
+                  {forgotLoading && (
+                    <span className="loading-spinner" aria-hidden="true"></span>
+                  )}
+                  <span>Send reset link</span>
+                </button>
+                <button
+                  type="button"
+                  className="action-button action-button--text"
+                  onClick={handleReturnToLogin}
+                >
+                  Back to sign in
+                </button>
+              </div>
+            </form>
+          )}
+
+          {authView === "forgot-success" && (
+            <div className="login-shell__form login-shell__form--static">
+              <div className="form-success" role="status">
                 <svg
-                  className="tenant-icon"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+                  className="form-success__icon"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   aria-hidden="true"
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                    clipRule="evenodd"
-                  />
+                  <path d="M9 11l3 3L22 4" />
+                  <path d="M21 12v6a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h7" />
                 </svg>
-                <span className="tenant-name">
-                  Organization:{" "}
-                  <strong>
-                    {availableTenants.find((t) => t.slug === tenantDiscovered)
-                      ?.name || tenantDiscovered}
-                  </strong>
-                </span>
+                <h2>Password reset email sent</h2>
+                <p>
+                  If an account matches{" "}
+                  <strong>{renderBrandAwareText(forgotEmail)}</strong>, we just
+                  sent reset instructions. Check your inbox (and spam folder) to
+                  continue.
+                </p>
               </div>
-            )}
-
-            {/* Submit Error */}
-            {submitError && (
-              <div className="form-error" role="alert" aria-live="polite">
-                {submitError}
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="action-button action-button--primary"
+                  onClick={handleReturnToLogin}
+                >
+                  Return to sign in
+                </button>
               </div>
-            )}
-
-            {/* Actions */}
-            <div className="form-actions">
-              {metadata.actions.map(renderAction)}
             </div>
+          )}
 
-            {metadata.securityAssurance && (
-              <div className="login-security-note" role="note">
-                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path
-                    fillRule="evenodd"
-                    d="M5 8a5 5 0 1110 0v1h.5A1.5 1.5 0 0117 10.5v5A1.5 1.5 0 0115.5 17h-11A1.5 1.5 0 013 15.5v-5A1.5 1.5 0 014.5 9H5V8zm2 1h6V8a3 3 0 10-6 0v1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>{renderBrandAwareText(metadata.securityAssurance)}</span>
+          {authView === "reset" && (
+            <form
+              className="login-shell__form"
+              onSubmit={handleResetPasswordSubmit}
+              noValidate
+            >
+              {resetValidationStatus === "validating" && (
+                <div
+                  className="tenant-discovery-indicator"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <span className="discovery-spinner"></span>
+                  <span className="discovery-text">
+                    Validating your reset link...
+                  </span>
+                </div>
+              )}
+
+              {resetValidationStatus === "valid" && (
+                <div className="form-fields">
+                  <p className="form-helper">
+                    Reset password for{" "}
+                    <strong>
+                      {renderBrandAwareText(
+                        resetContext?.maskedEmail || "your account"
+                      )}
+                    </strong>
+                    . Your link expires soon—choose a new password below.
+                  </p>
+                  <div className="field-group">
+                    <label htmlFor="reset-password" className="field-label">
+                      New Password
+                    </label>
+                    <input
+                      id="reset-password"
+                      name="reset-password"
+                      type="password"
+                      value={resetPassword}
+                      onChange={(e) => setResetPassword(e.target.value)}
+                      autoComplete="new-password"
+                      minLength={8}
+                      required
+                      className="field-input"
+                      placeholder="Enter a new password"
+                    />
+                  </div>
+                  <div className="field-group">
+                    <label
+                      htmlFor="reset-password-confirm"
+                      className="field-label"
+                    >
+                      Confirm Password
+                    </label>
+                    <input
+                      id="reset-password-confirm"
+                      name="reset-password-confirm"
+                      type="password"
+                      value={resetPasswordConfirm}
+                      onChange={(e) =>
+                        setResetPasswordConfirm(e.target.value)
+                      }
+                      autoComplete="new-password"
+                      minLength={8}
+                      required
+                      className="field-input"
+                      placeholder="Re-enter your new password"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {resetValidationStatus === "invalid" && (
+                <div className="form-error" role="alert" aria-live="polite">
+                  {resetError ||
+                    "This password reset link is invalid or has expired. Request a new one to continue."}
+                </div>
+              )}
+
+              {resetValidationStatus === "valid" && resetError && (
+                <div className="form-error" role="alert" aria-live="polite">
+                  {resetError}
+                </div>
+              )}
+
+              <div className="form-actions">
+                <button
+                  type="submit"
+                  className={`action-button action-button--primary ${
+                    resetLoading ? "action-button--loading" : ""
+                  }`}
+                  disabled={
+                    resetLoading || resetValidationStatus !== "valid"
+                  }
+                >
+                  {resetLoading && (
+                    <span className="loading-spinner" aria-hidden="true"></span>
+                  )}
+                  <span>Update password</span>
+                </button>
+                <button
+                  type="button"
+                  className="action-button action-button--text"
+                  onClick={
+                    resetValidationStatus === "invalid"
+                      ? handleForgotPasswordClick
+                      : handleReturnToLogin
+                  }
+                >
+                  {resetValidationStatus === "invalid"
+                    ? "Request a new link"
+                    : "Back to sign in"}
+                </button>
               </div>
-            )}
-          </form>
+            </form>
+          )}
+
+          {authView === "reset-success" && (
+            <div className="login-shell__form login-shell__form--static">
+              <div className="form-success" role="status">
+                <svg
+                  className="form-success__icon"
+                  width="40"
+                  height="40"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 11l3 3L22 4" />
+                  <path d="M21 12v6a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h7" />
+                </svg>
+                <h2>Password updated</h2>
+                <p>
+                  Your password has been reset successfully. Sign in with your
+                  new credentials to continue.
+                </p>
+              </div>
+              <div className="form-actions">
+                <button
+                  type="button"
+                  className="action-button action-button--primary"
+                  onClick={handleReturnToLogin}
+                >
+                  Sign in
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Loading Overlay */}
-        {(isSubmitting || externalLoading) && (
+        {authView === "login" && (isSubmitting || externalLoading) && (
           <div className="login-shell__overlay" aria-hidden="true">
             <div className="loading-indicator">
               <span className="loading-spinner"></span>
@@ -1709,6 +2256,52 @@ export const loginShellStyles = `
   font-size: var(--login-font-size-sm);
   margin-bottom: var(--login-spacing-md);
   box-shadow: 0 12px 24px -22px hsl(var(--destructive) / 0.5);
+}
+
+.form-helper {
+  margin-top: var(--login-spacing-xs);
+  font-size: var(--login-font-size-sm);
+  color: hsl(var(--muted-foreground));
+  line-height: 1.5;
+}
+
+.login-shell__form--static {
+  display: flex;
+  flex-direction: column;
+  gap: var(--login-spacing-md);
+}
+
+.form-success {
+  display: flex;
+  flex-direction: column;
+  gap: var(--login-spacing-sm);
+  padding: var(--login-spacing-md);
+  border-radius: var(--login-border-radius);
+  background: hsl(var(--success) / 0.12);
+  border: 1px solid hsl(var(--success) / 0.32);
+  color: hsl(var(--success-foreground));
+  box-shadow: 0 18px 32px -28px hsl(var(--success) / 0.4);
+}
+
+.form-success__icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  color: hsl(var(--success));
+  flex-shrink: 0;
+}
+
+.form-success h2 {
+  margin: 0;
+  font-size: var(--login-font-size-lg);
+  font-weight: 600;
+  color: hsl(var(--foreground));
+}
+
+.form-success p {
+  margin: 0;
+  font-size: var(--login-font-size-base);
+  color: hsl(var(--muted-foreground));
+  line-height: 1.6;
 }
 
 .form-actions {
@@ -2238,7 +2831,7 @@ export const defaultLoginMetadata: LoginMetadata = {
     {
       title: "Audit-Proof Confidence",
       description:
-        "Every inspection, signature, and mitigation is captured with immutable traceability—ready for executives and regulators.",
+        "Every inspection, signature, and mitigation is captured with immutable traceability.",
     },
   ],
   statHighlights: [

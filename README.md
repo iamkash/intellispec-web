@@ -14,6 +14,7 @@ For production, use `NODE_ENV=production node api/server.js` or `pm2`, and consu
 ## Documentation
 
 - Operations & architecture runbook: `docs/intellispec-runbook.md`
+- Forgot password feature guide: `docs/auth/forgot-password.md`
 - Workspace metadata lives under `public/data/workspaces`
 - API source lives under `api/`
 

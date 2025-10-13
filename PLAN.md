@@ -68,3 +68,63 @@
 
 - Support tenant-specific background media via CDN-hosted imagery.
 - Introduce localized copy variants for international deployments.
+
+---
+
+## Extension: Forgot password workflow
+
+### Goal / End state
+
+- Deliver a self-service password reset flow that lets users request a reset link and set a new password without operator intervention.
+- Preserve tenant safety by hiding account existence while still logging events through core services.
+- Provide a polished UX that keeps users inside the LoginShell experience.
+
+### Context & background
+
+- Existing auth surface only supported credential-based login; users needed manual support to recover accounts.
+- API lacked tokenized reset endpoints or an email abstraction for transactional notifications.
+- Multi-tenant constraints require neutral responses ("if the account exists…") and reuse of centralized repositories.
+
+### Milestones & sub-tasks
+
+1. **Backend capabilities**
+   - [x] Model + repository for password reset tokens with expiry handling.
+   - [x] Service layer for issuing, validating, and consuming reset tokens that reuses TenantContext + repositories.
+   - [x] Fastify routes (`POST /forgot-password`, `GET /reset-password/:token`, `POST /reset-password`) wired into the auth surface.
+   - [x] Email delivery abstraction with SMTP/console support and env wiring.
+2. **Frontend UX**
+   - [x] LoginShell enhancements for request/reset success states plus validation and token bootstrapping from URLs.
+   - [x] Inline messaging that keeps tenant discovery metadata intact and masks account signals.
+3. **Validation & follow-up**
+   - [x] Run `npm run validate-auth` after route changes.
+   - [ ] Add API smoke/Jest coverage for password reset service (follow-up).
+   - [ ] Document operational runbook (SMTP setup, audit logging expectations).
+
+### Surprises & discoveries
+
+- `TenantContextFactory` still falls back gracefully under unauthenticated traffic when `ENFORCE_AUTH=false`, but production operators must keep reset endpoints on approved allowlists.
+- Existing dependency tree requires `--legacy-peer-deps` during installs; captured while adding `nodemailer`.
+
+### Decision log
+
+| Decision | Reasoning | Alternatives considered | Chosen option |
+| -------- | --------- | ----------------------- | ------------- |
+| Hash and persist reset tokens in dedicated collection | Prevents replay, allows auditing, and keeps secure tokens out of logs | JWT-only reset tokens, in-memory cache | SHA-256 hashed tokens with TTL index |
+| Introduce EmailService with console fallback | Avoids direct nodemailer usage in routes and keeps transport configurable | Send emails inline per route | Centralized `core/EmailService` singleton |
+| Surface reset UI inside LoginShell instead of new route | Reuses existing branding/metadata and keeps auth surface single-page | Separate `/forgot-password` route/component | Inline multi-view shell with state machine |
+
+### Risks & mitigation
+
+- **Risk:** Reset emails leak account existence.  
+  **Mitigation:** Always respond with neutral messaging; log attempts for monitoring.
+- **Risk:** SMTP misconfiguration blocks email delivery.  
+  **Mitigation:** Console transport default, env checklist in `env.sample`, add runbook follow-up.
+- **Risk:** Missing automated coverage for new service.  
+  **Mitigation:** Schedule follow-up test addition; service designed with pure functions for easier testing.
+
+### Done criteria & verification
+
+- Endpoints issue, validate, and consume tokens while hashing tokens at rest.
+- Email dispatch works via SMTP or logs to console without breaking flows.
+- LoginShell forgot/reset flows render, validate, and handle success/error states.
+- `npm run validate-auth` passes; outstanding follow-up tasks tracked.

@@ -22,7 +22,11 @@ class Metrics {
     this.register = new promClient.Registry();
     
     // Add default metrics (CPU, memory, etc.)
-    promClient.collectDefaultMetrics({ register: this.register });
+    const isTestEnvironment = process.env.NODE_ENV === 'test';
+    this.defaultMetricsInterval = null;
+    if (!isTestEnvironment) {
+      this.defaultMetricsInterval = promClient.collectDefaultMetrics({ register: this.register });
+    }
     
     // HTTP request metrics
     this.httpRequestDuration = new promClient.Histogram({
@@ -257,6 +261,13 @@ class Metrics {
   reset() {
     this.register.resetMetrics();
   }
+
+  shutdown() {
+    if (this.defaultMetricsInterval) {
+      clearInterval(this.defaultMetricsInterval);
+      this.defaultMetricsInterval = null;
+    }
+  }
   
   /**
    * Register metrics middleware
@@ -424,4 +435,3 @@ module.exports = {
   HealthCheck,
   metrics // Export the singleton instance created above
 };
-

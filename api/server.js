@@ -9,6 +9,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
+// Ensure core models are registered before routes load
+require('./models/User');
+require('./models/PasswordResetToken');
+
 // Auto-load all routes
 const RouteLoader = require('./core/RouteLoader');
 const FileStorage = require('./core/FileStorage');
@@ -23,6 +27,11 @@ const { RateLimiter } = require('./core/RateLimiter');
 const { FeatureFlags } = require('./core/FeatureFlags');
 const { initializeCache } = require('./core/CacheManager');
 const { logger } = require('./core/Logger');
+const {
+  AppError,
+  NotFoundError,
+} = require('./core/ErrorHandler');
+const AuthPasswordResetService = require('./services/AuthPasswordResetService');
 
 if (process.env.NODE_ENV === 'production' && process.env.ENFORCE_AUTH === undefined) {
   process.env.ENFORCE_AUTH = 'true';
@@ -32,11 +41,51 @@ if (process.env.NODE_ENV === 'production' && process.env.ENFORCE_AUTH === undefi
 // WebSocket support
 const websocket = require('@fastify/websocket');
 
+function maskEmail(email) {
+  if (!email || typeof email !== 'string') {
+    return '';
+  }
+  const [local, domain] = email.split('@');
+  if (!domain) {
+    return '***';
+  }
+  const visibleLocal = local ? `${local.charAt(0)}***` : '***';
+  return `${visibleLocal}@${domain}`;
+}
+
+function handlePasswordResetError(error, request, reply, options = {}) {
+  const log = request.context?.logger || logger;
+  log.warn('[Auth] Password reset flow error', error, {
+    route: request.url,
+  });
+
+  if (error instanceof AppError) {
+    const isTokenNotFound = error instanceof NotFoundError;
+    const statusCode = isTokenNotFound ? 400 : error.statusCode;
+    const body = {
+      error: isTokenNotFound
+        ? options.notFoundMessage || 'Invalid or expired password reset token'
+        : error.message,
+      code: error.code,
+      details: error.details,
+    };
+    return reply.code(statusCode).send(body);
+  }
+
+  return reply.code(500).send({
+    error: 'Internal server error',
+    code: 'INTERNAL_ERROR',
+  });
+}
+
 async function buildServer() {
   const fastify = Fastify({
     logger: false, // Disable Fastify's logger, using our own framework logger
     bodyLimit: 100 * 1024 * 1024 // 100MB limit to accommodate inspection payloads with images/voice/signatures
   });
+
+  const isTestEnvironment =
+    process.env.NODE_ENV === 'test' || process.env.JEST_WORKER_ID !== undefined;
 
   await fastify.register(cors, {
     origin: true,
@@ -51,8 +100,9 @@ async function buildServer() {
     }
   });
 
-  // Register WebSocket support
-  await fastify.register(websocket);
+  if (!isTestEnvironment) {
+    await fastify.register(websocket);
+  }
 
   // ============================================
   // FRAMEWORK MIDDLEWARE (Must be registered BEFORE routes)
@@ -72,7 +122,17 @@ async function buildServer() {
   // We'll register these endpoints now, they'll work once DB is connected
   
   // 5. Tenant Usage Monitoring - Track API usage per tenant
-  TenantUsageMonitor.registerMiddleware(fastify);
+  if (!isTestEnvironment) {
+    TenantUsageMonitor.registerMiddleware(fastify);
+  } else {
+    logger.info('Tenant usage monitoring middleware skipped in test environment');
+    fastify.decorate('tenantUsageMonitor', {
+      trackApiCall: () => {},
+      trackStorage: () => {},
+      trackUserActivity: () => {},
+      trackFeatureUsage: () => {},
+    });
+  }
   
   // 5. Rate Limiting - Prevent abuse
   RateLimiter.registerMiddleware(fastify, {
@@ -176,6 +236,16 @@ async function buildServer() {
       await vectorService.stop();
     }
     
+    if (fastify.rateLimiter && fastify.rateLimiter.storage && typeof fastify.rateLimiter.storage.shutdown === 'function') {
+      logger.info('Shutting down rate limiter');
+      fastify.rateLimiter.storage.shutdown();
+    }
+
+    if (fastify.metrics && typeof fastify.metrics.shutdown === 'function') {
+      logger.info('Shutting down metrics collector');
+      fastify.metrics.shutdown();
+    }
+    
     // Close Fastify server
     logger.info('Closing Fastify server');
     await fastify.close();
@@ -189,8 +259,10 @@ async function buildServer() {
     process.exit(0);
   };
   
-  process.on('SIGINT', gracefulShutdown);
-  process.on('SIGTERM', gracefulShutdown);
+  if (process.env.NODE_ENV !== 'test') {
+    process.on('SIGINT', gracefulShutdown);
+    process.on('SIGTERM', gracefulShutdown);
+  }
 
   // =============== AUTH ROUTES (Fastify) =================
   // Register auth routes directly with full prefix to avoid plugin prefix issues
@@ -356,6 +428,69 @@ async function buildServer() {
       } catch (err) {
         request.log.error({ err }, 'Login error');
         return reply.code(500).send({ error: 'Internal server error', code: 'INTERNAL_ERROR' });
+      }
+    });
+
+  fastify.post('/api/auth/forgot-password', async (request, reply) => {
+      const { email, tenantSlug } = request.body || {};
+      const context = request.context;
+
+      try {
+        await AuthPasswordResetService.requestPasswordReset({
+          email,
+          tenantSlug,
+          requestContext: context || null
+        });
+
+        return reply.code(200).send({
+          success: true,
+          message: 'If an account exists for that email, we sent password reset instructions.'
+        });
+      } catch (error) {
+        return handlePasswordResetError(error, request, reply, {
+          notFoundMessage: 'If an account exists for that email, we sent password reset instructions.'
+        });
+      }
+    });
+
+  fastify.get('/api/auth/reset-password/:token', async (request, reply) => {
+      const { token } = request.params;
+
+      try {
+        const result = await AuthPasswordResetService.validateResetToken(token);
+
+        return reply.code(200).send({
+          success: true,
+          maskedEmail: maskEmail(result.email),
+          tenantSlug: result.tenantSlug,
+          expiresAt: result.expiresAt
+        });
+      } catch (error) {
+        return handlePasswordResetError(error, request, reply, {
+          notFoundMessage: 'Invalid or expired password reset token'
+        });
+      }
+    });
+
+  fastify.post('/api/auth/reset-password', async (request, reply) => {
+      const { token, password } = request.body || {};
+      const context = request.context;
+
+      try {
+        await AuthPasswordResetService.resetPassword({
+          token,
+          newPassword: password,
+          requestContext: context || null
+        });
+
+        return reply.code(200).send({
+          success: true,
+          message: 'Password reset successful. You can now sign in with your new password.'
+        });
+      } catch (error) {
+        return handlePasswordResetError(error, request, reply, {
+          notFoundMessage: 'Invalid or expired password reset token'
+        });
       }
     });
 
