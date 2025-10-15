@@ -1,5 +1,7 @@
 {
   "id": "tsti-audit-form",
+  "title": "TSTI Audit Form",
+  "description": "Template for conducting TSTI compliance audits with detailed walkthrough steps.",
   "layout": "form",
   "gadgets": [
    {

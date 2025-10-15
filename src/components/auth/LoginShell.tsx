@@ -500,6 +500,7 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
     >([]);
     const [isDiscoveringTenant, setIsDiscoveringTenant] = useState(false);
     const [showTenantSelector, setShowTenantSelector] = useState(false);
+    const [isPlatformAdmin, setIsPlatformAdmin] = useState(false);
     const [authView, setAuthView] = useState<
       "login" | "forgot" | "forgot-success" | "reset" | "reset-success"
     >("login");
@@ -579,6 +580,12 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
       (heroPanelContent ||
         statHighlights.length > 0 ||
         valuePropositions.length > 0);
+    const tenantSelectorLabel = isPlatformAdmin
+      ? "Select Tenant to Impersonate"
+      : "Select Your Organization";
+    const tenantSelectorHint = isPlatformAdmin
+      ? "As a platform admin, choose the tenant to impersonate before continuing."
+      : "You have access to multiple organizations. Please select one to continue.";
 
     // ==================== TENANT DISCOVERY ====================
 
@@ -587,8 +594,27 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
      */
     const getRememberedTenant = useCallback((email: string): string | null => {
       try {
-        const key = `intellispec_tenant_${email}`;
-        return localStorage.getItem(key);
+        if (!email) return null;
+
+        const trimmedEmail = email.trim();
+        if (!trimmedEmail) return null;
+
+        const primaryKey = `intellispec_tenant_${trimmedEmail}`;
+        const stored = localStorage.getItem(primaryKey);
+        if (stored) return stored;
+
+        // Backward compatibility: migrate legacy keys that included whitespace
+        if (trimmedEmail !== email) {
+          const legacyKey = `intellispec_tenant_${email}`;
+          const legacyValue = localStorage.getItem(legacyKey);
+          if (legacyValue) {
+            localStorage.setItem(primaryKey, legacyValue);
+            localStorage.removeItem(legacyKey);
+            return legacyValue;
+          }
+        }
+
+        return null;
       } catch (error) {
         console.warn("Failed to read from localStorage:", error);
         return null;
@@ -600,8 +626,18 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
      */
     const rememberTenant = useCallback((email: string, tenantSlug: string) => {
       try {
-        const key = `intellispec_tenant_${email}`;
-        localStorage.setItem(key, tenantSlug);
+        if (!email) return;
+
+        const trimmedEmail = email.trim();
+        if (!trimmedEmail) return;
+
+        const primaryKey = `intellispec_tenant_${trimmedEmail}`;
+        localStorage.setItem(primaryKey, tenantSlug);
+
+        if (trimmedEmail !== email) {
+          const legacyKey = `intellispec_tenant_${email}`;
+          localStorage.removeItem(legacyKey);
+        }
       } catch (error) {
         console.warn("Failed to save to localStorage:", error);
       }
@@ -614,23 +650,27 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
       async (email: string) => {
         if (!email || !email.includes("@")) return;
 
-        // First check localStorage
-        const remembered = getRememberedTenant(email);
-        if (remembered) {
-          setTenantDiscovered(remembered);
-          setShowTenantSelector(false);
-          return;
+        const trimmedEmail = email.trim();
+        if (!trimmedEmail || !trimmedEmail.includes("@")) return;
+
+        // Remember prior selection to preselect while still fetching latest tenant list
+        let rememberedTenant: string | null = null;
+        const storedTenant = getRememberedTenant(trimmedEmail);
+        if (storedTenant) {
+          rememberedTenant = storedTenant;
+          setTenantDiscovered(storedTenant);
         }
 
         setIsDiscoveringTenant(true);
+        setSubmitError(null);
 
         try {
-          const domain = email.split("@")[1];
+          const domainPart = trimmedEmail.split("@")[1] || "";
           const response = await fetch(
             getApiFullUrl(
               `/api/tenants/discover?email=${encodeURIComponent(
-                email
-              )}&domain=${encodeURIComponent(domain)}`
+                trimmedEmail
+              )}&domain=${encodeURIComponent(domainPart.toLowerCase())}`
             ),
             {
               method: "GET",
@@ -645,33 +685,102 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
           }
 
           const data = await response.json();
+          const platformAdmin = Boolean(data?.isPlatformAdmin);
+          setIsPlatformAdmin(platformAdmin);
 
-          if (data.tenantSlug && !data.tenants) {
-            // Single tenant found - auto-select and remember
-            setTenantDiscovered(data.tenantSlug);
-            setShowTenantSelector(false);
-            rememberTenant(email, data.tenantSlug);
-          } else if (data.tenants && data.tenants.length > 0) {
-            // Multiple tenants found - show selector
-            setAvailableTenants(data.tenants);
+          const rawTenants = Array.isArray(data?.tenants) ? data.tenants : [];
+          const normalizedTenants: Array<{ slug: string; name: string }> = [];
+          rawTenants.forEach((tenant: any) => {
+            const slug = tenant?.slug || tenant?.tenantSlug;
+            if (!slug) return;
+            normalizedTenants.push({
+              slug,
+              name: tenant?.name || slug,
+            });
+          });
+
+          const singleTenantSlug: string | null =
+            typeof data?.tenantSlug === "string" && data.tenantSlug.trim().length > 0
+              ? data.tenantSlug
+              : null;
+          const singleTenantName: string | undefined =
+            typeof data?.tenantName === "string" && data.tenantName.trim().length > 0
+              ? data.tenantName
+              : undefined;
+
+          if (platformAdmin) {
+            let tenantsToUse = normalizedTenants;
+            if (tenantsToUse.length === 0 && singleTenantSlug) {
+              tenantsToUse = [
+                {
+                  slug: singleTenantSlug,
+                  name: singleTenantName || singleTenantSlug,
+                },
+              ];
+            }
+
+            setAvailableTenants(tenantsToUse);
+
+            if (tenantsToUse.length > 0) {
+              let selectedTenant = rememberedTenant;
+              if (!selectedTenant || !tenantsToUse.some((t) => t.slug === selectedTenant)) {
+                if (singleTenantSlug && tenantsToUse.some((t) => t.slug === singleTenantSlug)) {
+                  selectedTenant = singleTenantSlug;
+                } else {
+                  selectedTenant = tenantsToUse[0].slug;
+                }
+              }
+
+              if (selectedTenant) {
+                setTenantDiscovered(selectedTenant);
+                rememberTenant(trimmedEmail, selectedTenant);
+              }
+            } else if (singleTenantSlug) {
+              setTenantDiscovered(singleTenantSlug);
+              rememberTenant(trimmedEmail, singleTenantSlug);
+            }
+
+            setShowTenantSelector(true);
+            return;
+          }
+
+          if (normalizedTenants.length > 0) {
+            setAvailableTenants(normalizedTenants);
             setShowTenantSelector(true);
 
-            // If only one tenant, auto-select it
-            if (data.tenants.length === 1) {
-              setTenantDiscovered(data.tenants[0].slug);
-              setShowTenantSelector(false);
-              rememberTenant(email, data.tenants[0].slug);
+            let selectedTenant = rememberedTenant;
+            if (!selectedTenant || !normalizedTenants.some((t) => t.slug === selectedTenant)) {
+              selectedTenant = normalizedTenants[0].slug;
             }
-          } else {
-            // No tenant found - show error
-            setSubmitError(
-              "No organization found for this email address. Please contact your administrator."
-            );
-            setShowTenantSelector(false);
+
+            if (selectedTenant) {
+              setTenantDiscovered(selectedTenant);
+              if (rememberedTenant) {
+                rememberTenant(trimmedEmail, selectedTenant);
+              }
+            }
+            return;
           }
+
+          if (singleTenantSlug) {
+            setAvailableTenants([]);
+            setTenantDiscovered(singleTenantSlug);
+            setShowTenantSelector(false);
+            rememberTenant(trimmedEmail, singleTenantSlug);
+            return;
+          }
+
+          setAvailableTenants([]);
+          setTenantDiscovered(null);
+          setShowTenantSelector(false);
+          setIsPlatformAdmin(false);
+          setSubmitError(
+            "No organization found for this email address. Please contact your administrator."
+          );
         } catch (error) {
           console.error("Tenant discovery error:", error);
-          // Don't show error, just proceed without discovery
+          setIsPlatformAdmin(false);
+          setAvailableTenants([]);
           setShowTenantSelector(false);
         } finally {
           setIsDiscoveringTenant(false);
@@ -686,7 +795,10 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
     const handleTenantSelect = useCallback(
       (tenantSlug: string) => {
         setTenantDiscovered(tenantSlug);
-        setShowTenantSelector(false);
+
+        if (!isPlatformAdmin) {
+          setShowTenantSelector(false);
+        }
 
         // Remember this selection
         const email = formData["email"];
@@ -694,7 +806,7 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
           rememberTenant(email, tenantSlug);
         }
       },
-      [formData, rememberTenant]
+      [formData, rememberTenant, isPlatformAdmin]
     );
 
     /**
@@ -1421,13 +1533,14 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
                 </div>
               )}
 
-              {showTenantSelector && availableTenants.length > 0 && (
+              {(showTenantSelector || isPlatformAdmin) &&
+                availableTenants.length > 0 && (
                 <div className="tenant-selector-container">
                   <label
                     htmlFor="tenant-selector"
                     className="tenant-selector-label"
                   >
-                    Select Your Organization
+                    {tenantSelectorLabel}
                   </label>
                   <select
                     id="tenant-selector"
@@ -1444,14 +1557,14 @@ export const LoginShell: React.FC<LoginShellProps> = React.memo(
                     ))}
                   </select>
                   <p className="tenant-selector-hint">
-                    You have access to multiple organizations. Please select one
-                    to continue.
+                    {tenantSelectorHint}
                   </p>
                 </div>
               )}
 
               {tenantDiscovered &&
                 !showTenantSelector &&
+                !isPlatformAdmin &&
                 formData["email"] && (
                   <div className="tenant-confirmed-indicator" role="status">
                     <svg

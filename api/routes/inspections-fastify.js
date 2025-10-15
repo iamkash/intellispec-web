@@ -369,9 +369,34 @@ async function registerInspectionRoutes(fastify) {
       };
 
       // Parse filters from query params with operator support
+      const toArray = (value) => {
+        if (Array.isArray(value)) {
+          return value;
+        }
+        if (typeof value === 'string') {
+          try {
+            const parsed = JSON.parse(value);
+            if (Array.isArray(parsed)) {
+              return parsed;
+            }
+          } catch {
+            // Not JSON, fall through to comma split handling
+          }
+          return value
+            .split(',')
+            .map((item) => item.trim())
+            .filter((item) => item.length > 0);
+        }
+        if (value === undefined || value === null) {
+          return [];
+        }
+        return [value];
+      };
+
       const parseFilterValue = (value, operator) => {
         if (operator === '__in') {
-          return { $in: Array.isArray(value) ? value : [value] };
+          const values = toArray(value);
+          return values.length > 0 ? { $in: values } : undefined;
         }
         if (operator === '__gte') {
           return { $gte: value };
@@ -388,25 +413,59 @@ async function registerInspectionRoutes(fastify) {
         if (operator === '__ne') {
           return { $ne: value };
         }
-        if (operator === '__regex') {
+        if (operator === '__like' || operator === '__regex') {
           return { $regex: value, $options: 'i' };
         }
         return value;
       };
 
+      const applyFilterEntry = (key, value) => {
+        if (value === undefined || value === null || value === '') {
+          return;
+        }
+
+        const operatorMatch = key.match(/(.+)__(in|gte|lte|gt|lt|ne|regex|like)$/);
+        if (operatorMatch) {
+          const [, fieldName, operator] = operatorMatch;
+          const parsedValue = parseFilterValue(value, `__${operator}`);
+          if (parsedValue !== undefined) {
+            filters[fieldName] = parsedValue;
+          }
+        } else {
+          if (Array.isArray(value)) {
+            const parsedValue = parseFilterValue(value, '__in');
+            if (parsedValue !== undefined) {
+              filters[key] = parsedValue;
+              return;
+            }
+          }
+          filters[key] = value;
+        }
+      };
+
       // Build filters from query params
       for (const [key, value] of Object.entries(request.query)) {
-        if (['page', 'limit', 'sort', 'sortBy', 'sortOrder'].includes(key)) {
+        if (['page', 'limit', 'sort', 'sortBy', 'sortOrder', 'dynamicFilter'].includes(key)) {
           continue;
         }
 
-        // Check for operator suffix
-        const operatorMatch = key.match(/(.+)__(in|gte|lte|gt|lt|ne|regex)$/);
-        if (operatorMatch) {
-          const [, fieldName, operator] = operatorMatch;
-          filters[fieldName] = parseFilterValue(value, `__${operator}`);
-        } else {
-          filters[key] = value;
+        applyFilterEntry(key, value);
+      }
+
+      // Merge dynamicFilter payload if present (view filters, etc.)
+      if (request.query.dynamicFilter) {
+        try {
+          const dynamicFilter =
+            typeof request.query.dynamicFilter === 'string'
+              ? JSON.parse(request.query.dynamicFilter)
+              : request.query.dynamicFilter;
+          if (dynamicFilter && typeof dynamicFilter === 'object') {
+            Object.entries(dynamicFilter).forEach(([key, value]) => {
+              applyFilterEntry(key, value);
+            });
+          }
+        } catch (err) {
+          request.log.warn({ err }, 'Failed to parse dynamicFilter query param');
         }
       }
 

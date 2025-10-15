@@ -344,7 +344,7 @@ export const WorkspaceConfigSchema = z.object({
   id: z.string().min(1, 'Workspace ID is required'),
   title: z.string().min(1, 'Workspace title is required'),
   description: z.string().optional(),
-  layout: z.enum(['dashboard', 'grid', 'list']).optional(),
+  layout: z.enum(['dashboard', 'grid', 'list', 'form']).optional(),
   filterContext: FilterContextSchema.optional(),
   gadgets: z.array(GadgetConfigSchema).min(1, 'At least one gadget is required'),
   settings: z.object({

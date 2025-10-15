@@ -1,8 +1,10 @@
 {
   "id": "voc-charts-test",
+  "title": "VOC Charts Test",
   "name": "VOC Charts Test",
   "description": "Simple test workspace for chart gadgets",
   "version": "1.0.0",
+  "layout": "dashboard",
   "filterContext": {
     "enabled": true,
     "filterDefinitions": [
@@ -134,4 +136,3 @@
     }
   ]
 }
-

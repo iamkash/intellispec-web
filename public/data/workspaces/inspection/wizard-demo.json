@@ -1,5 +1,7 @@
 {
   "id": "wizard-demo",
+  "title": "Inspection Wizard Demo",
+  "description": "Sample inspection wizard showcasing multi-step document forms.",
   "layout": "form",
   "gadgets": [
     {

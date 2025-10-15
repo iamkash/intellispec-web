@@ -5,10 +5,30 @@
  * Super Admin only - creates complete tenant setup in a single transaction.
  */
 
-const { logger } = require('../core/Logger');
 const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const { AuditTrail } = require('../core/AuditTrail');
+
+async function logAudit(event) {
+  const eventType = event.action && event.action.toUpperCase().startsWith('CREATE')
+    ? 'CREATE'
+    : 'SYSTEM_CHANGE';
+
+  await AuditTrail.log({
+    eventType,
+    userId: event.performedBy,
+    userName: event.performedByName,
+    tenantId: event.metadata?.tenantId,
+    resourceType: event.entityType,
+    resourceId: event.entityId,
+    action: event.action,
+    changes: event.changes,
+    metadata: event.metadata,
+    ipAddress: event.ipAddress,
+    userAgent: event.userAgent,
+    success: true
+  });
+}
 
 // Helper to generate unique IDs
 const generateId = (prefix) => {
@@ -382,4 +402,3 @@ async function registerTenantCreationRoutes(fastify, options) {
 }
 
 module.exports = registerTenantCreationRoutes;
-

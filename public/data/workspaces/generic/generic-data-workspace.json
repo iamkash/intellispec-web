@@ -98,9 +98,9 @@
               "displayField": "name",
               "idField": "id",
               "extractionPatterns": [
-                /about\s+(.+?)(?:\?|$|\s+total|\s+count|\s+sum)/i,
-                /for\s+(.+?)(?:\?|$|\s+total|\s+count|\s+sum)/i,
-                /(.+?)(?:\s+total|\s+count|\s+sum)/i
+                { "pattern": "about\\s+(.+?)(?:\\?|$|\\s+total|\\s+count|\\s+sum)", "flags": "i" },
+                { "pattern": "for\\s+(.+?)(?:\\?|$|\\s+total|\\s+count|\\s+sum)", "flags": "i" },
+                { "pattern": "(.+?)(?:\\s+total|\\s+count|\\s+sum)", "flags": "i" }
               ]
             }
           },

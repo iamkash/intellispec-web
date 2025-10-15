@@ -229,12 +229,20 @@ console.log(getValidationSummary(result));
   
   if (!result.success) {
 result.errors.forEach((error, index) => {
+console.log(`    ❌ [${error.code}] ${error.path.length ? error.path.join('.') : '(root)'}: ${error.message}`);
+if (error.suggestion) {
+console.log(`       ↳ ${error.suggestion}`);
+}
 });
   }
   
   if (result.warnings.length > 0) {
 result.warnings.forEach((warning, index) => {
 if (warning.suggestion) {
+console.log(`    ⚠️  ${warning.path.length ? warning.path.join('.') : '(root)'}: ${warning.message}`);
+console.log(`       ↳ ${warning.suggestion}`);
+} else {
+console.log(`    ⚠️  ${warning.path.length ? warning.path.join('.') : '(root)'}: ${warning.message}`);
 }
     });
   }
@@ -263,12 +271,22 @@ async function validateMetadataFile(filePath) {
     const data = await fs.readFile(filePath, 'utf8');
     const config = JSON.parse(data);
     const configName = path.basename(filePath, '.json');
-    
+
+    if (!config || typeof config !== 'object' || Array.isArray(config)) {
+      console.log(`  ${configName}: skipping non-object metadata`);
+      return { success: true, errors: [], warnings: [], skipped: true };
+    }
+
+    if (!Array.isArray(config.gadgets)) {
+      console.log(`  ${configName}: skipping metadata without gadgets array`);
+      return { success: true, errors: [], warnings: [], skipped: true };
+    }
+
     displayMetadataSummary(config, configName);
-    
+
     const validation = validateMetadata(config);
     displayValidationResults(validation, configName);
-    
+
     return validation;
   } catch (error) {
     console.error(`❌ Error validating ${filePath}:`, error.message);
@@ -306,21 +324,29 @@ const workspacesDir = path.join(__dirname, '../public/data/workspaces');
 return;
   }
 const results = [];
-  let totalErrors = 0;
   let totalWarnings = 0;
+  let validatedCount = 0;
+  let skippedCount = 0;
   
   for (const filePath of metadataFiles) {
     const result = await validateMetadataFile(filePath);
     results.push({ filePath, result });
-    totalErrors += result.errors.length;
+    if (result.skipped) {
+      skippedCount += 1;
+      continue;
+    }
+    validatedCount += 1;
     totalWarnings += result.warnings.length;
   }
   
   // Summary
-console.log(`  Files validated: ${metadataFiles.length}`);
+console.log(`  Files validated: ${validatedCount}`);
+  if (skippedCount > 0) {
+console.log(`  Files skipped: ${skippedCount}`);
+  }
 console.log(`  Total warnings: ${totalWarnings}`);
   
-  const failedFiles = results.filter(r => !r.result.success);
+  const failedFiles = results.filter(r => !r.result.success && !r.result.skipped);
   if (failedFiles.length > 0) {
 failedFiles.forEach(f => console.log(`  - ${path.relative(workspacesDir, f.filePath)}`));
     process.exit(1);

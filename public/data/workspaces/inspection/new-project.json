@@ -1,5 +1,7 @@
 {
   "id": "new-project",
+  "title": "Inspection Project Workspace",
+  "description": "Workspace for configuring new inspection projects, scope, team, and logistics.",
   "gadgets": [
     {
         "id": "inspection-project-form",
@@ -112,5 +114,4 @@
     }
   ]
 }
-
 

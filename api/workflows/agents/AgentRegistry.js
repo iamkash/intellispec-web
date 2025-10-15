@@ -5,6 +5,45 @@
  * with metadata-driven configuration.
  */
 
+const { logger } = require('../../core/Logger');
+const AIService = require('../../core/AIService');
+
+const generateWithAI = AIService.generateWithAI || (async () => '');
+
+async function generateAgentCompletion(prompt, options = {}, context = {}) {
+  if (typeof AIService.generateCompletion === 'function') {
+    return AIService.generateCompletion(prompt, options, context);
+  }
+
+  const {
+    model,
+    temperature,
+    max_tokens: maxTokens,
+    maxTokens: camelMaxTokens,
+    reasoning
+  } = options;
+
+  const aiConfig = {
+    model: model || 'gpt-4o',
+    temperature: temperature ?? 0.7,
+    maxTokens: camelMaxTokens ?? maxTokens ?? 2000,
+    systemPrompt: prompt
+  };
+
+  if (reasoning?.reasoningEffort) {
+    aiConfig.reasoningEffort = reasoning.reasoningEffort;
+  }
+
+  if (reasoning?.textVerbosity) {
+    aiConfig.textVerbosity = reasoning.textVerbosity;
+  }
+
+  return generateWithAI(aiConfig, {
+    ...context,
+    prompt
+  });
+}
+
 class AgentRegistry {
   constructor() {
     this.agentTypes = new Map();
@@ -162,7 +201,7 @@ const agent = this.createDynamicAgent(agentDefinition);
           });
           
           // Use AIService for metadata-driven processing
-          const aiResponse = await AIService.generateCompletion(
+          const aiResponse = await generateAgentCompletion(
             analysisPrompt,
             {
               model,

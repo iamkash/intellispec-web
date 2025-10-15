@@ -8,6 +8,17 @@
     "enabled": true,
     "filterDefinitions": [
       {
+        "id": "document_type",
+        "type": "select",
+        "label": "Document Type",
+        "placeholder": "Filter by document type...",
+        "options": [
+          { "value": "inspection", "label": "Inspections" }
+        ],
+        "defaultValue": "inspection",
+        "refreshTrigger": true
+      },
+      {
         "id": "company_id",
         "type": "multiselect",
         "label": "Company",
@@ -165,13 +176,24 @@
       },
       "position": 24
     },
-    {
-      "id": "inspection-filters",
-      "type": "workspace-filter-gadget",
-      "title": "Inspection Filters",
-      "description": "Interactive filter controls for refining inspection data",
-      "config": {
-        "filterDefinitions": [
+      {
+        "id": "inspection-filters",
+        "type": "workspace-filter-gadget",
+        "title": "Inspection Filters",
+        "description": "Interactive filter controls for refining inspection data",
+        "config": {
+          "filterDefinitions": [
+          {
+            "id": "document_type",
+            "type": "select",
+            "label": "Document Type",
+            "placeholder": "Filter by document type...",
+            "options": [
+              { "value": "inspection", "label": "Inspections" }
+            ],
+            "defaultValue": "inspection",
+            "refreshTrigger": true
+          },
           {
             "id": "company_id",
             "type": "multiselect",
@@ -289,7 +311,8 @@
               "collection": "documents",
               "baseFilter": { "type": "inspection" },
               "fieldMappings": {
-                "date_range": "inspectionDate",
+                "document_type": "type",
+                "date_range": "formData.inspectionDate",
                 "inspection_type": "inspectionType",
                 "status": "status"
               },
@@ -316,7 +339,8 @@
               "collection": "documents",
               "baseFilter": { "type": "inspection" },
               "fieldMappings": {
-                "date_range": "inspectionDate",
+                "document_type": "type",
+                "date_range": "formData.inspectionDate",
                 "inspection_type": "inspectionType",
                 "status": "status"
               },
@@ -347,7 +371,8 @@
               "collection": "documents",
               "baseFilter": { "type": "inspection" },
               "fieldMappings": {
-                "date_range": "inspectionDate",
+                "document_type": "type",
+                "date_range": "formData.inspectionDate",
                 "inspection_type": "inspectionType",
                 "status": "status"
               },
@@ -377,7 +402,8 @@
               "collection": "documents",
               "baseFilter": { "type": "inspection" },
               "fieldMappings": {
-                "date_range": "inspectionDate",
+                "document_type": "type",
+                "date_range": "formData.inspectionDate",
                 "inspection_type": "inspectionType",
                 "status": "status"
               },
@@ -408,7 +434,8 @@
               "collection": "documents",
               "baseFilter": { "type": "inspection" },
               "fieldMappings": {
-                "date_range": "inspectionDate",
+                "document_type": "type",
+                "date_range": "formData.inspectionDate",
                 "inspection_type": "inspectionType",
                 "status": "status"
               },
@@ -459,7 +486,8 @@
               "collection": "documents",
               "baseFilter": { "type": "inspection" },
               "fieldMappings": {
-                "date_range": "inspectionDate",
+                "document_type": "type",
+                "date_range": "formData.inspectionDate",
                 "inspection_type": "inspectionType",
                 "status": "status"
               },
@@ -475,7 +503,22 @@
                               { "$ne": ["$status", "completed"] },
                               { "$ne": ["$status", "approved"] },
                               { "$lt": ["$progress", 100] },
-                              { "$lt": ["$inspectionDate", "$$NOW"] }
+                              {
+                                "$lt": [
+                                  {
+                                    "$cond": [
+                                      { "$eq": [{ "$type": "$formData.inspectionDate" }, "date"] },
+                                      "$formData.inspectionDate",
+                                      {
+                                        "$dateFromString": {
+                                          "dateString": "$formData.inspectionDate"
+                                        }
+                                      }
+                                    ]
+                                  },
+                                  "$$NOW"
+                                ]
+                              }
                             ]
                           },
                           1,
@@ -528,7 +571,8 @@
                   "collection": "documents",
                   "baseFilter": { "type": "inspection" },
                   "fieldMappings": {
-                    "date_range": "inspectionDate",
+                    "document_type": "type",
+                    "date_range": "formData.inspectionDate",
                     "inspection_type": "inspectionType",
                     "status": "status"
                   },
@@ -589,7 +633,8 @@
                   "collection": "documents",
                   "baseFilter": { "type": "inspection" },
                   "fieldMappings": {
-                    "date_range": "inspectionDate",
+                    "document_type": "type",
+                    "date_range": "formData.inspectionDate",
                     "inspection_type": "inspectionType",
                     "status": "status"
                   },
@@ -633,6 +678,7 @@
         "dataUrl": "/api/inspections",
         "hideCreateButton": true,
         "fieldMappings": {
+          "document_type": "type",
           "company_id": "company_id",
           "site_id": "site_id",
           "asset_group_id": "asset_group_id",
@@ -640,7 +686,7 @@
           "inspection_type": "inspectionType",
           "equipment_type": "equipmentType",
           "status": "status",
-          "date_range": "inspectionDate",
+          "date_range": "formData.inspectionDate",
           "inspector": "inspectorName"
         },
         "search": {
@@ -740,7 +786,10 @@
   "smartDefaults": {
     "inspection-search-grid": {
       "defaultSort": { "field": "created_date", "order": "desc" },
-      "defaultFilters": { "status": ["completed", "approved", "in_progress"] },
+      "defaultFilters": {
+        "document_type": "inspection",
+        "status": ["completed", "approved", "in_progress"]
+      },
       "autoRefresh": true,
       "refreshInterval": 30000
     }

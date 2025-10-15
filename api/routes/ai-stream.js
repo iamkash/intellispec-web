@@ -40,6 +40,7 @@ async function registerAIStreamRoutes(fastify) {
    * Stream AI responses in real-time
    */
   fastify.post('/ai/stream', { preHandler: requireAuth }, async (request, reply) => {
+    let streamEnabled = true;
     try {
       logger.info('AI stream request received', {
         userId: request.user?.userId,
@@ -56,6 +57,7 @@ async function registerAIStreamRoutes(fastify) {
         context = {},
         stream = true
       } = request.body || {};
+      streamEnabled = stream;
 
       // Validate required fields
       if (!systemPrompt || !userPrompt) {
@@ -102,7 +104,7 @@ async function registerAIStreamRoutes(fastify) {
       const isGPT5 = model.startsWith('gpt-5');
       
       // GPT-5 doesn't support streaming yet, so we'll use non-streaming for GPT-5
-      if (stream && !isGPT5) {
+      if (streamEnabled && !isGPT5) {
         // Set streaming headers
         reply.raw.setHeader('Content-Type', 'text/event-stream');
         reply.raw.setHeader('Cache-Control', 'no-cache');
@@ -264,7 +266,7 @@ async function registerAIStreamRoutes(fastify) {
       });
 
       // If already streaming, can't send JSON error
-      if (stream && reply.raw.headersSent) {
+      if (streamEnabled && reply.raw.headersSent) {
         reply.raw.write(`data: ${JSON.stringify({ error: error.message })}\n\n`);
         reply.raw.end();
         return reply;

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { AppLayout } from '../ui/Layout';
-import { ModuleContainer } from './ModuleContainer';
-import { Module } from '../../schemas/module';
+import type { Module } from '../../schemas/module';
 
 export interface LayoutContainerProps {
   children: React.ReactNode;
@@ -109,37 +108,31 @@ export const LayoutContainer: React.FC<LayoutContainerProps> = ({
     onMenuClick?.(menuItem);
   }, [isMobile, onMenuClick]);
 
-  // Memoize module change handler to prevent module resets
-  const handleModuleChange = useCallback((module: Module | null) => {
-}, []);
-
   // Memoize module select handler to prevent module resets
-  const handleModuleSelect = useCallback((module: Module) => {
-// Module selection is handled by ModuleContainer
+  const handleModuleSelect = useCallback((_module: Module) => {
+    // Module selection is handled by ModuleContainer
   }, []);
 
   // Memoize collapse handler to prevent unnecessary re-renders
-  const handleCollapse = useCallback((collapsed: boolean) => {
-setCollapsed(collapsed);
-  }, [isMobile]);
+  const handleCollapse = useCallback((nextCollapsed: boolean) => {
+    setCollapsed(nextCollapsed);
+  }, []);
 
   return (
-    <ModuleContainer onModuleChange={handleModuleChange}>
-      <AppLayout
-        title={title}
-        logo={logo}
-        user={user}
-        footerText={footerText}
-        collapsed={collapsed}
-        onCollapse={handleCollapse}
-        isMobile={isMobile}
-        currentMenuItem={currentMenuItem}
-        onMenuClick={handleMenuClick}
-        onModuleSelect={handleModuleSelect}
-        onLogout={onLogout}
-      >
-        {children}
-      </AppLayout>
-    </ModuleContainer>
+    <AppLayout
+      title={title}
+      logo={logo}
+      user={user}
+      footerText={footerText}
+      collapsed={collapsed}
+      onCollapse={handleCollapse}
+      isMobile={isMobile}
+      currentMenuItem={currentMenuItem}
+      onMenuClick={handleMenuClick}
+      onModuleSelect={handleModuleSelect}
+      onLogout={onLogout}
+    >
+      {children}
+    </AppLayout>
   );
-}; 
+};

@@ -162,13 +162,35 @@ export const AppLayout: React.FC<LayoutProps> = ({
     [flatItems, onMenuClick, isMobile, onCollapse]
   );
 
-  // Calculate selected keys based on current menu item
+  // Derive selected menu key; fall back to workspace/route matching when key is missing or stale
   const selectedKeys = useMemo(() => {
-    if (currentMenuItem?.key) {
-return [currentMenuItem.key];
+    if (!currentMenuItem) {
+      return [];
     }
+
+    // Direct key match
+    if (currentMenuItem.key && flatItems.some((item) => item.key === currentMenuItem.key)) {
+      return [currentMenuItem.key];
+    }
+
+    // Workspace-based match
+    if (currentMenuItem.workspace) {
+      const match = flatItems.find((item) => item.workspace === currentMenuItem.workspace);
+      if (match?.key) {
+        return [match.key];
+      }
+    }
+
+    // Route-based match as final fallback
+    if (currentMenuItem.route) {
+      const match = flatItems.find((item) => item.route === currentMenuItem.route);
+      if (match?.key) {
+        return [match.key];
+      }
+    }
+
     return [];
-  }, [currentMenuItem]);
+  }, [currentMenuItem, flatItems]);
 
   return (
     <Layout

@@ -1,6 +1,6 @@
 import { App as AntdApp, ConfigProvider } from 'antd';
 import 'antd/dist/reset.css';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { LoginShell, defaultLoginMetadata } from './components/auth/LoginShell';
 import { LayoutContainer } from './components/containers/LayoutContainer';
 import { ModuleContainer, useModule } from './components/containers/ModuleContainer';
@@ -61,29 +61,23 @@ const PlaceholderPage: React.FC<{ title: string; description?: string }> = ({ ti
 const AppContent: React.FC = () => {
   const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string>('home/home');
   const [currentMenuItem, setCurrentMenuItem] = useState<any>(null);
-  const { moduleDefinition } = useModule();
+  const { currentModule, moduleDefinition } = useModule();
   const { isAuthenticated, isLoading, user, logout } = useAuth();
+  const previousModuleIdRef = useRef<string | null>(null);
 
   const handleMenuClick = useCallback((menuItem: any) => {
-    console.log('[App] handleMenuClick called with:', menuItem);
-    
     // Store the current menu item for reference
     setCurrentMenuItem(menuItem);
     
     // Check if the menu item has a workspace property
     if (menuItem.workspace) {
-      console.log('[App] Setting workspace to:', menuItem.workspace);
-      
       // Store current workspace in sessionStorage for navigation back support
       // CRITICAL: Read from URL, not state, to get the ACTUAL current workspace
       const currentUrl = new URL(window.location.href);
       const currentWorkspace = currentUrl.searchParams.get('workspace');
       
       if (currentWorkspace && currentWorkspace !== menuItem.workspace) {
-        console.log('[App] Storing navigation source (from URL):', currentWorkspace);
         sessionStorage.setItem('navigation-source', JSON.stringify(currentWorkspace));
-      } else {
-        console.log('[App] No valid navigation source to store', { currentWorkspace, targetWorkspace: menuItem.workspace });
       }
       
       setCurrentWorkspaceId(menuItem.workspace);
@@ -114,13 +108,11 @@ const AppContent: React.FC = () => {
             }
           });
         }
-        console.log('[App] Updating URL to:', url.toString());
         window.history.pushState({}, '', url.toString());
       } catch (error) {
         console.error('[App] Error updating URL:', error);
       }
     } else {
-      console.log('[App] No workspace in menu item, clearing workspace ID');
       // Clear workspace ID to show placeholder
       setCurrentWorkspaceId('');
     }
@@ -131,9 +123,7 @@ const AppContent: React.FC = () => {
     try {
       const url = new URL(window.location.href);
       const ws = url.searchParams.get('workspace');
-      console.log('[App] URL sync effect - workspace from URL:', ws);
       if (ws) {
-        console.log('[App] Setting workspace ID from URL:', ws);
         setCurrentWorkspaceId(ws);
       }
     } catch (error) {
@@ -143,36 +133,87 @@ const AppContent: React.FC = () => {
 
   // Auto-select default menu item when module loads
   useEffect(() => {
-    // Check if this is a wizard close navigation - if so, don't auto-select default
     const isWizardCloseNavigation = sessionStorage.getItem('wizard-close-navigation');
     if (isWizardCloseNavigation) {
-      console.log('[App] Wizard close navigation detected - skipping auto-selection');
       sessionStorage.removeItem('wizard-close-navigation');
-      return; // Skip auto-selection
-    }
-    
-    // Don't auto-select if we already have a workspace set (from URL or previous navigation)
-    if (currentWorkspaceId && currentWorkspaceId !== 'home/home') {
-      console.log('[App] Workspace already set, skipping auto-selection:', currentWorkspaceId);
       return;
     }
-    
-    if (moduleDefinition?.menu_items) {
-      const defaultMenuItem = moduleDefinition.menu_items.find((item: any) => item.is_default);
-      if (defaultMenuItem && !currentMenuItem) {
-        console.log('[App] Auto-selecting default menu item:', defaultMenuItem);
-        handleMenuClick(defaultMenuItem);
-      } else {
-        console.log('[App] No auto-selection needed:', { 
-          hasDefaultMenuItem: !!defaultMenuItem, 
-          hasCurrentMenuItem: !!currentMenuItem,
-          defaultMenuItem: defaultMenuItem?.workspace,
-          currentMenuItem: currentMenuItem?.workspace,
-          currentWorkspaceId
-        });
-      }
+
+    if (!currentModule) {
+      return;
     }
-  }, [moduleDefinition, currentMenuItem, handleMenuClick, currentWorkspaceId]);
+
+    const moduleId = currentModule.id;
+    const previousModuleId = previousModuleIdRef.current;
+    const workspaceModuleId = currentWorkspaceId ? currentWorkspaceId.split('/')[0] : null;
+    const moduleChanged = previousModuleId !== moduleId;
+    const menuItems = moduleDefinition?.menu_items ?? [];
+    const matchingMenuItem =
+      menuItems.find((item: any) => item.workspace === currentWorkspaceId) || null;
+
+    let urlWorkspace: string | null = null;
+    try {
+      const url = new URL(window.location.href);
+      urlWorkspace = url.searchParams.get('workspace');
+    } catch (error) {
+      console.error('[App] Failed parsing URL for workspace during module auto-selection', error);
+    }
+
+    if (urlWorkspace && urlWorkspace.split('/')[0] === moduleId && urlWorkspace !== currentWorkspaceId) {
+      previousModuleIdRef.current = moduleId;
+      const urlMenuItem = menuItems.find((item: any) => item.workspace === urlWorkspace) || {
+        key: urlWorkspace,
+        label: currentModule.label || 'Workspace',
+        workspace: urlWorkspace,
+        type: 'item'
+      };
+      handleMenuClick(urlMenuItem);
+      return;
+    }
+
+    if (!moduleChanged && workspaceModuleId === moduleId) {
+      if (matchingMenuItem && currentMenuItem?.key !== matchingMenuItem.key) {
+        previousModuleIdRef.current = moduleId;
+        handleMenuClick(matchingMenuItem);
+        return;
+      }
+
+      previousModuleIdRef.current = moduleId;
+      return;
+    }
+
+    const defaultMenuItem =
+      menuItems.find((item: any) => item.is_default && item.workspace) || null;
+
+    const moduleDefaultMenuItem =
+      menuItems.find((item: any) => item.workspace === currentModule.default_workspace) || null;
+
+    const firstModuleWorkspace =
+      menuItems.find(
+        (item: any) => item.workspace && item.workspace.split('/')[0] === moduleId
+      ) || null;
+
+    const fallbackMenuItem =
+      defaultMenuItem ||
+      moduleDefaultMenuItem ||
+      firstModuleWorkspace ||
+      (currentModule.default_workspace
+        ? {
+            key: `${moduleId}-default`,
+            label: currentModule.label || 'Default',
+            workspace: currentModule.default_workspace,
+            type: 'item'
+          }
+        : null);
+
+    if (fallbackMenuItem) {
+      previousModuleIdRef.current = moduleId;
+      handleMenuClick(fallbackMenuItem);
+      return;
+    }
+
+    previousModuleIdRef.current = moduleId;
+  }, [currentModule, moduleDefinition, currentWorkspaceId, currentMenuItem, handleMenuClick]);
 
   // Handle form save navigation events
   useEffect(() => {
@@ -333,6 +374,7 @@ const { workspace, target } = event.detail;
           role: user?.roles?.[0]?.name || "User",
           avatar: user?.avatar
         }}
+        currentMenuItem={currentMenuItem}
         onMenuClick={handleMenuClick}
         onLogout={logout}
       >

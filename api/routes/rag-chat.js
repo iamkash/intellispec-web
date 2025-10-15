@@ -48,7 +48,29 @@ return null;
   ];
 
   for (const pattern of patterns) {
-    const match = lowerQuery.match(pattern);
+    let regex = pattern;
+
+    if (!(pattern instanceof RegExp)) {
+      if (typeof pattern === 'string') {
+        try {
+          regex = new RegExp(pattern, 'i');
+        } catch (error) {
+          logger?.warn?.('Invalid regex pattern string in entityMappings', { pattern, error: error.message });
+          continue;
+        }
+      } else if (pattern && typeof pattern === 'object' && pattern.pattern) {
+        try {
+          regex = new RegExp(pattern.pattern, pattern.flags || 'i');
+        } catch (error) {
+          logger?.warn?.('Invalid regex pattern object in entityMappings', { pattern, error: error.message });
+          continue;
+        }
+      } else {
+        continue;
+      }
+    }
+
+    const match = lowerQuery.match(regex);
     if (match && match[1]) {
       let entityName = match[1].trim();
 
@@ -173,12 +195,6 @@ return {
   return response;
 }
 
-// Backward compatibility - keep the old function for now
-function extractPaintSpecName(query) {
-  // This is a temporary wrapper - should be removed once fully migrated
-  return extractEntityName(query, null, 'paint_specifications');
-}
-
 // Security filter to remove system IDs from AI responses
 function sanitizeResponse(response) {
   if (!response || typeof response !== 'string') return response;
@@ -187,7 +203,7 @@ function sanitizeResponse(response) {
   let sanitized = response.replace(/\b[a-f0-9]{24}\b/gi, '[ID]');
 
   // Remove doc_ patterns that are clearly system identifiers
-  sanitized = sanitized.replace(/\bdoc_[a-z0-9_\-]{8,}\b/gi, '[DOC]');
+  sanitized = sanitized.replace(/\bdoc_[a-z0-9_-]{8,}\b/gi, '[DOC]');
 
   // Clean up any multiple replacement markers
   sanitized = sanitized.replace(/(\[ID\]|\[DOC\])[\s\n\r]*/g, '$1 ');
@@ -217,16 +233,20 @@ async function registerRAGChatRoutes(fastify) {
     preHandler: requireAuth
   }, async (request, reply) => {
     try {
-      const { message, workspaceId, gadgetId, context, rag, gadgetConfig, previousResponseId } = request.body;
+      const { message, workspaceId, gadgetId, context = {}, rag, gadgetConfig, previousResponseId } = request.body;
       const { tenantId, userId } = request.user;
       const sessionId = `${userId}_${Date.now()}`;
+      const db = getDb();
+      const resolvedContext = previousResponseId
+        ? { ...context, previousResponseId }
+        : { ...context };
 
       // Sanitize the message for security
       const sanitizedMessage = sanitizeInput(message);
       logger.debug('RAG chat request', {
         workspaceId,
         gadgetId,
-        hasContext: !!context,
+        hasContext: Object.keys(resolvedContext).length > 0,
         hasRag: !!rag,
         hasGadgetConfig: !!gadgetConfig
       });
@@ -251,7 +271,7 @@ async function registerRAGChatRoutes(fastify) {
       const searchResults = await performVectorSearch({
         message: sanitizedMessage,
         ragConfig: workspaceConfig.rag,
-        context,
+        context: resolvedContext,
         tenantId,
         db
       });
@@ -262,7 +282,7 @@ async function registerRAGChatRoutes(fastify) {
         searchResults,
         aiConfig: workspaceConfig.ai,
         ragConfig: workspaceConfig.rag,
-        context,
+        context: resolvedContext,
         tenantId,
         isCountingQuery: sanitizedMessage.toLowerCase().includes('how many') || sanitizedMessage.toLowerCase().includes('count')
       });
@@ -344,10 +364,11 @@ const workspaceData = JSON.parse(await fs.readFile(workspacePath, 'utf8'));
     
     return gadget.config;
   } catch (error) {
-    logger.error('Error loading workspace config', {
-      error: error.message,
-      workspaceId: request.params?.workspaceId
-    });
+      logger.error('Error loading workspace config', {
+        error: error.message,
+        workspaceId,
+        gadgetId
+      });
     return null;
   }
 }
@@ -474,13 +495,6 @@ const docTypes = searchResults.map(doc => doc.type).filter(Boolean);
       });
     }
 
-    // Log search result statistics for debugging
-    if (isCountingQuery && searchResults.length > 0) {
-const sampleType = searchResults[0].type;
-      if (sampleType) {
-}
-    }
-
     // Handle relationship counting queries using workspace configuration
     if (isRelationshipCountingQuery) {
 // Use generic relationship counting from configuration
@@ -514,6 +528,16 @@ const sampleType = searchResults[0].type;
         }
       }
     }
+
+    const durationMs = Date.now() - startTime;
+    logger.debug('Vector search completed', {
+      tenantId,
+      durationMs,
+      resultCount: Array.isArray(searchResults) ? searchResults.length : 0,
+      isCountingQuery,
+      isRelationshipCountingQuery,
+      isAggregateQuery
+    });
 
     return searchResults;
     
@@ -662,7 +686,7 @@ if (searchResults.error) {
       // Find the appropriate response template from configuration
       let responseTemplate = null;
       if (ragConfig.aggregateQueries) {
-        for (const [queryType, queryConfig] of Object.entries(ragConfig.aggregateQueries)) {
+        for (const queryConfig of Object.values(ragConfig.aggregateQueries)) {
           if (queryConfig.responseTemplate) {
             // Check if this result matches the query type
             if ((searchResults.relationship && queryConfig.operation === 'count') ||

@@ -1,5 +1,7 @@
 {
   "id": "employee-time-card",
+  "title": "Employee Time Card",
+  "description": "Comprehensive weekly time tracking form for employees and supervisors.",
   "layout": "form",
   "gadgets": [
     {
@@ -7,6 +9,7 @@
       "id": "time-card-gadget",
       "type": "document-form-gadget",
       "title": "Employee Time Card",
+      "description": "Captures weekly hours, approvals, and supporting details for each employee.",
       "config": {
         "dataUrl": "/data/mock-data/forms/employee-time-card-data.json",
         "dataPath": "formData",

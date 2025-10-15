@@ -1,5 +1,7 @@
 {
   "id": "equipment-checkout-workspace",
+  "title": "Equipment Checkout Form",
+  "description": "Workspace form for tracking contractor equipment checkouts and returns.",
   "layout": "form",
   "gadgets": [
     {

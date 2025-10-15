@@ -573,8 +573,9 @@ export const DOCUMENT_FIELD_MAPPINGS: Record<string, {
     }
   },
   inspection: {
-    validFields: ['inspectionType', 'workspaceId', 'status', 'progress', 'formData.*', 'sections.*', 'grids.*'],
+    validFields: ['type', 'inspectionType', 'workspaceId', 'status', 'progress', 'formData.*', 'sections.*', 'grids.*'],
     filterMappings: {
+      document_type: 'type',
       inspection_type: 'inspectionType',
       workspace_id: 'workspaceId',
       status: 'status',

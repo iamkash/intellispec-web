@@ -10,9 +10,24 @@
  */
 
 const { logger } = require('../core/Logger');
+const { loadAIConfig } = require('../core/AIService');
 const { verifyMapping, suggestMapping, buildVerificationContext, buildSuggestionContext } = require('../utils/aiColumnMappingHelper');
 const { requireAuth } = require('../core/AuthMiddleware');
 const { ValidationError } = require('../core/ErrorHandler');
+
+function stripControlCharacters(value) {
+  if (!value) {
+    return value;
+  }
+
+  let sanitized = '';
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    const isControl = (code >= 0 && code <= 31) || (code >= 127 && code <= 159);
+    sanitized += isControl ? ' ' : value[index];
+  }
+  return sanitized;
+}
 
 async function registerAIColumnMappingRoutes(fastify) {
   
@@ -151,20 +166,9 @@ ${assetFields.map(f => `"${f.dbField}" → ${f.label}${f.required ? ' [REQUIRED]
       // Create batch-optimized prompt - FEW-SHOT EXAMPLE for GPT-5
       // Show a concrete example to follow
       
-      // Create first mapping as example
-      const firstColumn = columns[0];
-      const firstSamples = firstColumn.sampleData.slice(0, 3).join(', ');
-      const exampleMatch = allFieldDefinitions.find(f => 
-        f.label.toLowerCase().includes(firstColumn.excelColumn.toLowerCase()) ||
-        f.dbField.toLowerCase().includes(firstColumn.excelColumn.toLowerCase())
-      );
-      
       // ✅ GENERIC: Build prompt using metadata-provided instructions
       // The systemPrompt from metadata provides domain-specific context
       // We just add the data (columns and fields) dynamically
-      
-      // Create a concrete example from the first column
-      const firstMapping = columns[0] ? `{"excelColumn": "${columns[0].excelColumn}", "dbField": "name", "confidence": 0.9, "explanation": "Example mapping"}` : '{"excelColumn": "Column1", "dbField": "field1", "confidence": 0.9, "explanation": "Example"}';
       
       const batchUserPrompt = `You MUST return ONLY valid JSON. No other text.
 
@@ -221,7 +225,7 @@ Now map all ${columns.length} columns. Return ONLY the JSON object with "mapping
 
       // Call AI with batch prompt
       const { generateWithAI } = require('../core/AIService');
-      const aiResponse = await generateWithAI(suggestionConfig, {
+      let aiResponse = await generateWithAI(suggestionConfig, {
         userPrompt: batchUserPrompt
       });
       
@@ -262,8 +266,7 @@ Now map all ${columns.length} columns. Return ONLY the JSON object with "mapping
       try {
         // ✅ Clean AI response: remove control characters that break JSON parsing
         // AI sometimes includes unescaped newlines, tabs, etc. in explanation strings
-        const cleanedResponse = aiResponse
-          .replace(/[\u0000-\u001F\u007F-\u009F]/g, ' ') // Replace control chars with space
+        const cleanedResponse = stripControlCharacters(aiResponse)
           .replace(/\s+/g, ' ') // Normalize whitespace
           .trim();
         
@@ -416,4 +419,3 @@ Now map all ${columns.length} columns. Return ONLY the JSON object with "mapping
 }
 
 module.exports = registerAIColumnMappingRoutes;
-

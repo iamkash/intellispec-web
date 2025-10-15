@@ -1,5 +1,7 @@
 {
   "id": "equipment-tracking-form",
+  "title": "Equipment Tracking Form",
+  "description": "Advanced equipment tracking workspace with sectioned form layout.",
   "layout": "form",
   "gadgets": [
     {

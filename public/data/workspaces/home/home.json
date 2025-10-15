@@ -8,6 +8,7 @@
       "id": "quick-actions",
       "type": "action-panel-gadget",
       "title": "Quick Actions",
+      "description": "Launch high-frequency project management flows without leaving the dashboard.",
       "config": {
         "dataUrl": "/data/mock-data/home/quick-actions.json",
         "dataPath": "actions",
@@ -61,6 +62,7 @@
       "id": "kpi-summary",
       "type": "kpi-gadget",
       "title": "KPI Summary",
+      "description": "Summarizes portfolio performance metrics with auto-refreshing KPIs.",
       "config": {
         "dataUrl": "/data/mock-data/home/kpi-summary.json",
         "dataPath": "kpis",
@@ -74,6 +76,7 @@
       "id": "active-projects",
       "type": "card-selector-gadget",
       "title": "Active Projects",
+      "description": "Highlights active engagements with shortcuts for filtering and deep links.",
       "config": {
         "dataUrl": "/data/mock-data/home/my-projects.json",
         "dataPath": "projects",
@@ -116,6 +119,7 @@
       "id": "workload-snapshot",
       "type": "stats-gadget",
       "title": "Resource Utilization",
+      "description": "Visualizes current capacity and utilization trends across teams.",
       "config": {
         "dataUrl": "/data/mock-data/home/workload-snapshot.json",
         "dataPath": "workload",
@@ -131,6 +135,7 @@
       "id": "recent-activity",
       "type": "activity-feed-gadget",
       "title": "Recent Activity",
+      "description": "Streams the latest project updates, assignments, and timeline changes.",
       "config": {
         "dataUrl": "/data/mock-data/home/recent-activity.json",
         "dataPath": "activities",
@@ -149,6 +154,7 @@
       "id": "risks-issues",
       "type": "activity-feed-gadget",
       "title": "Risks & Issues",
+      "description": "Surfaces tracked risks and issues with severity to focus mitigation.",
       "config": {
         "dataUrl": "/data/mock-data/home/risks-issues.json",
         "dataPath": "issues",
@@ -167,6 +173,7 @@
       "id": "upcoming-milestones",
       "type": "activity-feed-gadget",
       "title": "Upcoming Milestones",
+      "description": "Shows key upcoming deliverables and due dates for proactive planning.",
       "config": {
         "dataUrl": "/data/mock-data/home/upcoming-milestones.json",
         "dataPath": "milestones",

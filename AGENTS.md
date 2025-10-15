@@ -48,6 +48,7 @@
 - `PLAN.md` is the living exec plan. At task kick-off, fill in Goal, Context, Milestones, and initial Risks. Update Progress checkboxes and Decision Log as work advances.
 - Log significant discoveries or blockers in the “Surprises & discoveries” section; reviewers rely on it for context.
 - A task is “done” when `PLAN.md` shows all relevant milestones complete, required validations/tests have passed, documentation is updated, and outstanding risks are either mitigated or ticketed separately.
+- Before closing out work, clear all surfaced warnings and errors (lint, build, runtime, validation) or explicitly document why they must remain.
 
 ## Agent rules / constraints
 

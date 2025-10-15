@@ -65,18 +65,18 @@ export const ModuleContainer: React.FC<ModuleContainerProps> = ({
   const selectModule = useCallback(async (module: Module) => {
     // Don't reload if the same module is already selected
     if (currentModule && currentModule.id === module.id) {
-return;
+      return;
     }
 
     try {
-setIsLoading(true);
+      setIsLoading(true);
       setError(undefined);
       
       const definition = await loadModuleDefinition(module);
       
       setCurrentModule(module);
       setModuleDefinition(definition);
-      
+
       // Notify parent component of module change
       onModuleChange?.(module);
     } catch (err) {
@@ -99,7 +99,8 @@ setIsLoading(true);
       }
       
       const data = await response.json();
-      setAvailableModules(data.modules || []);
+      const modules: Module[] = data.modules || [];
+      setAvailableModules(modules);
       
       // Check if there's a workspace parameter that indicates which module to load
       let targetModule: Module | null = null;
@@ -110,27 +111,23 @@ setIsLoading(true);
         
         if (workspaceParam) {
           const workspaceModuleId = workspaceParam.split('/')[0];
-const enabledModules = data.modules.filter((m: Module) => m.enabled);
+          const enabledModules = modules.filter((m: Module) => m.enabled);
           targetModule = enabledModules.find((m: Module) => m.id === workspaceModuleId) || null;
-          
-          if (targetModule) {
-} else {
-}
         }
       } catch (error) {
-        console.warn('Error parsing workspace parameter:', error);
+        console.error('Error parsing workspace parameter:', error);
       }
       
       // Set target module or fall back to default module (first enabled module or 'home')
       if (!targetModule) {
-        const enabledModules = data.modules.filter((m: Module) => m.enabled);
+        const enabledModules = modules.filter((m: Module) => m.enabled);
         targetModule = enabledModules.find((m: Module) => m.id === 'home') || enabledModules[0];
       }
       
       if (targetModule) {
         // Load the target module definition
         try {
-const definition = await loadModuleDefinition(targetModule);
+          const definition = await loadModuleDefinition(targetModule);
           setCurrentModule(targetModule);
           setModuleDefinition(definition);
           onModuleChange?.(targetModule);
@@ -179,4 +176,4 @@ const definition = await loadModuleDefinition(targetModule);
 export const useModuleActions = () => {
   console.warn('useModuleActions is deprecated. Use useModule instead.');
   return useModule();
-}; 
+};
