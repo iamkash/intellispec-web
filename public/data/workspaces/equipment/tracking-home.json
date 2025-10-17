@@ -1,5 +1,5 @@
 {
-  "id": "equipment-tracking-home",
+  "id": "equipment/tracking-home",
   "title": "Equipment Tracking & Management Executive Dashboard",
   "description": "Executive-level overview of equipment rental and tracking operations with comprehensive KPIs, financial metrics, and operational insights",
   "layout": "dashboard",
@@ -53,9 +53,18 @@
       "config": {
         "dataUrl": "/data/mock-data/equipment/monthly-revenue.json",
         "dataPath": "monthly_revenue",
-        "dataKeys": ["revenue", "profit"],
-        "areaColors": ["#1890ff", "#52c41a"],
-        "areaNames": ["Revenue", "Profit"],
+        "dataKeys": [
+          "revenue",
+          "profit"
+        ],
+        "areaColors": [
+          "#1890ff",
+          "#52c41a"
+        ],
+        "areaNames": [
+          "Revenue",
+          "Profit"
+        ],
         "useGradient": true,
         "xAxisKey": "month",
         "xAxisLabel": "Month",
@@ -166,7 +175,13 @@
   "metadata": {
     "created": "2024-01-07T10:00:00Z",
     "version": "2.0.0",
-    "tags": ["executive", "equipment", "tracking", "dashboard", "kpis"],
+    "tags": [
+      "executive",
+      "equipment",
+      "tracking",
+      "dashboard",
+      "kpis"
+    ],
     "description": "Comprehensive executive dashboard for equipment rental and tracking management featuring financial performance, fleet utilization, maintenance compliance, and operational insights tailored for safety equipment rental and scaffolding operations."
   }
-} 
+}

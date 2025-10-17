@@ -1,5 +1,5 @@
 {
-  "id": "confined-space-entry-permit",
+  "id": "intelliSAFTEY/confined-space-entry-permit",
   "title": "Confined Space Entry Permit",
   "description": "Capture key permit details, analyze scene images, and generate a printable permit.",
   "gadgets": [
@@ -305,32 +305,82 @@
           "responseSelector": "data.0"
         },
         "domainConfig": {
-          "payloadType": "inspection",
-          "defaultType": "general_inspection",
+          "payloadType": "safety",
+          "defaultType": "confined_space_entry_permit",
           "fields": {
-            "type": "inspection_type",
-            "detectedType": "detected_equipment_type",
-            "id": "equipment_id",
-            "name": "assetName",
-            "owner": "inspector_name",
-            "date": "inspection_date"
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
           },
           "outputKeys": {
-            "id": "equipmentId",
-            "type": "equipmentType",
-            "owner": "inspectorName",
-            "date": "inspectionDate"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
           },
           "payloadKeys": {
-            "type": "inspectionType"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
           },
           "navigation": {
-            "listingSuffix": "inspections",
+            "listingSuffix": "responses",
             "homeSuffix": "home"
+          },
+          "typeMap": {
+            "confined_space_entry_permit": "Confined Space Entry Permit"
+          }
+        },
+        "type": "safety",
+        "documentType": "confined_space_entry_permit",
+        "label": "Confined Space Entry Permit",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "confined_space_entry_permit",
+          "domainSubTypeLabel": "Confined Space Entry Permit"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },
       "position": 24
     }
-  ]
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
 }

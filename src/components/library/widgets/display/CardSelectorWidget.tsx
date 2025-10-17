@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Card, Input, Select, Space, Button, Tag, Progress, Avatar, Tooltip } from 'antd';
-import { SearchOutlined, FilterOutlined, EyeOutlined, EditOutlined } from '@ant-design/icons';
+import { Card, Input, Select, Space, Button, Tag, Progress, Tooltip } from 'antd';
+import { EyeOutlined, EditOutlined } from '@ant-design/icons';
 // Note: Using CSS variables directly instead of useTheme for better compatibility
 
 const { Search } = Input;

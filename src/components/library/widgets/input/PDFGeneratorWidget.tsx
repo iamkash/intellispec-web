@@ -7,7 +7,24 @@
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import type { MarginPaddingInput, Styles, ThemeType } from 'jspdf-autotable';
 import React from 'react';
+
+type PdfTableStylingConfig = {
+  headerBackground?: [number, number, number];
+  headerTextColor?: [number, number, number];
+  headerFontSize?: number;
+  contentFontSize?: number;
+  cellPadding?: number;
+  headStyles?: Partial<Styles>;
+  styles?: Partial<Styles>;
+  margin?: MarginPaddingInput;
+  theme?: ThemeType | null;
+  /**
+   * Allow passthrough of additional jsPDF-AutoTable options (e.g. bodyStyles, columnStyles).
+   */
+  [key: string]: unknown;
+};
 
 export type GenericPdfSection = {
   id?: string;
@@ -49,7 +66,7 @@ export type GenericPdfMetadata = {
     header?: { backgroundColor?: [number, number, number]; textColor?: [number, number, number]; fontSize?: number; showMainTitle?: boolean; showHeaderTitle?: boolean };
     footer?: { textColor?: [number, number, number]; fontSize?: number; leftText?: string; centerText?: string; rightText?: string };
     sections?: { headerFontSize?: number; contentFontSize?: number; lineSpacing?: number; margins?: { left?: number; right?: number } };
-    tables?: { headerBackground?: [number, number, number]; headerTextColor?: [number, number, number]; headerFontSize?: number; contentFontSize?: number; cellPadding?: number };
+    tables?: PdfTableStylingConfig;
     images?: { dpi?: number; format?: 'JPEG' | 'PNG'; quality?: number; backgroundColor?: [number, number, number]; fit?: 'contain' | 'cover' | 'stretch'; align?: 'left' | 'center' | 'right'; widthPercent?: number; heightPx?: number };
   };
   sections: GenericPdfSection[];
@@ -184,7 +201,7 @@ const sanitizeMarkdownForPdf = (markdown: string): { text: string; tables: Array
     .replace(/\*(.*?)\*/g, '$1') // Remove italic
     .replace(/`(.*?)`/g, '$1') // Remove code
     .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Remove links, keep text
-    .replace(/^\s*[-\*\+]\s/gm, '• ') // Convert list items
+    .replace(/^\s*[-*+]\s/gm, '• ') // Convert list items
     .replace(/\[TABLE_PLACEHOLDER\]/g, '') // Remove table placeholders
     .replace(/\n{3,}/g, '\n\n') // Normalize line breaks
   );
@@ -194,7 +211,8 @@ const sanitizeMarkdownForPdf = (markdown: string): { text: string; tables: Array
 
 const interpolate = (template: string, data: any): string => {
   if (!template) return '';
-  const interpolated = template.replace(/\{\{\s*([a-zA-Z0-9_\.\-\[\]"']+)\s*\}\}/g, (_m, key) => {
+  const interpolated = template.replace(/\{\{\s*([^}]+)\s*\}\}/g, (_m, rawKey) => {
+    const key = rawKey.trim();
     const val = getByPath(data, key);
     if (val == null) return '';
     return typeof val === 'string' ? val : JSON.stringify(val);
@@ -451,22 +469,46 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
                 const body = tableData.slice(1);
                 
                 // Use autoTable for proper table formatting
+                const {
+                  headStyles: tableHeadStyles,
+                  styles: tableStyles,
+                  margin: tableMargin,
+                  theme: tableTheme,
+                  headerBackground,
+                  headerTextColor,
+                  headerFontSize,
+                  contentFontSize,
+                  cellPadding,
+                  ...additionalTableOptions
+                } = tableCfg;
+                const defaultHeadStyles: Partial<Styles> = {
+                  fillColor: (headerBackground as [number, number, number] | undefined) ?? [245, 245, 245],
+                  textColor: (headerTextColor as [number, number, number] | undefined) ?? [50, 50, 50],
+                  fontStyle: 'bold' as Styles['fontStyle'],
+                  fontSize: headerFontSize ?? 9,
+                };
+                const headStyles: Partial<Styles> = {
+                  ...defaultHeadStyles,
+                  ...(tableHeadStyles ?? {}),
+                };
+                const defaultStyles: Partial<Styles> = {
+                  fontSize: contentFontSize ?? 8,
+                  cellPadding: cellPadding ?? 3,
+                };
+                const bodyStyles: Partial<Styles> = {
+                  ...defaultStyles,
+                  ...(tableStyles ?? {}),
+                };
+
                 autoTable(pdf, {
                   startY: currentY,
                   head: [headers],
                   body: body,
-                  theme: 'grid',
-                  headStyles: {
-                    fillColor: [245, 245, 245],
-                    textColor: [50, 50, 50],
-                    fontStyle: 'bold',
-                    fontSize: 9,
-                  },
-                  styles: {
-                    fontSize: 8,
-                    cellPadding: 3,
-                  },
-                  margin: { left: margins.left || 15 },
+                  theme: tableTheme ?? 'grid',
+                  headStyles,
+                  styles: bodyStyles,
+                  margin: tableMargin ?? { left: margins.left || 15 },
+                  ...additionalTableOptions,
                 });
                 
                 currentY = (pdf as any).lastAutoTable.finalY + 6;
@@ -475,7 +517,7 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
               i = j - 1; // Skip processed table rows
             }
             
-          } else if (line.startsWith('- ') || line.startsWith('* ') || /^\d+[\.\)]\s/.test(line)) {
+          } else if (line.startsWith('- ') || line.startsWith('* ') || /^\d+[.)]\s/.test(line)) {
             // Bullet point or numbered list
             let bulletText;
             if (line.startsWith('- ') || line.startsWith('* ')) {
@@ -877,6 +919,8 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
               currentY = 30;
             }
             
+            const gridStartY = currentY;
+            
             // Process all images in the chunk simultaneously using Promise.all
             const imagePromises = chunk.map(async (it, i) => {
               const row = Math.floor(i / gridColumns);
@@ -884,7 +928,7 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
               
               // Calculate position in grid
               const x = (marginsSection.left || 15) + col * (imageWidth + colSpacing);
-              const y = currentY + row * (imageHeight + rowSpacing);
+              const y = gridStartY + row * (imageHeight + rowSpacing);
               
               try {
                 const img = new Image();
@@ -962,7 +1006,7 @@ export const PDFGeneratorWidget: React.FC<PDFGeneratorWidgetProps> = ({ id, meta
               // Chunk processing error, continue
             }
             
-            currentY += totalGridHeight + 10;
+            currentY = gridStartY + totalGridHeight + 10;
           }
         }
       }

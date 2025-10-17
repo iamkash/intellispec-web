@@ -3,7 +3,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Input, Tag, Space, Button, Tooltip, Popconfirm, Card, Typography, Divider } from 'antd';
+import { Input, Tag, Space, Button, Tooltip, Popconfirm, Card, Typography } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined, SaveOutlined, CloseOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
@@ -124,14 +124,6 @@ export const TagsInputWidget: React.FC<TagsInputWidgetProps> = ({
     }
   }, [value]);
 
-  // Validate current value
-  useEffect(() => {
-    if (onValidate) {
-      const validation = validateTags(internalValue);
-      onValidate(validation);
-    }
-  }, [internalValue, onValidate]);
-
   const validateTags = useCallback((tags: string[]): { isValid: boolean; message?: string } => {
     // Check required field
     if (required && tags.length === 0) {
@@ -164,6 +156,14 @@ export const TagsInputWidget: React.FC<TagsInputWidgetProps> = ({
 
     return { isValid: true };
   }, [required, maxTags, validateTag, allowEmpty, label]);
+
+  // Validate current value
+  useEffect(() => {
+    if (onValidate) {
+      const validation = validateTags(internalValue);
+      onValidate(validation);
+    }
+  }, [internalValue, onValidate, validateTags]);
 
   const handleAdd = useCallback(() => {
     if (!inputValue.trim() && !allowEmpty) {
@@ -251,7 +251,8 @@ export const TagsInputWidget: React.FC<TagsInputWidgetProps> = ({
   const handleRemoveAll = useCallback(() => {
     setInternalValue([]);
     onChange?.([]);
-  }, [onChange]);
+    onReset?.();
+  }, [onChange, onReset]);
 
   const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -259,17 +260,6 @@ export const TagsInputWidget: React.FC<TagsInputWidgetProps> = ({
       handleAdd();
     }
   }, [handleAdd]);
-
-  const handleReset = useCallback(() => {
-    const resetValue = defaultValue;
-    setInternalValue(resetValue);
-    setInputValue('');
-    setEditingIndex(null);
-    setEditingValue('');
-    setInputError(null);
-    onChange?.(resetValue);
-    onReset?.();
-  }, [defaultValue, onChange, onReset]);
 
   const renderTagItem = useCallback((tag: string, index: number) => {
     if (renderTag) {

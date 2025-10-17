@@ -154,21 +154,26 @@ console.log('==================');
         totalLineItems += invoice.lineItems.length;
         totalQuantity += invoice.lineItems.reduce((sum, item) => sum + item.quantityPurchased, 0);
       });
-console.log(`Total Line Items: ${totalLineItems}`);
-console.log('\nStatus Distribution:');
+      console.log(`Total Line Items: ${totalLineItems}`);
+      console.log(`Total Quantity Purchased: ${totalQuantity}`);
+      console.log('\nStatus Distribution:');
       Object.entries(statusCounts).forEach(([status, count]) => {
-});
-const companyInvoices = {};
+        console.log(`  • ${status}: ${count}`);
+      });
+      const companyInvoices = {};
       invoices.forEach(invoice => {
         const company = companies.find(c => c.id === invoice.companyId);
         const companyName = company ? company.name : 'Unknown';
         companyInvoices[companyName] = (companyInvoices[companyName] || 0) + 1;
       });
+      console.log('\nInvoices by Company:');
       Object.entries(companyInvoices).forEach(([company, count]) => {
-});
+        console.log(`  • ${company}: ${count}`);
+      });
       
     } else {
-}
+      console.log('No invoices generated for seeding.');
+    }
     
   } catch (error) {
     console.error('❌ Error seeding paint invoices:', error);

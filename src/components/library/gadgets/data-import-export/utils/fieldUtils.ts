@@ -22,7 +22,7 @@ export function generateAliasesFromLabel(label: string, dbField: string): string
     }
 
     // Add variations
-    const words = label.split(/[\s\/\-(),]+/).filter(w => w.length > 0);
+    const words = label.split(/[\s/(),-]+/).filter(w => w.length > 0);
 
     // Add individual significant words (length > 2)
     words.forEach(word => {

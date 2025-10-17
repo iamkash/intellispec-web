@@ -6,7 +6,7 @@
  * 
  * Usage:
  *   import { apiConfig } from '@/config/api.config';
- *   const response = await fetch(apiConfig.getFullUrl('/api/inspections'));
+ *   const response = await fetch(apiConfig.getFullUrl('/api/documents?type=wizard&identity.domain=inspection'));
  */
 
 interface ApiConfig {
@@ -245,4 +245,3 @@ if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
   (window as any).__API_CONFIG__ = apiConfig;
   console.log('[API Config] Debug info available at: window.__API_CONFIG__.getDebugInfo()');
 }
-

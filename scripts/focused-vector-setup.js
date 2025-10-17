@@ -104,12 +104,15 @@ console.log('2. Use this configuration:');
     }
     
     // Check document counts for priority types
-for (const docType of CONFIG.priorityDocumentTypes) {
+    for (const docType of CONFIG.priorityDocumentTypes) {
       const count = await collection.countDocuments({ type: docType });
-if (count > 0) {
+      if (count > 0) {
         const sample = await collection.findOne({ type: docType });
-        const hasEmbedding = !!sample.embedding;
-}
+        const hasEmbedding = !!sample?.embedding;
+        console.log(`  • ${docType}: ${count} docs (embedding ${hasEmbedding ? 'available' : 'missing'})`);
+      } else {
+        console.log(`  • ${docType}: no documents found`);
+      }
     }
 console.log('\n📋 Next Steps:');
 console.log('2. Test RAG chatbot: $env:DATABASE_NAME="test"; node scripts/test-rag-chatbot.js');

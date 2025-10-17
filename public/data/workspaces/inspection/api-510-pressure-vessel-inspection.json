@@ -1,5 +1,5 @@
 {
-  "id": "api-510-pressure-vessel-inspection",
+  "id": "inspection/api-510-pressure-vessel-inspection",
   "type": "wizard",
   "title": "API 510 Pressure Vessel Inspection",
   "description": "Comprehensive API 510 pressure vessel inspection wizard with all required sections and workflows",
@@ -149,4 +149,4 @@
       "report-submission": "submitted"
     }
   }
-} 
+}

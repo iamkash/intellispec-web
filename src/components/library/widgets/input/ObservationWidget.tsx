@@ -12,6 +12,44 @@ export interface ObservationWidgetProps {
   onChange?: (data: any) => void;
 }
 
+const formatCategoryName = (category: string) => {
+  return category
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' & ');
+};
+
+const groupOptionsByCategory = (options: any[]) => {
+  const categoriesMap = new Map();
+
+  options.forEach(option => {
+    const category = option.metadata?.category || option.parentGroup || 'general';
+    if (!categoriesMap.has(category)) {
+      categoriesMap.set(category, {
+        id: category,
+        name: formatCategoryName(category),
+        items: []
+      });
+    }
+    categoriesMap.get(category).items.push({
+      id: option.value,
+      code: option.metadata?.code || option.value,
+      label: option.label.replace(/^(P\d+\s*-\s*)/, ''), // Remove code prefix if present
+      description: option.description,
+      category: category
+    });
+  });
+
+  return Array.from(categoriesMap.values());
+};
+
+const getRatingOptions = () => [
+  { value: 'good', label: 'Good' },
+  { value: 'fair', label: 'Fair' },
+  { value: 'poor', label: 'Poor' },
+  { value: 'na', label: 'NA' }
+];
+
 // Functional component that can be used with React.lazy
 const ObservationWidget: React.FC<ObservationWidgetProps> = (props) => {
   return <ObservationWidgetRenderer {...props} />;
@@ -33,27 +71,33 @@ const ObservationWidgetRenderer: React.FC<ObservationWidgetProps> = ({
 
   // Sync local state with prop data (flatten nested data if needed)
   React.useEffect(() => {
-    if (data && typeof data === 'object') {
-      let actualData = data;
+    if (!data || typeof data !== 'object') {
+      return;
+    }
 
-      // If data is nested (from wizard re-wrapping), extract the actual observation data
-      if (data.observations_data && typeof data.observations_data === 'object') {
-actualData = data.observations_data;
+    let actualData = data;
 
-        // Continue flattening if still nested
-        while (actualData.observations_data && typeof actualData.observations_data === 'object') {
-          actualData = actualData.observations_data;
-        }
-      }
+    // If data is nested (from wizard re-wrapping), extract the actual observation data
+    if (data.observations_data && typeof data.observations_data === 'object') {
+      actualData = data.observations_data;
 
-      const dataString = JSON.stringify(actualData);
-      if (dataString !== JSON.stringify(localFormData)) {
-setLocalFormData(actualData);
-        // Reset the ref when parent data changes
-        lastSentDataRef.current = dataString;
+      // Continue flattening if still nested
+      while (actualData.observations_data && typeof actualData.observations_data === 'object') {
+        actualData = actualData.observations_data;
       }
     }
-  }, [data]); // Only depend on data prop
+
+    const dataString = JSON.stringify(actualData);
+
+    setLocalFormData((prev: unknown) => {
+      const prevString = JSON.stringify(prev);
+      if (dataString !== prevString) {
+        lastSentDataRef.current = dataString;
+        return actualData;
+      }
+      return prev;
+    });
+  }, [data]);
 
   React.useEffect(() => {
     const loadData = async () => {
@@ -99,49 +143,6 @@ console.log('ObservationWidget: Categories count:', transformedData.categories?.
 
     loadData();
   }, [referenceListType, optionsUrl, optionsPath]);
-
-  // Helper function to group options by category from API response
-  const groupOptionsByCategory = (options: any[]) => {
-    const categoriesMap = new Map();
-
-    options.forEach(option => {
-      const category = option.metadata?.category || option.parentGroup || 'general';
-      if (!categoriesMap.has(category)) {
-        categoriesMap.set(category, {
-          id: category,
-          name: formatCategoryName(category),
-          items: []
-        });
-      }
-      categoriesMap.get(category).items.push({
-        id: option.value,
-        code: option.metadata?.code || option.value,
-        label: option.label.replace(/^(P\d+\s*-\s*)/, ''), // Remove code prefix if present
-        description: option.description,
-        category: category
-      });
-    });
-
-    return Array.from(categoriesMap.values());
-  };
-
-  // Helper function to format category names
-  const formatCategoryName = (category: string) => {
-    return category
-      .split('_')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' & ');
-  };
-
-  // Helper function to get rating options
-  const getRatingOptions = () => {
-    return [
-      { value: 'good', label: 'Good' },
-      { value: 'fair', label: 'Fair' },
-      { value: 'poor', label: 'Poor' },
-      { value: 'na', label: 'NA' }
-    ];
-  };
 
   if (!referenceListType && !optionsUrl) {
     return (
@@ -194,10 +195,9 @@ console.log('ObservationWidget: Categories count:', transformedData.categories?.
     // Prevent sending duplicate data to avoid nesting
     const dataString = JSON.stringify(newFormData);
     if (onChange && dataString !== lastSentDataRef.current) {
-lastSentDataRef.current = dataString;
+      lastSentDataRef.current = dataString;
       onChange(newFormData); // Pass the complete observation data to parent
-    } else {
-}
+    }
   };
 
   console.log('ObservationWidget: Rendering with data:', {

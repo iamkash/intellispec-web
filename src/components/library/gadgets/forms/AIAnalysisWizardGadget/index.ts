@@ -4,7 +4,11 @@ import AIAnalysisWizardGadget from './AIAnalysisWizardGadget';
 export default AIAnalysisWizardGadget;
 
 // Export types
-export type { AIAnalysisWizardConfig, AIAnalysisWizardData, InspectionType } from './AIAnalysisWizardGadget.types';
+export type {
+  AIAnalysisWizardConfig,
+  AIAnalysisWizardData,
+  DomainTypeOption
+} from './AIAnalysisWizardGadget.types';
 
 // Export atomic components (for potential reuse)
 export * from './components';
@@ -14,5 +18,3 @@ export * from './hooks';
 
 // Export utilities (for potential reuse)
 export * from './utils';
-
-

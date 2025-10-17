@@ -1,5 +1,5 @@
 {
-  "id": "intelliSCAFF-home",
+  "id": "intelliSCAFF/home",
   "type": "dashboard",
   "title": "IntelliSCAFF Home",
   "description": "Welcome to IntelliSCAFF - Scaffolding AI Assistant",
@@ -13,25 +13,29 @@
       "title": "Quick Actions",
       "description": "Quick access to scaffolding tools and workflows",
       "position": 24,
-      "size": 24,
       "config": {
-        "title": "Scaffolding Tools",
-        "dataUrl": "/data/mock-data/home/quick-actions.json",
-        "dataPath": "quicklinks",
-        "columns": 1,
-        "size": "medium",
-        "layout": "grid",
-        "maxItems": 30,
+        "layout": "horizontal",
+        "maxItems": 6,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
         "actions": [
           {
-            "id": "scaff-project-planner",
-            "label": "Scaffolding Project Planner",
-            "description": "Plan scaffolding scope and resources",
-            "icon": "ProjectOutlined",
-            "type": "workspace",
-            "workspace": "construction/scaffolding-project-plan-wizard",
-            "category": "planning",
-            "tags": ["scaffolding", "planning"]
+            "key": "scaff-projects-dashboard",
+            "label": "Projects",
+            "description": "View scaffolding project dashboards and quick links",
+            "icon": "AppstoreOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/projects"
+          },
+          {
+            "key": "scaff-calculators",
+            "label": "Calculators",
+            "description": "Access scaffolding calculators and tools",
+            "icon": "CalculatorOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/calculators"
           }
         ]
       }
@@ -47,9 +51,3 @@
     }
   }
 }
-
-
-
-
-
-

@@ -31,21 +31,63 @@ import './AIAgenticWizardGadget.css';
 
 const { Text } = Typography;
 
-// Dynamic imports for lazy loading
-const VoiceRecorderWidget = React.lazy(() => import('../../widgets/input/VoiceRecorderWidget').then(m => ({ default: m.VoiceRecorderWidget })));
-const RealtimeVoiceWidget = React.lazy(() => import('../../widgets/input/RealtimeVoiceWidget').then(m => {
-return { default: m.RealtimeVoiceWidget };
-}));
-const ImageUploadWithDrawingWidget = React.lazy(() => import('../../widgets/input/ImageUploadWithDrawingWidget').then(m => ({ default: m.ImageUploadWithDrawingWidget })));
-const VisionAnalysisWidget = React.lazy(() => import('../../widgets/input/VisionAnalysisWidget').then(m => ({ default: m.VisionAnalysisWidget })));
-const EditableGridWidget = React.lazy(() => import('../../widgets/input/EditableGridWidget').then(m => ({ default: m.EditableGridWidget })));
-const PDFGeneratorWidget = React.lazy(() => import('../../widgets/input/PDFGeneratorWidget').then(m => ({ default: m.PDFGeneratorWidget })));
+const registerWidget = (
+  type: string,
+  loader: () => Promise<{ default: React.ComponentType<any> }>
+) => {
+  if (!WidgetRegistry.has(type)) {
+    WidgetRegistry.registerAsync(type, loader);
+  }
+};
 
-// Additional widgets for form sections
-const InputFieldWidget = React.lazy(() => import('../../widgets/input/InputFieldWidget').then(m => ({ default: m.InputFieldWidget })));
-const TextAreaWidget = React.lazy(() => import('../../widgets/input/TextAreaWidget').then(m => ({ default: m.TextAreaWidget })));
-const AutoCompleteWidget = React.lazy(() => import('../../widgets/input/AutoCompleteWidget').then(m => ({ default: m.AutoCompleteWidget })));
-const ObservationWidget = React.lazy(() => import('../../widgets/input/ObservationWidget'));
+registerWidget('voice-recorder-widget', () =>
+  import('../../widgets/input/VoiceRecorderWidget').then((m) => ({
+    default: m.VoiceRecorderWidget,
+  }))
+);
+registerWidget('realtime-voice-widget', () =>
+  import('../../widgets/input/RealtimeVoiceWidget').then((m) => ({
+    default: m.RealtimeVoiceWidget,
+  }))
+);
+registerWidget('image-upload-with-drawing-widget', () =>
+  import('../../widgets/input/ImageUploadWithDrawingWidget').then((m) => ({
+    default: m.ImageUploadWithDrawingWidget,
+  }))
+);
+registerWidget('vision-analysis-widget', () =>
+  import('../../widgets/input/VisionAnalysisWidget').then((m) => ({
+    default: m.VisionAnalysisWidget,
+  }))
+);
+registerWidget('editable-grid-widget', () =>
+  import('../../widgets/input/EditableGridWidget').then((m) => ({
+    default: m.EditableGridWidget,
+  }))
+);
+registerWidget('pdf-generator-widget', () =>
+  import('../../widgets/input/PDFGeneratorWidget').then((m) => ({
+    default: m.PDFGeneratorWidget,
+  }))
+);
+registerWidget('input-field-widget', () =>
+  import('../../widgets/input/InputFieldWidget').then((m) => ({
+    default: m.InputFieldWidget,
+  }))
+);
+registerWidget('text-area-widget', () =>
+  import('../../widgets/input/TextAreaWidget').then((m) => ({
+    default: m.TextAreaWidget,
+  }))
+);
+registerWidget('auto-complete-widget', () =>
+  import('../../widgets/input/AutoCompleteWidget').then((m) => ({
+    default: m.AutoCompleteWidget,
+  }))
+);
+registerWidget('observation-widget', () =>
+  import('../../widgets/input/ObservationWidget')
+);
 
 // Types
 export interface AIAgenticWizardData {
@@ -257,6 +299,26 @@ this.setState({ data: this.wizardData });
   public updateWizardData(data: Partial<AIAgenticWizardData>): void {
     this.wizardData = { ...this.wizardData, ...data };
     this.setState({ data: this.wizardData });
+  }
+
+  /**
+   * Merge external form data into the wizard workflow state.
+   * This is used by automated flows (e.g. LangGraph agents) to hydrate
+   * underlying form sections without forcing a full re-render cycle.
+   */
+  public mergeFormData(data: Record<string, any>): void {
+    const currentWorkflowState = this.wizardData.workflowState || {};
+    const mergedFormData = {
+      ...(currentWorkflowState.formData || {}),
+      ...data,
+    };
+
+    this.updateWizardData({
+      workflowState: {
+        ...currentWorkflowState,
+        formData: mergedFormData,
+      },
+    });
   }
 
   public getWizardData(): AIAgenticWizardData {
@@ -768,7 +830,6 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({
       case 'image':
         // Get transcription from Step 1 (voice capture)
         const voiceTranscription = (() => {
-          // Look for voice sections in previous steps
           const voiceSections = config.sections?.filter((s: any) => s.sectionType === 'voice') || [];
           for (const voiceSection of voiceSections) {
             const voiceData = wizardState.data?.[`${voiceSection.id}_voice`];
@@ -779,47 +840,62 @@ const SectionRenderer: React.FC<SectionRendererProps> = ({
           return null;
         })();
 
+        const ImageUploadComponent = WidgetRegistry.get('image-upload-with-drawing-widget') as React.ComponentType<any> | undefined;
+        const VisionAnalysisComponent = WidgetRegistry.get('vision-analysis-widget') as React.ComponentType<any> | undefined;
+
+        if (!ImageUploadComponent) {
+          return (
+            <Alert
+              type="error"
+              showIcon
+              message="Image upload widget is not available"
+              description='Register "image-upload-with-drawing-widget" in the widget registry to enable this section.'
+            />
+          );
+        }
+
         return (
           <div style={{ width: '100%' }}>
-            <ImageUploadWithDrawingWidget
+            <ImageUploadComponent
               id={`${section.id}-images`}
               maxCount={section.maxImages || 10}
               drawingEnabled={section.drawingEnabled !== false}
               value={wizardState.data?.[`${section.id}_images`] || []}
-              onChange={(images) => {
-gadget.updateWizardData({
-                  [`${section.id}_images`]: images
+              onChange={(images: any) => {
+                gadget.updateWizardData({
+                  [`${section.id}_images`]: images,
                 });
               }}
             />
-            {section.aiAgent && (
+
+            {section.aiAgent && VisionAnalysisComponent && (
               <div style={{ marginTop: '16px' }}>
-                <VisionAnalysisWidget
+                <VisionAnalysisComponent
                   id={`${section.id}-analysis`}
                   images={wizardState.data?.[`${section.id}_images`] || []}
-                  text={voiceTranscription || ''}  // Pass the transcription as context
+                  text={voiceTranscription || ''}
                   promptConfig={{
                     modelConfig: {
                       model: section.aiConfig?.model || 'gpt-4o',
                       temperature: section.aiConfig?.temperature || 0.3,
-                      maxTokens: section.aiConfig?.maxTokens || 1000
+                      maxTokens: section.aiConfig?.maxTokens || 1000,
                     },
                     promptConfig: {
-                      systemPrompt: section.analysisPrompt || 'Analyze the provided images for inspection purposes.',
-                      userPrompt: voiceTranscription 
+                      systemPrompt:
+                        section.analysisPrompt ||
+                        'Analyze the provided images for inspection purposes.',
+                      userPrompt: voiceTranscription
                         ? `Analyze these inspection images in context with the following voice inspection transcript:\n\n"${voiceTranscription}"\n\nProvide a comprehensive analysis that correlates the visual evidence with the verbal observations. Identify any discrepancies or additional findings not mentioned in the voice transcript.`
-                        : 'Please provide detailed analysis of these inspection images.'
-                    }
+                        : 'Please provide detailed analysis of these inspection images.',
+                    },
                   }}
                   langGraphConfig={section.langGraphConfig}
-                  onResult={async (result) => {
-gadget.updateWizardData({
-                      [`${section.id}_analysis`]: result
+                  onResult={async (result: any) => {
+                    gadget.updateWizardData({
+                      [`${section.id}_analysis`]: result,
                     });
-                    
-                    // Trigger LangGraph to run all agents and populate forms
+
                     if (section.langGraphConfig?.enabled !== false) {
-// Prepare comprehensive input for LangGraph
                       const langGraphInput = {
                         voiceTranscript: voiceTranscription || '',
                         images: wizardState.data?.[`${section.id}_images`] || [],
@@ -827,171 +903,122 @@ gadget.updateWizardData({
                         workflowId: section.langGraphConfig?.workflowId || 'piping-inspection-workflow',
                         agents: section.langGraphConfig?.agents || [
                           'EquipmentIdentificationAgent',
-                          'CorrosionAnalysisAgent', 
+                          'CorrosionAnalysisAgent',
                           'ThicknessMeasurementAgent',
                           'ComplianceCheckAgent',
                           'RiskAssessmentAgent',
-                          'RecommendationAgent'
-                        ]
+                          'RecommendationAgent',
+                        ],
                       };
-                      
-                      // Call workflow execution API (existing architecture)
+
                       fetch(`http://localhost:4000/api/workflows/${langGraphInput.workflowId}/execute`, {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(langGraphInput)
+                        body: JSON.stringify(langGraphInput),
                       })
-                      .then(response => {
-                        if (!response.ok) {
-                          throw new Error(`LangGraph API error: ${response.status}`);
-                        }
-                        return response.json();
-                      })
-                      .then(langGraphResult => {
+                        .then((response) => {
+                          if (!response.ok) {
+                            throw new Error(`LangGraph API error: ${response.status}`);
+                          }
+                          return response.json();
+                        })
+                        .then((langGraphResult) => {
 console.log('✅ [SectionRenderer] LangGraph agents completed. Auto-populating forms...');
-                        
-                        // Extract real agent results from LangGraph response
-                        const extractAgentData = (langGraphResult: any) => {
-// Try to extract data from agent results
-                          const equipmentAgent = langGraphResult.equipmentData || langGraphResult.EquipmentIdentificationAgent;
-                          const visualAgent = langGraphResult.findings || langGraphResult.VisualInspectionAgent;
-                          const corrosionAgent = langGraphResult.corrosionData || langGraphResult.CorrosionAnalysisAgent;
-                          const thicknessAgent = langGraphResult.thicknessData || langGraphResult.ThicknessMeasurementAgent;
-                          const complianceAgent = langGraphResult.complianceData || langGraphResult.ComplianceCheckAgent;
-                          const riskAgent = langGraphResult.riskData || langGraphResult.RiskAssessmentAgent;
-                          const recommendationAgent = langGraphResult.recommendations || langGraphResult.RecommendationAgent;
 
-                          return {
-                            // Equipment Identification (Step 3)
-                            'equipment-identification_form_data': {
-                              system_name: equipmentAgent?.system_name || equipmentAgent?.systemName || '10-P-101',
-                              line_number: equipmentAgent?.line_number || equipmentAgent?.lineNumber || '10-LN-001-SS',
-                              fluid_service: equipmentAgent?.fluid_service || equipmentAgent?.fluidService || 'steam',
-                              design_pressure: equipmentAgent?.design_pressure || equipmentAgent?.designPressure || '150',
-                              design_temperature: equipmentAgent?.design_temperature || equipmentAgent?.designTemperature || '350',
-                              material_spec: equipmentAgent?.material_spec || equipmentAgent?.materialSpec || 'A106 Grade B',
-                              pipe_schedule: 'Schedule 40',
-                              insulation_type: 'calcium_silicate',
-                              last_inspection: new Date().toISOString().split('T')[0],
-                              manufacturer: equipmentAgent?.manufacturer || 'Extracted from OCR',
-                              serial_number: equipmentAgent?.serial_number || equipmentAgent?.serialNumber || 'SN-2015-12345'
-                            },
+                          const extractAgentData = (langGraphResult: any) => {
+                            const equipmentAgent = langGraphResult.equipmentData || langGraphResult.EquipmentIdentificationAgent;
+                            const visualAgent = langGraphResult.findings || langGraphResult.VisualInspectionAgent;
+                            const corrosionAgent = langGraphResult.corrosionData || langGraphResult.CorrosionAnalysisAgent;
+                            const thicknessAgent = langGraphResult.thicknessData || langGraphResult.ThicknessMeasurementAgent;
+                            const complianceAgent = langGraphResult.complianceData || langGraphResult.ComplianceCheckAgent;
+                            const riskAgent = langGraphResult.riskData || langGraphResult.RiskAssessmentAgent;
+                            const recommendationAgent = langGraphResult.recommendations || langGraphResult.RecommendationAgent;
 
-                            // Thickness Measurements (Step 5)
-                            'thickness-measurements_data': {
-                              readings: thicknessAgent?.readings || [
-                                { location: 'North Elbow', nominal: 0.375, measured: 0.265, loss: 29.3 },
-                                { location: 'South Flange', nominal: 0.375, measured: 0.340, loss: 9.3 },
-                                { location: 'Straight Run', nominal: 0.375, measured: 0.360, loss: 4.0 }
-                              ],
-                              corrosionRate: thicknessAgent?.corrosionRate || 0.015,
-                              remainingLife: thicknessAgent?.remainingLife || 8.5
-                            },
-
-                            // Corrosion Assessment (Step 9)
-                            'corrosion-assessment_form_data': {
-                              corrosion_type: corrosionAgent?.corrosion_type || corrosionAgent?.corrosionType || 'uniform',
-                              severity: corrosionAgent?.severity || visualAgent?.severity || 'moderate',
-                              affected_area: corrosionAgent?.affected_area || corrosionAgent?.affectedArea || '35',
-                              corrosion_rate: corrosionAgent?.corrosion_rate || corrosionAgent?.corrosionRate || '0.015',
-                              remaining_life: corrosionAgent?.remaining_life || corrosionAgent?.remainingLife || '8.5',
-                              cuf_present: corrosionAgent?.cuf_present || corrosionAgent?.cufPresent || true,
-                              immediate_action: corrosionAgent?.immediate_action || corrosionAgent?.immediateAction || false,
-                              monitoring_frequency: corrosionAgent?.monitoring_frequency || corrosionAgent?.monitoringFrequency || 'annual'
-                            },
-
-                            // Risk Assessment (Step 11)
-                            'risk-assessment_form_data': {
-                              likelihood: riskAgent?.likelihood || 'medium',
-                              consequence: riskAgent?.consequence || 'high',
-                              risk_level: riskAgent?.risk_level || riskAgent?.riskLevel || 'medium-high',
-                              risk_score: riskAgent?.risk_score || riskAgent?.riskScore || 65,
-                              mitigation_priority: riskAgent?.mitigation_priority || riskAgent?.mitigationPriority || 'high',
-                              inspection_interval: riskAgent?.inspection_interval || riskAgent?.inspectionInterval || '12',
-                              recommendations: riskAgent?.recommendations || recommendationAgent?.recommendations || [
-                                'Schedule thickness monitoring within 6 months',
-                                'Consider pipe replacement in next turnaround',
-                                'Increase CUI inspection frequency'
-                              ]
-                            },
-
-                            // Compliance Status
-                            'compliance_status': {
-                              api574_compliant: complianceAgent?.api574_compliant || complianceAgent?.api574Compliant || true,
-                              api570_compliant: complianceAgent?.api570_compliant || complianceAgent?.api570Compliant || true,
-                              violations: complianceAgent?.violations || [],
-                              warnings: complianceAgent?.warnings || ['Approaching minimum wall thickness in north elbow']
-                            }
+                            return {
+                              'equipment-identification_form_data': {
+                                system_name: equipmentAgent?.system_name || equipmentAgent?.systemName || '10-P-101',
+                                line_number: equipmentAgent?.line_number || equipmentAgent?.lineNumber || '10-LN-001-SS',
+                                fluid_service: equipmentAgent?.fluid_service || equipmentAgent?.fluidService || 'steam',
+                                design_pressure: equipmentAgent?.design_pressure || equipmentAgent?.designPressure || '150',
+                                design_temperature: equipmentAgent?.design_temperature || equipmentAgent?.designTemperature || '350',
+                                material_spec: equipmentAgent?.material_spec || equipmentAgent?.materialSpec || 'A106 Grade B',
+                                pipe_schedule: 'Schedule 40',
+                                insulation_type: 'calcium_silicate',
+                                last_inspection: new Date().toISOString().split('T')[0],
+                                manufacturer: equipmentAgent?.manufacturer || 'Extracted from OCR',
+                                serial_number: equipmentAgent?.serial_number || equipmentAgent?.serialNumber || 'SN-2015-12345',
+                              },
+                              'thickness-measurements_data': {
+                                readings: thicknessAgent?.readings || [
+                                  { location: 'North Elbow', nominal: 0.375, measured: 0.265, loss: 29.3 },
+                                  { location: 'South Flange', nominal: 0.375, measured: 0.340, loss: 9.3 },
+                                  { location: 'Straight Run', nominal: 0.375, measured: 0.360, loss: 4.0 },
+                                ],
+                                corrosionRate: thicknessAgent?.corrosionRate || 0.015,
+                                remainingLife: thicknessAgent?.remainingLife || 8.5,
+                              },
+                              'corrosion-assessment_form_data': {
+                                corrosion_type: corrosionAgent?.corrosion_type || corrosionAgent?.corrosionType || 'uniform',
+                                severity: corrosionAgent?.severity || visualAgent?.severity || 'moderate',
+                                affected_area: corrosionAgent?.affected_area || corrosionAgent?.affectedArea || '35',
+                                corrosion_rate: corrosionAgent?.corrosion_rate || corrosionAgent?.corrosionRate || '0.015',
+                                remaining_life: corrosionAgent?.remaining_life || corrosionAgent?.remainingLife || '8.5',
+                                cuf_present: corrosionAgent?.cuf_present || corrosionAgent?.cufPresent || true,
+                                immediate_action: corrosionAgent?.immediate_action || corrosionAgent?.immediateAction || false,
+                                monitoring_frequency: corrosionAgent?.monitoring_frequency || corrosionAgent?.monitoringFrequency || 'annual',
+                              },
+                              'risk-assessment_form_data': {
+                                likelihood: riskAgent?.likelihood || 'medium',
+                                consequence: riskAgent?.consequence || 'high',
+                                risk_level: riskAgent?.risk_level || riskAgent?.riskLevel || 'medium-high',
+                                risk_score: riskAgent?.risk_score || riskAgent?.riskScore || 65,
+                                mitigation_priority: riskAgent?.mitigation_priority || riskAgent?.mitigationPriority || 'high',
+                                inspection_interval: riskAgent?.inspection_interval || riskAgent?.inspectionInterval || '12',
+                                recommendations: riskAgent?.recommendations || recommendationAgent?.recommendations || [
+                                  'Schedule thickness monitoring within 6 months',
+                                  'Consider pipe replacement in next turnaround',
+                                  'Increase CUI inspection frequency',
+                                ],
+                              },
+                              compliance_status: {
+                                api_570_compliant: complianceAgent?.api_570_compliant ?? true,
+                                api_574_compliant: complianceAgent?.api_574_compliant ?? true,
+                                api_580_compliant: complianceAgent?.api_580_compliant ?? false,
+                              },
+                            };
                           };
-                        };
 
-                        const autoPopulatedData = extractAgentData(langGraphResult);
-                        
-                        // Update wizard data with all auto-populated values
-                        // Store each form's data separately to match the wizard data structure
-                        Object.entries(autoPopulatedData).forEach(([key, value]) => {
-                          gadget.updateWizardData({
-                            [key]: value
-                          });
+                          gadget.mergeFormData(extractAgentData(langGraphResult));
+                        })
+                        .catch((error: Error) => {
+                          console.error('❌ [SectionRenderer] LangGraph workflow failed:', error);
+                          const errorMessage = document.createElement('div');
+                          errorMessage.style.cssText = `
+                            position: fixed;
+                            bottom: 24px;
+                            right: 24px;
+                            padding: 16px 20px;
+                            background: hsl(var(--destructive));
+                            color: hsl(var(--destructive-foreground));
+                            border-radius: 12px;
+                            box-shadow: 0 8px 20px hsl(var(--destructive) / 0.3);
+                            font-size: 14px;
+                            font-weight: 500;
+                          `;
+                          errorMessage.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                              <span style="font-size: 20px;">❌</span>
+                              <div>
+                                <div style="font-weight: 600;">LangGraph Error</div>
+                                <div style="font-size: 14px; opacity: 0.9;">${error.message}</div>
+                              </div>
+                            </div>
+                          `;
+                          document.body.appendChild(errorMessage);
+                          setTimeout(() => errorMessage.remove(), 5000);
                         });
-                        
-                        // Show success notification
-                        const message = document.createElement('div');
-                        message.style.cssText = `
-                          position: fixed;
-                          top: 20px;
-                          right: 20px;
-                          background: hsl(var(--success));
-                          color: white;
-                          padding: 16px 24px;
-                          border-radius: 8px;
-                          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                          z-index: 10000;
-                          font-weight: 500;
-                          animation: slideIn 0.3s ease-out;
-                        `;
-                        message.innerHTML = `
-                          <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">✅</span>
-                            <div>
-                              <div style="font-weight: 600;">LangGraph Analysis Complete!</div>
-                              <div style="font-size: 14px; opacity: 0.9;">All forms have been auto-populated. Review and adjust as needed.</div>
-                            </div>
-                          </div>
-                        `;
-                        document.body.appendChild(message);
-                        setTimeout(() => message.remove(), 5000);
-
-                      })
-                      .catch(error => {
-                        console.error('❌ [SectionRenderer] LangGraph execution failed:', error);
-                        const errorMessage = document.createElement('div');
-                        errorMessage.style.cssText = `
-                          position: fixed;
-                          top: 20px;
-                          right: 20px;
-                          background: hsl(var(--error));
-                          color: white;
-                          padding: 16px 24px;
-                          border-radius: 8px;
-                          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                          z-index: 10000;
-                          font-weight: 500;
-                        `;
-                        errorMessage.innerHTML = `
-                          <div style="display: flex; align-items: center; gap: 12px;">
-                            <span style="font-size: 20px;">❌</span>
-                            <div>
-                              <div style="font-weight: 600;">LangGraph Error</div>
-                              <div style="font-size: 14px; opacity: 0.9;">${error.message}</div>
-                            </div>
-                          </div>
-                        `;
-                        document.body.appendChild(errorMessage);
-                        setTimeout(() => errorMessage.remove(), 5000);
-                      });
                     }
                   }}
                 />
@@ -1004,9 +1031,18 @@ console.log('✅ [SectionRenderer] LangGraph agents completed. Auto-populating f
                 )}
               </div>
             )}
+
+            {section.aiAgent && !VisionAnalysisComponent && (
+              <Alert
+                type="warning"
+                showIcon
+                style={{ marginTop: '16px' }}
+                message="Vision analysis widget not available"
+                description='Register "vision-analysis-widget" in the widget registry to enable AI analysis.'
+              />
+            )}
           </div>
         );
-
       case 'form':
         return (
           <div style={{ width: '100%' }}>

@@ -74,6 +74,19 @@ function buildAggregationPipeline(config, filters = {}) {
     processDatePlaceholders(processedPipeline);
     
     const pipeline = [];
+
+    const needsIdentityAlias = config.baseFilter && config.baseFilter.type === 'wizard';
+
+    if (needsIdentityAlias) {
+      pipeline.push({
+        $addFields: {
+          'identity.domain': { $ifNull: ['$identity.domain', '$domain'] },
+          'identity.domainSubType': { $ifNull: ['$identity.domainSubType', '$domainSubType'] },
+          'identity.domainLabel': { $ifNull: ['$identity.domainLabel', '$domainLabel'] },
+          'identity.domainSubTypeLabel': { $ifNull: ['$identity.domainSubTypeLabel', '$domainSubTypeLabel'] }
+        }
+      });
+    }
     
     // Separate base filters from line item filters
     const baseMatchStage = {
@@ -188,6 +201,19 @@ unwindFound = true;
   }
 
   const pipeline = [];
+
+  const needsIdentityAlias = config.baseFilter && config.baseFilter.type === 'wizard';
+
+  if (needsIdentityAlias) {
+    pipeline.push({
+      $addFields: {
+        'identity.domain': { $ifNull: ['$identity.domain', '$domain'] },
+        'identity.domainSubType': { $ifNull: ['$identity.domainSubType', '$domainSubType'] },
+        'identity.domainLabel': { $ifNull: ['$identity.domainLabel', '$domainLabel'] },
+        'identity.domainSubTypeLabel': { $ifNull: ['$identity.domainSubTypeLabel', '$domainSubTypeLabel'] }
+      }
+    });
+  }
 
   // 1. Match stage - base filtering
   const matchStage = {
@@ -399,135 +425,6 @@ unwindFound = true;
   return pipeline;
 }
 
-/**
- * Execute aggregation query and format results
- */
-async function executeAggregation(collection, pipeline, config) {
-  
-  
-  // Debug: Count documents before aggregation
-  const matchStage = pipeline.find(stage => stage.$match);
-  if (matchStage) {
-    const docCount = await collection.countDocuments(matchStage.$match);
-}
-  
-  let results;
-  try {
-    results = await collection.aggregate(pipeline).toArray();
-  } catch (error) {
-    logger.error('Aggregation pipeline error', {
-      error: error.message,
-      pipeline,
-      stack: error.stack
-    });
-    throw error;
-  }
-
-  // Apply post-processing if specified
-  if (config.postProcess && Array.isArray(results)) {
-    return results.map(result => {
-      const processed = { ...result };
-      
-      // Apply custom calculations
-      if (config.postProcess.calculations) {
-        Object.entries(config.postProcess.calculations).forEach(([fieldName, calculation]) => {
-          try {
-            if (calculation.formula) {
-              // Simple formula evaluation (be careful with eval - this is a controlled environment)
-              const formula = calculation.formula.replace(/\$(\w+)/g, (match, fieldName) => {
-                return processed[fieldName] || 0;
-              });
-              processed[fieldName] = eval(formula);
-            } else if (calculation.expression) {
-              // MongoDB-style expression evaluation
-              processed[fieldName] = evaluateExpression(calculation.expression, processed);
-            }
-          } catch (error) {
-            logger.error('Error calculating field', {
-              fieldName,
-              error: error.message
-            });
-            processed[fieldName] = null;
-          }
-        });
-      }
-
-      // Apply formatting
-      if (config.postProcess.formatting) {
-        Object.entries(config.postProcess.formatting).forEach(([fieldName, format]) => {
-          if (processed[fieldName] !== undefined && processed[fieldName] !== null) {
-            switch (format.type) {
-              case 'number':
-                processed[fieldName] = Number(processed[fieldName]).toLocaleString(format.locale, format.options);
-                break;
-              case 'currency':
-                processed[fieldName] = new Intl.NumberFormat(format.locale || 'en-US', {
-                  style: 'currency',
-                  currency: format.currency || 'USD',
-                  ...format.options
-                }).format(processed[fieldName]);
-                break;
-              case 'percentage':
-                processed[fieldName] = `${(processed[fieldName] * 100).toFixed(format.decimals || 1)}%`;
-                break;
-              case 'date':
-                processed[fieldName] = new Date(processed[fieldName]).toLocaleDateString(format.locale, format.options);
-                break;
-            }
-          }
-        });
-      }
-
-      return processed;
-    });
-  }
-
-  return results;
-}
-
-/**
- * Simple expression evaluator for MongoDB-style expressions
- */
-function evaluateExpression(expression, data) {
-  if (typeof expression === 'object' && expression !== null) {
-    const operator = Object.keys(expression)[0];
-    const operands = expression[operator];
-
-    switch (operator) {
-      case '$multiply':
-        return operands.reduce((acc, operand) => {
-          const value = typeof operand === 'string' && operand.startsWith('$') 
-            ? data[operand.substring(1)] 
-            : operand;
-          return acc * (value || 0);
-        }, 1);
-      
-      case '$add':
-        return operands.reduce((acc, operand) => {
-          const value = typeof operand === 'string' && operand.startsWith('$') 
-            ? data[operand.substring(1)] 
-            : operand;
-          return acc + (value || 0);
-        }, 0);
-      
-      case '$divide':
-        const [dividend, divisor] = operands;
-        const dividendValue = typeof dividend === 'string' && dividend.startsWith('$') 
-          ? data[dividend.substring(1)] 
-          : dividend;
-        const divisorValue = typeof divisor === 'string' && divisor.startsWith('$') 
-          ? data[divisor.substring(1)] 
-          : divisor;
-        return divisorValue !== 0 ? dividendValue / divisorValue : 0;
-      
-      default:
-        return expression;
-    }
-  }
-  
-  return expression;
-}
-
 async function registerAggregationRoutes(fastify) {
 
   // GET /api/aggregation/test - Simple test endpoint
@@ -655,6 +552,8 @@ const db = mongoose.connection;
               groupBy = { $substr: ["$purchaseDate", 0, 4] };
               periodCalc = { $substr: ["$purchaseDate", 0, 4] };
               break;
+            default:
+              throw new Error(`Unsupported aggregation period: ${period}`);
           }
 
           const pipeline = [

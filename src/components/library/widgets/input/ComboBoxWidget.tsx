@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Select, Typography, Space, Tag } from 'antd';
-import { SearchOutlined, DownOutlined, LoadingOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 const { Option, OptGroup } = Select;

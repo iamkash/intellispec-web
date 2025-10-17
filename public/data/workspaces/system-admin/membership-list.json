@@ -1,5 +1,5 @@
 {
-  "id": "membership-list",
+  "id": "system-admin/membership-list",
   "title": "User Membership Management",
   "description": "Manage user access and roles across all tenants in the multi-tenant platform",
   "layout": "dashboard",
@@ -56,10 +56,26 @@
               "type": "select",
               "required": true,
               "options": [
-                { "value": "tenant_admin", "label": "Tenant Admin", "color": "red" },
-                { "value": "user", "label": "User", "color": "blue" },
-                { "value": "viewer", "label": "Viewer", "color": "gray" },
-                { "value": "custom", "label": "Custom", "color": "purple" }
+                {
+                  "value": "tenant_admin",
+                  "label": "Tenant Admin",
+                  "color": "red"
+                },
+                {
+                  "value": "user",
+                  "label": "User",
+                  "color": "blue"
+                },
+                {
+                  "value": "viewer",
+                  "label": "Viewer",
+                  "color": "gray"
+                },
+                {
+                  "value": "custom",
+                  "label": "Custom",
+                  "color": "purple"
+                }
               ]
             }
           },
@@ -72,9 +88,21 @@
               "type": "select",
               "required": true,
               "options": [
-                { "value": "active", "label": "Active", "color": "green" },
-                { "value": "invited", "label": "Invited", "color": "orange" },
-                { "value": "disabled", "label": "Disabled", "color": "red" }
+                {
+                  "value": "active",
+                  "label": "Active",
+                  "color": "green"
+                },
+                {
+                  "value": "invited",
+                  "label": "Invited",
+                  "color": "orange"
+                },
+                {
+                  "value": "disabled",
+                  "label": "Disabled",
+                  "color": "red"
+                }
               ]
             }
           },
@@ -162,10 +190,22 @@
               "label": "Role",
               "type": "select",
               "options": [
-                { "value": "tenant_admin", "label": "Tenant Admin" },
-                { "value": "user", "label": "User" },
-                { "value": "viewer", "label": "Viewer" },
-                { "value": "custom", "label": "Custom" }
+                {
+                  "value": "tenant_admin",
+                  "label": "Tenant Admin"
+                },
+                {
+                  "value": "user",
+                  "label": "User"
+                },
+                {
+                  "value": "viewer",
+                  "label": "Viewer"
+                },
+                {
+                  "value": "custom",
+                  "label": "Custom"
+                }
               ]
             },
             {
@@ -173,9 +213,18 @@
               "label": "Status",
               "type": "select",
               "options": [
-                { "value": "active", "label": "Active" },
-                { "value": "invited", "label": "Invited" },
-                { "value": "disabled", "label": "Disabled" }
+                {
+                  "value": "active",
+                  "label": "Active"
+                },
+                {
+                  "value": "invited",
+                  "label": "Invited"
+                },
+                {
+                  "value": "disabled",
+                  "label": "Disabled"
+                }
               ]
             }
           ]
@@ -223,7 +272,12 @@
   "metadata": {
     "created": "2025-01-24T04:35:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "membership", "users", "roles"],
+    "tags": [
+      "admin",
+      "membership",
+      "users",
+      "roles"
+    ],
     "description": "Dedicated workspace for managing user memberships and access across tenants",
     "features": [
       "User membership management",
@@ -233,7 +287,9 @@
       "User impersonation with audit"
     ],
     "permissions": {
-      "required": ["super_admin"],
+      "required": [
+        "super_admin"
+      ],
       "actions": [
         "membership:create",
         "membership:read",

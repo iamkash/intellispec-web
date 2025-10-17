@@ -1,23 +1,12 @@
 {
   "id": "intelliINSPECT/inspections",
-  "title": "Inspection Management Dashboard", 
+  "title": "Inspection Management Dashboard",
   "description": "Comprehensive inspection tracking, analytics, and management system",
-  "layout": "dashboard", 
+  "layout": "dashboard",
   "version": "1.0.3",
   "filterContext": {
     "enabled": true,
     "filterDefinitions": [
-      {
-        "id": "document_type",
-        "type": "select",
-        "label": "Document Type",
-        "placeholder": "Filter by document type...",
-        "options": [
-          { "value": "inspection", "label": "Inspections" }
-        ],
-        "defaultValue": "inspection",
-        "refreshTrigger": true
-      },
       {
         "id": "company_id",
         "type": "multiselect",
@@ -29,7 +18,7 @@
         "refreshTrigger": true
       },
       {
-        "id": "site_id", 
+        "id": "site_id",
         "type": "multiselect",
         "label": "Facility/Site",
         "placeholder": "Select facilities...",
@@ -50,33 +39,29 @@
         "valueField": "value",
         "refreshTrigger": true
       },
-          {
-            "id": "asset_id",
-            "type": "select",
-            "label": "Asset",
-            "placeholder": "Select asset...",
-            "optionsUrl": "/api/options/assets",
-            "dependsOn": ["company_id", "site_id", "asset_group_id"],
-            "labelField": "label",
-            "valueField": "value",
-            "refreshTrigger": true
-          },
+      {
+        "id": "asset_id",
+        "type": "select",
+        "label": "Asset",
+        "placeholder": "Select asset...",
+        "optionsUrl": "/api/options/assets",
+        "dependsOn": [
+          "company_id",
+          "site_id",
+          "asset_group_id"
+        ],
+        "labelField": "label",
+        "valueField": "value",
+        "refreshTrigger": true
+      },
       {
         "id": "inspection_type",
         "type": "multiselect",
         "label": "Inspection Type",
         "placeholder": "Select inspection types...",
-        "options": [
-          { "value": "External", "label": "External" },
-          { "value": "Internal", "label": "Internal" },
-          { "value": "Internal & External", "label": "Internal & External" },
-          { "value": "On-stream", "label": "On-stream" },
-          { "value": "RBI", "label": "RBI" },
-          { "value": "Turnaround", "label": "Turnaround" },
-          { "value": "Post-repair", "label": "Post-repair" },
-          { "value": "Post-alteration", "label": "Post-alteration" },
-          { "value": "Pre-service", "label": "Pre-service" }
-        ],
+        "optionsUrl": "/api/options/wizard?distinct=identity.domainSubType&identity.domain=inspection&includeFields=identity.domain,identity.domainLabel,identity.domainSubTypeLabel,workspaceId&labelField=identity.domainSubTypeLabel",
+        "labelField": "label",
+        "valueField": "value",
         "refreshTrigger": true
       },
       {
@@ -84,13 +69,9 @@
         "type": "multiselect",
         "label": "Status",
         "placeholder": "Select status...",
-        "options": [
-          { "value": "draft", "label": "Draft" },
-          { "value": "in_progress", "label": "In Progress" },
-          { "value": "completed", "label": "Completed" },
-          { "value": "approved", "label": "Approved" },
-          { "value": "archived", "label": "Archived" }
-        ],
+        "optionsUrl": "/api/options/wizard?distinct=status&identity.domain=inspection&includeFields=identity.domain,identity.domainLabel,identity.domainSubTypeLabel,workspaceId&labelField=identity.domainSubTypeLabel",
+        "labelField": "label",
+        "valueField": "value",
         "refreshTrigger": true
       },
       {
@@ -98,7 +79,13 @@
         "type": "daterange",
         "label": "Date Range",
         "placeholder": "Select date range...",
-        "presets": ["MTD", "QTD", "YTD", "Last 6 Months", "Last Year"],
+        "presets": [
+          "MTD",
+          "QTD",
+          "YTD",
+          "Last 6 Months",
+          "Last Year"
+        ],
         "refreshTrigger": true
       },
       {
@@ -176,24 +163,13 @@
       },
       "position": 24
     },
-      {
-        "id": "inspection-filters",
-        "type": "workspace-filter-gadget",
-        "title": "Inspection Filters",
-        "description": "Interactive filter controls for refining inspection data",
-        "config": {
-          "filterDefinitions": [
-          {
-            "id": "document_type",
-            "type": "select",
-            "label": "Document Type",
-            "placeholder": "Filter by document type...",
-            "options": [
-              { "value": "inspection", "label": "Inspections" }
-            ],
-            "defaultValue": "inspection",
-            "refreshTrigger": true
-          },
+    {
+      "id": "inspection-filters",
+      "type": "workspace-filter-gadget",
+      "title": "Inspection Filters",
+      "description": "Interactive filter controls for refining inspection data",
+      "config": {
+        "filterDefinitions": [
           {
             "id": "company_id",
             "type": "multiselect",
@@ -205,7 +181,7 @@
             "refreshTrigger": true
           },
           {
-            "id": "site_id", 
+            "id": "site_id",
             "type": "multiselect",
             "label": "Facility/Site",
             "placeholder": "Select facilities...",
@@ -232,7 +208,11 @@
             "label": "Asset",
             "placeholder": "Select asset...",
             "optionsUrl": "/api/options/assets",
-            "dependsOn": ["company_id", "site_id", "asset_group_id"],
+            "dependsOn": [
+              "company_id",
+              "site_id",
+              "asset_group_id"
+            ],
             "labelField": "label",
             "valueField": "value",
             "refreshTrigger": true
@@ -242,39 +222,33 @@
             "type": "multiselect",
             "label": "Inspection Type",
             "placeholder": "Select inspection types...",
-            "options": [
-              { "value": "External", "label": "External" },
-              { "value": "Internal", "label": "Internal" },
-              { "value": "Internal & External", "label": "Internal & External" },
-              { "value": "On-stream", "label": "On-stream" },
-              { "value": "RBI", "label": "RBI" },
-              { "value": "Turnaround", "label": "Turnaround" },
-              { "value": "Post-repair", "label": "Post-repair" },
-              { "value": "Post-alteration", "label": "Post-alteration" },
-              { "value": "Pre-service", "label": "Pre-service" }
-            ],
-            "refreshTrigger": true
+            "refreshTrigger": true,
+            "optionsUrl": "/api/options/wizard?distinct=identity.domainSubType&identity.domain=inspection&includeFields=identity.domain,identity.domainLabel,identity.domainSubTypeLabel,workspaceId&labelField=identity.domainSubTypeLabel",
+            "labelField": "label",
+            "valueField": "value"
           },
           {
             "id": "status",
             "type": "multiselect",
             "label": "Status",
             "placeholder": "Select status...",
-            "options": [
-              { "value": "draft", "label": "Draft" },
-              { "value": "in_progress", "label": "In Progress" },
-              { "value": "completed", "label": "Completed" },
-              { "value": "approved", "label": "Approved" },
-              { "value": "archived", "label": "Archived" }
-            ],
-            "refreshTrigger": true
+            "refreshTrigger": true,
+            "optionsUrl": "/api/options/wizard?distinct=status&identity.domain=inspection&includeFields=identity.domain,identity.domainLabel,identity.domainSubTypeLabel,workspaceId&labelField=identity.domainSubTypeLabel",
+            "labelField": "label",
+            "valueField": "value"
           },
           {
             "id": "date_range",
             "type": "daterange",
             "label": "Date Range",
             "placeholder": "Select date range...",
-            "presets": ["MTD", "QTD", "YTD", "Last 6 Months", "Last Year"],
+            "presets": [
+              "MTD",
+              "QTD",
+              "YTD",
+              "Last 6 Months",
+              "Last Year"
+            ],
             "refreshTrigger": true
           },
           {
@@ -309,17 +283,36 @@
             "aggregationConfig": {
               "name": "Total Inspections",
               "collection": "documents",
-              "baseFilter": { "type": "inspection" },
+              "baseFilter": {
+                "type": "wizard",
+                "$or": [
+                  {
+                    "domain": "inspection"
+                  },
+                  {
+                    "identity.domain": "inspection"
+                  }
+                ]
+              },
               "fieldMappings": {
-                "document_type": "type",
-                "date_range": "formData.inspectionDate",
-                "inspection_type": "inspectionType",
-                "status": "status"
+                "domain": "identity.domain",
+                "inspection_type": "identity.domainSubType",
+                "status": "status",
+                "date_range": "recordContext.inspection.date",
+                "company_id": "recordContext.company.id",
+                "site_id": "recordContext.site.id",
+                "asset_group_id": "recordContext.assetGroup.id",
+                "asset_id": "recordContext.asset.id",
+                "inspector": "recordContext.inspection.inspectorName"
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "total": { "expression": { "$sum": 1 } }
+                  "total": {
+                    "expression": {
+                      "$sum": 1
+                    }
+                  }
                 }
               }
             },
@@ -337,19 +330,45 @@
             "aggregationConfig": {
               "name": "Completed Inspections",
               "collection": "documents",
-              "baseFilter": { "type": "inspection" },
+              "baseFilter": {
+                "type": "wizard",
+                "$or": [
+                  {
+                    "domain": "inspection"
+                  },
+                  {
+                    "identity.domain": "inspection"
+                  }
+                ]
+              },
               "fieldMappings": {
-                "document_type": "type",
-                "date_range": "formData.inspectionDate",
-                "inspection_type": "inspectionType",
-                "status": "status"
+                "domain": "identity.domain",
+                "inspection_type": "identity.domainSubType",
+                "status": "status",
+                "date_range": "recordContext.inspection.date",
+                "company_id": "recordContext.company.id",
+                "site_id": "recordContext.site.id",
+                "asset_group_id": "recordContext.assetGroup.id",
+                "asset_id": "recordContext.asset.id",
+                "inspector": "recordContext.inspection.inspectorName"
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
                   "completed": {
                     "expression": {
-                      "$sum": { "$cond": [{ "$eq": ["$status", "completed"] }, 1, 0] }
+                      "$sum": {
+                        "$cond": [
+                          {
+                            "$eq": [
+                              "$status",
+                              "completed"
+                            ]
+                          },
+                          1,
+                          0
+                        ]
+                      }
                     }
                   }
                 }
@@ -369,19 +388,45 @@
             "aggregationConfig": {
               "name": "In Progress Inspections",
               "collection": "documents",
-              "baseFilter": { "type": "inspection" },
+              "baseFilter": {
+                "type": "wizard",
+                "$or": [
+                  {
+                    "domain": "inspection"
+                  },
+                  {
+                    "identity.domain": "inspection"
+                  }
+                ]
+              },
               "fieldMappings": {
-                "document_type": "type",
-                "date_range": "formData.inspectionDate",
-                "inspection_type": "inspectionType",
-                "status": "status"
+                "domain": "identity.domain",
+                "inspection_type": "identity.domainSubType",
+                "status": "status",
+                "date_range": "recordContext.inspection.date",
+                "company_id": "recordContext.company.id",
+                "site_id": "recordContext.site.id",
+                "asset_group_id": "recordContext.assetGroup.id",
+                "asset_id": "recordContext.asset.id",
+                "inspector": "recordContext.inspection.inspectorName"
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
                   "inProgress": {
                     "expression": {
-                      "$sum": { "$cond": [{ "$eq": ["$status", "in_progress"] }, 1, 0] }
+                      "$sum": {
+                        "$cond": [
+                          {
+                            "$eq": [
+                              "$status",
+                              "in_progress"
+                            ]
+                          },
+                          1,
+                          0
+                        ]
+                      }
                     }
                   }
                 }
@@ -400,17 +445,36 @@
             "aggregationConfig": {
               "name": "Average Progress",
               "collection": "documents",
-              "baseFilter": { "type": "inspection" },
+              "baseFilter": {
+                "type": "wizard",
+                "$or": [
+                  {
+                    "domain": "inspection"
+                  },
+                  {
+                    "identity.domain": "inspection"
+                  }
+                ]
+              },
               "fieldMappings": {
-                "document_type": "type",
-                "date_range": "formData.inspectionDate",
-                "inspection_type": "inspectionType",
-                "status": "status"
+                "domain": "identity.domain",
+                "inspection_type": "identity.domainSubType",
+                "status": "status",
+                "date_range": "recordContext.inspection.date",
+                "company_id": "recordContext.company.id",
+                "site_id": "recordContext.site.id",
+                "asset_group_id": "recordContext.assetGroup.id",
+                "asset_id": "recordContext.asset.id",
+                "inspector": "recordContext.inspection.inspectorName"
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "avgProgress": { "expression": { "$avg": "$progress" } }
+                  "avgProgress": {
+                    "expression": {
+                      "$avg": "$progress"
+                    }
+                  }
                 }
               }
             },
@@ -432,22 +496,56 @@
             "aggregationConfig": {
               "name": "Compliance Rate",
               "collection": "documents",
-              "baseFilter": { "type": "inspection" },
+              "baseFilter": {
+                "type": "wizard",
+                "$or": [
+                  {
+                    "domain": "inspection"
+                  },
+                  {
+                    "identity.domain": "inspection"
+                  }
+                ]
+              },
               "fieldMappings": {
-                "document_type": "type",
-                "date_range": "formData.inspectionDate",
-                "inspection_type": "inspectionType",
-                "status": "status"
+                "domain": "identity.domain",
+                "inspection_type": "identity.domainSubType",
+                "status": "status",
+                "date_range": "recordContext.inspection.date",
+                "company_id": "recordContext.company.id",
+                "site_id": "recordContext.site.id",
+                "asset_group_id": "recordContext.assetGroup.id",
+                "asset_id": "recordContext.asset.id",
+                "inspector": "recordContext.inspection.inspectorName"
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "total": { "expression": { "$sum": 1 } },
+                  "total": {
+                    "expression": {
+                      "$sum": 1
+                    }
+                  },
                   "compliant": {
                     "expression": {
                       "$sum": {
                         "$cond": [
-                          { "$or": [{ "$eq": ["$status", "completed"] }, { "$eq": ["$status", "approved"] }] },
+                          {
+                            "$or": [
+                              {
+                                "$eq": [
+                                  "$status",
+                                  "completed"
+                                ]
+                              },
+                              {
+                                "$eq": [
+                                  "$status",
+                                  "approved"
+                                ]
+                              }
+                            ]
+                          },
                           1,
                           0
                         ]
@@ -461,8 +559,23 @@
                   "$project": {
                     "complianceRate": {
                       "$cond": [
-                        { "$gt": ["$total", 0] },
-                        { "$multiply": [{ "$divide": ["$compliant", "$total"] }, 100] },
+                        {
+                          "$gt": [
+                            "$total",
+                            0
+                          ]
+                        },
+                        {
+                          "$multiply": [
+                            {
+                              "$divide": [
+                                "$compliant",
+                                "$total"
+                              ]
+                            },
+                            100
+                          ]
+                        },
                         0
                       ]
                     }
@@ -484,12 +597,27 @@
             "aggregationConfig": {
               "name": "Overdue Inspections",
               "collection": "documents",
-              "baseFilter": { "type": "inspection" },
+              "baseFilter": {
+                "type": "wizard",
+                "$or": [
+                  {
+                    "domain": "inspection"
+                  },
+                  {
+                    "identity.domain": "inspection"
+                  }
+                ]
+              },
               "fieldMappings": {
-                "document_type": "type",
-                "date_range": "formData.inspectionDate",
-                "inspection_type": "inspectionType",
-                "status": "status"
+                "domain": "identity.domain",
+                "inspection_type": "identity.domainSubType",
+                "status": "status",
+                "date_range": "recordContext.inspection.date",
+                "company_id": "recordContext.company.id",
+                "site_id": "recordContext.site.id",
+                "asset_group_id": "recordContext.assetGroup.id",
+                "asset_id": "recordContext.asset.id",
+                "inspector": "recordContext.inspection.inspectorName"
               },
               "groupBy": {
                 "_id": null,
@@ -500,14 +628,36 @@
                         "$cond": [
                           {
                             "$and": [
-                              { "$ne": ["$status", "completed"] },
-                              { "$ne": ["$status", "approved"] },
-                              { "$lt": ["$progress", 100] },
+                              {
+                                "$ne": [
+                                  "$status",
+                                  "completed"
+                                ]
+                              },
+                              {
+                                "$ne": [
+                                  "$status",
+                                  "approved"
+                                ]
+                              },
+                              {
+                                "$lt": [
+                                  "$progress",
+                                  100
+                                ]
+                              },
                               {
                                 "$lt": [
                                   {
                                     "$cond": [
-                                      { "$eq": [{ "$type": "$formData.inspectionDate" }, "date"] },
+                                      {
+                                        "$eq": [
+                                          {
+                                            "$type": "$formData.inspectionDate"
+                                          },
+                                          "date"
+                                        ]
+                                      },
                                       "$formData.inspectionDate",
                                       {
                                         "$dateFromString": {
@@ -569,24 +719,49 @@
                 "config": {
                   "name": "Status Distribution",
                   "collection": "documents",
-                  "baseFilter": { "type": "inspection" },
+                  "baseFilter": {
+                    "type": "wizard",
+                    "$or": [
+                      {
+                        "domain": "inspection"
+                      },
+                      {
+                        "identity.domain": "inspection"
+                      }
+                    ]
+                  },
                   "fieldMappings": {
-                    "document_type": "type",
-                    "date_range": "formData.inspectionDate",
-                    "inspection_type": "inspectionType",
-                    "status": "status"
+                    "domain": "identity.domain",
+                    "inspection_type": "identity.domainSubType",
+                    "status": "status",
+                    "date_range": "recordContext.inspection.date",
+                    "company_id": "recordContext.company.id",
+                    "site_id": "recordContext.site.id",
+                    "asset_group_id": "recordContext.assetGroup.id",
+                    "asset_id": "recordContext.asset.id",
+                    "inspector": "recordContext.inspection.inspectorName"
                   },
                   "groupBy": {
-                    "_id": "$status",
+                    "_id": {
+                      "$ifNull": [
+                        "$status",
+                        "unknown"
+                      ]
+                    },
                     "fields": {
-                      "count": { "expression": { "$sum": 1 } }
+                      "count": {
+                        "expression": {
+                          "$sum": 1
+                        }
+                      }
                     }
                   },
-                  "sort": { "count": -1 }
+                  "sort": {
+                    "count": -1
+                  }
                 }
               }
             },
-            "dataPath": "data",
             "colorMap": {
               "draft": "#8c8c8c",
               "in_progress": "#faad14",
@@ -631,39 +806,54 @@
                 "config": {
                   "name": "Type Distribution",
                   "collection": "documents",
-                  "baseFilter": { "type": "inspection" },
+                  "baseFilter": {
+                    "type": "wizard",
+                    "$or": [
+                      {
+                        "domain": "inspection"
+                      },
+                      {
+                        "identity.domain": "inspection"
+                      }
+                    ]
+                  },
                   "fieldMappings": {
-                    "document_type": "type",
-                    "date_range": "formData.inspectionDate",
-                    "inspection_type": "inspectionType",
-                    "status": "status"
+                    "domain": "identity.domain",
+                    "inspection_type": "identity.domainSubType",
+                    "status": "status",
+                    "date_range": "recordContext.inspection.date",
+                    "company_id": "recordContext.company.id",
+                    "site_id": "recordContext.site.id",
+                    "asset_group_id": "recordContext.assetGroup.id",
+                    "asset_id": "recordContext.asset.id",
+                    "inspector": "recordContext.inspection.inspectorName"
                   },
                   "groupBy": {
                     "_id": {
                       "$ifNull": [
-                        "$inspectionType",
+                        "$domainSubTypeLabel",
                         {
                           "$ifNull": [
-                            "$documentSummary.inspectionType",
-                            {
-                              "$ifNull": [
-                                "$wizardState.documentSummary.inspectionType",
-                                "Unknown"
-                              ]
-                            }
+                            "$domainSubType",
+                            "Unknown"
                           ]
                         }
                       ]
                     },
                     "fields": {
-                      "count": { "expression": { "$sum": 1 } }
+                      "count": {
+                        "expression": {
+                          "$sum": 1
+                        }
+                      }
                     }
                   },
-                  "sort": { "count": -1 }
+                  "sort": {
+                    "count": -1
+                  }
                 }
               }
-            },
-            "dataPath": "data"
+            }
           }
         ]
       },
@@ -675,19 +865,18 @@
       "title": "Inspection Records",
       "description": "Search and manage inspection documents",
       "config": {
-        "dataUrl": "/api/inspections",
+        "dataUrl": "/api/documents?type=wizard&domain=inspection",
         "hideCreateButton": true,
         "fieldMappings": {
-          "document_type": "type",
-          "company_id": "company_id",
-          "site_id": "site_id",
-          "asset_group_id": "asset_group_id",
-          "asset_id": "asset_id",
-          "inspection_type": "inspectionType",
-          "equipment_type": "equipmentType",
+          "domain": "domain",
+          "inspection_type": "domainSubType",
           "status": "status",
-          "date_range": "formData.inspectionDate",
-          "inspector": "inspectorName"
+          "date_range": "recordContext.inspection.date",
+          "company_id": "recordContext.company.id",
+          "site_id": "recordContext.site.id",
+          "asset_group_id": "recordContext.assetGroup.id",
+          "asset_id": "recordContext.asset.id",
+          "inspector": "recordContext.inspection.inspectorName"
         },
         "search": {
           "placeholder": "Search inspections...",
@@ -706,52 +895,84 @@
           {
             "key": "inspectionType",
             "title": "Inspection Type",
-            "width": "140"
+            "width": "140",
+            "valuePath": [
+              "domainSubTypeLabel",
+              "domainSubType"
+            ]
           },
           {
             "key": "status",
             "title": "Status",
-            "width": "100"
+            "width": "100",
+            "valuePath": [
+              "status"
+            ]
           },
           {
             "key": "progress",
             "title": "Progress",
-            "width": "100"
+            "width": "100",
+            "valuePath": [
+              "progress"
+            ]
           },
           {
             "key": "facilityName",
             "title": "Facility",
-            "width": "130"
+            "width": "140",
+            "valuePath": [
+              "recordContext.site.name"
+            ]
           },
           {
             "key": "assetGroupName",
             "title": "Asset Group",
-            "width": "130"
+            "width": "150",
+            "valuePath": [
+              "recordContext.assetGroup.name"
+            ]
           },
           {
             "key": "assetName",
             "title": "Asset",
-            "width": "130"
+            "width": "140",
+            "valuePath": [
+              "recordContext.asset.name"
+            ]
           },
           {
             "key": "equipmentType",
             "title": "Asset Type",
-            "width": "140"
+            "width": "140",
+            "valuePath": [
+              "recordContext.asset.type",
+              "domainSubTypeLabel"
+            ]
           },
           {
             "key": "inspectionDate",
             "title": "Inspection Date",
-            "width": "120"
+            "width": "140",
+            "valuePath": [
+              "recordContext.inspection.date"
+            ]
           },
           {
             "key": "inspectorName",
             "title": "Inspector",
-            "width": "150"
+            "width": "150",
+            "valuePath": [
+              "recordContext.inspection.inspectorName"
+            ]
           },
           {
             "key": "created_date",
             "title": "Created",
-            "width": "120"
+            "width": "120",
+            "valuePath": [
+              "created_date"
+            ]
           }
         ],
         "rowActions": [
@@ -761,14 +982,16 @@
             "icon": "RobotOutlined",
             "type": "primary",
             "conditional": {
-              "field": "inspectionType",
+              "field": "domainSubType",
               "workspaceMapping": {
-                "pressure_vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
-                "piping": "intelliINSPECT/pipework-inspection-wizard"
+                "pressure_vessel_tank_wizard": "intelliINSPECT/pressure-vessel-tank-wizard",
+                "pipework_inspection_wizard": "intelliINSPECT/pipework-inspection-wizard",
+                "heat_exchanger_boiler_wizard": "intelliINSPECT/heat-exchanger-boiler-wizard",
+                "rotating_equipment_wizard": "intelliINSPECT/rotating-equipment-wizard"
               }
             },
             "params": {
-              "inspectionId": "{id}",
+              "documentId": "{id}",
               "mode": "continue"
             }
           },
@@ -785,10 +1008,16 @@
   ],
   "smartDefaults": {
     "inspection-search-grid": {
-      "defaultSort": { "field": "created_date", "order": "desc" },
+      "defaultSort": {
+        "field": "created_date",
+        "order": "desc"
+      },
       "defaultFilters": {
-        "document_type": "inspection",
-        "status": ["completed", "approved", "in_progress"]
+        "status": [
+          "completed",
+          "approved",
+          "in_progress"
+        ]
       },
       "autoRefresh": true,
       "refreshInterval": 30000

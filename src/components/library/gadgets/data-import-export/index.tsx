@@ -58,9 +58,9 @@ export const DataImportExportGadget: React.FC<DataImportExportProps> = ({
   const [aiMappings, setAiMappings] = useState<AIMapping[]>([]);
   const [validationErrors, setValidationErrors] = useState<ValidationError[]>([]);
   const [importSummary, setImportSummary] = useState<ImportSummary | null>(null);
-  const [excelFile, setExcelFile] = useState<File | null>(null);
+  const [, setExcelFile] = useState<File | null>(null);
   const [excelData, setExcelData] = useState<any[]>([]);
-  const [progress, setProgress] = useState(0);
+  const [, setProgress] = useState(0);
   const [allFieldDefinitions, setAllFieldDefinitions] = useState<FieldDefinition[]>([]);
   const [selectedParents, setSelectedParents] = useState<Record<string, any>>({});
   const [availableParents, setAvailableParents] = useState<Record<string, any[]>>({});
@@ -395,7 +395,7 @@ export const DataImportExportGadget: React.FC<DataImportExportProps> = ({
   }, [columns, excelData, allFieldDefinitions]);
 
   useEffect(() => {
-    const hasParents = selectedDocTypeOption?.parentEntities?.length || 0 > 0;
+    const hasParents = (selectedDocTypeOption?.parentEntities?.length || 0) > 0;
     const validationIndex = hasParents ? 4 : 3;
     if (currentStep === validationIndex) {
       setTimeout(() => {
@@ -797,13 +797,6 @@ export const DataImportExportGadget: React.FC<DataImportExportProps> = ({
           if (updateKey) {
             const updateValue = finalAsset[updateKey];
             if (updateValue) {
-                // Check cache first for existing record based on updateKey
-                let cachedRecord = null;
-                const cacheKey = `${documentType}-${updateValue}`;
-                
-                // This part of caching logic needs a more generic cache implementation
-                // For now, we rely on the direct API call but this is where further optimization could go.
-
                 const response = await httpClient.get(
                   `/api/documents?type=${documentType}&${updateKey}=${encodeURIComponent(updateValue)}`
                 );
@@ -889,105 +882,6 @@ export const DataImportExportGadget: React.FC<DataImportExportProps> = ({
       setProgress(0);
     }
   }, [validateData, columns, excelData, documentType, config, selectedDocTypeOption, selectedParents, allFieldDefinitions]);
-
-  const handleExport = useCallback(async () => {
-    setIsProcessing(true);
-
-    try {
-      const response = await httpClient.get(`/api/documents?type=${documentType}`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch data');
-      }
-
-      const data = await response.json();
-      const documents = data.data || [];
-
-      if (documents.length === 0) {
-        setIsProcessing(false);
-        return;
-      }
-
-      const denormalizedData = await Promise.all(documents.map(async (doc: any) => {
-        const exportRow: any = { ...doc };
-        
-        const flatten = (obj: any, prefix: string = '') => {
-          const result: any = {};
-          for (const key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              const value = obj[key];
-              const newKey = prefix ? `${prefix}_${key}` : key;
-              
-              if (value && typeof value === 'object' && !Array.isArray(value)) {
-                Object.assign(result, flatten(value, newKey));
-              } else if (Array.isArray(value)) {
-                result[newKey] = value.join(', ');
-              } else {
-                result[newKey] = value;
-              }
-            }
-          }
-          return result;
-        };
-        
-        const fetchAndMerge = async (idField: string, typeHint: string, prefix: string) => {
-          const relatedId = exportRow[idField];
-          if (!relatedId) return;
-          
-          try {
-            const res = await httpClient.get(`/api/documents/${relatedId}?type=${typeHint}`);
-            if (res.ok) {
-              const json = await res.json();
-              const relatedDoc = json.data || json;
-              const flattened = flatten(relatedDoc, prefix);
-              Object.assign(exportRow, flattened);
-            }
-          } catch (err) {
-            console.warn(`Failed to fetch ${prefix}:`, err);
-          }
-        };
-        
-        if (exportRow.site_id) {
-          await fetchAndMerge('site_id', 'site', 'site');
-        }
-        
-        if (exportRow.company_id || exportRow.site_company_id) {
-          exportRow.company_id = exportRow.company_id || exportRow.site_company_id;
-          await fetchAndMerge('company_id', 'company', 'company');
-        }
-        
-        if (exportRow.asset_group_id) {
-          await fetchAndMerge('asset_group_id', 'asset_group', 'asset_group');
-        }
-        
-        const flattenedMain = flatten(doc);
-        Object.assign(exportRow, flattenedMain);
-        
-        const internalFields = ['id', '_id', 'company_id', 'site_id', 'asset_group_id', 
-                                'tenantId', 'created_by', 'updated_by', 'created_date', 
-                                'last_updated', 'deleted', 'deleted_at', 'deleted_by', 
-                                '__v', 'type', 'embedding', 'semanticText', 'searchableContent',
-                                'lastEmbeddingUpdate', 'ragMetadata'];
-        internalFields.forEach(field => delete exportRow[field]);
-        
-        return exportRow;
-      }));
-
-      const worksheet = XLSX.utils.json_to_sheet(denormalizedData);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, documentType);
-
-      const filename = config.exportFilename ||
-        `${documentType}_export_${new Date().toISOString().split('T')[0]}.xlsx`;
-
-      XLSX.writeFile(workbook, filename);
-      
-    } catch (error) {
-      console.error('Export error:', error);
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [documentType, config.exportFilename]);
 
   // Render step content
   const renderStepContent = () => {
@@ -1112,7 +1006,7 @@ export const DataImportExportGadget: React.FC<DataImportExportProps> = ({
   };
 
   const canProceed = () => {
-    const hasParents = selectedDocTypeOption?.parentEntities?.length || 0 > 0;
+    const hasParents = (selectedDocTypeOption?.parentEntities?.length || 0) > 0;
     const columnMappingIndex = hasParents ? 3 : 2;
     const validationIndex = hasParents ? 4 : 3;
 
@@ -1134,7 +1028,7 @@ export const DataImportExportGadget: React.FC<DataImportExportProps> = ({
   };
 
   const getNextButtonLabel = () => {
-    const hasParents = selectedDocTypeOption?.parentEntities?.length || 0 > 0;
+    const hasParents = (selectedDocTypeOption?.parentEntities?.length || 0) > 0;
     const validationIndex = hasParents ? 4 : 3;
 
     if (currentStep === validationIndex - 1) {
@@ -1147,7 +1041,7 @@ export const DataImportExportGadget: React.FC<DataImportExportProps> = ({
   };
 
   const handleNextClick = () => {
-    const hasParents = selectedDocTypeOption?.parentEntities?.length || 0 > 0;
+    const hasParents = (selectedDocTypeOption?.parentEntities?.length || 0) > 0;
     const validationIndex = hasParents ? 4 : 3;
 
     if (currentStep === validationIndex) {

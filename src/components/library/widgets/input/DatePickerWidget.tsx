@@ -6,12 +6,10 @@
  */
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { DatePicker, TimePicker as AntdTimePicker, ConfigProvider, Space, Typography, Button, Alert } from 'antd';
+import { DatePicker, ConfigProvider, Space, Typography, Button } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
-import type { PickerLocale } from 'antd/es/date-picker/generatePicker';
-import { sanitizeData } from '../../../../utils/sanitizeData';
 
 const { RangePicker } = DatePicker;
 const { Text } = Typography;

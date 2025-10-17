@@ -339,6 +339,7 @@ const useWidgetData = (dataSource?: DataSource, globalConfig?: GlobalConfig) => 
 
       if (dataSource.transform) {
         try {
+          // eslint-disable-next-line no-new-func
           const transformFn = new Function('data', `return ${dataSource.transform}`);
           data = transformFn(data);
         } catch (transformError) {

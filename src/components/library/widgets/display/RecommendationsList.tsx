@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Card, Tag, Button, Input, Select, Switch, Divider, Modal, Form, InputNumber, Space, message } from 'antd';
-import { CopyOutlined, SortAscendingOutlined, FileTextOutlined, BulbOutlined, DownOutlined, RightOutlined, CheckCircleOutlined, BranchesOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CopyOutlined, SortAscendingOutlined, FileTextOutlined, BulbOutlined, DownOutlined, RightOutlined, BranchesOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useReactTable, ColumnDef, getCoreRowModel, flexRender } from '@tanstack/react-table';
 
 export interface RecommendationItem {
@@ -110,10 +110,6 @@ export const RecommendationsList: React.FC<RecommendationsListProps> = React.mem
       const values = await form.validateFields();
       const parseLines = (text?: string) => (text || '').split(/\n+/).map(s => s.trim()).filter(Boolean);
       const parseList = (text?: string) => parseLines(text);
-      const parsePersonnel = (text?: string) => parseLines(text).map((line, i) => {
-        const [role, name, notes] = line.split('|').map(s => s?.trim() || '');
-        return { id: String(i), role, name, notes: notes || undefined };
-      });
       const updated = {
         ...(editing || { id: `new-${Date.now()}` }),
         label: values.label?.trim() || 'Untitled',
@@ -449,4 +445,3 @@ const EditablePersonnelEditor: React.FC<{ rows: PersonnelRow[]; setRows: (r: Per
     </div>
   );
 };
-

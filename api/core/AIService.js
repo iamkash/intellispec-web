@@ -36,18 +36,7 @@ const openai = new OpenAI({
  * @returns {Promise<string>} - The AI response
  */
 async function generateWithAI(config, context = {}) {
-  const {
-    model = 'gpt-4',
-    temperature = 0.7,
-    maxTokens = 2000,
-    maxCompletionTokens,
-    systemPrompt = 'You are a helpful assistant.',
-    userPromptTemplate = '',
-    messages = [],
-    responseFormat = null,
-    reasoningEffort = 'medium',
-    textVerbosity = 'medium'
-  } = config;
+  const { model = 'gpt-4' } = config;
 
   try {
     // Determine which API to use based on model
@@ -461,4 +450,3 @@ module.exports = {
   analyzeText,
   buildDynamicPrompt
 };
-

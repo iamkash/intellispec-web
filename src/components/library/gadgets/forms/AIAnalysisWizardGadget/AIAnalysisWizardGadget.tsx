@@ -6,10 +6,10 @@ import type { AIAnalysisWizardConfig, AIAnalysisWizardData } from './AIAnalysisW
 import { GenericWizardRenderer } from './components';
 
 /**
- * AIAnalysisWizardGadget - A generic AI-powered inspection wizard
+ * AIAnalysisWizardGadget - A generic AI-powered domain analysis wizard
  * 
  * This is a metadata-driven wizard component that can be configured to handle
- * various types of inspections with AI assistance. The wizard supports:
+ * various domains of analysis with AI assistance. The wizard supports:
  * - Voice recording and transcription
  * - Image upload with drawing annotations
  * - AI-powered image analysis
@@ -42,11 +42,11 @@ export class AIAnalysisWizardGadget extends BaseGadget {
   public metadata: GadgetMetadata = { 
     id: 'ai-analysis-wizard', 
     name: 'AI Analysis Wizard', 
-    description: 'Generic AI-powered inspection wizard with metadata-driven configuration', 
+    description: 'Generic AI-powered domain analysis wizard with metadata-driven configuration', 
     version: '1.0.0', 
     author: 'intelliSPEC Team', 
     category: 'forms', 
-    tags: ['wizard','ai','inspection','voice','image','analysis','markdown','generic'], 
+    tags: ['wizard','ai','domain','voice','image','analysis','markdown','generic'], 
     gadgetType: GadgetType.FORM, 
     widgetTypes: ['voice-recorder-widget','image-upload-with-drawing-widget','ai-analysis-widget'] 
   };
@@ -56,7 +56,10 @@ export class AIAnalysisWizardGadget extends BaseGadget {
     properties: { 
       currentStep: { type: 'number', minimum: 0 }, 
       completedSteps: { type: 'array', items: { type: 'number' } }, 
-      inspectionType: { type: 'string' }, 
+      domain: { type: 'string' },
+      domainType: { type: 'string' },
+      domainTypeLabel: { type: 'string' },
+      detectedType: { type: 'string' }, 
       voiceData: { type: 'object' }, 
       textData: { type: 'string' }, 
       imageData: { type: 'array' }, 
@@ -91,7 +94,7 @@ export class AIAnalysisWizardGadget extends BaseGadget {
       hasSteps: !!(config as any)?.steps
     });
     
-    // Strict: build steps only if metadata provides sections/groups/fields per inspection metadata
+    // Strict: build steps only if metadata provides sections/groups/fields per domain metadata
     if (config && Array.isArray((config as any).sections) && Array.isArray((config as any).groups) && Array.isArray((config as any).fields)) {
       console.log('[AIAnalysisWizardGadget] Building steps from flat structure...');
       const { buildStepsFromFlat } = require('./utils/steps');
@@ -134,11 +137,11 @@ export class AIAnalysisWizardGadget extends BaseGadget {
     const hasSections = Array.isArray(this.config.steps.sections) && this.config.steps.sections.length > 0; 
     if (!hasSections) errors.push('At least one section must be defined');
     
-    if (this.config.steps.input) { 
-      const input = this.config.steps.input; 
-      if (!Array.isArray(input.inspectionTypes) || input.inspectionTypes.length === 0) { 
-        errors.push('Input step requires at least one inspection type'); 
-      } 
+    if (this.config.steps.input) {
+      const input = this.config.steps.input;
+      if (!Array.isArray(input.domainTypeOptions) || input.domainTypeOptions.length === 0) {
+        errors.push('Input step requires at least one domain type option');
+      }
     }
     
     if (!this.config.steps.pdf?.enabled) { 

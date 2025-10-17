@@ -1,5 +1,5 @@
 {
-  "id": "piping-inspection-dashboard",
+  "id": "inspection/piping-inspection-dashboard",
   "title": "Piping Inspection Dashboard",
   "description": "Dashboard for managing piping inspections with search, KPIs, and quick actions",
   "icon": "ExperimentOutlined",
@@ -70,11 +70,15 @@
             "aggregationConfig": {
               "name": "total-piping-executions",
               "collection": "executions",
-              "baseFilter": { "workflowId": "piping-inspection-workflow" },
+              "baseFilter": {
+                "workflowId": "piping-inspection-workflow"
+              },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "count": { "$sum": 1 }
+                  "count": {
+                    "$sum": 1
+                  }
                 }
               }
             },
@@ -98,7 +102,9 @@
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "count": { "$sum": 1 }
+                  "count": {
+                    "$sum": 1
+                  }
                 }
               }
             },
@@ -126,7 +132,9 @@
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "count": { "$sum": 1 }
+                  "count": {
+                    "$sum": 1
+                  }
                 }
               }
             },
@@ -151,14 +159,20 @@
                 "workflowId": "piping-inspection-workflow",
                 "status": "completed",
                 "completedAt": {
-                  "$gte": { "$date": "2024-01-01T00:00:00.000Z" },
-                  "$lt": { "$date": "2024-12-31T23:59:59.999Z" }
+                  "$gte": {
+                    "$date": "2024-01-01T00:00:00.000Z"
+                  },
+                  "$lt": {
+                    "$date": "2024-12-31T23:59:59.999Z"
+                  }
                 }
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "count": { "$sum": 1 }
+                  "count": {
+                    "$sum": 1
+                  }
                 }
               }
             },
@@ -175,18 +189,52 @@
             "aggregationConfig": {
               "name": "success-rate",
               "collection": "executions",
-              "baseFilter": { "workflowId": "piping-inspection-workflow" },
+              "baseFilter": {
+                "workflowId": "piping-inspection-workflow"
+              },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "total": { "$sum": 1 },
-                  "successful": { "$sum": { "$cond": [{ "$eq": ["$status", "completed"] }, 1, 0] } },
+                  "total": {
+                    "$sum": 1
+                  },
+                  "successful": {
+                    "$sum": {
+                      "$cond": [
+                        {
+                          "$eq": [
+                            "$status",
+                            "completed"
+                          ]
+                        },
+                        1,
+                        0
+                      ]
+                    }
+                  },
                   "rate": {
                     "$multiply": [
-                      { "$divide": [
-                        { "$sum": { "$cond": [{ "$eq": ["$status", "completed"] }, 1, 0] } },
-                        { "$sum": 1 }
-                      ] },
+                      {
+                        "$divide": [
+                          {
+                            "$sum": {
+                              "$cond": [
+                                {
+                                  "$eq": [
+                                    "$status",
+                                    "completed"
+                                  ]
+                                },
+                                1,
+                                0
+                              ]
+                            }
+                          },
+                          {
+                            "$sum": 1
+                          }
+                        ]
+                      },
                       100
                     ]
                   }
@@ -213,13 +261,24 @@
               "baseFilter": {
                 "workflowId": "piping-inspection-workflow",
                 "status": "completed",
-                "duration": { "$exists": true }
+                "duration": {
+                  "$exists": true
+                }
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "avgDuration": { "$avg": "$duration" },
-                  "avgMinutes": { "$avg": { "$divide": ["$duration", 60000] } }
+                  "avgDuration": {
+                    "$avg": "$duration"
+                  },
+                  "avgMinutes": {
+                    "$avg": {
+                      "$divide": [
+                        "$duration",
+                        60000
+                      ]
+                    }
+                  }
                 }
               }
             },
@@ -264,8 +323,14 @@
               "type": "select",
               "required": true,
               "options": [
-                {"label": "Visual Inspection", "value": "piping-visual-inspection-workflow"},
-                {"label": "Comprehensive Inspection", "value": "piping-inspection-workflow"}
+                {
+                  "label": "Visual Inspection",
+                  "value": "piping-visual-inspection-workflow"
+                },
+                {
+                  "label": "Comprehensive Inspection",
+                  "value": "piping-inspection-workflow"
+                }
               ]
             }
           },
@@ -369,8 +434,16 @@
       "autoRefresh": false
     },
     "piping-search-grid": {
-      "defaultSort": { "field": "createdAt", "order": "desc" },
-      "defaultFilters": { "status": ["completed", "approved"] },
+      "defaultSort": {
+        "field": "createdAt",
+        "order": "desc"
+      },
+      "defaultFilters": {
+        "status": [
+          "completed",
+          "approved"
+        ]
+      },
       "autoRefresh": true,
       "refreshInterval": 30000
     }

@@ -20,7 +20,7 @@
  * - RAG-ready document structure
  */
 
-import mongoose, { Schema, Document, Model } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
 // ==================== INTERFACES ====================
@@ -610,7 +610,7 @@ export const createDefaultRoles = async (tenantId: mongoose.Types.ObjectId): Pro
   return roles as any[];
 };
 
-export default {
+const Models = {
   Tenant,
   Role,
   User,
@@ -618,3 +618,5 @@ export default {
   RagDocument,
   createDefaultRoles
 };
+
+export default Models;

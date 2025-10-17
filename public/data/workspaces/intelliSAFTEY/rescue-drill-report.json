@@ -1,5 +1,5 @@
 {
-  "id": "rescue-drill-report",
+  "id": "intelliSAFTEY/rescue-drill-report",
   "title": "Rescue Drill Report / After Action Review",
   "description": "Capture drill details, actions, outcomes, and lessons learned; export PDF.",
   "gadgets": [
@@ -286,32 +286,82 @@
           "responseSelector": "data.0"
         },
         "domainConfig": {
-          "payloadType": "inspection",
-          "defaultType": "general_inspection",
+          "payloadType": "safety",
+          "defaultType": "rescue_drill_report",
           "fields": {
-            "type": "inspection_type",
-            "detectedType": "detected_equipment_type",
-            "id": "equipment_id",
-            "name": "assetName",
-            "owner": "inspector_name",
-            "date": "inspection_date"
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
           },
           "outputKeys": {
-            "id": "equipmentId",
-            "type": "equipmentType",
-            "owner": "inspectorName",
-            "date": "inspectionDate"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
           },
           "payloadKeys": {
-            "type": "inspectionType"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
           },
           "navigation": {
-            "listingSuffix": "inspections",
+            "listingSuffix": "responses",
             "homeSuffix": "home"
+          },
+          "typeMap": {
+            "rescue_drill_report": "Rescue Drill Report / After Action Review"
+          }
+        },
+        "type": "safety",
+        "documentType": "rescue_drill_report",
+        "label": "Rescue Drill Report / After Action Review",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "rescue_drill_report",
+          "domainSubTypeLabel": "Rescue Drill Report"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },
       "position": 24
     }
-  ]
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
 }

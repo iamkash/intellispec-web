@@ -1,5 +1,5 @@
 {
-  "id": "ai-project-plan-wizard",
+  "id": "inspection/ai-project-plan-wizard",
   "title": "AI Project Plan Wizard",
   "description": "Capture voice notes and images, then generate a comprehensive inspection project plan in Markdown (scope, equipment, labor, duration, schedule, risks).",
   "gadgets": [
@@ -36,7 +36,7 @@
                 "temperature": 0.2
               },
               "promptConfig": {
-                "systemPrompt": "ROLE: You are a senior inspection project planner and scheduler. GOAL: Produce a complete, professional project plan in Markdown from provided IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once when applicable): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Equipment and Tools, ## Materials and Consumables, ## Permits and Safety, ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation. TABLES: Where data is structured, use Markdown tables with the following columns: - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials and Consumables: | Item | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - Work Breakdown Structure and Estimates: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks and Mitigations: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CALCULATIONS: Compute Extended (USD) = Qty \u00d7 Hours \u00d7 Hourly Rate where applicable; show Labor Subtotal and Grand Total (sum of line items). FORMATTING: Use USD with thousands separators (e.g., $12,345). TONE: Concise, actionable, and field\u2011ready. RULES: No duplicate headings; prefer bullets and tables where possible.",
+                "systemPrompt": "ROLE: You are a senior inspection project planner and scheduler. GOAL: Produce a complete, professional project plan in Markdown from provided IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once when applicable): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Equipment and Tools, ## Materials and Consumables, ## Permits and Safety, ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation. TABLES: Where data is structured, use Markdown tables with the following columns: - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials and Consumables: | Item | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - Work Breakdown Structure and Estimates: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks and Mitigations: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CALCULATIONS: Compute Extended (USD) = Qty × Hours × Hourly Rate where applicable; show Labor Subtotal and Grand Total (sum of line items). FORMATTING: Use USD with thousands separators (e.g., $12,345). TONE: Concise, actionable, and field‑ready. RULES: No duplicate headings; prefer bullets and tables where possible.",
                 "userPrompt": "Context (transcript and notes):\n{text}\n\nUsing the images and transcript above, produce the project plan using the specified headings. Convert lists into the tables defined in the instructions (Equipment, Materials, Team and Roles, WBS, Schedule, Risks, Quotation) and compute Extended and totals where applicable. Ensure clear USD currency formatting and include a Labor Subtotal and a Grand Total in Quotation. Return Markdown only."
               },
               "streaming": {
@@ -632,7 +632,7 @@
             },
             "promptConfig": {
               "systemPrompt": "ROLE: You are a senior inspection project planner and scheduler. GOAL: Produce a complete, professional project plan in Markdown from IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Equipment and Tools, ## Materials and Consumables, ## Permits and Safety, ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation. TABLES (required formats): - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials and Consumables: | Item | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - WBS: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks and Mitigations: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CALCULATIONS: Compute Extended and totals; include Labor Subtotal and Grand Total with USD formatting (e.g., $12,345). TONE: Concise and actionable. RULES: No duplicate headings; prefer tables where possible.",
-              "userPrompt": "Context (transcript and notes):\n{text}\n\nCreate the project plan using the specified headings and table formats. Compute Extended (Qty \u00d7 Hours \u00d7 Rate) and show Labor Subtotal and Grand Total in Quotation. Use USD currency formatting with thousands separators. Return Markdown only."
+              "userPrompt": "Context (transcript and notes):\n{text}\n\nCreate the project plan using the specified headings and table formats. Compute Extended (Qty × Hours × Rate) and show Labor Subtotal and Grand Total in Quotation. Use USD currency formatting with thousands separators. Return Markdown only."
             },
             "streaming": {
               "enabled": true,
@@ -794,8 +794,8 @@
           "disablePopulatedFields": true,
           "urlParams": [
             {
-              "name": "recordId",
-              "queryParam": "record_id",
+              "name": "documentId",
+              "queryParam": "documentId",
               "required": true
             }
           ],
@@ -803,8 +803,8 @@
             "url": "/api/documents",
             "method": "GET",
             "query": {
-              "type": "asset",
-              "id": "{params.recordId}"
+              "type": "wizard",
+              "id": "{params.documentId}"
             }
           },
           "responseSelector": "data.0"
@@ -832,6 +832,38 @@
           "navigation": {
             "listingSuffix": "inspections",
             "homeSuffix": "home"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "inspection",
+          "domainLabel": "Inspection",
+          "domainSubType": "ai_project_plan_wizard",
+          "domainSubTypeLabel": "AI Project Plan Wizard"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },

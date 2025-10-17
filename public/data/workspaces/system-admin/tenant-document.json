@@ -1,5 +1,5 @@
 {
-  "id": "tenant-document",
+  "id": "system-admin/tenant-document",
   "title": "Tenant Configuration",
   "description": "Comprehensive tenant creation and management",
   "layout": "dashboard",
@@ -108,9 +108,18 @@
             "required": true,
             "size": 12,
             "options": [
-              { "label": "Active", "value": "active" },
-              { "label": "Suspended", "value": "suspended" },
-              { "label": "Inactive", "value": "inactive" }
+              {
+                "label": "Active",
+                "value": "active"
+              },
+              {
+                "label": "Suspended",
+                "value": "suspended"
+              },
+              {
+                "label": "Inactive",
+                "value": "inactive"
+              }
             ]
           },
           {
@@ -149,8 +158,14 @@
             "required": true,
             "size": 24,
             "options": [
-              { "label": "IntelliFlex", "value": "IntelliFlex" },
-              { "label": "IntelliEnterprise", "value": "IntelliEnterprise" }
+              {
+                "label": "IntelliFlex",
+                "value": "IntelliFlex"
+              },
+              {
+                "label": "IntelliEnterprise",
+                "value": "IntelliEnterprise"
+              }
             ]
           },
           {
@@ -164,9 +179,18 @@
             "size": 24,
             "description": "Determines pricing model",
             "options": [
-              { "label": "User-Based", "value": "user-based" },
-              { "label": "Facility-Based", "value": "facility-based" },
-              { "label": "Enterprise (Unlimited)", "value": "enterprise" }
+              {
+                "label": "User-Based",
+                "value": "user-based"
+              },
+              {
+                "label": "Facility-Based",
+                "value": "facility-based"
+              },
+              {
+                "label": "Enterprise (Unlimited)",
+                "value": "enterprise"
+              }
             ]
           },
           {
@@ -249,8 +273,14 @@
             "watchField": "trial.enabled",
             "showWhen": true,
             "options": [
-              { "label": "Auto Start", "value": "auto" },
-              { "label": "Manual Start", "value": "manual" }
+              {
+                "label": "Auto Start",
+                "value": "auto"
+              },
+              {
+                "label": "Manual Start",
+                "value": "manual"
+              }
             ]
           },
           {
@@ -355,10 +385,22 @@
                   "editable": true,
                   "width": 180,
                   "options": [
-                    { "label": "👤 Tenant Admin", "value": "Tenant Admin" },
-                    { "label": "👨‍💼 Manager", "value": "Manager" },
-                    { "label": "👷 User", "value": "User" },
-                    { "label": "👁️ Viewer", "value": "Viewer" }
+                    {
+                      "label": "👤 Tenant Admin",
+                      "value": "Tenant Admin"
+                    },
+                    {
+                      "label": "👨‍💼 Manager",
+                      "value": "Manager"
+                    },
+                    {
+                      "label": "👷 User",
+                      "value": "User"
+                    },
+                    {
+                      "label": "👁️ Viewer",
+                      "value": "Viewer"
+                    }
                   ]
                 },
                 {
@@ -373,7 +415,11 @@
                 "enableFiltering": true,
                 "enablePagination": true,
                 "enableSelection": true,
-                "pageSizeOptions": [5, 10, 20],
+                "pageSizeOptions": [
+                  5,
+                  10,
+                  20
+                ],
                 "readOnly": false,
                 "bordered": true
               }

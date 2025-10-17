@@ -1,5 +1,5 @@
 {
-  "id": "intelliQuote-home",
+  "id": "intelliQuote/home",
   "type": "dashboard",
   "title": "IntelliQuote Home",
   "description": "Welcome to IntelliQuote - Intelligent Quoting & Estimation Platform",
@@ -31,7 +31,11 @@
             "type": "workspace",
             "workspace": "quote/ai-quote-assistant",
             "category": "ai",
-            "tags": ["ai", "quote", "fireproofing"]
+            "tags": [
+              "ai",
+              "quote",
+              "fireproofing"
+            ]
           }
         ]
       }

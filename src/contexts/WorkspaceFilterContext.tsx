@@ -64,7 +64,7 @@ export const WorkspaceFilterProvider: React.FC<WorkspaceFilterProviderProps> = (
   onFiltersChange
 }) => {
   const [filters, setFilters] = useState<WorkspaceFilters>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Initialize default filter values
@@ -181,7 +181,7 @@ setFilters({});
   // Notify parent of filter changes
   useEffect(() => {
     onFiltersChange?.(filters);
-  }, [filters]); // Removed onFiltersChange from deps to prevent loops
+  }, [filters, onFiltersChange]);
 
   const contextValue: WorkspaceFilterContextValue = {
     filters,

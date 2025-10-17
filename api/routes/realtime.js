@@ -6,8 +6,6 @@
 const { logger } = require('../core/Logger');
 const { requireAuth } = require('../core/AuthMiddleware');
 const WebSocket = require('ws');
-const { createServer } = require('http');
-
 // Store active connections
 const activeConnections = new Map();
 

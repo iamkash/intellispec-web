@@ -1,5 +1,5 @@
 {
-  "id": "thickness-measurements",
+  "id": "inspection/thickness-measurements",
   "type": "section",
   "title": "Thickness Measurements",
   "description": "Measurement planning, execution, critical areas, corrosion rate, and remaining life",
@@ -48,11 +48,26 @@
           "size": 6,
           "required": true,
           "options": [
-            {"label": "Ultrasonic Testing (UT)", "value": "ut"},
-            {"label": "Radiographic Testing (RT)", "value": "rt"},
-            {"label": "Manual Caliper", "value": "manual-caliper"},
-            {"label": "Digital Caliper", "value": "digital-caliper"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "Ultrasonic Testing (UT)",
+              "value": "ut"
+            },
+            {
+              "label": "Radiographic Testing (RT)",
+              "value": "rt"
+            },
+            {
+              "label": "Manual Caliper",
+              "value": "manual-caliper"
+            },
+            {
+              "label": "Digital Caliper",
+              "value": "digital-caliper"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -64,11 +79,26 @@
           "size": 6,
           "required": true,
           "options": [
-            {"label": "100% Coverage", "value": "100"},
-            {"label": "Spot Check", "value": "spot"},
-            {"label": "Representative Sample", "value": "representative"},
-            {"label": "Critical Areas Only", "value": "critical"},
-            {"label": "As Required", "value": "as-required"}
+            {
+              "label": "100% Coverage",
+              "value": "100"
+            },
+            {
+              "label": "Spot Check",
+              "value": "spot"
+            },
+            {
+              "label": "Representative Sample",
+              "value": "representative"
+            },
+            {
+              "label": "Critical Areas Only",
+              "value": "critical"
+            },
+            {
+              "label": "As Required",
+              "value": "as-required"
+            }
           ]
         }
       ]
@@ -108,11 +138,26 @@
           "required": true,
           "size": 6,
           "options": [
-            {"label": "UT Gauge", "value": "ut-gauge"},
-            {"label": "Digital Caliper", "value": "digital-caliper"},
-            {"label": "Manual Caliper", "value": "manual-caliper"},
-            {"label": "Micrometer", "value": "micrometer"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "UT Gauge",
+              "value": "ut-gauge"
+            },
+            {
+              "label": "Digital Caliper",
+              "value": "digital-caliper"
+            },
+            {
+              "label": "Manual Caliper",
+              "value": "manual-caliper"
+            },
+            {
+              "label": "Micrometer",
+              "value": "micrometer"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -232,10 +277,22 @@
           "placeholder": "Select method",
           "size": 6,
           "options": [
-            {"label": "API 510 Standard", "value": "api-510"},
-            {"label": "ASME Code", "value": "asme"},
-            {"label": "Custom Calculation", "value": "custom"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "API 510 Standard",
+              "value": "api-510"
+            },
+            {
+              "label": "ASME Code",
+              "value": "asme"
+            },
+            {
+              "label": "Custom Calculation",
+              "value": "custom"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -300,4 +357,4 @@
       ]
     }
   ]
-} 
+}

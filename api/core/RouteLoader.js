@@ -40,8 +40,7 @@ const ROUTE_CONFIG = {
   'workflows': { prefix: '/api/workflows', enabled: true },
   'executions': { prefix: '/api/executions', enabled: true },
   
-  // Inspection routes
-  'inspections-fastify': { prefix: '/api', enabled: true },
+  // Wizard routes
   'wizards': { prefix: '/api', enabled: true },
   'calculators': { prefix: '/api', enabled: true },
   
@@ -217,4 +216,3 @@ class RouteLoader {
 }
 
 module.exports = RouteLoader;
-

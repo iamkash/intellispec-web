@@ -105,8 +105,8 @@ return formData;
             required: fieldOption.required,
             defaultValue: fieldOption.defaultValue,
             options: fieldOption.options,
-            optionsUrl: fieldOption.optionsDatasourceUrl,
-            optionsDatasourceUrl: fieldOption.optionsDatasourceUrl,
+            optionsUrl: (fieldOption as any).optionsUrl || fieldOption.optionsDatasourceUrl,
+            optionsDatasourceUrl: fieldOption.optionsDatasourceUrl || (fieldOption as any).optionsUrl,
             optionsPath: fieldOption.optionsPath,
             size: fieldOption.size,
             section: fieldOption.sectionId,
@@ -121,7 +121,7 @@ return formData;
             showWhen: fieldOption.showWhen,
             showOnMatch: fieldOption.showOnMatch,
             ...Object.keys(fieldOption)
-              .filter(key => !['id', 'title', 'type', 'size', 'icon', 'sectionId', 'groupId', 'label', 'placeholder', 'description', 'required', 'defaultValue', 'options', 'optionsDatasourceUrl', 'optionsPath', 'disabled', 'readOnly', 'props', 'validator', 'transform', 'render', 'watchField', 'showWhen', 'showOnMatch', 'span'].includes(key))
+              .filter(key => !['id', 'title', 'type', 'size', 'icon', 'sectionId', 'groupId', 'label', 'placeholder', 'description', 'required', 'defaultValue', 'options', 'optionsDatasourceUrl', 'optionsPath', 'disabled', 'readOnly', 'props', 'validator', 'transform', 'render', 'watchField', 'showWhen', 'showOnMatch', 'span', 'optionsUrl'].includes(key))
               .reduce((acc, key) => ({ ...acc, [key]: (fieldOption as any)[key] }), {} as any)
           };
           if (fieldOption.groupId) {

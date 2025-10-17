@@ -7,7 +7,7 @@
 
 import { BulbOutlined, DeleteOutlined, PlusOutlined, ReloadOutlined, RobotOutlined, SettingOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { Button, Card, Empty, Form, Input, InputNumber, message, Modal, Select, Space, Tooltip, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BaseGadget, GadgetConfig, GadgetMetadata, GadgetSchema, GadgetType } from '../base';
 import ReferenceDataOptionsGrid from './ReferenceDataOptionsGrid';
 import './modal-theme.css';
@@ -42,22 +42,10 @@ const ReferenceOptionsGridView: React.FC<ReferenceOptionsGridProps> = ({
   aiConfig = {},
   onAIGenerate
 }) => {
-  const [currentDataUrl, setCurrentDataUrl] = useState<string | null>(null);
   const [isAIModalVisible, setIsAIModalVisible] = useState(false);
   const [aiForm] = Form.useForm();
   const [aiGenerating, setAIGenerating] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-
-  // Update data URL when list type changes
-  useEffect(() => {
-    if (selectedListType?._id) {
-      // Fix the API endpoint - it should be /api/reference-data/options/{listTypeId}
-      const baseUrl = dataUrl.replace('/api/reference-data/options', '/api/reference-data/options');
-      setCurrentDataUrl(`${baseUrl}/${selectedListType._id}`);
-    } else {
-      setCurrentDataUrl(null);
-    }
-  }, [selectedListType, dataUrl]);
 
   // Handle AI generation
   const handleAIGenerate = () => {
@@ -108,50 +96,6 @@ if (response.ok) {
       setAIGenerating(false);
     }
   };
-
-  // Handle duplicate option
-  const handleDuplicate = async (record: any) => {
-    try {
-      const duplicateData = {
-        ...record,
-        label: `${record.label} (Copy)`,
-        value: `${record.value}_copy_${Date.now()}`,
-        _id: undefined // Remove ID so it creates new
-      };
-
-      const response = await BaseGadget.makeAuthenticatedFetch(
-        `/api/reference-data/options/${selectedListType._id}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(duplicateData)
-        }
-      );
-
-      if (response.ok) {
-        message.success('Option duplicated successfully');
-        // Refresh the grid by updating the data URL
-        setCurrentDataUrl(prev => prev?.split('?')[0] + '?refresh=' + Date.now() || null);
-      } else {
-        const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-        message.error(`Failed to duplicate option: ${error.error || 'Unknown error'}`);
-      }
-    } catch (error) {
-      message.error('Failed to duplicate option');
-      console.error('Duplicate error:', error);
-    }
-  };
-
-  // Enhanced row actions with duplicate
-  const enhancedRowActions = rowActions?.map(action => {
-    if (action.key === 'duplicate') {
-      return {
-        ...action,
-        onClick: handleDuplicate
-      };
-    }
-    return action;
-  });
 
   // No list type selected state
   if (!selectedListType) {

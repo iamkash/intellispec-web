@@ -67,7 +67,7 @@ const openai = new OpenAI({ apiKey: CONFIG.openai.apiKey });
 // Parse command line arguments
 const args = process.argv.slice(2);
 const mode = args.find(arg => arg.startsWith('--mode='))?.split('=')[1] || 'all';
-const collections = args.find(arg => arg.startsWith('--collections='))?.split('=')[1]?.split(',');
+const selectedCollections = args.find(arg => arg.startsWith('--collections='))?.split('=')[1]?.split(',');
 const tenantId = args.find(arg => arg.startsWith('--tenant='))?.split('=')[1];
 const dryRun = args.includes('--dry-run');
 
@@ -80,12 +80,13 @@ const documentTypes = new Map();
   
   try {
     // Get all collections
-    const collections = await db.listCollections().toArray();
-for (const collectionInfo of collections) {
+    const allCollections = await db.listCollections().toArray();
+    for (const collectionInfo of allCollections) {
       const collectionName = collectionInfo.name;
       
       // Skip system collections
       if (collectionName.startsWith('system.')) continue;
+      if (selectedCollections && !selectedCollections.includes(collectionName)) continue;
 const collection = db.collection(collectionName);
       
       // Get distinct document types
@@ -123,8 +124,9 @@ for (const type of types) {
 }
       }
     }
-for (const [type, info] of documentTypes) {
-console.log(`    🔧 Key fields: ${info.structure.textFields.slice(0, 5).join(', ')}${info.structure.textFields.length > 5 ? '...' : ''}`);
+    for (const [type, info] of documentTypes) {
+      console.log(`  📄 Document type: ${type}`);
+      console.log(`    🔧 Key fields: ${info.structure.textFields.slice(0, 5).join(', ')}${info.structure.textFields.length > 5 ? '...' : ''}`);
     }
     
     return documentTypes;
@@ -528,6 +530,7 @@ results.updated++;
       processed += documents.length;
       
       const progress = Math.round((processed / totalDocs) * 100);
+      console.log(`    Progress: ${processed}/${totalDocs} (${progress}%)`);
 }
   }
   
@@ -649,8 +652,9 @@ return;
     // Execute based on mode
     if (mode === 'setup' || mode === 'all') {
       const indexResults = await createUniversalVectorIndexes(db, documentTypes);
-indexResults.forEach(result => {
-});
+      indexResults.forEach(result => {
+        console.log(`  • Index created for ${result.collection}: ${result.indexName}`);
+      });
     }
     
     if (mode === 'generate' || mode === 'all') {
@@ -659,7 +663,8 @@ console.log(`  📄 Total processed: ${processResults.processed}`);
 console.log(`  ⏭️  Total skipped: ${processResults.skipped}`);
 console.log('\n📋 By Document Type:');
       for (const [docType, stats] of Object.entries(processResults.byType)) {
-}
+        console.log(`    • ${docType}: updated=${stats.updated}, errors=${stats.errors}, skipped=${stats.skipped}`);
+      }
     }
     
     if (mode === 'watch' || mode === 'all') {

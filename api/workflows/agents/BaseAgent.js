@@ -12,7 +12,7 @@
  */
 
 const { logger } = require('../../core/Logger');
-const { ValidationError, AppError } = require('../../core/ErrorHandler');
+const { ValidationError } = require('../../core/ErrorHandler');
 const { AuditTrail } = require('../../core/AuditTrail');
 
 class BaseAgent {

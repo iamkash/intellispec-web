@@ -1,13 +1,13 @@
 {
-  "id": "atmospheric-monitoring-log",
-  "title": "Atmospheric Monitoring Log",
-  "description": "Log atmospheric readings over time; AI can build initial plan and hazards.",
+  "id": "intelliSAFTEY/rescue-equipment-readiness",
+  "title": "Rescue Equipment Readiness",
+  "description": "Checklist and readiness status for rescue equipment; AI can suggest missing items.",
   "gadgets": [
     {
-      "id": "atmospheric-monitoring-log-gadget",
+      "id": "rescue-equipment-readiness-gadget",
       "type": "ai-analysis-wizard-gadget",
-      "title": "Atmospheric Monitoring Log",
-      "description": "Voice/text notes, optional image analysis, tabular readings, and PDF.",
+      "title": "Rescue Equipment Readiness",
+      "description": "Capture notes, auto-suggest equipment list, and export PDF.",
       "config": {
         "sections": [
           {
@@ -36,21 +36,28 @@
             }
           },
           {
-            "id": "monitoring_plan",
-            "title": "Monitoring Plan",
+            "id": "equipment_readiness",
+            "title": "Equipment Readiness",
             "includeInPdf": true,
             "grid": {
-              "title": "Plan Items",
-              "dataKey": "planItems",
+              "title": "Equipment List",
+              "dataKey": "equipment",
               "columns": [
                 {
-                  "key": "location",
-                  "title": "Location",
-                  "editable": true
+                  "key": "item",
+                  "title": "Item",
+                  "editable": true,
+                  "summary": "uniqueCount"
                 },
                 {
-                  "key": "interval",
-                  "title": "Interval (min)",
+                  "key": "quantity",
+                  "title": "Qty",
+                  "editable": true,
+                  "summary": "sum"
+                },
+                {
+                  "key": "status",
+                  "title": "Status",
                   "editable": true
                 },
                 {
@@ -59,49 +66,8 @@
                   "editable": true
                 }
               ],
-              "promptRef": "planPopulate",
+              "promptRef": "equipmentPopulate",
               "btnLabel": "Populate from AI"
-            }
-          },
-          {
-            "id": "readings",
-            "title": "Atmospheric Readings",
-            "includeInPdf": true,
-            "grid": {
-              "title": "Readings",
-              "dataKey": "readings",
-              "columns": [
-                {
-                  "key": "timestamp",
-                  "title": "Timestamp",
-                  "editable": true
-                },
-                {
-                  "key": "o2",
-                  "title": "%O2",
-                  "editable": true
-                },
-                {
-                  "key": "lel",
-                  "title": "%LEL",
-                  "editable": true
-                },
-                {
-                  "key": "h2s",
-                  "title": "H2S (ppm)",
-                  "editable": true
-                },
-                {
-                  "key": "co",
-                  "title": "CO (ppm)",
-                  "editable": true
-                },
-                {
-                  "key": "notes",
-                  "title": "Notes",
-                  "editable": true
-                }
-              ]
             }
           },
           {
@@ -158,7 +124,7 @@
               139
             ],
             "fontSize": 6,
-            "leftText": "Atmospheric Log",
+            "leftText": "Equipment Readiness",
             "centerText": "Confidential",
             "rightText": "Page {page} of {pages}"
           },
@@ -194,19 +160,19 @@
               "max_completion_tokens": 1000
             },
             "promptConfig": {
-              "systemPrompt": "Analyze images for hazards affecting monitoring. Output JSON only.",
+              "systemPrompt": "Analyze images for staging and potential equipment needs. Output JSON only.",
               "userPrompt": "JSON only"
             }
           },
-          "planPopulate": {
+          "equipmentPopulate": {
             "modelConfig": {
               "model": "gpt-5-nano",
               "max_completion_tokens": 800,
               "temperature": 0.3
             },
             "promptConfig": {
-              "systemPrompt": "ROLE: Draft a monitoring plan (locations, interval, notes) from transcript and overview. FORMAT: JSON array rows.",
-              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"location\": \"string\", \"interval\": \"string|number\", \"notes\": \"string\" } ]"
+              "systemPrompt": "ROLE: Suggest a readiness equipment list based on transcript and image overview. FORMAT: JSON array of {item, quantity, status, notes}.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"item\": \"string\", \"quantity\": \"string|number\", \"status\": \"Ready|Missing|Check\", \"notes\": \"string\" } ]"
             }
           }
         },
@@ -232,32 +198,82 @@
           "responseSelector": "data.0"
         },
         "domainConfig": {
-          "payloadType": "inspection",
-          "defaultType": "general_inspection",
+          "payloadType": "safety",
+          "defaultType": "rescue_equipment_readiness",
           "fields": {
-            "type": "inspection_type",
-            "detectedType": "detected_equipment_type",
-            "id": "equipment_id",
-            "name": "assetName",
-            "owner": "inspector_name",
-            "date": "inspection_date"
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
           },
           "outputKeys": {
-            "id": "equipmentId",
-            "type": "equipmentType",
-            "owner": "inspectorName",
-            "date": "inspectionDate"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
           },
           "payloadKeys": {
-            "type": "inspectionType"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
           },
           "navigation": {
-            "listingSuffix": "inspections",
+            "listingSuffix": "responses",
             "homeSuffix": "home"
+          },
+          "typeMap": {
+            "rescue_equipment_readiness": "Rescue Equipment Readiness"
+          }
+        },
+        "type": "safety",
+        "documentType": "rescue_equipment_readiness",
+        "label": "Rescue Equipment Readiness",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "rescue_equipment_readiness",
+          "domainSubTypeLabel": "Rescue Equipment Readiness"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },
       "position": 24
     }
-  ]
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
 }

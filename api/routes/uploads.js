@@ -14,13 +14,9 @@
 const mongoose = require('mongoose');
 const crypto = require('crypto');
 const FileStorage = require('../core/FileStorage');
+const contentDisposition = require('content-disposition');
 const { logger } = require('../core/Logger');
 const { requireAuth } = require('../core/AuthMiddleware');
-
-// Generate unique IDs
-function generateId(prefix = 'file') {
-  return `${prefix}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
 
 /**
  * Calculate file hash for deduplication
@@ -312,8 +308,15 @@ async function registerUploadRoutes(fastify, options) {
       const file = await FileStorage.getFileById(id);
 
       // Set appropriate headers
-      reply.header('Content-Type', file.contentType || 'application/octet-stream');
-      reply.header('Content-Disposition', `inline; filename="${file.filename}"`);
+      const mimeType = file.contentType || 'application/octet-stream';
+      const fallbackFilename = `${id}.bin`;
+      const safeFilename = sanitizeFilename(
+        file.filename || file.metadata?.originalName,
+        fallbackFilename
+      );
+
+      reply.type(mimeType);
+      reply.header('Content-Disposition', contentDisposition(safeFilename, { type: 'inline' }));
 
       // Stream the file
       return await FileStorage.streamFile(id, reply);
@@ -323,10 +326,20 @@ async function registerUploadRoutes(fastify, options) {
         error: error.message,
         fileId: request.params.id
       });
+      if (!reply.sent) {
+        reply.removeHeader('Content-Type');
+        reply.removeHeader('Content-Disposition');
+      }
       if (error.message === 'File not found') {
-        reply.code(404).send({ error: 'Image not found' });
+        reply
+          .code(404)
+          .type('application/json')
+          .send(JSON.stringify({ error: 'Image not found' }));
       } else {
-        reply.code(500).send({ error: 'Failed to serve image' });
+        reply
+          .code(500)
+          .type('application/json')
+          .send(JSON.stringify({ error: 'Failed to serve image' }));
       }
     }
   });
@@ -498,3 +511,20 @@ async function registerUploadRoutes(fastify, options) {
 }
 
 module.exports = registerUploadRoutes;
+/**
+ * Ensure filenames used in HTTP headers avoid control characters
+ */
+function sanitizeFilename(name, fallback) {
+  if (!name || typeof name !== 'string') {
+    return fallback;
+  }
+
+  // Drop control characters and collapse whitespace/newlines
+  const sanitized = name
+    .replace(/[\r\n\t]+/g, ' ')
+    .replace(/["\\]/g, '_')
+    .replace(/[^\x20-\x7E]+/g, '_')
+    .trim();
+
+  return sanitized || fallback;
+}

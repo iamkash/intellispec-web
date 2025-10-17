@@ -5,7 +5,7 @@
  * to create widgets, gadgets, and workspaces.
  */
 
-import { ComponentLibrary, initializeComponentLibrary } from '../index';
+import { initializeComponentLibrary } from '../index';
 
 // Example data for demonstrations
 const sampleChartData = [
@@ -55,7 +55,17 @@ export function createLineChartExample() {
 
     // console.log('Line chart widget created:', chartWidget);
     // return chartWidget;
-return null;
+    return {
+      id: 'sales-chart-example',
+      type: 'line-chart',
+      props: {
+        data: sampleChartData,
+        title: 'Monthly Sales',
+        xAxisLabel: 'Month',
+        yAxisLabel: 'Sales ($000)',
+        color: '#1890ff'
+      }
+    };
   } catch (error) {
     console.error('Failed to create line chart widget:', error);
     return null;
@@ -91,7 +101,7 @@ export function validateWidgetConfigExample() {
   // console.log('Invalid config validation:', invalidResult);
 
   // return { validResult, invalidResult };
-return { validResult: null, invalidResult: null };
+  return { validExampleConfig: validConfig, invalidExampleConfig: invalidConfig };
 }
 
 /**

@@ -10,9 +10,7 @@ const { requirePlatformAdmin } = require('../middleware/platform-admin');
 
 // Lazy-load models
 const getTenantModel = () => mongoose.model('Tenant');
-const getOrganizationModel = () => mongoose.model('Organization');
 const getUserModel = () => mongoose.model('User');
-const getMembershipModel = () => mongoose.model('Membership');
 const getSubscriptionModel = () => mongoose.model('Subscription');
 const getTenantEntitlementsModel = () => mongoose.model('TenantEntitlements');
 
@@ -295,8 +293,6 @@ async function registerPlatformAdminRoutes(fastify) {
     try {
       const TenantModel = getTenantModel();
       const UserModel = getUserModel();
-      const MembershipModel = getMembershipModel();
-      
       const [
         totalTenants,
         activeTenants,
@@ -335,4 +331,3 @@ async function registerPlatformAdminRoutes(fastify) {
 }
 
 module.exports = registerPlatformAdminRoutes;
-

@@ -29,12 +29,30 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "assessment-results-group",
     "options": [
-      {"label": "Acceptable", "value": "acceptable"},
-      {"label": "Acceptable with Monitoring", "value": "acceptable-monitoring"},
-      {"label": "Conditional", "value": "conditional"},
-      {"label": "Repair Required", "value": "repair-required"},
-      {"label": "Replacement Required", "value": "replacement-required"},
-      {"label": "Immediate Shutdown", "value": "immediate-shutdown"}
+      {
+        "label": "Acceptable",
+        "value": "acceptable"
+      },
+      {
+        "label": "Acceptable with Monitoring",
+        "value": "acceptable-monitoring"
+      },
+      {
+        "label": "Conditional",
+        "value": "conditional"
+      },
+      {
+        "label": "Repair Required",
+        "value": "repair-required"
+      },
+      {
+        "label": "Replacement Required",
+        "value": "replacement-required"
+      },
+      {
+        "label": "Immediate Shutdown",
+        "value": "immediate-shutdown"
+      }
     ]
   },
   {
@@ -49,9 +67,18 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "assessment-results-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Minor", "value": "minor"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Minor",
+        "value": "minor"
+      }
     ]
   },
   {
@@ -66,10 +93,22 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "assessment-results-group",
     "options": [
-      {"label": "Minor", "value": "minor"},
-      {"label": "Moderate", "value": "moderate"},
-      {"label": "Major", "value": "major"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Minor",
+        "value": "minor"
+      },
+      {
+        "label": "Moderate",
+        "value": "moderate"
+      },
+      {
+        "label": "Major",
+        "value": "major"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -84,8 +123,14 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "assessment-results-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -121,13 +166,34 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "remaining-life-calculations-group",
     "options": [
-      {"label": "1 Year", "value": "1-year"},
-      {"label": "2 Years", "value": "2-years"},
-      {"label": "3 Years", "value": "3-years"},
-      {"label": "5 Years", "value": "5-years"},
-      {"label": "10 Years", "value": "10-years"},
-      {"label": "As Required", "value": "as-required"},
-      {"label": "Continuous Monitoring", "value": "continuous-monitoring"}
+      {
+        "label": "1 Year",
+        "value": "1-year"
+      },
+      {
+        "label": "2 Years",
+        "value": "2-years"
+      },
+      {
+        "label": "3 Years",
+        "value": "3-years"
+      },
+      {
+        "label": "5 Years",
+        "value": "5-years"
+      },
+      {
+        "label": "10 Years",
+        "value": "10-years"
+      },
+      {
+        "label": "As Required",
+        "value": "as-required"
+      },
+      {
+        "label": "Continuous Monitoring",
+        "value": "continuous-monitoring"
+      }
     ]
   },
   {
@@ -150,11 +216,26 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "remaining-life-calculations-group",
     "options": [
-      {"label": "API 510", "value": "api-510"},
-      {"label": "ASME FFS-1", "value": "asme-ffs1"},
-      {"label": "Fitness for Service", "value": "ffs"},
-      {"label": "Engineering Judgment", "value": "engineering-judgment"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "API 510",
+        "value": "api-510"
+      },
+      {
+        "label": "ASME FFS-1",
+        "value": "asme-ffs1"
+      },
+      {
+        "label": "Fitness for Service",
+        "value": "ffs"
+      },
+      {
+        "label": "Engineering Judgment",
+        "value": "engineering-judgment"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -189,9 +270,18 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "recommendations-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Minor", "value": "minor"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Minor",
+        "value": "minor"
+      }
     ]
   },
   {
@@ -218,10 +308,22 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "recommendations-group",
     "options": [
-      {"label": "Immediate", "value": "immediate"},
-      {"label": "High", "value": "high"},
-      {"label": "Medium", "value": "medium"},
-      {"label": "Low", "value": "low"}
+      {
+        "label": "Immediate",
+        "value": "immediate"
+      },
+      {
+        "label": "High",
+        "value": "high"
+      },
+      {
+        "label": "Medium",
+        "value": "medium"
+      },
+      {
+        "label": "Low",
+        "value": "low"
+      }
     ]
   },
   {
@@ -247,8 +349,14 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "recommendations-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -284,9 +392,18 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "compliance-verification-group",
     "options": [
-      {"label": "Compliant", "value": "compliant"},
-      {"label": "Conditional", "value": "conditional"},
-      {"label": "Non-Compliant", "value": "non-compliant"}
+      {
+        "label": "Compliant",
+        "value": "compliant"
+      },
+      {
+        "label": "Conditional",
+        "value": "conditional"
+      },
+      {
+        "label": "Non-Compliant",
+        "value": "non-compliant"
+      }
     ]
   },
   {
@@ -299,9 +416,18 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "compliance-verification-group",
     "options": [
-      {"label": "Compliant", "value": "compliant"},
-      {"label": "Conditional", "value": "conditional"},
-      {"label": "Non-Compliant", "value": "non-compliant"}
+      {
+        "label": "Compliant",
+        "value": "compliant"
+      },
+      {
+        "label": "Conditional",
+        "value": "conditional"
+      },
+      {
+        "label": "Non-Compliant",
+        "value": "non-compliant"
+      }
     ]
   },
   {
@@ -336,9 +462,18 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "documentation-requirements-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "In Progress", "value": "in-progress"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      }
     ]
   },
   {
@@ -385,9 +520,18 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "final-approval-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Partial", "value": "partial"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Partial",
+        "value": "partial"
+      }
     ]
   },
   {
@@ -401,9 +545,18 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "final-approval-group",
     "options": [
-      {"label": "Approved", "value": "approved"},
-      {"label": "Conditional", "value": "conditional"},
-      {"label": "Not Approved", "value": "not-approved"}
+      {
+        "label": "Approved",
+        "value": "approved"
+      },
+      {
+        "label": "Conditional",
+        "value": "conditional"
+      },
+      {
+        "label": "Not Approved",
+        "value": "not-approved"
+      }
     ]
   },
   {
@@ -469,4 +622,4 @@
     "sectionId": "inspection-results-analysis",
     "groupId": "final-notes-group"
   }
-] 
+]

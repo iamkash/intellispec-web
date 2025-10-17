@@ -1,5 +1,5 @@
 {
-  "id": "wizard-demo",
+  "id": "inspection/wizard-demo",
   "title": "Inspection Wizard Demo",
   "description": "Sample inspection wizard showcasing multi-step document forms.",
   "layout": "form",
@@ -97,12 +97,30 @@
             "sectionId": "inspection-details",
             "groupId": "inspection-params-group",
             "options": [
-              { "label": "Visual Inspection", "value": "visual" },
-              { "label": "Non-Destructive Testing", "value": "ndt" },
-              { "label": "Pressure Testing", "value": "pressure" },
-              { "label": "Leak Testing", "value": "leak" },
-              { "label": "Performance Testing", "value": "performance" },
-              { "label": "Comprehensive", "value": "comprehensive" }
+              {
+                "label": "Visual Inspection",
+                "value": "visual"
+              },
+              {
+                "label": "Non-Destructive Testing",
+                "value": "ndt"
+              },
+              {
+                "label": "Pressure Testing",
+                "value": "pressure"
+              },
+              {
+                "label": "Leak Testing",
+                "value": "leak"
+              },
+              {
+                "label": "Performance Testing",
+                "value": "performance"
+              },
+              {
+                "label": "Comprehensive",
+                "value": "comprehensive"
+              }
             ]
           },
           {
@@ -119,4 +137,4 @@
       }
     }
   ]
-} 
+}

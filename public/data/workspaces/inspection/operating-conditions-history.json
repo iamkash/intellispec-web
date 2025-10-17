@@ -130,7 +130,7 @@
     "title": "Pressure Cycles",
     "label": "Pressure Cycles",
     "placeholder": "Enter number of pressure cycles",
-      "size": 24,
+    "size": 24,
     "sectionId": "operating-conditions-history",
     "groupId": "service-history-group"
   },
@@ -146,8 +146,14 @@
     "sectionId": "operating-conditions-history",
     "groupId": "service-history-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -191,11 +197,26 @@
     "sectionId": "operating-conditions-history",
     "groupId": "previous-inspections-group",
     "options": [
-      {"label": "Internal", "value": "internal"},
-      {"label": "External", "value": "external"},
-      {"label": "On-Stream", "value": "on-stream"},
-      {"label": "Combined", "value": "combined"},
-      {"label": "Unknown", "value": "unknown"}
+      {
+        "label": "Internal",
+        "value": "internal"
+      },
+      {
+        "label": "External",
+        "value": "external"
+      },
+      {
+        "label": "On-Stream",
+        "value": "on-stream"
+      },
+      {
+        "label": "Combined",
+        "value": "combined"
+      },
+      {
+        "label": "Unknown",
+        "value": "unknown"
+      }
     ]
   },
   {
@@ -210,10 +231,22 @@
     "sectionId": "operating-conditions-history",
     "groupId": "previous-inspections-group",
     "options": [
-      {"label": "No Issues", "value": "no-issues"},
-      {"label": "Minor Issues", "value": "minor-issues"},
-      {"label": "Major Issues", "value": "major-issues"},
-      {"label": "Critical Issues", "value": "critical-issues"}
+      {
+        "label": "No Issues",
+        "value": "no-issues"
+      },
+      {
+        "label": "Minor Issues",
+        "value": "minor-issues"
+      },
+      {
+        "label": "Major Issues",
+        "value": "major-issues"
+      },
+      {
+        "label": "Critical Issues",
+        "value": "critical-issues"
+      }
     ]
   },
   {
@@ -248,8 +281,14 @@
     "sectionId": "operating-conditions-history",
     "groupId": "repairs-modifications-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -276,8 +315,14 @@
     "sectionId": "operating-conditions-history",
     "groupId": "repairs-modifications-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -352,11 +397,26 @@
     "sectionId": "operating-conditions-history",
     "groupId": "remaining-life-assessment-group",
     "options": [
-      {"label": "API 510", "value": "api-510"},
-      {"label": "ASME FFS-1", "value": "asme-ffs1"},
-      {"label": "Fitness for Service", "value": "ffs"},
-      {"label": "Engineering Judgment", "value": "engineering-judgment"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "API 510",
+        "value": "api-510"
+      },
+      {
+        "label": "ASME FFS-1",
+        "value": "asme-ffs1"
+      },
+      {
+        "label": "Fitness for Service",
+        "value": "ffs"
+      },
+      {
+        "label": "Engineering Judgment",
+        "value": "engineering-judgment"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -389,4 +449,4 @@
     "sectionId": "operating-conditions-history",
     "groupId": "operating-notes-group"
   }
-] 
+]

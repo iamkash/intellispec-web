@@ -1,5 +1,5 @@
 {
-  "id": "paint-specs-dashboard",
+  "id": "asset-manager/paint-specs-dashboard",
   "title": "Paint Specifications Dashboard",
   "description": "Manage paint specifications and VOC compliance data with inline editing capabilities",
   "layout": "dashboard",
@@ -46,7 +46,7 @@
       "position": 24
     },
     {
-      "id": "paint-specs-grid", 
+      "id": "paint-specs-grid",
       "type": "inline-editable-grid-gadget",
       "title": "Paint Specifications",
       "description": "Interactive grid for managing paint specifications with inline editing, bulk operations, and VOC compliance tracking",
@@ -156,7 +156,9 @@
             "size": "small",
             "bordered": true,
             "striped": false,
-            "scroll": { "y": 500 }
+            "scroll": {
+              "y": 500
+            }
           }
         }
       },
@@ -175,7 +177,13 @@
   "metadata": {
     "created": "2024-01-15T00:00:00Z",
     "version": "1.0.0",
-    "tags": ["paint", "specifications", "voc", "compliance", "assets"],
+    "tags": [
+      "paint",
+      "specifications",
+      "voc",
+      "compliance",
+      "assets"
+    ],
     "description": "Paint specifications dashboard with inline editing capabilities for VOC compliance tracking."
   }
 }

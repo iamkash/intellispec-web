@@ -30,9 +30,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "inspection-photographs-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "In Progress", "value": "in-progress"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      }
     ]
   },
   {
@@ -58,13 +67,34 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "inspection-photographs-group",
     "options": [
-      {"label": "Overall Views", "value": "overall-views"},
-      {"label": "Component Close-ups", "value": "component-closeups"},
-      {"label": "Defect Documentation", "value": "defect-docs"},
-      {"label": "Anomaly Photos", "value": "anomaly-photos"},
-      {"label": "Before/After", "value": "before-after"},
-      {"label": "Environmental", "value": "environmental"},
-      {"label": "Safety Equipment", "value": "safety-equipment"}
+      {
+        "label": "Overall Views",
+        "value": "overall-views"
+      },
+      {
+        "label": "Component Close-ups",
+        "value": "component-closeups"
+      },
+      {
+        "label": "Defect Documentation",
+        "value": "defect-docs"
+      },
+      {
+        "label": "Anomaly Photos",
+        "value": "anomaly-photos"
+      },
+      {
+        "label": "Before/After",
+        "value": "before-after"
+      },
+      {
+        "label": "Environmental",
+        "value": "environmental"
+      },
+      {
+        "label": "Safety Equipment",
+        "value": "safety-equipment"
+      }
     ]
   },
   {
@@ -107,9 +137,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "technical-drawings-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -123,12 +162,30 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "technical-drawings-group",
     "options": [
-      {"label": "Vessel Layout", "value": "vessel-layout"},
-      {"label": "Component Details", "value": "component-details"},
-      {"label": "Defect Sketches", "value": "defect-sketches"},
-      {"label": "Repair Details", "value": "repair-details"},
-      {"label": "Isometric Views", "value": "isometric-views"},
-      {"label": "Cross Sections", "value": "cross-sections"}
+      {
+        "label": "Vessel Layout",
+        "value": "vessel-layout"
+      },
+      {
+        "label": "Component Details",
+        "value": "component-details"
+      },
+      {
+        "label": "Defect Sketches",
+        "value": "defect-sketches"
+      },
+      {
+        "label": "Repair Details",
+        "value": "repair-details"
+      },
+      {
+        "label": "Isometric Views",
+        "value": "isometric-views"
+      },
+      {
+        "label": "Cross Sections",
+        "value": "cross-sections"
+      }
     ]
   },
   {
@@ -177,9 +234,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "supporting-documents-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "In Progress", "value": "in-progress"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      }
     ]
   },
   {
@@ -193,14 +259,38 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "supporting-documents-group",
     "options": [
-      {"label": "Previous Reports", "value": "previous-reports"},
-      {"label": "Manufacturer Data", "value": "manufacturer-data"},
-      {"label": "Test Results", "value": "test-results"},
-      {"label": "Calibration Certificates", "value": "calibration-certs"},
-      {"label": "Permits", "value": "permits"},
-      {"label": "Safety Documentation", "value": "safety-docs"},
-      {"label": "Material Certificates", "value": "material-certs"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "Previous Reports",
+        "value": "previous-reports"
+      },
+      {
+        "label": "Manufacturer Data",
+        "value": "manufacturer-data"
+      },
+      {
+        "label": "Test Results",
+        "value": "test-results"
+      },
+      {
+        "label": "Calibration Certificates",
+        "value": "calibration-certs"
+      },
+      {
+        "label": "Permits",
+        "value": "permits"
+      },
+      {
+        "label": "Safety Documentation",
+        "value": "safety-docs"
+      },
+      {
+        "label": "Material Certificates",
+        "value": "material-certs"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -264,9 +354,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "digital-signatures-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Applicable", "value": "not-applicable"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Applicable",
+        "value": "not-applicable"
+      }
     ]
   },
   {
@@ -292,9 +391,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "digital-signatures-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Applicable", "value": "not-applicable"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Applicable",
+        "value": "not-applicable"
+      }
     ]
   },
   {
@@ -329,11 +437,26 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "report-generation-group",
     "options": [
-      {"label": "PDF", "value": "pdf"},
-      {"label": "Word Document", "value": "word"},
-      {"label": "Excel Spreadsheet", "value": "excel"},
-      {"label": "HTML", "value": "html"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "PDF",
+        "value": "pdf"
+      },
+      {
+        "label": "Word Document",
+        "value": "word"
+      },
+      {
+        "label": "Excel Spreadsheet",
+        "value": "excel"
+      },
+      {
+        "label": "HTML",
+        "value": "html"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -347,11 +470,26 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "report-generation-group",
     "options": [
-      {"label": "Email", "value": "email"},
-      {"label": "File Transfer", "value": "file-transfer"},
-      {"label": "Physical Copy", "value": "physical-copy"},
-      {"label": "Cloud Storage", "value": "cloud-storage"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "Email",
+        "value": "email"
+      },
+      {
+        "label": "File Transfer",
+        "value": "file-transfer"
+      },
+      {
+        "label": "Physical Copy",
+        "value": "physical-copy"
+      },
+      {
+        "label": "Cloud Storage",
+        "value": "cloud-storage"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -365,10 +503,22 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "report-generation-group",
     "options": [
-      {"label": "Routine", "value": "routine"},
-      {"label": "Standard", "value": "standard"},
-      {"label": "Urgent", "value": "urgent"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Routine",
+        "value": "routine"
+      },
+      {
+        "label": "Standard",
+        "value": "standard"
+      },
+      {
+        "label": "Urgent",
+        "value": "urgent"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -409,9 +559,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "final-verification-submission-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "In Progress", "value": "in-progress"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      }
     ]
   },
   {
@@ -426,9 +585,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "final-verification-submission-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "In Progress", "value": "in-progress"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      }
     ]
   },
   {
@@ -443,9 +611,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "final-verification-submission-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "In Progress", "value": "in-progress"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      }
     ]
   },
   {
@@ -459,9 +636,18 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "final-verification-submission-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Pending", "value": "pending"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Pending",
+        "value": "pending"
+      }
     ]
   },
   {
@@ -475,12 +661,30 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "final-verification-submission-group",
     "options": [
-      {"label": "Draft", "value": "draft"},
-      {"label": "Ready for Review", "value": "ready-review"},
-      {"label": "Under Review", "value": "under-review"},
-      {"label": "Approved", "value": "approved"},
-      {"label": "Submitted", "value": "submitted"},
-      {"label": "Completed", "value": "completed"}
+      {
+        "label": "Draft",
+        "value": "draft"
+      },
+      {
+        "label": "Ready for Review",
+        "value": "ready-review"
+      },
+      {
+        "label": "Under Review",
+        "value": "under-review"
+      },
+      {
+        "label": "Approved",
+        "value": "approved"
+      },
+      {
+        "label": "Submitted",
+        "value": "submitted"
+      },
+      {
+        "label": "Completed",
+        "value": "completed"
+      }
     ]
   },
   {
@@ -524,4 +728,4 @@
     "sectionId": "final-documentation-attachments",
     "groupId": "final-notes-group"
   }
-] 
+]

@@ -248,6 +248,7 @@ console.log('💬 Messages:', bodyData.messages);
       console.group(`📥 [OpenAI API] Response ${requestId} - ${new Date().toISOString()}`);
 console.log('📊 Status:', response.status, response.statusText);
 console.log('📋 Response Headers:', Object.fromEntries(response.headers.entries()));
+console.log('⏱ Duration (ms):', duration);
 
       if (!response.ok) {
         const errorText = await response.text();
@@ -327,7 +328,8 @@ console.log('💰 Estimated Cost:', {
       
       console.group(`❌ [OpenAI API] Error ${requestId} - ${new Date().toISOString()}`);
 console.log('🔗 URL:', url);
-      console.error('❌ Error:', error);
+console.error('❌ Error:', error);
+console.error('⏱ Duration (ms):', duration);
       console.error('❌ Error Message:', error.message);
       console.error('❌ Error Stack:', error.stack);
       console.groupEnd();

@@ -19,11 +19,9 @@ import {
   Select, 
   InputNumber,
   message, 
-  Tooltip,
   Popconfirm,
   Row,
   Col,
-  Divider,
   Form,
   Tag
 } from 'antd';
@@ -31,7 +29,6 @@ import {
   PlusOutlined, 
   DeleteOutlined, 
   EyeOutlined,
-  UploadOutlined,
   CameraOutlined,
   EnvironmentOutlined
 } from '@ant-design/icons';

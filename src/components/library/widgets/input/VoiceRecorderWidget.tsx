@@ -86,7 +86,6 @@ export const VoiceRecorderWidget: React.FC<VoiceRecorderWidgetProps> = ({
   const [transcription, setTranscription] = useState<string>(value?.transcription || '');
   const [confidence, setConfidence] = useState<number>(value?.confidence || 0);
   const [error, setError] = useState<string>('');
-  const [audioData, setAudioData] = useState<Uint8Array>(new Uint8Array());
   const [volume, setVolume] = useState<number>(0); // 0..1
   const [playbackProgress, setPlaybackProgress] = useState<number>(0); // 0..1
   const [notesWhileRecording, setNotesWhileRecording] = useState<string>('');
@@ -219,80 +218,6 @@ export const VoiceRecorderWidget: React.FC<VoiceRecorderWidgetProps> = ({
     animationRef.current = requestAnimationFrame(drawVisualization);
   }, [isRecording]);
 
-  // Start recording
-  const startRecording = useCallback(async () => {
-    try {
-      setError('');
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-      // Try to use a more compatible format
-      let mimeType = 'audio/webm;codecs=opus';
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = 'audio/webm';
-      }
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = 'audio/mp4';
-      }
-      if (!MediaRecorder.isTypeSupported(mimeType)) {
-        mimeType = 'audio/wav';
-      }
-      
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType
-      });
-      mediaRecorderRef.current = mediaRecorder;
-      
-      const chunks: Blob[] = [];
-      mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-      mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        setAudioUrl(url);
-        
-        // Convert to base64 for storage
-        const reader = new FileReader();
-        reader.onload = () => {
-          const base64 = reader.result as string;
-          const newValue = { audioUrl: base64, transcription, confidence };
-          onChange?.(newValue);
-        };
-        reader.readAsDataURL(blob);
-
-        // Auto-transcribe if enabled
-        if (autoTranscribe && openaiConfig?.apiKey) {
-          await transcribeAudio(blob);
-        }
-      };
-      
-      mediaRecorder.start();
-      setIsRecording(true);
-      setRecordingTime(0);
-      setInterimTranscript('');
-      if (streamingSupported) startStreamingSTT();
-      
-      // Start visualization
-      if (showVisualization) {
-        await initializeAudioContext();
-        drawVisualization();
-      }
-      
-      // Start timer
-      timeIntervalRef.current = setInterval(() => {
-        setRecordingTime(prev => {
-          if (prev >= maxDuration) {
-            stopRecording();
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 1000);
-      
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-      setError('Unable to access microphone. Please check permissions.');
-    }
-  }, [onChange, transcription, confidence, autoTranscribe, openaiConfig?.apiKey, showVisualization, initializeAudioContext, drawVisualization, maxDuration, streamingSupported, startStreamingSTT]);
-
   // Stop recording
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && isRecording) {
@@ -352,17 +277,6 @@ export const VoiceRecorderWidget: React.FC<VoiceRecorderWidgetProps> = ({
         if (langGraphConfig?.enabled && langGraphConfig?.triggerOnTranscription && newTranscription) {
           setIsProcessingLangGraph(true);
           try {
-// Call LangGraph API
-            const langGraphPayload = {
-              workflowId: langGraphConfig.workflowId,
-              input: {
-                transcription: newTranscription,
-                confidence: newConfidence,
-                audioUrl: value?.audioUrl,
-                prompt: langGraphConfig.agentPrompt?.replace('{{transcription}}', newTranscription)
-              }
-            };
-
             // Simulate LangGraph processing (replace with actual API call)
             setTimeout(() => {
               const mockResponse = {
@@ -409,7 +323,104 @@ export const VoiceRecorderWidget: React.FC<VoiceRecorderWidgetProps> = ({
     } finally {
       setIsTranscribing(false);
     }
-  }, [openaiConfig?.apiKey, language, value?.audioUrl, onChange, openAI]);
+  }, [
+    openaiConfig?.apiKey,
+    language,
+    value?.audioUrl,
+    onChange,
+    openAI,
+    langGraphConfig?.enabled,
+    langGraphConfig?.triggerOnTranscription,
+    langGraphTriggered,
+    langGraphResponse
+  ]);
+
+  // Start recording
+  const startRecording = useCallback(async () => {
+    try {
+      setError('');
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Try to use a more compatible format
+      let mimeType = 'audio/webm;codecs=opus';
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = 'audio/webm';
+      }
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = 'audio/mp4';
+      }
+      if (!MediaRecorder.isTypeSupported(mimeType)) {
+        mimeType = 'audio/wav';
+      }
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      mediaRecorderRef.current = mediaRecorder;
+
+      const chunks: Blob[] = [];
+      mediaRecorder.ondataavailable = event => chunks.push(event.data);
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        setAudioUrl(url);
+
+        // Convert to base64 for storage
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result as string;
+          const newValue = { audioUrl: base64, transcription, confidence };
+          onChange?.(newValue);
+        };
+        reader.readAsDataURL(blob);
+
+        // Auto-transcribe if enabled
+        if (autoTranscribe && openaiConfig?.apiKey) {
+          await transcribeAudio(blob);
+        }
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+      setInterimTranscript('');
+      if (streamingSupported) {
+        startStreamingSTT();
+      }
+
+      // Start visualization
+      if (showVisualization) {
+        await initializeAudioContext();
+        drawVisualization();
+      }
+
+      // Start timer
+      timeIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => {
+          if (prev >= maxDuration) {
+            stopRecording();
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1000);
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      setError('Unable to access microphone. Please check permissions.');
+    }
+  }, [
+    onChange,
+    transcription,
+    confidence,
+    autoTranscribe,
+    openaiConfig?.apiKey,
+    showVisualization,
+    initializeAudioContext,
+    drawVisualization,
+    maxDuration,
+    streamingSupported,
+    startStreamingSTT,
+    stopRecording,
+    transcribeAudio
+  ]);
 
   // Play audio
   const playAudio = useCallback(() => {
@@ -437,7 +448,7 @@ export const VoiceRecorderWidget: React.FC<VoiceRecorderWidgetProps> = ({
     };
     el.addEventListener('timeupdate', onTime);
     return () => el.removeEventListener('timeupdate', onTime);
-  }, [audioRef.current]);
+  }, [audioUrl]);
 
   // Clear recording
   const clearRecording = useCallback(() => {
@@ -471,7 +482,7 @@ export const VoiceRecorderWidget: React.FC<VoiceRecorderWidgetProps> = ({
       if (value.langGraphTriggered !== langGraphTriggered) setLangGraphTriggered(value.langGraphTriggered || false);
       if (value.langGraphResponse !== langGraphResponse) setLangGraphResponse(value.langGraphResponse || null);
     }
-  }, [value]);
+  }, [value, audioUrl, transcription, confidence, langGraphTriggered, langGraphResponse]);
 
   // Cleanup on unmount
   useEffect(() => {

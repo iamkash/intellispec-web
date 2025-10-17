@@ -1,12 +1,15 @@
 {
-  "id": "intelliNDT-dynamic-calculator",
+  "id": "intelliNDT/calculators/dynamic-calculator",
   "type": "form",
   "title": "NDT Calculator",
   "description": "Dynamic calculator workspace for NDT",
   "icon": "CalculatorOutlined",
   "mode": "form",
   "layout": "dashboard",
-  "filterContext": { "enabled": true, "filterDefinitions": [] },
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": []
+  },
   "gadgets": [
     {
       "id": "dynamic-calculator-gadget",
@@ -23,5 +26,3 @@
     }
   ]
 }
-
-

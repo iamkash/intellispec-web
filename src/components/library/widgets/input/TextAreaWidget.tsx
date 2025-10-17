@@ -160,8 +160,8 @@ export const TextAreaWidget: React.FC<TextAreaWidgetProps> = ({
 }) => {
   const [internalValue, setInternalValue] = useState(value || defaultValue || '');
   const [validationError, setValidationError] = useState<string | undefined>();
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
-  const [validationTimer, setValidationTimer] = useState<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const validationTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [textareaSize, setTextareaSize] = useState<{ width: number; height: number } | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -197,18 +197,14 @@ export const TextAreaWidget: React.FC<TextAreaWidgetProps> = ({
   // Cleanup timers on unmount
   useEffect(() => {
     return () => {
-      setDebounceTimer(prevTimer => {
-        if (prevTimer) {
-          clearTimeout(prevTimer);
-        }
-        return null;
-      });
-      setValidationTimer(prevTimer => {
-        if (prevTimer) {
-          clearTimeout(prevTimer);
-        }
-        return null;
-      });
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+      if (validationTimerRef.current) {
+        clearTimeout(validationTimerRef.current);
+        validationTimerRef.current = null;
+      }
     };
   }, []);
 
@@ -243,33 +239,30 @@ export const TextAreaWidget: React.FC<TextAreaWidgetProps> = ({
 
     // Debounced validation to prevent excessive validation calls
     if (validator) {
-      setValidationTimer(prevTimer => {
-        if (prevTimer) {
-          clearTimeout(prevTimer);
+      if (validationTimerRef.current) {
+        clearTimeout(validationTimerRef.current);
+      }
+
+      validationTimerRef.current = setTimeout(() => {
+        const validation = validator(processedValue);
+        if (!validation.isValid) {
+          setValidationError(validation.message);
+        } else {
+          setValidationError(undefined);
         }
-        return setTimeout(() => {
-          const validation = validator(processedValue);
-          if (!validation.isValid) {
-            setValidationError(validation.message);
-          } else {
-            setValidationError(undefined);
-          }
-        }, 200); // 200ms debounce for validation
-      });
+      }, 200); // 200ms debounce for validation
     }
 
     // Handle debounced onChange
     if (onChange) {
       if (debounceDelay > 0) {
-        // Use functional update to avoid dependency on debounceTimer
-        setDebounceTimer(prevTimer => {
-          if (prevTimer) {
-            clearTimeout(prevTimer);
-          }
-          return setTimeout(() => {
-            onChange(processedValue);
-          }, debounceDelay);
-        });
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+
+        debounceTimerRef.current = setTimeout(() => {
+          onChange(processedValue);
+        }, debounceDelay);
       } else {
         onChange(processedValue);
       }
@@ -278,18 +271,14 @@ export const TextAreaWidget: React.FC<TextAreaWidgetProps> = ({
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLTextAreaElement>) => {
     // Clear debounce timer on blur to trigger immediate onChange
-    setDebounceTimer(prevTimer => {
-      if (prevTimer) {
-        clearTimeout(prevTimer);
-        if (onChange) {
-          onChange(e.target.value);
-        }
-      }
-      return null;
-    });
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+      onChange?.(e.target.value);
+    }
     
     onBlur?.(e);
-  }, [onChange, onBlur]); // Removed debounceTimer from dependencies
+  }, [onChange, onBlur]);
 
   const handleCopy = useCallback(() => {
     if (internalValue) {

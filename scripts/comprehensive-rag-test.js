@@ -40,22 +40,22 @@ const TEST_CATEGORIES = {
   identification: [
     {
       question: "which company has the most facilities",
-      expectedPattern: /^[A-Za-z\s\-&]+$/,
+      expectedPattern: /^[A-Za-z\s&-]+$/,
       description: "Should return company name only"
     },
     {
       question: "what paint has the highest VOC content",
-      expectedPattern: /^[A-Za-z0-9\s\-]+$/,
+      expectedPattern: /^[A-Za-z0-9\s-]+$/,
       description: "Should return product name only"
     },
     {
       question: "which facility consumed the most paint",
-      expectedPattern: /^[A-Za-z\s\-]+$/,
+      expectedPattern: /^[A-Za-z\s-]+$/,
       description: "Should return facility name only"
     },
     {
       question: "who used the most paint",
-      expectedPattern: /^[A-Za-z\s\-&]+$/,
+      expectedPattern: /^[A-Za-z\s&-]+$/,
       description: "Should return company name only"
     }
   ],
@@ -111,7 +111,7 @@ const TEST_CATEGORIES = {
   complex_analysis: [
     {
       question: "which facility has the highest average VOC per invoice",
-      expectedPattern: /^[A-Za-z\s\-]+$/,
+      expectedPattern: /^[A-Za-z\s-]+$/,
       description: "Should return facility name after complex calculation"
     },
     {
@@ -121,7 +121,7 @@ const TEST_CATEGORIES = {
     },
     {
       question: "which company has the most diverse paint portfolio",
-      expectedPattern: /^[A-Za-z\s\-&]+$/,
+      expectedPattern: /^[A-Za-z\s&-]+$/,
       description: "Should return company name after diversity analysis"
     }
   ],
@@ -130,12 +130,12 @@ const TEST_CATEGORIES = {
   aggregation: [
     {
       question: "total paint consumption by company",
-      expectedPattern: /^[A-Za-z\s\-&]+:\s*\d+/,
+      expectedPattern: /^[A-Za-z\s&-]+:\s*\d+/,
       description: "Should return company breakdown"
     },
     {
       question: "average VOC content by manufacturer",
-      expectedPattern: /^[A-Za-z\s\-&]+:\s*\d+/,
+      expectedPattern: /^[A-Za-z\s&-]+:\s*\d+/,
       description: "Should return manufacturer breakdown"
     }
   ],
@@ -252,7 +252,7 @@ return {
 }
 
 async function runComprehensiveTest() {
-console.log('=' .repeat(60));
+  console.log('='.repeat(60));
 
   const results = {
     total: 0,
@@ -263,7 +263,7 @@ console.log('=' .repeat(60));
 
   // Test each category
   for (const [categoryName, tests] of Object.entries(TEST_CATEGORIES)) {
-console.log('-'.repeat(40));
+    console.log('-'.repeat(40));
 
     const categoryResults = {
       total: tests.length,
@@ -299,9 +299,10 @@ console.log(`Total Tests: ${results.total}`);
 console.log(`Failed: ${results.failed} (${Math.round(results.failed/results.total*100)}%)`);
 
   // Category breakdown
-for (const [category, categoryResult] of Object.entries(results.categories)) {
-    const passRate = Math.round(categoryResult.passed/categoryResult.total*100);
-}
+  for (const [category, categoryResult] of Object.entries(results.categories)) {
+    const passRate = Math.round((categoryResult.passed / categoryResult.total) * 100);
+    console.log(`Category ${category}: ${categoryResult.passed}/${categoryResult.total} passed (${passRate}%)`);
+  }
 
   // Critical issues
   const criticalIssues = [];
@@ -314,21 +315,28 @@ for (const [category, categoryResult] of Object.entries(results.categories)) {
   }
 
   if (criticalIssues.length > 0) {
-criticalIssues.forEach(issue => {
-});
+    console.warn('\n🚨 Critical issues detected:');
+    criticalIssues.forEach(issue => {
+      console.warn(` - ${issue.description}: ${issue.issues.join('; ')}`);
+    });
   }
 
   // Save detailed results to file
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const reportFile = `rag-test-report-${timestamp}.json`;
   fs.writeFileSync(reportFile, JSON.stringify(results, null, 2));
-// Overall assessment
-  const overallPassRate = Math.round(results.passed/results.total*100);
+  // Overall assessment
+  const overallPassRate = Math.round((results.passed / results.total) * 100);
+  console.log(`\nOverall pass rate: ${results.passed}/${results.total} (${overallPassRate}%)`);
   if (overallPassRate >= 90) {
-} else if (overallPassRate >= 75) {
-} else if (overallPassRate >= 50) {
-} else {
-}
+    console.log('✅ Excellent RAG performance');
+  } else if (overallPassRate >= 75) {
+    console.log('✅ Good performance with room for improvement');
+  } else if (overallPassRate >= 50) {
+    console.log('⚠️  Significant improvements needed');
+  } else {
+    console.log('❌ RAG performance is below acceptable thresholds');
+  }
 
   return results;
 }

@@ -59,8 +59,9 @@ calculations.forEach(calc => {
   const result = calculator.evaluate(calc.formula);
   const isCorrect = Math.abs(result.value - calc.expected) < 0.01;
   const status = isCorrect ? '✅' : '❌';
-console.log(`  Formula: ${calc.formula}`);
-console.log(`  Actual: ${result.value}`);
+  console.log(`${status} ${calc.name}`);
+  console.log(`  Formula: ${calc.formula}`);
+  console.log(`  Actual: ${result.value}`);
 if (result.error) {
 }
 });
@@ -95,8 +96,9 @@ excelCalculations.forEach(calc => {
     ? Math.abs(result.value - calc.expected) < 0.01
     : result.value === calc.expected;
   const status = isCorrect ? '✅' : '❌';
-console.log(`  Formula: ${calc.formula}`);
-console.log(`  Actual: ${result.value}`);
+  console.log(`${status} ${calc.name}`);
+  console.log(`  Formula: ${calc.formula}`);
+  console.log(`  Actual: ${result.value}`);
 if (result.error) {
 }
 });
@@ -131,8 +133,9 @@ formDataCalculations.forEach(calc => {
   const result = calculator.evaluate(calc.formula);
   const isCorrect = Math.abs(result.value - calc.expected) < 0.01;
   const status = isCorrect ? '✅' : '❌';
-console.log(`  Formula: ${calc.formula}`);
-console.log(`  Actual: ${result.value}`);
+  console.log(`${status} ${calc.name}`);
+  console.log(`  Formula: ${calc.formula}`);
+  console.log(`  Actual: ${result.value}`);
 if (result.error) {
 }
 });

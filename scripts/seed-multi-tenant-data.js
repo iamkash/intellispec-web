@@ -108,46 +108,6 @@ const SubscriptionModel = mongoose.model('Subscription', new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 }));
 
-const SubscriptionHistoryModel = mongoose.model('SubscriptionHistory', new mongoose.Schema({
-  id: String,
-  tenantId: String,
-  changeType: String,
-  changedBy: String,
-  changeReason: String,
-  beforeSnapshot: Object,
-  afterSnapshot: Object,
-  diff: String,
-  createdAt: { type: Date, default: Date.now }
-}));
-
-const AuditLogModel = mongoose.model('AuditLog', new mongoose.Schema({
-  id: String,
-  action: String, // create_organization, create_tenant, update_tenant, assign_admin, activate_tenant, deactivate_tenant, etc.
-  entityType: String, // organization, tenant, user, subscription, entitlements
-  entityId: String,
-  entityName: String,
-  performedBy: String,
-  performedByName: String,
-  changes: Object, // Before/after snapshot
-  metadata: Object, // Additional context
-  ipAddress: String,
-  userAgent: String,
-  createdAt: { type: Date, default: Date.now, index: true }
-}));
-
-const EntitlementsHistoryModel = mongoose.model('EntitlementsHistory', new mongoose.Schema({
-  id: String,
-  tenantId: String,
-  version: Number,
-  changeType: String,
-  changedBy: String,
-  changeReason: String,
-  beforeSnapshot: Object,
-  afterSnapshot: Object,
-  diff: String,
-  createdAt: { type: Date, default: Date.now }
-}));
-
 // Seed data configuration
 const SEED_DATA = {
   organizations: [
@@ -489,7 +449,7 @@ const SEED_DATA = {
     { key: "track", name: "Asset Manager", status: "active", category: "asset", defaultIncludedInFlex: true, icon: "DatabaseOutlined" },
     { key: "comply", name: "Compliance Manager", status: "active", category: "compliance", defaultIncludedInFlex: false, icon: "SafetyCertificateOutlined" },
     { key: "vault", name: "Document Vault", status: "active", category: "document", defaultIncludedInFlex: false, icon: "FolderOutlined" },
-    { key: "rescue", name: "Safety Command Center", status: "active", category: "safety", defaultIncludedInFlex: false, icon: "AlertOutlined" },
+    { key: "rescue", name: "intelliSAFTEY", status: "active", category: "safety", defaultIncludedInFlex: false, icon: "SafetyCertificateOutlined" },
     { key: "turnaround", name: "Turnaround Digital", status: "active", category: "project", defaultIncludedInFlex: false, icon: "ProjectOutlined" },
     { key: "workforce", name: "Workforce Manager", status: "active", category: "hr", defaultIncludedInFlex: false, icon: "TeamOutlined" }
   ]
@@ -674,25 +634,30 @@ async function seedMemberships() {
 }
 
 async function printSummary() {
-const [orgCount, tenantCount, userCount, membershipCount, moduleCount] = await Promise.all([
+  const [orgCount, tenantCount, userCount, membershipCount, moduleCount] = await Promise.all([
     OrganizationModel.countDocuments(),
     TenantModel.countDocuments(),
     UserModel.countDocuments(),
     MembershipModel.countDocuments(),
     ModuleModel.countDocuments()
   ]);
-console.log(`Tenants: ${tenantCount}`);
-console.log(`Memberships: ${membershipCount}`);
-console.log('\n=== TENANT DETAILS ===');
+  console.log(`Organizations: ${orgCount}`);
+  console.log(`Tenants: ${tenantCount}`);
+  console.log(`Users: ${userCount}`);
+  console.log(`Memberships: ${membershipCount}`);
+  console.log(`Modules: ${moduleCount}`);
+  console.log('\n=== TENANT DETAILS ===');
   const tenants = await TenantModel.find().lean();
   for (const tenant of tenants) {
     const subscription = await SubscriptionModel.findOne({ tenantId: tenant.id }).lean();
     const entitlements = await TenantEntitlementsModel.findOne({ tenantId: tenant.id }).lean();
     const memberCount = await MembershipModel.countDocuments({ tenantId: tenant.id });
-console.log(`  Status: ${tenant.status}`);
-console.log(`  Term: ${subscription?.termStartAt?.toISOString().split('T')[0]} - ${subscription?.termEndAt?.toISOString().split('T')[0]}`);
-console.log(`  Modules: ${entitlements?.modules?.join(', ') || 'None'}`);
-}
+    console.log(`\nTenant: ${tenant.name} (${tenant.tenantSlug})`);
+    console.log(`  Members: ${memberCount}`);
+    console.log(`  Status: ${tenant.status}`);
+    console.log(`  Term: ${subscription?.termStartAt?.toISOString().split('T')[0]} - ${subscription?.termEndAt?.toISOString().split('T')[0]}`);
+    console.log(`  Modules: ${entitlements?.modules?.join(', ') || 'None'}`);
+  }
 console.log('\n=== LOGIN CREDENTIALS ===');
 console.log('Platform Admins (password: Admin@12345) - tenant_admin role on ALL tenants:');
 console.log('  • superadmin@pksti.com - Multi-Tenant Admin (access to 6 tenants)');
@@ -702,8 +667,9 @@ console.log('  • owner@pk.com - PK Owner (tenant_admin on 3 tenants)');
 console.log('  • admin@hfsinclair.com - HF Sinclair Admin (tenant_admin on 1 tenant)');
 console.log('  • admin@sherwin.com - Sherwin Williams Admin (tenant_admin on 1 tenant)');
 console.log('\n=== TENANT URLS ===');
-for (const tenant of tenants) {
-}
+  for (const tenant of tenants) {
+    console.log(`  • ${tenant.name}: https://${tenant.tenantSlug || tenant.slug || tenant.id}.intellispec.app`);
+  }
 }
 
 async function main() {

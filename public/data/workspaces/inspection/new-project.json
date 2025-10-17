@@ -1,117 +1,536 @@
 {
-  "id": "new-project",
+  "id": "inspection/new-project",
   "title": "Inspection Project Workspace",
   "description": "Workspace for configuring new inspection projects, scope, team, and logistics.",
   "gadgets": [
     {
-        "id": "inspection-project-form",
-        "type": "document-form-gadget",
-        "title": "Inspection Project",
-        "description": "Project overview, scope, team, schedule, risks and budget",
-        "icon": "ProjectOutlined",
+      "id": "inspection-project-form",
+      "type": "document-form-gadget",
+      "title": "Inspection Project",
+      "description": "Project overview, scope, team, schedule, risks and budget",
+      "icon": "ProjectOutlined",
       "position": 24,
       "config": {
         "dataUrl": "/data/mock-data/forms/inspection-project-data.json",
         "mode": "wizard",
         "id": "inspection-project-form",
         "gadgetOptions": [
-          { "id": "projectName", "type": "text", "title": "Project Name", "label": "Project Name", "sectionId": "header", "size": 4, "required": true, "placeholder": "Enter project name" },
-          { "id": "projectCode", "type": "text", "title": "Project Code", "label": "Project Code", "sectionId": "header", "size": 4, "placeholder": "e.g., INSP-001" },
-          { "id": "status", "type": "select", "title": "Status", "label": "Status", "sectionId": "header", "size": 4, "options": [
-            { "label": "Planned", "value": "planned" },
-            { "label": "Active", "value": "active" },
-            { "label": "On Hold", "value": "on-hold" },
-            { "label": "Completed", "value": "completed" }
-          ] },
-          { "id": "priority", "type": "select", "title": "Priority", "label": "Priority", "sectionId": "header", "size": 4, "options": [
-            { "label": "Low", "value": "low" },
-            { "label": "Medium", "value": "medium" },
-            { "label": "High", "value": "high" }
-          ] },
-          { "id": "startDate", "type": "date", "title": "Start Date", "label": "Start Date", "sectionId": "header", "size": 4 },
-          { "id": "endDate", "type": "date", "title": "End Date", "label": "End Date", "sectionId": "header", "size": 4 }
-        ,
-          { "id": "general", "type": "section", "title": "General", "description": "Project context and defaults", "icon": "ProfileOutlined", "order": 1, "size": 12 },
-          { "id": "general-context", "type": "group", "title": "Context", "sectionId": "general", "order": 1, "size": 24 },
-          { "id": "general-standards", "type": "group", "title": "Standards Snapshot", "sectionId": "general", "order": 3, "size": 24 },
-          { "id": "general-stakeholders", "type": "group", "title": "Stakeholders", "sectionId": "general", "order": 7, "size": 24 },
-          { "id": "general-communication", "type": "group", "title": "Communication", "sectionId": "general", "order": 9, "size": 24 },
-          { "id": "general-notes", "type": "group", "title": "Notes", "sectionId": "general", "order": 10, "size": 24 },
-
-          { "id": "industry", "type": "ComboBoxWidget", "title": "Industry", "label": "Industry", "sectionId": "general", "groupId": "general-context", "size": 8, "required": true, "options": [
-            { "label": "Oil and Gas", "value": "oil-gas" },
-            { "label": "Power", "value": "power" },
-            { "label": "Chemicals", "value": "chemicals" },
-            { "label": "Manufacturing", "value": "manufacturing" },
-            { "label": "Pharma", "value": "pharma" },
-            { "label": "Maritime", "value": "maritime" },
-            { "label": "Paint", "value": "paint" },
-            { "label": "Scaffolding", "value": "scaffolding" }
-          ], "props": { "mode": "multiple", "placeholder": "Select industries", "tokenSeparators": [",", ";"] } },
-          { "id": "site", "type": "AutoCompleteWidget", "title": "Site or Facility", "label": "Site or Facility", "sectionId": "general", "groupId": "general-context", "size": 8, "required": true, "props": { "placeholder": "Search sites..." }, "options": [
-            { "label": "Refinery A", "value": "Refinery A" },
-            { "label": "Plant B", "value": "Plant B" },
-            { "label": "Terminal C", "value": "Terminal C" }
-          ] },
-          { "id": "area", "type": "InputFieldWidget", "title": "Area or Unit", "label": "Area or Unit", "sectionId": "general", "groupId": "general-context", "size": 8, "props": { "maxLength": 80, "placeholder": "Unit or area name" } },
-          { "id": "department", "type": "SegmentedWidget", "title": "Department", "label": "Department", "sectionId": "general", "groupId": "general-context", "size": 12, "options": [
-            { "label": "Operations", "value": "operations" },
-            { "label": "Maintenance", "value": "maintenance" },
-            { "label": "Integrity", "value": "integrity" },
-            { "label": "HSE", "value": "hse" },
-            { "label": "Projects", "value": "projects" }
-          ] },
-          
-          { "id": "project_type", "type": "SegmentedWidget", "title": "Project Type", "label": "Project Type", "sectionId": "general", "groupId": "general-context", "size": 12, "required": true, "options": [
-            { "label": "Campaign", "value": "Campaign" },
-            { "label": "Turnaround", "value": "Turnaround" },
-            { "label": "Shutdown", "value": "Shutdown" },
-            { "label": "Ad-hoc", "value": "Ad-hoc" }
-          ] },
-          
-          { "id": "project_manager", "type": "AutoCompleteWidget", "title": "Project Manager", "label": "Project Manager", "sectionId": "general", "groupId": "general-stakeholders", "size": 12, "required": true, "options": [
-            { "label": "Priya N", "value": "Priya N" },
-            { "label": "Alex J", "value": "Alex J" }
-          ] },
-          { "id": "inspection_coordinator", "type": "AutoCompleteWidget", "title": "Inspection Coordinator", "label": "Inspection Coordinator", "sectionId": "general", "groupId": "general-stakeholders", "size": 12, "options": [
-            { "label": "Mark L", "value": "Mark L" },
-            { "label": "Sarah T", "value": "Sarah T" }
-          ] },
-          { "id": "client_rep", "type": "InputFieldWidget", "title": "Client Representative", "label": "Client Representative", "sectionId": "general", "groupId": "general-stakeholders", "size": 12, "props": { "maxLength": 80 } },
-          { "id": "hse_rep", "type": "InputFieldWidget", "title": "HSE Representative", "label": "HSE Representative", "sectionId": "general", "groupId": "general-stakeholders", "size": 12, "props": { "maxLength": 80 } },
-
-          { "id": "per_asset_reports", "type": "SwitchWidget", "title": "Per-Asset Reports", "label": "Per-Asset Reports", "sectionId": "general", "groupId": "general-deliverables", "size": 6, "required": true },
-          { "id": "project_report", "type": "SwitchWidget", "title": "Project Report", "label": "Project Report", "sectionId": "general", "groupId": "general-deliverables", "size": 6, "required": true },
-          { "id": "output_formats", "type": "CheckboxWidget", "title": "Output Formats", "label": "Output Formats", "sectionId": "general", "groupId": "general-deliverables", "size": 12, "required": true, "direction": "horizontal", "options": [
-            { "label": "PDF", "value": "PDF" },
-            { "label": "DOCX", "value": "DOCX" },
-            { "label": "CSV", "value": "CSV" },
-            { "label": "JSON", "value": "JSON" }
-          ] },
-          { "id": "language", "type": "ComboBoxWidget", "title": "Report Language", "label": "Report Language", "sectionId": "general", "groupId": "general-deliverables", "size": 12, "required": true, "options": [
-            { "label": "English", "value": "English" },
-            { "label": "Spanish", "value": "Spanish" },
-            { "label": "Portuguese", "value": "Portuguese" },
-            { "label": "French", "value": "French" },
-            { "label": "Arabic", "value": "Arabic" },
-            { "label": "Hindi", "value": "Hindi" }
-          ] },
-          { "id": "units_system", "type": "ComboBoxWidget", "title": "Units System", "label": "Units System", "sectionId": "general", "groupId": "general-deliverables", "size": 12, "required": true, "options": [
-            { "label": "Metric", "value": "Metric" },
-            { "label": "US Customary", "value": "US Customary" }
-          ] },
-
-          { "id": "distribution_list", "type": "TagsInputWidget", "title": "Report Distribution Emails", "label": "Report Distribution Emails", "sectionId": "general", "groupId": "general-communication", "size": 24, "props": { "type": "email", "placeholder": "Type email and press Enter" } },
-          { "id": "escalation_contacts", "type": "TextAreaWidget", "title": "Escalation Contacts", "label": "Escalation Contacts", "sectionId": "general", "groupId": "general-communication", "size": 24, "props": { "maxLength": 200 } },
-
-          { "id": "general_notes", "type": "TextAreaWidget", "title": "General Notes", "label": "General Notes", "sectionId": "general", "groupId": "general-notes", "size": 24, "props": { "maxLength": 2000 } },
-
-          { "id": "assets", "type": "section", "title": "Assets", "description": "Select or import assets to include in this project", "icon": "AppstoreOutlined", "order": 2, "size": 12 },
-          { "id": "asset-selector-group", "type": "group", "title": "Asset Selection", "sectionId": "assets", "order": 1, "size": 24 },
-          { "id": "asset_selection", "type": "asset-selector", "title": "Assets", "label": "Assets", "sectionId": "assets", "groupId": "asset-selector-group", "size": 24 }
+          {
+            "id": "projectName",
+            "type": "text",
+            "title": "Project Name",
+            "label": "Project Name",
+            "sectionId": "header",
+            "size": 4,
+            "required": true,
+            "placeholder": "Enter project name"
+          },
+          {
+            "id": "projectCode",
+            "type": "text",
+            "title": "Project Code",
+            "label": "Project Code",
+            "sectionId": "header",
+            "size": 4,
+            "placeholder": "e.g., INSP-001"
+          },
+          {
+            "id": "status",
+            "type": "select",
+            "title": "Status",
+            "label": "Status",
+            "sectionId": "header",
+            "size": 4,
+            "options": [
+              {
+                "label": "Planned",
+                "value": "planned"
+              },
+              {
+                "label": "Active",
+                "value": "active"
+              },
+              {
+                "label": "On Hold",
+                "value": "on-hold"
+              },
+              {
+                "label": "Completed",
+                "value": "completed"
+              }
+            ]
+          },
+          {
+            "id": "priority",
+            "type": "select",
+            "title": "Priority",
+            "label": "Priority",
+            "sectionId": "header",
+            "size": 4,
+            "options": [
+              {
+                "label": "Low",
+                "value": "low"
+              },
+              {
+                "label": "Medium",
+                "value": "medium"
+              },
+              {
+                "label": "High",
+                "value": "high"
+              }
+            ]
+          },
+          {
+            "id": "startDate",
+            "type": "date",
+            "title": "Start Date",
+            "label": "Start Date",
+            "sectionId": "header",
+            "size": 4
+          },
+          {
+            "id": "endDate",
+            "type": "date",
+            "title": "End Date",
+            "label": "End Date",
+            "sectionId": "header",
+            "size": 4
+          },
+          {
+            "id": "general",
+            "type": "section",
+            "title": "General",
+            "description": "Project context and defaults",
+            "icon": "ProfileOutlined",
+            "order": 1,
+            "size": 12
+          },
+          {
+            "id": "general-context",
+            "type": "group",
+            "title": "Context",
+            "sectionId": "general",
+            "order": 1,
+            "size": 24
+          },
+          {
+            "id": "general-standards",
+            "type": "group",
+            "title": "Standards Snapshot",
+            "sectionId": "general",
+            "order": 3,
+            "size": 24
+          },
+          {
+            "id": "general-stakeholders",
+            "type": "group",
+            "title": "Stakeholders",
+            "sectionId": "general",
+            "order": 7,
+            "size": 24
+          },
+          {
+            "id": "general-communication",
+            "type": "group",
+            "title": "Communication",
+            "sectionId": "general",
+            "order": 9,
+            "size": 24
+          },
+          {
+            "id": "general-notes",
+            "type": "group",
+            "title": "Notes",
+            "sectionId": "general",
+            "order": 10,
+            "size": 24
+          },
+          {
+            "id": "industry",
+            "type": "ComboBoxWidget",
+            "title": "Industry",
+            "label": "Industry",
+            "sectionId": "general",
+            "groupId": "general-context",
+            "size": 8,
+            "required": true,
+            "options": [
+              {
+                "label": "Oil and Gas",
+                "value": "oil-gas"
+              },
+              {
+                "label": "Power",
+                "value": "power"
+              },
+              {
+                "label": "Chemicals",
+                "value": "chemicals"
+              },
+              {
+                "label": "Manufacturing",
+                "value": "manufacturing"
+              },
+              {
+                "label": "Pharma",
+                "value": "pharma"
+              },
+              {
+                "label": "Maritime",
+                "value": "maritime"
+              },
+              {
+                "label": "Paint",
+                "value": "paint"
+              },
+              {
+                "label": "Scaffolding",
+                "value": "scaffolding"
+              }
+            ],
+            "props": {
+              "mode": "multiple",
+              "placeholder": "Select industries",
+              "tokenSeparators": [
+                ",",
+                ";"
+              ]
+            }
+          },
+          {
+            "id": "site",
+            "type": "AutoCompleteWidget",
+            "title": "Site or Facility",
+            "label": "Site or Facility",
+            "sectionId": "general",
+            "groupId": "general-context",
+            "size": 8,
+            "required": true,
+            "props": {
+              "placeholder": "Search sites..."
+            },
+            "options": [
+              {
+                "label": "Refinery A",
+                "value": "Refinery A"
+              },
+              {
+                "label": "Plant B",
+                "value": "Plant B"
+              },
+              {
+                "label": "Terminal C",
+                "value": "Terminal C"
+              }
+            ]
+          },
+          {
+            "id": "area",
+            "type": "InputFieldWidget",
+            "title": "Area or Unit",
+            "label": "Area or Unit",
+            "sectionId": "general",
+            "groupId": "general-context",
+            "size": 8,
+            "props": {
+              "maxLength": 80,
+              "placeholder": "Unit or area name"
+            }
+          },
+          {
+            "id": "department",
+            "type": "SegmentedWidget",
+            "title": "Department",
+            "label": "Department",
+            "sectionId": "general",
+            "groupId": "general-context",
+            "size": 12,
+            "options": [
+              {
+                "label": "Operations",
+                "value": "operations"
+              },
+              {
+                "label": "Maintenance",
+                "value": "maintenance"
+              },
+              {
+                "label": "Integrity",
+                "value": "integrity"
+              },
+              {
+                "label": "HSE",
+                "value": "hse"
+              },
+              {
+                "label": "Projects",
+                "value": "projects"
+              }
+            ]
+          },
+          {
+            "id": "project_type",
+            "type": "SegmentedWidget",
+            "title": "Project Type",
+            "label": "Project Type",
+            "sectionId": "general",
+            "groupId": "general-context",
+            "size": 12,
+            "required": true,
+            "options": [
+              {
+                "label": "Campaign",
+                "value": "Campaign"
+              },
+              {
+                "label": "Turnaround",
+                "value": "Turnaround"
+              },
+              {
+                "label": "Shutdown",
+                "value": "Shutdown"
+              },
+              {
+                "label": "Ad-hoc",
+                "value": "Ad-hoc"
+              }
+            ]
+          },
+          {
+            "id": "project_manager",
+            "type": "AutoCompleteWidget",
+            "title": "Project Manager",
+            "label": "Project Manager",
+            "sectionId": "general",
+            "groupId": "general-stakeholders",
+            "size": 12,
+            "required": true,
+            "options": [
+              {
+                "label": "Priya N",
+                "value": "Priya N"
+              },
+              {
+                "label": "Alex J",
+                "value": "Alex J"
+              }
+            ]
+          },
+          {
+            "id": "inspection_coordinator",
+            "type": "AutoCompleteWidget",
+            "title": "Inspection Coordinator",
+            "label": "Inspection Coordinator",
+            "sectionId": "general",
+            "groupId": "general-stakeholders",
+            "size": 12,
+            "options": [
+              {
+                "label": "Mark L",
+                "value": "Mark L"
+              },
+              {
+                "label": "Sarah T",
+                "value": "Sarah T"
+              }
+            ]
+          },
+          {
+            "id": "client_rep",
+            "type": "InputFieldWidget",
+            "title": "Client Representative",
+            "label": "Client Representative",
+            "sectionId": "general",
+            "groupId": "general-stakeholders",
+            "size": 12,
+            "props": {
+              "maxLength": 80
+            }
+          },
+          {
+            "id": "hse_rep",
+            "type": "InputFieldWidget",
+            "title": "HSE Representative",
+            "label": "HSE Representative",
+            "sectionId": "general",
+            "groupId": "general-stakeholders",
+            "size": 12,
+            "props": {
+              "maxLength": 80
+            }
+          },
+          {
+            "id": "per_asset_reports",
+            "type": "SwitchWidget",
+            "title": "Per-Asset Reports",
+            "label": "Per-Asset Reports",
+            "sectionId": "general",
+            "groupId": "general-deliverables",
+            "size": 6,
+            "required": true
+          },
+          {
+            "id": "project_report",
+            "type": "SwitchWidget",
+            "title": "Project Report",
+            "label": "Project Report",
+            "sectionId": "general",
+            "groupId": "general-deliverables",
+            "size": 6,
+            "required": true
+          },
+          {
+            "id": "output_formats",
+            "type": "CheckboxWidget",
+            "title": "Output Formats",
+            "label": "Output Formats",
+            "sectionId": "general",
+            "groupId": "general-deliverables",
+            "size": 12,
+            "required": true,
+            "direction": "horizontal",
+            "options": [
+              {
+                "label": "PDF",
+                "value": "PDF"
+              },
+              {
+                "label": "DOCX",
+                "value": "DOCX"
+              },
+              {
+                "label": "CSV",
+                "value": "CSV"
+              },
+              {
+                "label": "JSON",
+                "value": "JSON"
+              }
+            ]
+          },
+          {
+            "id": "language",
+            "type": "ComboBoxWidget",
+            "title": "Report Language",
+            "label": "Report Language",
+            "sectionId": "general",
+            "groupId": "general-deliverables",
+            "size": 12,
+            "required": true,
+            "options": [
+              {
+                "label": "English",
+                "value": "English"
+              },
+              {
+                "label": "Spanish",
+                "value": "Spanish"
+              },
+              {
+                "label": "Portuguese",
+                "value": "Portuguese"
+              },
+              {
+                "label": "French",
+                "value": "French"
+              },
+              {
+                "label": "Arabic",
+                "value": "Arabic"
+              },
+              {
+                "label": "Hindi",
+                "value": "Hindi"
+              }
+            ]
+          },
+          {
+            "id": "units_system",
+            "type": "ComboBoxWidget",
+            "title": "Units System",
+            "label": "Units System",
+            "sectionId": "general",
+            "groupId": "general-deliverables",
+            "size": 12,
+            "required": true,
+            "options": [
+              {
+                "label": "Metric",
+                "value": "Metric"
+              },
+              {
+                "label": "US Customary",
+                "value": "US Customary"
+              }
+            ]
+          },
+          {
+            "id": "distribution_list",
+            "type": "TagsInputWidget",
+            "title": "Report Distribution Emails",
+            "label": "Report Distribution Emails",
+            "sectionId": "general",
+            "groupId": "general-communication",
+            "size": 24,
+            "props": {
+              "type": "email",
+              "placeholder": "Type email and press Enter"
+            }
+          },
+          {
+            "id": "escalation_contacts",
+            "type": "TextAreaWidget",
+            "title": "Escalation Contacts",
+            "label": "Escalation Contacts",
+            "sectionId": "general",
+            "groupId": "general-communication",
+            "size": 24,
+            "props": {
+              "maxLength": 200
+            }
+          },
+          {
+            "id": "general_notes",
+            "type": "TextAreaWidget",
+            "title": "General Notes",
+            "label": "General Notes",
+            "sectionId": "general",
+            "groupId": "general-notes",
+            "size": 24,
+            "props": {
+              "maxLength": 2000
+            }
+          },
+          {
+            "id": "assets",
+            "type": "section",
+            "title": "Assets",
+            "description": "Select or import assets to include in this project",
+            "icon": "AppstoreOutlined",
+            "order": 2,
+            "size": 12
+          },
+          {
+            "id": "asset-selector-group",
+            "type": "group",
+            "title": "Asset Selection",
+            "sectionId": "assets",
+            "order": 1,
+            "size": 24
+          },
+          {
+            "id": "asset_selection",
+            "type": "asset-selector",
+            "title": "Assets",
+            "label": "Assets",
+            "sectionId": "assets",
+            "groupId": "asset-selector-group",
+            "size": 24
+          }
         ]
       }
     }
   ]
 }
-

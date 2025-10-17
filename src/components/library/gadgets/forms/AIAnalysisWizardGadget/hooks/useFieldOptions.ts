@@ -43,7 +43,7 @@ export const useFieldOptions = (
     }
     
     return fields;
-  }, [config?.steps?.sections, currentStep]);
+  }, [config?.steps?.sections, config?.steps?.input, currentStep]);
 
   // Load options for a field
   const loadFieldOptions = React.useCallback(async (fieldId: string, field: any) => {
@@ -117,6 +117,16 @@ export const useFieldOptions = (
     });
   }, [currentStep, getCurrentStepFields, loadFieldOptions, fieldOptions]);
 
+  // Helper to get current step section index
+  const getCurrentStepSectionIndex = React.useCallback(() => {
+    if (currentStep === undefined) return -1;
+    let sectionIndex = currentStep;
+    if (config.steps.input) {
+      sectionIndex = currentStep - 1;
+    }
+    return sectionIndex;
+  }, [currentStep, config?.steps?.input]);
+
   // Handle field changes and dependent field loading
   const handleFieldChange = React.useCallback((fieldId: string, newValue: any) => {
     console.log(`[useFieldOptions] Field ${fieldId} changed to:`, newValue);
@@ -157,17 +167,7 @@ export const useFieldOptions = (
         loadFieldOptions(depFieldId, depField);
       }
     });
-  }, [getCurrentStepFields, loadFieldOptions, updateSectionData, wizardData.sections]);
-
-  // Helper to get current step section index
-  const getCurrentStepSectionIndex = React.useCallback(() => {
-    if (currentStep === undefined) return -1;
-    let sectionIndex = currentStep;
-    if (config.steps.input) {
-      sectionIndex = currentStep - 1;
-    }
-    return sectionIndex;
-  }, [currentStep, config.steps.input]);
+  }, [getCurrentStepFields, loadFieldOptions, updateSectionData, wizardData.sections, getCurrentStepSectionIndex]);
 
   return {
     fieldOptions,

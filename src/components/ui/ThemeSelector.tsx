@@ -13,7 +13,6 @@
 
 import { Dropdown } from 'antd';
 import {
-    Check,
     Monitor,
     Moon,
     Palette,
@@ -179,67 +178,12 @@ const THEME_MODE_OPTIONS = [
   { id: 'system' as ThemeMode, label: 'System', icon: Monitor, description: 'Follow system' },
 ];
 
-const RADIUS_OPTIONS = [
-  { value: 0, label: 'None' },
-  { value: 0.3, label: 'Small' },
-  { value: 0.5, label: 'Medium' },
-  { value: 0.75, label: 'Large' },
-  { value: 1.0, label: 'Extra Large' },
-];
-
-const FONT_OPTIONS = [
-  { id: 'inter' as const, label: 'Inter', description: 'Modern and clean' },
-  { id: 'system' as const, label: 'System', description: 'System default' },
-];
-
-// =============================================================================
-// UI COMPONENTS
-// =============================================================================
-
-// Using Ant Design Button component instead
-
-// Using Ant Design Dropdown component instead
-
-const ColorThemeGrid: React.FC<{
-  selectedTheme: ColorTheme;
-  onSelect: (theme: ColorTheme) => void;
-}> = ({ selectedTheme, onSelect }) => {
-  return (
-    <div className="grid grid-cols-5 gap-2 p-1">
-      {COLOR_THEME_OPTIONS.map((option) => (
-        <button
-          key={option.id}
-          onClick={() => onSelect(option.id)}
-          className={cn(
-            'group relative flex h-8 w-8 items-center justify-center rounded-md border-2 transition-all',
-            'hover:scale-105',
-            selectedTheme === option.id
-              ? 'border-ring ring-2 ring-ring ring-offset-2 ring-offset-background'
-              : 'border-transparent hover:border-muted-foreground/25'
-          )}
-          title={`${option.label} - ${option.description}`}
-        >
-          <div 
-            className="h-4 w-4 rounded-full"
-            style={{ backgroundColor: option.colors.primary }}
-          />
-          {selectedTheme === option.id && (
-            <div className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
-              <Check className="h-2.5 w-2.5" />
-            </div>
-          )}
-        </button>
-      ))}
-    </div>
-  );
-};
-
 // =============================================================================
 // MAIN COMPONENT
 // =============================================================================
 
 export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ className, isMobile = false }) => {
-  const { config, setMode, setColorTheme, setRadius, setFontFamily, resolvedTheme } = useTheme();
+  const { config, setMode, setColorTheme, resolvedTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   const currentThemeOption = COLOR_THEME_OPTIONS.find(option => option.id === config.colorTheme);

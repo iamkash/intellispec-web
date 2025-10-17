@@ -6,16 +6,13 @@
  * Perfect for location-based forms, asset tracking, and geographical data entry.
  */
 
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { Input, Button, Space, Typography, Select, Tooltip, Card, Alert } from 'antd';
+import React, { useCallback, useState, useEffect } from 'react';
+import { Input, Button, Space, Typography, Select, Tooltip, Card } from 'antd';
 import { 
-  EnvironmentOutlined, 
   AimOutlined, 
   SearchOutlined, 
   CopyOutlined,
-  SwapOutlined
 } from '@ant-design/icons';
-import { sanitizeData } from '../../../../utils/sanitizeData';
 
 const { Text } = Typography;
 const { Option } = Select;
@@ -181,7 +178,6 @@ export const LocationPickerWidget: React.FC<LocationPickerWidgetProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [currentFormat, setCurrentFormat] = useState<CoordinateFormat>(format);
-  const [showMapView, setShowMapView] = useState<boolean>(false);
 
   // Validation function
   const validateValue = useCallback((val: LocationData): string | null => {
@@ -231,7 +227,7 @@ export const LocationPickerWidget: React.FC<LocationPickerWidgetProps> = ({
   }, [onChange, validateOnChange, validateValue]);
 
   // Format coordinates for display
-  const formatCoordinates = (location: LocationData): string => {
+  const formatCoordinates = useCallback((location: LocationData): string => {
     if (!location) return '';
     
     const { latitude, longitude } = location;
@@ -258,7 +254,7 @@ export const LocationPickerWidget: React.FC<LocationPickerWidgetProps> = ({
       default:
         return `${latitude.toFixed(precision)}, ${longitude.toFixed(precision)}`;
     }
-  };
+  }, [currentFormat, precision]);
 
   // Convert decimal degrees to DMS
   const convertToDMS = (decimal: number, isLatitude: boolean): string => {

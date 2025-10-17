@@ -56,3 +56,5 @@ const workflowData = {
     ]
   }
 };
+
+module.exports = workflowData;

@@ -117,7 +117,7 @@ export function evaluateFormula(
   context: FormulaContext
 ): FormulaResult {
   try {
-    const { formData, fieldConfigs, metadata } = context;
+    const { formData, fieldConfigs } = context;
     
     // Create a safe evaluation environment
     const safeEval = (expression: string): number => {
@@ -168,6 +168,7 @@ export function evaluateFormula(
       }
       
       // Use Function constructor for safe evaluation
+      // eslint-disable-next-line no-new-func
       const result = new Function(`return ${processedExpression}`)();
       return typeof result === 'number' ? result : 0;
     };

@@ -1,5 +1,5 @@
 {
-  "id": "nde-requirements-results",
+  "id": "inspection/nde-requirements-results",
   "type": "section",
   "title": "NDE Requirements & Results",
   "description": "Non-destructive examination methods, results, risk assessment, compliance",
@@ -23,14 +23,38 @@
           "label": "NDE Methods Used",
           "size": 12,
           "options": [
-            {"label": "Ultrasonic Testing (UT)", "value": "ut"},
-            {"label": "Radiographic Testing (RT)", "value": "rt"},
-            {"label": "Magnetic Particle Testing (MT)", "value": "mt"},
-            {"label": "Liquid Penetrant Testing (PT)", "value": "pt"},
-            {"label": "Eddy Current Testing (ET)", "value": "et"},
-            {"label": "Visual Testing (VT)", "value": "vt"},
-            {"label": "Acoustic Emission (AE)", "value": "ae"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "Ultrasonic Testing (UT)",
+              "value": "ut"
+            },
+            {
+              "label": "Radiographic Testing (RT)",
+              "value": "rt"
+            },
+            {
+              "label": "Magnetic Particle Testing (MT)",
+              "value": "mt"
+            },
+            {
+              "label": "Liquid Penetrant Testing (PT)",
+              "value": "pt"
+            },
+            {
+              "label": "Eddy Current Testing (ET)",
+              "value": "et"
+            },
+            {
+              "label": "Visual Testing (VT)",
+              "value": "vt"
+            },
+            {
+              "label": "Acoustic Emission (AE)",
+              "value": "ae"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -50,10 +74,22 @@
           "required": true,
           "size": 6,
           "options": [
-            {"label": "ASNT Level II", "value": "asnt-ii"},
-            {"label": "ASNT Level III", "value": "asnt-iii"},
-            {"label": "API 510 Certified", "value": "api-510"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "ASNT Level II",
+              "value": "asnt-ii"
+            },
+            {
+              "label": "ASNT Level III",
+              "value": "asnt-iii"
+            },
+            {
+              "label": "API 510 Certified",
+              "value": "api-510"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -191,9 +227,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "In Progress", "value": "in-progress"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "In Progress",
+              "value": "in-progress"
+            }
           ]
         },
         {
@@ -224,10 +269,22 @@
           "required": true,
           "size": 6,
           "options": [
-            {"label": "Low", "value": "low"},
-            {"label": "Medium", "value": "medium"},
-            {"label": "High", "value": "high"},
-            {"label": "Critical", "value": "critical"}
+            {
+              "label": "Low",
+              "value": "low"
+            },
+            {
+              "label": "Medium",
+              "value": "medium"
+            },
+            {
+              "label": "High",
+              "value": "high"
+            },
+            {
+              "label": "Critical",
+              "value": "critical"
+            }
           ]
         },
         {
@@ -279,9 +336,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Compliant", "value": "compliant"},
-            {"label": "Non-Compliant", "value": "non-compliant"},
-            {"label": "Conditional Compliance", "value": "conditional"}
+            {
+              "label": "Compliant",
+              "value": "compliant"
+            },
+            {
+              "label": "Non-Compliant",
+              "value": "non-compliant"
+            },
+            {
+              "label": "Conditional Compliance",
+              "value": "conditional"
+            }
           ]
         },
         {
@@ -301,11 +367,26 @@
           "label": "Code Requirements Met",
           "size": 6,
           "options": [
-            {"label": "ASME Section V", "value": "asme-v"},
-            {"label": "ASME Section VIII", "value": "asme-viii"},
-            {"label": "API 510", "value": "api-510"},
-            {"label": "ASNT SNT-TC-1A", "value": "asnt-snt"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "ASME Section V",
+              "value": "asme-v"
+            },
+            {
+              "label": "ASME Section VIII",
+              "value": "asme-viii"
+            },
+            {
+              "label": "API 510",
+              "value": "api-510"
+            },
+            {
+              "label": "ASNT SNT-TC-1A",
+              "value": "asnt-snt"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -326,9 +407,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "In Progress", "value": "in-progress"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "In Progress",
+              "value": "in-progress"
+            }
           ]
         },
         {
@@ -403,4 +493,4 @@
       ]
     }
   ]
-} 
+}

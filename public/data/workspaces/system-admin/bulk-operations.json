@@ -1,5 +1,5 @@
 {
-  "id": "bulk-operations-workspace",
+  "id": "system-admin/bulk-operations",
   "title": "Bulk Import/Export",
   "description": "CSV import and export functionality for managing large datasets",
   "layout": "dashboard",
@@ -10,7 +10,12 @@
       "title": "CSV Import/Export",
       "position": 24,
       "config": {
-        "allowedTypes": ["company", "site", "asset_group", "asset"],
+        "allowedTypes": [
+          "company",
+          "site",
+          "asset_group",
+          "asset"
+        ],
         "maxFileSize": 10,
         "showInstructions": true
       }

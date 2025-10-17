@@ -379,10 +379,11 @@ try {
       const existingType = await ReferenceListType.findOne({ name: listData.type.name });
 
       if (existingType) {
-skippedTypes++;
+        skippedTypes++;
         continue;
       }
 
+      console.log(`\n📚 Creating reference list: ${listName}`);
       // Create the new list type
       const listType = new ReferenceListType(listData.type);
       await listType.save();

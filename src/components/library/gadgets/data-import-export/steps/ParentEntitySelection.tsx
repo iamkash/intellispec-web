@@ -28,12 +28,6 @@ export const ParentEntitySelection: React.FC<ParentEntitySelectionProps> = ({
             }
         });
     }, [parentEntities, loadParentEntities]);
-    
-    // Check if all required parents are selected
-    const allRequiredSelected = parentEntities.every(
-        parent => !parent.required || selectedParents[parent.type]
-    );
-
     const parentLabels = parentEntities.map(p => p.label.toLowerCase()).join(' and ');
 
     return (

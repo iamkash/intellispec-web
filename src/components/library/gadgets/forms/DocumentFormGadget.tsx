@@ -1,10 +1,8 @@
 import React from 'react';
-import { BaseGadget, GadgetType, GadgetMetadata, GadgetSchema, GadgetConfig, GadgetState, GadgetContext } from '../base';
+import { BaseGadget, GadgetType, GadgetMetadata, GadgetSchema, GadgetConfig, GadgetContext } from '../base';
 import { ValidationResult } from '../../core/base';
-import { dataService } from '../../../../utils/DataService';
 import { sanitizeData } from '../../../../utils/sanitizeData';
-import FormValidator, { FormValidationResult } from '../../../../utils/FormValidator';
-import { commercialFormulaCalculator, FormulaContext } from '../../../../utils/CommercialFormulaCalculator';
+import { FormValidationResult } from '../../../../utils/FormValidator';
 import { WizardUtils } from '../../../../utils/WizardUtils';
 import { WizardConfig, WizardState, WizardStep } from './types';
 import { FormDataUtils } from '../../../../utils/FormDataUtils';
@@ -12,10 +10,7 @@ import {
   FieldConfig,
   FormSection,
   FormGroup,
-  GadgetOption,
-  SectionOption,
-  GroupOption,
-  FieldOption
+  GadgetOption
 } from './types';
 // FormRenderer is imported dynamically to avoid circular dependency
 import { 
@@ -314,6 +309,17 @@ class DocumentFormGadget extends BaseGadget {
     
     // Regenerate steps
     return this.parseWizardSteps((this.state as ExtendedDocumentFormGadgetState).formData);
+  }
+
+  /**
+   * Merge form data without regenerating steps.
+   * Useful when bulk updates are applied from external automation.
+   */
+  public mergeFormData(newData: Record<string, any>): void {
+    (this.state as ExtendedDocumentFormGadgetState).formData = {
+      ...(this.state as ExtendedDocumentFormGadgetState).formData,
+      ...newData,
+    };
   }
 
   /**

@@ -5,7 +5,7 @@
  * Provides real-time validation feedback for workspace configurations.
  */
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { quickValidate, validateWorkspaceConfig, ValidationResult } from '../schemas/WorkspaceValidation';
 
 export interface UseWorkspaceValidationOptions {
@@ -43,7 +43,7 @@ export function useWorkspaceValidation(
 
   const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [isValidating, setIsValidating] = useState(false);
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Only validate in development by default
   const shouldValidate = process.env.NODE_ENV === 'development' || showInProduction;
@@ -90,8 +90,8 @@ export function useWorkspaceValidation(
     }
 
     // Clear existing timer
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
     }
 
     // Set new timer
@@ -99,15 +99,13 @@ export function useWorkspaceValidation(
       validate(config);
     }, debounceMs);
 
-    setDebounceTimer(timer);
+    debounceTimerRef.current = timer;
 
     // Cleanup
     return () => {
-      if (timer) {
-        clearTimeout(timer);
-      }
+      clearTimeout(timer);
     };
-  }, [config, validateOnChange, debounceMs, validate, shouldValidate]); // Removed debounceTimer from deps
+  }, [config, validateOnChange, debounceMs, validate, shouldValidate]);
 
   // Get errors for specific path
   const getErrorsForPath = useCallback((path: string[]) => {

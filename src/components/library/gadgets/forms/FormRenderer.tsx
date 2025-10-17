@@ -11,7 +11,6 @@ import {
   Row,
   Space,
   Spin,
-  Steps,
   Tooltip,
   Typography,
 } from "antd";
@@ -35,10 +34,9 @@ import {
   extractFieldSpecificProps,
   getPropsForWidget,
 } from "./widgetFactory";
+import { useNavigation } from "../../../../contexts/NavigationContext";
 
 const { Title, Text } = Typography;
-const { Step } = Steps;
-
 interface FormRendererProps {
   gadget: DocumentFormGadget;
   initialProps: any;
@@ -128,22 +126,57 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
   fitContent,
 }) => {
   const mode = (gadget.config as any).mode;
+  const navigation = useNavigation();
+  const currentWorkspaceId = navigation.currentWorkspaceId;
 
+  const navigateBackOrFallback = React.useCallback(() => {
+    const navigated = navigation.navigateBack();
+    if (navigated) {
+      return;
+    }
+
+    const moduleId = currentWorkspaceId?.split('/')?.[0];
+    if (moduleId) {
+      const fallback = navigation.getLastWorkspaceForModule(moduleId);
+      if (fallback && fallback !== currentWorkspaceId) {
+        navigation.openWorkspace(fallback, { replace: true });
+        return;
+      }
+    }
+
+    if (window.history.length > 1) {
+      window.history.back();
+    }
+  }, [navigation, currentWorkspaceId]);
+
+  const triggerNavigation = React.useCallback((target?: string | null, params?: Record<string, string>, options?: { replace?: boolean }) => {
+    const mergedParams: Record<string, string> = { ...(params || {}) };
+    if (currentWorkspaceId && mergedParams.returnTo === undefined) {
+      mergedParams.returnTo = currentWorkspaceId;
+    }
+
+    if (target && target !== 'back') {
+      navigation.openWorkspace(target, {
+        params: mergedParams,
+        replace: options?.replace ?? true,
+      });
+      return;
+    }
+
+    navigateBackOrFallback();
+  }, [navigation, navigateBackOrFallback, currentWorkspaceId]);
   // Memoize the data URL to prevent unnecessary re-fetches
   const memoizedDataUrl: string | undefined = React.useMemo(
     () => gadget.config.dataUrl,
     [gadget.config.dataUrl]
   );
-
-  // Debug: Track FormRenderer instances
-  const instanceId = React.useMemo(
-    () => Math.random().toString(36).substr(2, 9),
-    []
-  );
-
   // All state is now managed by React Hooks
   const [activeSection, setActiveSection] = React.useState<string | null>(null);
   const [formData, setFormData] = React.useState<FormData>({});
+  const formDataRef = React.useRef(formData);
+  React.useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
   const [originalData, setOriginalData] = React.useState<FormData>({});
 
   // Broadcast form data changes to parent when requested
@@ -197,7 +230,6 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
   const [collapsedGroups, setCollapsedGroups] = React.useState<
     Record<string, boolean>
   >({});
-  const [validationTriggered, setValidationTriggered] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
   const [showScrollToTop, setShowScrollToTop] = React.useState(false);
   const [isInitialized, setIsInitialized] = React.useState(false);
@@ -213,7 +245,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
   const [stepValidation, setStepValidation] = React.useState<
     Record<string, FormValidationResult>
   >({});
-  const [wizardLoading, setWizardLoading] = React.useState(false);
+  const [wizardLoading] = React.useState(false);
 
   // Section loading state
   const [loadingSections, setLoadingSections] = React.useState<Set<string>>(
@@ -230,27 +262,70 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
   const sectionRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
   const contentContainerRef = React.useRef<HTMLDivElement>(null);
 
-  // Function to get field icon
-  const getFieldIcon = (
-    fieldId: string,
-    fieldConfigs: Record<string, FieldConfig>
-  ): React.ReactNode => {
-    const config = fieldConfigs[fieldId];
-    if (config && config.icon) {
-      let iconName = config.icon;
-      if (typeof iconName === "string") {
-        try {
-          const IconComponent = (AntIcons as any)[iconName];
-          if (IconComponent && typeof IconComponent === "function") {
-            return <IconComponent />;
+  const mapOptionsData = React.useCallback(
+    (data: any[], config: FieldConfig) => {
+      return data.map((item) => {
+        const valueField = config.optionsValueField || "value";
+        const labelField = config.optionsLabelField || "label";
+
+        const rawValue =
+          item?.[valueField] ??
+          item?.id ??
+          item?._id ??
+          item?.value ??
+          item?.code ??
+          null;
+        const optionValue =
+          rawValue !== undefined && rawValue !== null
+            ? String(rawValue)
+            : "";
+
+        let optionLabel: string | undefined;
+        if (typeof labelField === "string") {
+          if (labelField.includes("{")) {
+            optionLabel = labelField
+              .replace(/\{([^}]+)\}/g, (_match, key) => {
+                const lookupKey = String(key).trim();
+                const replacement = item?.[lookupKey];
+                return replacement !== undefined && replacement !== null
+                  ? String(replacement)
+                  : "";
+              })
+              .replace(/\s+/g, " ")
+              .trim();
+          } else if (
+            item?.[labelField] !== undefined &&
+            item?.[labelField] !== null
+          ) {
+            optionLabel = String(item[labelField]);
           }
-        } catch (error) {
-          console.error(`Error resolving field icon "${iconName}":`, error);
         }
-      }
-    }
-    return null;
-  };
+
+        if (!optionLabel || optionLabel.length === 0) {
+          const fallback =
+            item?.name ??
+            item?.label ??
+            item?.title ??
+            item?.description ??
+            null;
+          optionLabel =
+            fallback !== undefined && fallback !== null
+              ? String(fallback)
+              : optionValue;
+        }
+
+        if (!optionLabel || optionLabel.length === 0) {
+          optionLabel = optionValue;
+        }
+
+        return {
+          label: optionLabel,
+          value: optionValue,
+        };
+      });
+    },
+    []
+  );
 
   // Function to load section metadata from URL
   const loadSectionMetadata = React.useCallback(
@@ -644,6 +719,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
         let steps: WizardStep[] = [];
 
         // Try to use the new method with loaded data, fallback to original method
+        const latestFormData = formDataRef.current;
         if (typeof gadget.parseWizardStepsWithLoadedData === "function") {
           steps = gadget.parseWizardStepsWithLoadedData(
             sections,
@@ -651,11 +727,11 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             fieldConfigs,
             sectionGroups,
             groupFields,
-            formData
+            latestFormData
           );
         } else {
           // Fallback to original method
-          steps = gadget.parseWizardSteps(formData);
+          steps = gadget.parseWizardSteps(latestFormData);
         }
         setWizardSteps(steps);
 
@@ -1420,14 +1496,8 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
   }, [formData, fieldConfigs, calculateSmartDefaults]);
 
   // Track which fields are currently loading and which have been loaded
-  const [loadingFields, setLoadingFields] = React.useState<Set<string>>(
-    new Set()
-  );
-  const [loadedFields, setLoadedFields] = React.useState<Set<string>>(
-    new Set()
-  );
-  const optionsLoadingRef = React.useRef<boolean>(false);
-
+  const loadingFieldsRef = React.useRef<Set<string>>(new Set());
+  const loadedFieldsRef = React.useRef<Set<string>>(new Set());
   // Load options for fields with optionsUrl (independent fields only, loaded once)
   React.useEffect(() => {
     if (!isInitialized || Object.keys(fieldConfigs).length === 0) {
@@ -1440,8 +1510,8 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
       for (const [fieldId, fieldConfig] of Object.entries(fieldConfigs)) {
         // Skip if already loaded, currently loading, or if it's a dependent field
         if (
-          loadedFields.has(fieldId) ||
-          loadingFields.has(fieldId) ||
+          loadedFieldsRef.current.has(fieldId) ||
+          loadingFieldsRef.current.has(fieldId) ||
           fieldConfig.dependsOn
         ) {
           continue;
@@ -1459,11 +1529,11 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
         return;
       }
       // Mark fields as loading
-      setLoadingFields((prev) => {
-        const newSet = new Set(prev);
-        fieldsToLoad.forEach((fieldId) => newSet.add(fieldId));
-        return newSet;
-      });
+      if (fieldsToLoad.length > 0) {
+        const nextLoadingFields = new Set(loadingFieldsRef.current);
+        fieldsToLoad.forEach((fieldId) => nextLoadingFields.add(fieldId));
+        loadingFieldsRef.current = nextLoadingFields;
+      }
 
       // Load options for each field
       const loadPromises = fieldsToLoad.map(async (fieldId) => {
@@ -1483,20 +1553,13 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
               for (const part of pathParts) {
                 optionsData = optionsData?.[part];
               }
+            } else if (optionsData && Array.isArray(optionsData.data)) {
+              optionsData = optionsData.data;
             }
 
             // Convert to options format
             const options = Array.isArray(optionsData)
-              ? optionsData.map((item) => ({
-                  label:
-                    item[fieldConfig.optionsLabelField || "label"] ||
-                    item.name ||
-                    item.label,
-                  value:
-                    item[fieldConfig.optionsValueField || "value"] ||
-                    item.id ||
-                    item.value,
-                }))
+              ? mapOptionsData(optionsData, fieldConfig)
               : [];
             return { fieldId, options };
           } else {
@@ -1530,26 +1593,24 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
       });
 
       // Mark fields as loaded and remove from loading
-      setLoadedFields((prev) => {
-        const newSet = new Set(prev);
-        results.forEach(({ fieldId }) => newSet.add(fieldId));
-        return newSet;
-      });
+      if (results.length > 0) {
+        const loadedIds = results.map(({ fieldId }) => fieldId);
 
-      setLoadingFields((prev) => {
-        const newSet = new Set(prev);
-        results.forEach(({ fieldId }) => newSet.delete(fieldId));
-        return newSet;
-      });
+        const nextLoadedFields = new Set(loadedFieldsRef.current);
+        loadedIds.forEach((fieldId) => nextLoadedFields.add(fieldId));
+        loadedFieldsRef.current = nextLoadedFields;
+
+        const nextLoadingFields = new Set(loadingFieldsRef.current);
+        loadedIds.forEach((fieldId) => nextLoadingFields.delete(fieldId));
+        loadingFieldsRef.current = nextLoadingFields;
+      }
     };
 
     loadIndependentFieldOptions();
-  }, [isInitialized]); // Only run once after initialization
+  }, [isInitialized, fieldConfigs, mapOptionsData]);
 
   // Track which dependent field + parent value combinations have been loaded
-  const [loadedDependentFields, setLoadedDependentFields] = React.useState<
-    Set<string>
-  >(new Set());
+  const loadedDependentFieldsRef = React.useRef<Set<string>>(new Set());
 
   // Load options for dependent fields when their parent values change
   React.useEffect(() => {
@@ -1571,7 +1632,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
         const loadKey = `${fieldId}_${parentValue || "empty"}`;
 
         // Skip if already loaded for this parent value
-        if (loadedDependentFields.has(loadKey)) {
+        if (loadedDependentFieldsRef.current.has(loadKey)) {
           continue;
         }
 
@@ -1585,11 +1646,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             },
           }));
           // Mark as "loaded" for empty parent value to prevent repeated clearing
-          setLoadedDependentFields((prev) => {
-            const newSet = new Set(prev);
-            newSet.add(loadKey);
-            return newSet;
-          });
+          loadedDependentFieldsRef.current.add(loadKey);
           continue;
         }
 
@@ -1648,16 +1705,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
 
               // Convert to options format
               const options = Array.isArray(optionsData)
-                ? optionsData.map((item) => ({
-                    label:
-                      item[fieldConfig.optionsLabelField || "label"] ||
-                      item.name ||
-                      item.label,
-                    value:
-                      item[fieldConfig.optionsValueField || "value"] ||
-                      item.id ||
-                      item.value,
-                  }))
+                ? mapOptionsData(optionsData, fieldConfig)
                 : [];
 
               return { fieldId, options, parentValue, loadKey };
@@ -1693,17 +1741,15 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
       });
 
       // Mark all loaded combinations as complete
-      setLoadedDependentFields((prev) => {
-        const newSet = new Set(prev);
+      if (results.length > 0) {
         results.forEach(({ loadKey }) => {
-          newSet.add(loadKey);
+          loadedDependentFieldsRef.current.add(loadKey);
         });
-        return newSet;
-      });
+      }
     };
 
     loadDependentFieldOptions();
-  }, [formData]); // Only depend on formData, not fieldConfigs to avoid circular dependency
+  }, [formData, fieldConfigs, mapOptionsData]);
 
   // Load mock data from dataUrl if specified
   React.useEffect(() => {
@@ -1846,7 +1892,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     if (Object.keys(fieldConfigs).length > 0) {
       loadMockData();
     }
-  }, [memoizedDataUrl, isInitialized]); // Use isInitialized instead of fieldConfigs
+  }, [memoizedDataUrl, isInitialized, fieldConfigs, gadget]);
 
   // Watch for URL changes to reload data when parameters change
   React.useEffect(() => {
@@ -1950,7 +1996,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     return () => {
       window.removeEventListener("popstate", handleLocationChange);
     };
-  }, [memoizedDataUrl, isInitialized]); // Use isInitialized instead of fieldConfigs
+  }, [memoizedDataUrl, isInitialized, fieldConfigs, gadget]);
 
   // Initialization logic now lives in useEffect, which runs once
   React.useEffect(() => {
@@ -2007,7 +2053,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     }
 
     setIsInitialized(true);
-  }, []); // Run only once on mount to prevent re-initialization
+  }, [gadget, initialProps]);
 
   // Initialize wizard if in wizard mode
   React.useEffect(() => {
@@ -2029,7 +2075,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
         gadget.initializeWizardSteps();
       }
     }
-  }, [mode, isInitialized]); // Depend only on mode and initialization status
+  }, [mode, isInitialized, gadget]);
 
   // Wizard navigation handlers
   const handleNextStep = React.useCallback(() => {
@@ -2145,19 +2191,6 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     [gadget, mode, currentStep, completedSteps]
   );
 
-  // Get current step data
-  const getCurrentStepData = React.useCallback(() => {
-    if (mode !== "wizard" || wizardSteps.length === 0) {
-      return formData;
-    }
-
-    const currentStepObj = wizardSteps[currentStep];
-    if (!currentStepObj) return formData;
-
-    // Use current form data instead of stepData
-    return formData;
-  }, [mode, wizardSteps, currentStep, formData]);
-
   // Update calculated fields when formData changes (but not when we're already updating)
   // Debounced to prevent excessive calculations
   const calculatedFieldsTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
@@ -2246,17 +2279,6 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     [scrollToSection]
   );
 
-  const handleFieldChange = React.useCallback(
-    (fieldPath: string, value: any) => {
-      setFormData((prevData) => ({
-        ...prevData,
-        [fieldPath]: value,
-      }));
-      setIsDirty(true);
-    },
-    []
-  );
-
   const handleGroupToggle = React.useCallback((groupId: string) => {
     setCollapsedGroups((prev) => ({
       ...prev,
@@ -2271,7 +2293,7 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     );
   };
 
-  const getSortedGroups = (sectionId: string): FormGroup[] => {
+  const getSortedGroups = React.useCallback((sectionId: string): FormGroup[] => {
     const groupIds = sectionGroups[sectionId];
     if (!groupIds) return [];
 
@@ -2322,14 +2344,14 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     }
 
     return visibleGroups;
-  };
+  }, [sectionGroups, groups, formData]);
 
-  const getFieldsForGroup = (groupId: string): string[] => {
+  const getFieldsForGroup = React.useCallback((groupId: string): string[] => {
     const fieldIds = groupFields[groupId];
     if (!fieldIds) return [];
 
     return fieldIds.filter((fieldId) => fieldConfigs[fieldId]);
-  };
+  }, [groupFields, fieldConfigs]);
 
   // Validation functions
   const validateField = React.useCallback(
@@ -2406,32 +2428,6 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     },
     []
   );
-
-  const validateForm = React.useCallback((): FormValidationResult => {
-    const errors: Record<string, string> = {};
-    const warnings: Record<string, string> = {};
-
-    Object.entries(fieldConfigs).forEach(([fieldPath, config]) => {
-      // Check if field is currently visible
-      const isVisible = shouldShowField(config, formData);
-
-      // Only validate visible fields
-      if (isVisible) {
-        const value = formData[fieldPath];
-        const error = validateField(fieldPath, config, value);
-
-        if (error) {
-          errors[fieldPath] = error;
-        }
-      }
-    });
-
-    return {
-      isValid: Object.keys(errors).length === 0,
-      errors,
-      warnings,
-    };
-  }, [fieldConfigs, formData, validateField, shouldShowField]);
 
   const getSectionErrorCount = React.useCallback(
     (sectionId: string): number => {
@@ -2606,41 +2602,13 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
 
   // Cleanup debounced validation timeouts on unmount
   React.useEffect(() => {
+    const timeouts = debouncedValidation.current;
     return () => {
-      Object.values(debouncedValidation.current).forEach((timeout) => {
+      Object.values(timeouts).forEach((timeout) => {
         clearTimeout(timeout);
       });
     };
   }, []);
-
-  const performValidation = React.useCallback(
-    (fieldPath: string, value: any) => {
-      const config = fieldConfigs[fieldPath];
-      if (!config) return;
-
-      const error = validateField(fieldPath, config, value);
-
-      setValidationResult((prev) => {
-        const newErrors = { ...prev.errors };
-
-        if (error) {
-          newErrors[fieldPath] = error;
-        } else {
-          delete newErrors[fieldPath];
-        }
-
-        return {
-          ...prev,
-          errors: newErrors,
-          isValid: Object.keys(newErrors).length === 0,
-        };
-      });
-
-      // Validate conditional fields that depend on this field
-      validateConditionalFields(fieldPath, value);
-    },
-    [fieldConfigs, validateField, validateConditionalFields]
-  );
 
   // Use refs for stable references to prevent callback recreation
   const modeRef = React.useRef(mode);
@@ -2729,8 +2697,8 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
         delete debouncedValidation.current[fieldPath];
       }, 300); // 300ms delay
     },
-    []
-  ); // Empty dependencies - stable callback
+    [handleWizardFieldChange]
+  );
 
   const renderField = (
     fieldPath: string,
@@ -2765,7 +2733,6 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
     // Generic handling for pre-populated fields based on metadata configuration
     let effectiveFieldType = config.type;
     let effectiveValue = value ?? "";
-    let effectiveLabel = config.label;
 
     if (isPrePopulated && config.prePopulatedFieldType) {
       // Change field type based on metadata configuration
@@ -2786,9 +2753,6 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
       }
 
       // Update label based on metadata configuration
-      if (config.prePopulatedLabel) {
-        effectiveLabel = config.prePopulatedLabel;
-      }
     }
 
     const baseProps = {
@@ -3268,162 +3232,13 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
 
     const handleClose = () => {
       const config = gadget.config as any;
-      const currentUrl = window.location.href;
-      const referrerUrl = document.referrer;
 
-      // Check sessionStorage for navigation source (more reliable than document.referrer for SPA)
-      const navigationSource = sessionStorage.getItem("navigation-source");
-
-      console.log("[FormRenderer] Close requested", {
-        currentUrl,
-        referrerUrl,
-        navigationSource,
-        isSameUrl: referrerUrl === currentUrl,
-      });
-
-      // Helper function to determine intelligent fallback workspace
-      const getIntelligentFallback = (): string | null => {
-        const urlParams = new URL(currentUrl).searchParams;
-        const currentWorkspace = urlParams.get("workspace");
-
-        if (!currentWorkspace) return null;
-
-        console.log(
-          "[FormRenderer] Determining fallback for workspace:",
-          currentWorkspace
-        );
-
-        // Extract workspace parts (e.g., "system-admin/tenant-document" -> ["system-admin", "tenant-document"])
-        const workspaceParts = currentWorkspace.split("/");
-
-        if (workspaceParts.length >= 2) {
-          const baseModule = workspaceParts[0]; // e.g., "system-admin"
-          const formName = workspaceParts[1]; // e.g., "tenant-document"
-
-          // Try to determine the list/home workspace
-          // Pattern: if form is "tenant-document", try "tenant-list"
-          // Pattern: if form is "*-form", try "*-list" or "*-dashboard"
-          let fallbackWorkspace = null;
-
-          if (formName.endsWith("-document") || formName.endsWith("-form")) {
-            const baseName = formName
-              .replace("-document", "")
-              .replace("-form", "");
-            fallbackWorkspace = `${baseModule}/${baseName}-list`;
-          } else if (
-            formName.endsWith("-edit") ||
-            formName.endsWith("-create")
-          ) {
-            const baseName = formName
-              .replace("-edit", "")
-              .replace("-create", "");
-            fallbackWorkspace = `${baseModule}/${baseName}-list`;
-          }
-
-          // Fallback to module home/dashboard
-          if (!fallbackWorkspace) {
-            fallbackWorkspace = `${baseModule}/admin-dashboard`;
-          }
-
-          console.log(
-            "[FormRenderer] Fallback workspace determined:",
-            fallbackWorkspace
-          );
-          return fallbackWorkspace;
-        }
-
-        return null;
-      };
-
-      // Determine navigation target with priority:
-      // 1. sessionStorage navigation-source (most reliable for SPA)
-      // 2. document.referrer (if different from current)
-      // 3. Intelligent fallback (pattern-based guess)
-      // 4. history.back() (last resort)
-
-      let targetUrl: string | null = null;
-
-      // Priority 1: Check sessionStorage first (set by navigation)
-      if (navigationSource) {
-        try {
-          const sourceWorkspace = JSON.parse(navigationSource);
-          if (
-            sourceWorkspace &&
-            sourceWorkspace !==
-              new URL(currentUrl).searchParams.get("workspace")
-          ) {
-            targetUrl = `${
-              window.location.origin
-            }/?workspace=${encodeURIComponent(sourceWorkspace)}`;
-            console.log(
-              "[FormRenderer] Using sessionStorage navigation source:",
-              sourceWorkspace
-            );
-            sessionStorage.removeItem("navigation-source"); // Clean up
-          }
-        } catch (e) {
-          console.warn("[FormRenderer] Failed to parse navigation source:", e);
-        }
-      }
-
-      // Priority 2: Check document.referrer
-      if (
-        !targetUrl &&
-        referrerUrl &&
-        referrerUrl.includes(window.location.origin) &&
-        referrerUrl !== currentUrl
-      ) {
-        console.log("[FormRenderer] Using document.referrer");
-        targetUrl = referrerUrl;
-      }
-
-      // Priority 3: Intelligent fallback
-      if (!targetUrl) {
-        const fallbackWorkspace = getIntelligentFallback();
-        if (fallbackWorkspace) {
-          targetUrl = `${
-            window.location.origin
-          }/?workspace=${encodeURIComponent(fallbackWorkspace)}`;
-          console.log(
-            "[FormRenderer] Using intelligent fallback:",
-            fallbackWorkspace
-          );
-        }
-      }
-
-      // Navigate or fall back to history.back()
-      if (config.onCancel?.action === "navigate" && config.onCancel?.target) {
-        if (config.onCancel.target === "back") {
-          if (targetUrl) {
-            window.location.replace(targetUrl);
-          } else {
-            console.log("[FormRenderer] No valid target, using history.back()");
-            window.history.back();
-          }
-        } else {
-          // Navigate to specific workspace
-          const specificUrl = `${
-            window.location.origin
-          }/?workspace=${encodeURIComponent(config.onCancel.target)}`;
-          console.log(
-            `[FormRenderer] Navigating to specific target: ${specificUrl}`
-          );
-          window.location.replace(specificUrl);
-        }
+      if (config.onCancel?.action === "navigate") {
+        triggerNavigation(config.onCancel.target, undefined, { replace: true });
       } else if (config.onCancel?.action === "close") {
-        if (targetUrl) {
-          window.location.replace(targetUrl);
-        } else {
-          console.log("[FormRenderer] No valid target, using history.back()");
-          window.history.back();
-        }
+        triggerNavigation(undefined);
       } else {
-        // Default behavior
-        if (targetUrl) {
-          window.location.replace(targetUrl);
-        } else {
-          window.history.back();
-        }
+        triggerNavigation(config.onCancel?.target);
       }
     };
 
@@ -3590,151 +3405,12 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             icon={<AntIcons.CloseOutlined />}
             onClick={() => {
               const config = gadget.config as any;
-              const currentUrl = window.location.href;
-              const referrerUrl = document.referrer;
-
-              console.log("[FormRenderer] Cancel button clicked", {
-                currentUrl,
-                referrerUrl,
-                isSameUrl: referrerUrl === currentUrl,
-              });
-
-              // Helper function to determine intelligent fallback workspace
-              const getIntelligentFallback = (): string | null => {
-                const urlParams = new URL(currentUrl).searchParams;
-                const currentWorkspace = urlParams.get("workspace");
-
-                if (!currentWorkspace) return null;
-
-                console.log(
-                  "[FormRenderer] Determining fallback for workspace:",
-                  currentWorkspace
-                );
-
-                const workspaceParts = currentWorkspace.split("/");
-
-                if (workspaceParts.length >= 2) {
-                  const baseModule = workspaceParts[0];
-                  const formName = workspaceParts[1];
-
-                  let fallbackWorkspace = null;
-
-                  if (
-                    formName.endsWith("-document") ||
-                    formName.endsWith("-form")
-                  ) {
-                    const baseName = formName
-                      .replace("-document", "")
-                      .replace("-form", "");
-                    fallbackWorkspace = `${baseModule}/${baseName}-list`;
-                  } else if (
-                    formName.endsWith("-edit") ||
-                    formName.endsWith("-create")
-                  ) {
-                    const baseName = formName
-                      .replace("-edit", "")
-                      .replace("-create", "");
-                    fallbackWorkspace = `${baseModule}/${baseName}-list`;
-                  }
-
-                  if (!fallbackWorkspace) {
-                    fallbackWorkspace = `${baseModule}/admin-dashboard`;
-                  }
-
-                  console.log(
-                    "[FormRenderer] Fallback workspace determined:",
-                    fallbackWorkspace
-                  );
-                  return fallbackWorkspace;
-                }
-
-                return null;
-              };
-
-              if (
-                config.onCancel?.action === "navigate" &&
-                config.onCancel?.target
-              ) {
-                if (config.onCancel.target === "back") {
-                  if (
-                    referrerUrl &&
-                    referrerUrl.includes(window.location.origin) &&
-                    referrerUrl !== currentUrl
-                  ) {
-                    console.log("[FormRenderer] Using valid referrer");
-                    window.location.replace(referrerUrl);
-                  } else {
-                    const fallbackWorkspace = getIntelligentFallback();
-                    if (fallbackWorkspace) {
-                      const fallbackUrl = `${
-                        window.location.origin
-                      }/?workspace=${encodeURIComponent(fallbackWorkspace)}`;
-                      console.log(
-                        "[FormRenderer] Using intelligent fallback:",
-                        fallbackUrl
-                      );
-                      window.location.replace(fallbackUrl);
-                    } else {
-                      console.log(
-                        "[FormRenderer] No fallback found, using history.back()"
-                      );
-                      window.history.back();
-                    }
-                  }
-                } else {
-                  const targetUrl = `${
-                    window.location.origin
-                  }/?workspace=${encodeURIComponent(config.onCancel.target)}`;
-                  window.location.replace(targetUrl);
-                }
-              } else if (config.onCancel?.action === "close") {
-                if (
-                  referrerUrl &&
-                  referrerUrl.includes(window.location.origin) &&
-                  referrerUrl !== currentUrl
-                ) {
-                  console.log("[FormRenderer] Using valid referrer for close");
-                  window.location.replace(referrerUrl);
-                } else {
-                  const fallbackWorkspace = getIntelligentFallback();
-                  if (fallbackWorkspace) {
-                    const fallbackUrl = `${
-                      window.location.origin
-                    }/?workspace=${encodeURIComponent(fallbackWorkspace)}`;
-                    console.log(
-                      "[FormRenderer] Using intelligent fallback:",
-                      fallbackUrl
-                    );
-                    window.location.replace(fallbackUrl);
-                  } else {
-                    console.log(
-                      "[FormRenderer] No fallback found, using history.back()"
-                    );
-                    window.history.back();
-                  }
-                }
+              if (config.onCancel?.action === "navigate") {
+                triggerNavigation(config.onCancel.target, undefined, {
+                  replace: true,
+                });
               } else {
-                if (
-                  referrerUrl &&
-                  referrerUrl.includes(window.location.origin) &&
-                  referrerUrl !== currentUrl
-                ) {
-                  window.location.replace(referrerUrl);
-                } else {
-                  const fallbackWorkspace = getIntelligentFallback();
-                  if (fallbackWorkspace) {
-                    const fallbackUrl = `${
-                      window.location.origin
-                    }/?workspace=${encodeURIComponent(fallbackWorkspace)}`;
-                    console.log(
-                      "[FormRenderer] Using intelligent fallback:",
-                      fallbackUrl
-                    );
-                    window.location.replace(fallbackUrl);
-                  } else {
-                    window.history.back();
-                  }
-                }
+                triggerNavigation(undefined);
               }
             }}
             disabled={isSubmitting}
@@ -3762,7 +3438,6 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
             onClick={() => {
               setFormData({ ...originalData });
               setIsDirty(false);
-              setValidationTriggered(false);
               setValidationResult({ isValid: true, errors: {}, warnings: {} });
             }}
             disabled={isSubmitting || !isDirty}
@@ -3860,64 +3535,18 @@ export const FormRenderer: React.FC<FormRendererProps> = ({
                     );
                   }
 
-                  const result = await response.json();
-
                   // Show success message
                   const successMessage =
                     config.onSaveSuccess?.message || "Saved successfully!";
                   message.success(successMessage);
 
-                  // Handle navigation using window.location.replace for reliable re-render
-                  if (
-                    config.onSaveSuccess?.action === "navigate" &&
-                    config.onSaveSuccess?.target
-                  ) {
-                    const currentUrl = window.location.href;
-                    const referrerUrl = document.referrer;
+                  if (config.onSaveSuccess?.action === "navigate") {
+                    const targetWorkspace = config.onSaveSuccess.target || undefined;
+                    const params = config.onSaveSuccess.params as Record<string, string> | undefined;
 
-                    console.log(
-                      "[FormRenderer] Save success - navigating to:",
-                      config.onSaveSuccess.target,
-                      {
-                        currentUrl,
-                        referrerUrl,
-                      }
-                    );
-
-                    if (config.onSaveSuccess.target === "back") {
-                      // Navigate back using referrer or history
-                      setTimeout(() => {
-                        // Check if referrer is valid and different from current page
-                        if (
-                          referrerUrl &&
-                          referrerUrl.includes(window.location.origin) &&
-                          referrerUrl !== currentUrl
-                        ) {
-                          console.log(
-                            "[FormRenderer] Using valid referrer after save"
-                          );
-                          window.location.replace(referrerUrl);
-                        } else {
-                          console.log(
-                            "[FormRenderer] Invalid/same referrer, using history.back()"
-                          );
-                          window.history.back();
-                        }
-                      }, 500);
-                    } else {
-                      // Navigate to specific workspace using location.replace to ensure re-render
-                      setTimeout(() => {
-                        const targetUrl = `${
-                          window.location.origin
-                        }/?workspace=${encodeURIComponent(
-                          config.onSaveSuccess.target
-                        )}`;
-                        console.log(
-                          `[FormRenderer] Navigating to: ${targetUrl}`
-                        );
-                        window.location.replace(targetUrl);
-                      }, 500);
-                    }
+                    setTimeout(() => {
+                      triggerNavigation(targetWorkspace, params, { replace: true });
+                    }, 300);
                   }
 
                   // Refresh asset data

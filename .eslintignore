@@ -1,0 +1,9 @@
+# Ignore build artifacts and generated files
+build/
+backups/
+coverage/
+dist/
+node_modules/
+
+# Legacy scripts executed in non-Node environments (e.g., Mongo shell)
+scripts/cleanup-tenant-mongo-shell.js

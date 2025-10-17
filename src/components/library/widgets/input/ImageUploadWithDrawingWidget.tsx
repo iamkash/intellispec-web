@@ -152,7 +152,7 @@ export const ImageUploadWithDrawingWidget: React.FC<ImageUploadWithDrawingWidget
   useEffect(() => {
     const normalized = normalizeToArray(value);
     setFileList(normalized);
-  }, [value]); // Remove normalizeToArray from deps since it's a stable callback
+  }, [value, normalizeToArray]);
   const [drawingModalVisible, setDrawingModalVisible] = useState(false);
   const [currentDrawingImage, setCurrentDrawingImage] = useState<ImageWithDrawing | null>(null);
   const [currentTool, setCurrentTool] = useState<string>('pen');
@@ -180,12 +180,11 @@ export const ImageUploadWithDrawingWidget: React.FC<ImageUploadWithDrawingWidget
       setCurrentColor(palette[0]);
       setCustomColor(palette[0]);
     }
-  }, [palette]);
+  }, [palette, currentColor]);
   const [currentStrokeWidth, setCurrentStrokeWidth] = useState<number>(strokeWidths[1]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [drawingHistory, setDrawingHistory] = useState<string[]>([]);
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [metadataUpdateKey, setMetadataUpdateKey] = useState(0);
   const [thumbSize, setThumbSize] = useState<number>(thumbnailSize);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -422,7 +421,7 @@ export const ImageUploadWithDrawingWidget: React.FC<ImageUploadWithDrawingWidget
 
   // Handle file upload list changes (remove support)
   const handleUpload = useCallback((info: any) => {
-    const { file, fileList: antdList } = info || {};
+    const { file } = info || {};
     if (file?.status === 'removed') {
       const updated = (fileList || []).filter(x => x.uid !== file.uid);
       setFileList(updated);
@@ -450,7 +449,7 @@ export const ImageUploadWithDrawingWidget: React.FC<ImageUploadWithDrawingWidget
   // Upload props
   const uploadProps: UploadProps = useMemo(() => ({
     name,
-    multiple: true,
+    multiple,
     accept,
     fileList: fileList.map(img => ({
       uid: img.uid,
@@ -520,7 +519,6 @@ export const ImageUploadWithDrawingWidget: React.FC<ImageUploadWithDrawingWidget
             onChange?.(finalUpdated);
             return finalUpdated;
           });
-          setMetadataUpdateKey(prev => prev + 1);
         };
         img.src = dataUrl;
         message.success(`${file.name} loaded successfully`);
@@ -535,7 +533,7 @@ export const ImageUploadWithDrawingWidget: React.FC<ImageUploadWithDrawingWidget
     data,
     withCredentials,
     disabled
-  }), [name, multiple, accept, fileList, handleUpload, maxSize, action, headers, data, withCredentials, disabled, onChange, setMetadataUpdateKey]);
+  }), [name, multiple, accept, fileList, handleUpload, maxCount, maxSize, action, headers, data, withCredentials, disabled, onChange, clientOnly]);
 
   // Render image card
   const toggleSelect = useCallback((uid: string, selected: boolean) => {
@@ -667,7 +665,7 @@ export const ImageUploadWithDrawingWidget: React.FC<ImageUploadWithDrawingWidget
         }
       />
     </Card>
-  ), [showThumbnails, thumbnailSize, showPreview, drawingEnabled, openDrawingModal, downloadImage, removeImage, moveImage, toggleSelect, updateImage]);
+  ), [showThumbnails, thumbSize, showPreview, drawingEnabled, openDrawingModal, downloadImage, removeImage, moveImage, toggleSelect, updateImage]);
 
   return (
     <div className={className} style={style}>

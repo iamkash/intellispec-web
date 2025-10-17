@@ -6,14 +6,12 @@
  */
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { TimePicker, Typography, Space, Button, Select, Tooltip, Alert, Spin } from 'antd';
-import { ClockCircleOutlined, ClearOutlined } from '@ant-design/icons';
+import { TimePicker, Typography, Space, Button } from 'antd';
+import { ClockCircleOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
-import { sanitizeData } from '../../../../utils/sanitizeData';
 
 const { RangePicker } = TimePicker;
 const { Text } = Typography;
-const { Option } = Select;
 
 export type TimeValue = Dayjs | null;
 export type TimeRangeValue = [Dayjs | null, Dayjs | null] | null;
@@ -266,6 +264,18 @@ export const TimePickerWidget: React.FC<TimePickerWidgetProps> = ({
 
   const currentOpen = open !== undefined ? open : internalOpen;
 
+  const getFormat = useCallback(() => {
+    if (format) return format;
+    
+    let timeFormat = '';
+    if (showHour) timeFormat += use12Hours ? 'h' : 'HH';
+    if (showMinute) timeFormat += (timeFormat ? ':' : '') + 'mm';
+    if (showSecond) timeFormat += (timeFormat ? ':' : '') + 'ss';
+    if (use12Hours) timeFormat += ' A';
+    
+    return timeFormat || 'HH:mm';
+  }, [format, use12Hours, showHour, showMinute, showSecond]);
+
   const handleChange = useCallback((newValue: TimeValue | TimeRangeValue, timeString: string | [string, string]) => {
     // Always update internal state immediately for visual feedback
     setInternalValue(newValue);
@@ -303,7 +313,7 @@ export const TimePickerWidget: React.FC<TimePickerWidgetProps> = ({
 
     setValidationError(undefined);
     onChange?.(newValue, timeString);
-  }, [validator, onChange, isRange, minTime, maxTime]);
+  }, [validator, onChange, isRange, minTime, maxTime, getFormat]);
 
   const handleOpenChange = useCallback((newOpen: boolean) => {
     if (open === undefined) {
@@ -318,24 +328,12 @@ export const TimePickerWidget: React.FC<TimePickerWidgetProps> = ({
       preset.value[1]?.format(getFormat()) || ''
     ] : preset.value?.format(getFormat()) || '');
     onPresetSelect?.(preset);
-  }, [handleChange, onPresetSelect]);
+  }, [handleChange, onPresetSelect, getFormat]);
 
   const handleTimeZoneChange = useCallback((newTimeZone: string) => {
     setSelectedTimeZone(newTimeZone);
     onTimeZoneChange?.(newTimeZone);
   }, [onTimeZoneChange]);
-
-  const getFormat = useCallback(() => {
-    if (format) return format;
-    
-    let timeFormat = '';
-    if (showHour) timeFormat += use12Hours ? 'h' : 'HH';
-    if (showMinute) timeFormat += (timeFormat ? ':' : '') + 'mm';
-    if (showSecond) timeFormat += (timeFormat ? ':' : '') + 'ss';
-    if (use12Hours) timeFormat += ' A';
-    
-    return timeFormat || 'HH:mm';
-  }, [format, use12Hours, showHour, showMinute, showSecond]);
 
   const getPlaceholder = useMemo(() => {
     if (placeholder) return placeholder;

@@ -7,16 +7,13 @@
  */
 
 import React, { useCallback, useRef, useState, useEffect } from 'react';
-import { Button, Space, Typography, Card, Alert, Tooltip } from 'antd';
+import { Button, Space, Typography, Card } from 'antd';
 import { 
-  EditOutlined, 
   ClearOutlined, 
-  SaveOutlined, 
   UndoOutlined,
   RedoOutlined,
   DownloadOutlined
 } from '@ant-design/icons';
-import { sanitizeData } from '../../../../utils/sanitizeData';
 
 const { Text } = Typography;
 
@@ -150,7 +147,7 @@ export const SignatureWidget: React.FC<SignatureWidgetProps> = ({
   const [undoStack, setUndoStack] = useState<ImageData[]>([]);
   const [redoStack, setRedoStack] = useState<ImageData[]>([]);
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
-  const [lastPoint, setLastPoint] = useState<{ x: number; y: number } | null>(null);
+  const [, setLastPoint] = useState<{ x: number; y: number } | null>(null);
 
   // Save canvas state to undo stack
   const saveToUndoStack = useCallback(() => {

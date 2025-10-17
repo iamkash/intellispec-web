@@ -20,7 +20,6 @@
 
 import React from 'react';
 import { getApiFullUrl } from '../../../config/api.config';
-import { FetchOptions } from '../../../utils/DataService';
 import { BaseComponent, BaseRegistry, ComponentMetadata, ComponentSchema, ValidationResult } from '../core/base';
 import { BaseWidget, WidgetConfig, WidgetContext } from '../widgets/base';
 
@@ -241,7 +240,7 @@ export abstract class BaseGadget extends BaseComponent {
     const metadataName = this.metadata.name;
     
     // Create a React component that handles the data fetching
-    const DataFetcher: React.FC = () => {
+    const DataFetcher: React.FC<{ dataUrl: string; dataPath?: string; metadataName: string }> = ({ dataUrl: fetchUrl, dataPath: fetchPath, metadataName: name }) => {
       const [data, setData] = React.useState<any>(null);
       const [loading, setLoading] = React.useState(true);
       const [error, setError] = React.useState<string | null>(null);
@@ -262,17 +261,11 @@ setData(null);
               return;
             }
             
-            //console.log(`[${metadataName}] Fetching data from:`, dataUrl);
-            
-            const options: FetchOptions = {
-              path: dataPath,
-              cache: true,
-              transform: (data) => this.processDataFlow(data)
-            };
+            //console.log(`[${name}] Fetching data from:`, fetchUrl);
 
             // Temporary simple fetch for debugging
-            //console.log(`[DEBUG] Trying simple fetch for: ${dataUrl}`);
-            let usedUrl = dataUrl!;
+            //console.log(`[DEBUG] Trying simple fetch for: ${fetchUrl}`);
+            let usedUrl = fetchUrl;
             // Dev convenience: if running on port 3000 and hitting /api/*, hit backend directly to avoid proxy 404s
             try {
               const isDevHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -425,7 +418,7 @@ setData(null);
             
             setData(response.data);
           } catch (err) {
-            console.error(`[${metadataName}] Failed to fetch data:`, err);
+            console.error(`[${name}] Failed to fetch data:`, err);
             setError(err instanceof Error ? err.message : 'Failed to fetch data');
           } finally {
             setLoading(false);
@@ -433,7 +426,7 @@ setData(null);
         };
 
         fetchData();
-      }, [dataUrl, dataPath, metadataName]); // Use captured values as dependencies
+      }, [fetchUrl, fetchPath, name]);
 
       if (loading) {
         return React.createElement('div', 
@@ -454,7 +447,7 @@ setData(null);
       return body as React.ReactElement || React.createElement('div', null, 'No content');
     };
 
-    return React.createElement(DataFetcher);
+    return React.createElement(DataFetcher, { dataUrl: dataUrl!, dataPath, metadataName });
   }
 
   abstract validate(config: GadgetConfig): ValidationResult;
@@ -546,8 +539,8 @@ window.location.href = '/login';
    * Static method for authenticated fetch - can be used in functional components
    * 
    * IMPORTANT: This method automatically resolves API URLs using the centralized apiConfig.
-   * All relative URLs (e.g., /api/inspections) will be converted to absolute URLs
-   * pointing to the correct API server (e.g., http://localhost:4000/api/inspections).
+   * All relative URLs (e.g., /api/documents?type=wizard&identity.domain=inspection) will be converted
+   * to absolute URLs pointing to the correct API server (e.g., http://localhost:4000/api/documents?...).
    */
   static async makeAuthenticatedFetch(url: string, options: RequestInit = {}): Promise<Response> {
     // Convert relative URLs to absolute using centralized config
@@ -618,12 +611,6 @@ window.location.href = '/login';
     try {
       //console.log(`[${this.metadata.name}] Fetching data from:`, config.dataUrl);
       
-      const options: FetchOptions = {
-        path: config.dataPath,
-        cache: true,
-        transform: (data) => this.processDataFlow(data)
-      };
-
       // Use centralized authenticated fetch instead of dataService
       const response = await this.makeAuthenticatedRequest(config.dataUrl);
       const data = await response.json();

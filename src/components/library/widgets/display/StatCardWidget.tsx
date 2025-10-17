@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Statistic } from 'antd';
+import { Statistic } from 'antd';
 import { BaseWidget, WidgetMetadata, WidgetSchema, WidgetConfig, WidgetContext } from '../base';
 import { ValidationResult } from '../../core/base';
 
@@ -79,9 +79,6 @@ export class StatCardWidget extends BaseWidget {
       style,
       className
     } = props;
-
-    const cardSize = size === 'small' ? 'small' : size === 'large' ? 'default' : 'default';
-    const statSize = size === 'small' ? 'small' : size === 'large' ? 'large' : 'default';
 
     // Detect dark theme
     const isDarkTheme = context?.theme?.isDarkMode || 

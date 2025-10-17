@@ -1,15 +1,23 @@
-import type { AIAnalysisWizardConfig, AIAnalysisWizardData } from '../AIAnalysisWizardGadget.types';
+import type {
+  AIAnalysisWizardConfig,
+  AIAnalysisWizardData,
+  WizardIdentityConfig
+} from '../AIAnalysisWizardGadget.types';
 
 /** Determine a stable id from URL params if present. */
-export function getStableRestoreIdFromUrl(paramKeys: string[] = ['restoreId', 'id', 'planId', 'recordId', 'inspectionId']): string | null {
+export function getStableRestoreIdFromUrl(
+  paramKeys: string[] = ['documentId', 'restoreId', 'id', 'planId', 'recordId', 'wizardId']
+): string | null {
   try {
     const url = new URL(window.location.href);
-    for (const k of paramKeys) {
-      const v = url.searchParams.get(k);
-      if (v) return v;
+    for (const key of paramKeys) {
+      const value = url.searchParams.get(key);
+      if (value) {
+        return value;
+      }
     }
   } catch {
-    // ignore
+    // ignore errors triggered by malformed URLs
   }
   return null;
 }
@@ -18,22 +26,19 @@ export function getStableRestoreIdFromUrl(paramKeys: string[] = ['restoreId', 'i
 
 export async function tryFetchRecordFromApi(id: string): Promise<any | null> {
   const tryFetch = async (base: string, endpoint: string) => {
-    // Get auth headers from BaseGadget
     const { BaseGadget } = await import('../../../base');
-    const res = await BaseGadget.makeAuthenticatedFetch(`${base}${endpoint}`);
-    if (!res.ok) throw new Error(String(res.status));
-    const ct = res.headers.get('content-type') || '';
-    if (!ct.includes('application/json')) throw new Error('Invalid content-type');
-    return res.json();
+    const response = await BaseGadget.makeAuthenticatedFetch(`${base}${endpoint}`);
+    if (!response.ok) {
+      throw new Error(String(response.status));
+    }
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      throw new Error('Invalid content-type');
+    }
+    return response.json();
   };
 
-  // Determine if this is an inspection ID or wizard progress ID
-  // Inspection IDs typically start with 'inspection-' and contain timestamps
-  const isInspectionId = id.startsWith('inspection-');
-
-  const endpoint = isInspectionId
-    ? `/api/inspections/${encodeURIComponent(id)}`
-    : `/api/wizard/${encodeURIComponent(id)}`;
+  const endpoint = `/api/wizard/${encodeURIComponent(id)}`;
 
   try {
     return await tryFetch('', endpoint);
@@ -47,559 +52,232 @@ export async function tryFetchRecordFromApi(id: string): Promise<any | null> {
   }
 }
 
-/** Convert record data to wizard data format */
-export function convertRecordToWizardData(recordData: any): Partial<AIAnalysisWizardData> {
-  console.log('[convertInspectionToWizardData] Starting conversion with:', {
-    hasInspectionData: !!recordData,
-    inspectionKeys: recordData ? Object.keys(recordData) : [],
-    hasFormData: !!recordData?.formData,
-    hasSections: !!recordData?.sections,
-    hasWizardState: !!recordData?.wizardState
-  });
+const isPlainObject = (value: unknown): value is Record<string, any> =>
+  value !== null && typeof value === 'object';
 
-  const wizardData: Partial<AIAnalysisWizardData> = {
-    currentStep: 0,
-    completedSteps: [],
-    sections: [],
-    voiceData: {},
-    imageData: [],
-    analysisData: {},
-    grids: {}
+const normaliseNumberArray = (value: unknown): number[] => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value
+    .map((entry) => Number(entry))
+    .filter((entry) => Number.isFinite(entry));
+};
+
+const normaliseStringArray = (value: unknown): string[] => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value
+    .map((entry) => (entry == null ? null : String(entry)))
+    .filter((entry): entry is string => Boolean(entry));
+};
+
+type SectionState = NonNullable<AIAnalysisWizardData['sections']>[number];
+type SectionSnapshot = Partial<SectionState> & { id?: string };
+
+const toFormData = (value: unknown): Record<string, any> =>
+  isPlainObject(value) ? (value as Record<string, any>) : {};
+
+const sanitiseConfiguredSection = (
+  sectionConfig: NonNullable<AIAnalysisWizardConfig['steps']['sections']>[number],
+  snapshotSection?: SectionSnapshot
+): SectionState => {
+  if (!sectionConfig?.id) {
+    throw new Error('Wizard section metadata requires an id for restoration');
+  }
+
+  const base: SectionState = {
+    id: sectionConfig.id,
+    title: snapshotSection?.title ?? sectionConfig.title ?? sectionConfig.id,
+    formData: toFormData(snapshotSection?.formData)
   };
 
-  if (!recordData) {
-    console.log('[convertInspectionToWizardData] No inspection data provided');
-    return wizardData;
+  if (snapshotSection?.imagesCollapsed !== undefined) {
+    base.imagesCollapsed = snapshotSection.imagesCollapsed;
+  }
+  if (isPlainObject(snapshotSection?.voiceData)) {
+    base.voiceData = snapshotSection?.voiceData;
+  }
+  if (snapshotSection?.textData !== undefined) {
+    base.textData = snapshotSection.textData;
+  }
+  const snapshotImages = snapshotSection?.images;
+  if (Array.isArray(snapshotImages)) {
+    base.images = snapshotImages;
+  }
+  const snapshotImageAnalysis = snapshotSection?.imageAnalysis;
+  if (snapshotImageAnalysis) {
+    base.imageAnalysis = snapshotImageAnalysis;
+  }
+  const snapshotAnalysisData = snapshotSection?.analysisData;
+  if (snapshotAnalysisData) {
+    base.analysisData = snapshotAnalysisData;
   }
 
-  const restoreGrids = (sourceGrids: Record<string, any> | undefined, sectionId?: string) => {
-    if (!sourceGrids || typeof sourceGrids !== 'object') return;
-    wizardData.grids = wizardData.grids || {};
-    (wizardData as any).globalFormData = (wizardData as any).globalFormData || {};
+  return base;
+};
 
-    Object.entries(sourceGrids).forEach(([key, value]) => {
-      if (!Array.isArray(value)) return;
+const sanitiseAdhocSection = (snapshotSection: SectionSnapshot): SectionState => {
+  if (!snapshotSection?.id) {
+    throw new Error('Persisted wizard state contains a section without an id. Ensure persistence payloads include section identifiers.');
+  }
 
-      wizardData.grids![key] = value;
-      (wizardData as any).globalFormData[key] = value;
-
-      if (Array.isArray(wizardData.sections)) {
-        const targetIndex = sectionId
-          ? wizardData.sections.findIndex((s: any) => s?.id === sectionId)
-          : wizardData.sections.findIndex((s: any) => (s?.formData || {})[key] !== undefined);
-
-        if (targetIndex >= 0 && wizardData.sections[targetIndex]) {
-          const sectionFormData = (wizardData.sections[targetIndex] as any).formData || {};
-          (wizardData.sections as any)[targetIndex] = {
-            ...(wizardData.sections as any)[targetIndex],
-            formData: {
-              ...sectionFormData,
-              [key]: value
-            }
-          };
-        } else {
-          wizardData.sections.push({
-            id: sectionId || key,
-            title: sectionId || key,
-            formData: { [key]: value },
-            textData: '',
-            voiceData: {},
-            images: [],
-            imageAnalysis: undefined
-          });
-        }
-      }
-    });
+  const base: SectionState = {
+    id: snapshotSection.id,
+    title: snapshotSection.title ?? snapshotSection.id,
+    formData: toFormData(snapshotSection.formData)
   };
 
-  // CRITICAL FIX: Handle both section-based data AND top-level formData
-  
-  // First, try to restore sections from the sections array
-  if (recordData.sections && Array.isArray(recordData.sections)) {
-    console.log('[convertInspectionToWizardData] Converting sections:', {
-      sectionsCount: recordData.sections.length,
-      sectionsData: recordData.sections.map((s: any, i: number) => ({ 
-        index: i, 
-        isNull: s === null, 
-        id: s?.id, 
-        hasFormData: !!s?.formData,
-        formDataKeys: s?.formData ? Object.keys(s.formData) : []
-      }))
-    });
-
-    wizardData.sections = recordData.sections
-      .map((section: any) => {
-        if (section === null) {
-          // Preserve null sections to maintain indexing
-          return null;
-        }
-        const restoredSection = {
-          id: section.id,
-          title: section.title || section.id,
-          formData: section.formData || section.fields || {},  // Try formData first, then fields
-          textData: section.textData || '',
-          voiceData: section.voiceData || {},
-          images: section.images || [],
-          imageAnalysis: section.imageAnalysis || undefined
-        };
-
-        if (section.grids && typeof section.grids === 'object') {
-          restoredSection.formData = {
-            ...restoredSection.formData,
-            ...section.grids
-          };
-          restoreGrids(section.grids, section.id);
-        }
-        
-        // Debug image restoration for image sections
-        if (section.id === 'image_capture' && section.images?.length > 0) {
-          console.log(`[convertInspectionToWizardData] Restoring images for ${section.id}:`, {
-            imagesCount: section.images.length,
-            sampleImages: section.images.slice(0, 2).map((img: any) => ({
-              name: img.name,
-              url: img.url,
-              gridfsId: img.gridfsId,
-              type: img.type,
-              hasMetadata: !!img.metadata
-            }))
-          });
-        }
-        
-        // Debug AI analysis restoration
-        if (section.id === 'ai_analysis' || section.id === 'section_2') {
-          console.log(`[convertInspectionToWizardData] Restoring AI analysis for ${section.id}:`, {
-            hasImageAnalysis: !!section.imageAnalysis,
-            imageAnalysisKeys: section.imageAnalysis ? Object.keys(section.imageAnalysis) : [],
-            hasOverview: !!section.imageAnalysis?.overview,
-            overviewLength: section.imageAnalysis?.overview?.length || 0,
-            hasSuggestions: !!section.imageAnalysis?.suggestions,
-            suggestionsCount: section.imageAnalysis?.suggestions?.length || 0
-          });
-        }
-        
-        return restoredSection;
-      });
-    
-    console.log('[convertInspectionToWizardData] Converted sections:', {
-      originalCount: recordData.sections.length,
-      restoredCount: wizardData.sections?.length || 0,
-      convertedSections: wizardData.sections?.map((s: any, i: number) => ({ 
-        index: i,
-        isNull: s === null,
-        id: s?.id,
-        hasFormData: !!s?.formData,
-        formDataKeys: s?.formData ? Object.keys(s.formData) : []
-      })) || []
-    });
+  if (snapshotSection.imagesCollapsed !== undefined) {
+    base.imagesCollapsed = snapshotSection.imagesCollapsed;
+  }
+  if (isPlainObject(snapshotSection.voiceData)) {
+    base.voiceData = snapshotSection.voiceData;
+  }
+  if (snapshotSection.textData !== undefined) {
+    base.textData = snapshotSection.textData;
+  }
+  const additionalImages = snapshotSection.images;
+  if (Array.isArray(additionalImages)) {
+    base.images = additionalImages;
+  }
+  const additionalImageAnalysis = snapshotSection.imageAnalysis;
+  if (additionalImageAnalysis) {
+    base.imageAnalysis = additionalImageAnalysis;
+  }
+  const additionalAnalysisData = snapshotSection.analysisData;
+  if (additionalAnalysisData) {
+    base.analysisData = additionalAnalysisData;
   }
 
-  // CRITICAL FIX: Store top-level formData as globalFormData for field value lookup
-  if (recordData.formData && Object.keys(recordData.formData).length > 0) {
-    (wizardData as any).globalFormData = recordData.formData;
-    
-    console.log('[convertInspectionToWizardData] Stored global formData for field lookup:', {
-      formDataKeys: Object.keys(recordData.formData),
-      sampleData: {
-        company_id: recordData.formData.company_id,
-        companyName: recordData.formData.companyName,
-        detected_equipment_type: recordData.formData.detected_equipment_type,
-        inspection_type: recordData.formData.inspection_type,
-        equipment_description: recordData.formData.equipment_description?.substring(0, 50) + '...'
-      }
-    });
+  return base;
+};
+
+const mergeSummary = (
+  snapshotSummary: unknown,
+  recordSummary: unknown,
+  identity: WizardIdentityConfig,
+  detectedTypeFallback: unknown
+): Record<string, any> => {
+  const merged: Record<string, any> = {
+    ...(isPlainObject(snapshotSummary) ? snapshotSummary : {}),
+    ...(isPlainObject(recordSummary) ? recordSummary : {})
+  };
+
+  merged.type = identity.recordType;
+  merged.domain = identity.domain;
+  if (identity.domainLabel) {
+    merged.domainLabel = identity.domainLabel;
+  }
+  merged.domainType = identity.domainSubType;
+  merged.domainSubType = identity.domainSubType;
+  if (identity.domainTypeLabel) {
+    merged.domainTypeLabel = identity.domainTypeLabel;
+  }
+  if (identity.domainSubTypeLabel) {
+    merged.domainSubTypeLabel = identity.domainSubTypeLabel;
+  }
+  if (!merged.detectedType && detectedTypeFallback) {
+    merged.detectedType = detectedTypeFallback;
   }
 
-  // CRITICAL FIX: Handle AI analysis data that might be stored in wizardState.sections
-  // Look for AI analysis data in wizardState sections (with both old and new IDs)
-  if (recordData.wizardState?.sections && Array.isArray(recordData.wizardState.sections)) {
-    const aiAnalysisSection = recordData.wizardState.sections.find((s: any) => 
-      s?.id === 'ai_analysis' || s?.id === 'section_2'
-    );
-    
-    if (aiAnalysisSection?.imageAnalysis) {
-      console.log('[convertInspectionToWizardData] Found AI analysis data in wizardState:', {
-        sectionId: aiAnalysisSection.id,
-        hasOverview: !!aiAnalysisSection.imageAnalysis.overview,
-        overviewLength: aiAnalysisSection.imageAnalysis.overview?.length || 0,
-        hasSuggestions: !!aiAnalysisSection.imageAnalysis.suggestions,
-        suggestionsCount: aiAnalysisSection.imageAnalysis.suggestions?.length || 0
-      });
-      
-      // Ensure we have a sections array
-      if (!wizardData.sections) {
-        wizardData.sections = [];
-      }
-      
-      // Find or create the ai_analysis section and add the imageAnalysis data
-      let aiSectionIndex = wizardData.sections.findIndex((s: any) => s?.id === 'ai_analysis');
-      if (aiSectionIndex === -1) {
-        // Create the ai_analysis section if it doesn't exist
-        wizardData.sections[2] = {
-          id: 'ai_analysis',
-          title: 'AI Equipment Analysis',
-          formData: {},
-          textData: '',
-          voiceData: {},
-          images: [],
-          imageAnalysis: undefined
-        };
-        aiSectionIndex = 2;
-      }
-      
-      // Add the imageAnalysis data to the correct section
-      if (wizardData.sections[aiSectionIndex]) {
-        (wizardData.sections[aiSectionIndex] as any).imageAnalysis = aiAnalysisSection.imageAnalysis;
-        console.log(`[convertInspectionToWizardData] Restored AI analysis data to section index ${aiSectionIndex}`);
-      }
+  return merged;
+};
+
+export function convertRecordToWizardData(
+  recordData: any,
+  config: AIAnalysisWizardConfig
+): AIAnalysisWizardData {
+  if (!isPlainObject(recordData)) {
+    throw new Error('Wizard restore requires persisted record data');
   }
+
+  const sectionDefinitions = Array.isArray(config?.steps?.sections) ? config.steps.sections : [];
+  if (sectionDefinitions.length === 0) {
+    throw new Error('Wizard configuration missing steps.sections metadata required for restoration');
+  }
+
+  const identity = (config as any).identity as WizardIdentityConfig | undefined;
+  if (!identity) {
+    throw new Error('Wizard configuration missing identity metadata required for restoration');
+  }
+
+  const snapshot = recordData.wizardState;
+  if (!isPlainObject(snapshot)) {
+    throw new Error('Wizard record payload missing wizardState snapshot');
+  }
+
+  const snapshotSections = Array.isArray(snapshot.sections) ? snapshot.sections : [];
+  const configuredSections = sectionDefinitions.map((sectionConfig) => {
+    const matched = snapshotSections.find((section: SectionSnapshot) => section?.id === sectionConfig.id);
+    return sanitiseConfiguredSection(sectionConfig, matched);
+  });
+
+  const configuredIds = new Set(configuredSections.map((section) => section.id));
+  const extraSections = snapshotSections
+    .filter((section: SectionSnapshot) => section?.id && !configuredIds.has(section.id))
+    .map((section: SectionSnapshot) => sanitiseAdhocSection(section));
+
+  const resolvedSections = [...configuredSections, ...extraSections];
+
+  const summary = mergeSummary(
+    snapshot.summary,
+    recordData.summary,
+    identity,
+    snapshot.detectedType ?? recordData.detectedType
+  );
+
+  const currentStep = Number.isFinite(snapshot.currentStep)
+    ? Number(snapshot.currentStep)
+    : Number(recordData.currentStep ?? 0) || 0;
+
+  const completedSteps = normaliseNumberArray(snapshot.completedSteps ?? recordData.completedSteps);
+  const disabledFields = normaliseStringArray(snapshot.disabledFields ?? recordData.disabledFields);
+
+  const globalFormData = isPlainObject(snapshot.globalFormData)
+    ? snapshot.globalFormData
+    : isPlainObject(recordData.formData)
+      ? recordData.formData
+      : {};
+
+  const voiceData = isPlainObject(snapshot.voiceData) ? snapshot.voiceData : {};
+  const analysisData = isPlainObject(snapshot.analysisData) ? snapshot.analysisData : {};
+  const grids = isPlainObject(snapshot.grids) ? snapshot.grids : {};
+  const recordContext = isPlainObject(snapshot.recordContext)
+    ? snapshot.recordContext
+    : isPlainObject(recordData.recordContext)
+      ? recordData.recordContext
+      : {};
+  const recordParams = isPlainObject(snapshot.recordParams)
+    ? snapshot.recordParams
+    : isPlainObject(recordData.recordParams)
+      ? recordData.recordParams
+      : {};
+
+  const imageData = Array.isArray(snapshot.imageData) ? snapshot.imageData : [];
+
+  return {
+    recordType: identity.recordType,
+    domain: identity.domain,
+    domainLabel: identity.domainLabel,
+    domainType: identity.domainSubType,
+    domainTypeLabel: identity.domainTypeLabel ?? identity.domainSubTypeLabel,
+    domainSubType: identity.domainSubType,
+    domainSubTypeLabel: identity.domainSubTypeLabel ?? identity.domainTypeLabel,
+    currentStep,
+    completedSteps,
+    sections: resolvedSections,
+    voiceData,
+    textData: snapshot.textData,
+    imageData,
+    analysisData,
+    summary,
+    grids,
+    globalFormData,
+    disabledFields,
+    recordContext,
+    recordParams,
+    detectedType: summary.detectedType
+  };
 }
-
-  const documentSummary = recordData.documentSummary || {};
-  const normalizedInspectionType = documentSummary.inspectionType
-    || recordData.inspectionType
-    || recordData.sectionData?.inspectionType
-    || recordData.formData?.inspectionType
-    || recordData.wizardState?.inspectionType;
-
-  if (normalizedInspectionType) {
-    (wizardData as any).inspectionType = normalizedInspectionType;
-  }
-
-  const inspectionTypeLabel = documentSummary.inspectionTypeLabel
-    || recordData.inspectionTypeLabel
-    || recordData.sectionData?.inspectionTypeLabel
-    || recordData.formData?.inspectionTypeLabel
-    || recordData.wizardState?.inspectionTypeLabel;
-
-  if (inspectionTypeLabel) {
-    (wizardData as any).inspectionTypeLabel = inspectionTypeLabel;
-  }
-
-  const detectedEquipmentType = documentSummary.detectedEquipmentType
-    || recordData.detectedEquipmentType
-    || recordData.sectionData?.detectedEquipmentType
-    || recordData.formData?.detectedEquipmentType
-    || recordData.wizardState?.detectedEquipmentType;
-
-  if (detectedEquipmentType) {
-    (wizardData as any).detectedEquipmentType = detectedEquipmentType;
-  }
-
-  (wizardData as any).recordContext = recordData.recordContext || recordData.formData || wizardData.recordContext;
-
-  // Fallback: single section snapshot stored in sectionData
-  if (recordData.sectionData && recordData.sectionData.sectionId) {
-    const sectionId = recordData.sectionData.sectionId;
-    const baseSection = {
-      id: sectionId,
-      title: recordData.sectionData.title || sectionId,
-      formData: recordData.sectionData.formData || {},
-      textData: recordData.sectionData.textData || '',
-      voiceData: recordData.sectionData.voiceData || {},
-      images: recordData.sectionData.images || [],
-      imageAnalysis: recordData.sectionData.imageAnalysis
-    };
-
-    if (!wizardData.sections) {
-      wizardData.sections = [];
-    }
-
-    const existingIndex = wizardData.sections.findIndex((s: any) => s?.id === sectionId);
-    if (existingIndex >= 0 && wizardData.sections[existingIndex]) {
-      wizardData.sections[existingIndex] = {
-        ...wizardData.sections[existingIndex],
-        ...baseSection,
-        formData: {
-          ...(wizardData.sections[existingIndex] as any).formData,
-          ...baseSection.formData
-        }
-      };
-    } else {
-      wizardData.sections.push(baseSection);
-    }
-  }
-
-  wizardData.currentStep = recordData.currentStep
-    || recordData.sectionData?.currentStep
-    || recordData.wizardState?.currentStep
-    || wizardData.currentStep;
-
-  wizardData.completedSteps = recordData.completedSteps
-    || recordData.wizardState?.completedSteps
-    || wizardData.completedSteps;
-
-  restoreGrids(recordData.grids);
-  restoreGrids(recordData.sectionData?.grids, recordData.sectionData?.sectionId);
-  restoreGrids(recordData.wizardState?.grids);
-
-  if (recordData.sectionData?.formData && typeof recordData.sectionData.formData === 'object') {
-    const sectionFormData = recordData.sectionData.formData;
-    (wizardData as any).globalFormData = {
-      ...((wizardData as any).globalFormData || {}),
-      ...sectionFormData
-    };
-
-    const targetIndex = Array.isArray(wizardData.sections)
-      ? wizardData.sections.findIndex((s: any) => s?.id === recordData.sectionData.sectionId)
-      : -1;
-
-    if (targetIndex >= 0 && wizardData.sections) {
-      const existingFormData = (wizardData.sections[targetIndex] as any).formData || {};
-      (wizardData.sections as any)[targetIndex] = {
-        ...(wizardData.sections as any)[targetIndex],
-        formData: {
-          ...existingFormData,
-          ...sectionFormData
-        }
-      };
-    }
-  }
-
-  // Convert voice data
-  if (recordData.aiAnalysis && recordData.aiAnalysis.voice) {
-    wizardData.voiceData = recordData.aiAnalysis.voice;
-  }
-
-  // Convert image data from multiple sources
-  const allImages: any[] = [];
-  
-  // Source 1: attachments array
-  if (recordData.attachments && Array.isArray(recordData.attachments)) {
-    const attachmentImages = recordData.attachments
-      .filter((att: any) => att.type === 'image')
-      .map((att: any) => ({
-        url: att.url,
-        name: att.metadata?.originalName || 'uploaded-image',
-        type: 'existing',
-        gridfsId: att.gridfsId || att.url?.split('/').pop()
-      }));
-    allImages.push(...attachmentImages);
-  }
-  
-  // Source 2: sections[].images arrays  
-  if (recordData.sections && Array.isArray(recordData.sections)) {
-    recordData.sections.forEach((section: any) => {
-      if (section?.images && Array.isArray(section.images)) {
-        const sectionImages = section.images.map((img: any) => ({
-          url: img.url,
-          name: img.name || 'uploaded-image',
-          type: img.type || 'existing',
-          gridfsId: img.gridfsId,
-          uid: img.uid,
-          metadata: img.metadata
-        }));
-        allImages.push(...sectionImages);
-      }
-    });
-  }
-  
-  // Source 3: wizardState.sections[].images arrays
-  if (recordData.wizardState?.sections && Array.isArray(recordData.wizardState.sections)) {
-    recordData.wizardState.sections.forEach((section: any, index: number) => {
-      if (section?.images && Array.isArray(section.images)) {
-        console.log(`[convertInspectionToWizardData] Found images in wizardState section ${index} (${section.id}):`, {
-          imagesCount: section.images.length,
-          sampleImage: section.images[0] ? {
-            name: section.images[0].name,
-            url: section.images[0].url,
-            gridfsId: section.images[0].gridfsId
-          } : null
-        });
-        
-        const sectionImages = section.images.map((img: any) => ({
-          url: img.url,
-          name: img.name || 'uploaded-image', 
-          type: img.type || 'existing',
-          gridfsId: img.gridfsId,
-          uid: img.uid,
-          metadata: img.metadata
-        }));
-        allImages.push(...sectionImages);
-      }
-    });
-  }
-  
-  // Deduplicate images by gridfsId or URL
-  const uniqueImages = allImages.filter((img, index, arr) => {
-    const identifier = img.gridfsId || img.url;
-    return arr.findIndex(other => (other.gridfsId || other.url) === identifier) === index;
-  });
-  
-  wizardData.imageData = uniqueImages;
-  
-  // CRITICAL FIX: Also restore images to the image_capture section if they exist
-  if (uniqueImages.length > 0) {
-    // Ensure we have a sections array
-    if (!wizardData.sections) {
-      wizardData.sections = [];
-    }
-
-    let imageSectionIndex = wizardData.sections.findIndex((s: any) => s?.id === 'image_capture');
-
-    if (imageSectionIndex === -1) {
-      imageSectionIndex = 1;
-      if (wizardData.sections.length <= imageSectionIndex) {
-        wizardData.sections.length = imageSectionIndex + 1;
-      }
-      wizardData.sections[imageSectionIndex] = {
-        id: 'image_capture',
-        title: 'Equipment Images',
-        formData: {},
-        textData: '',
-        voiceData: {},
-        images: [],
-        imageAnalysis: undefined
-      };
-    }
-
-    (wizardData.sections as any)[imageSectionIndex] = {
-      ...(wizardData.sections as any)[imageSectionIndex],
-      images: uniqueImages
-    };
-
-    console.log(`[convertInspectionToWizardData] Restored images to image_capture section:`, {
-      sectionIndex: imageSectionIndex,
-      sectionId: (wizardData.sections as any)[imageSectionIndex]?.id,
-      imagesCount: uniqueImages.length
-    });
-  }
-  
-  console.log('[convertInspectionToWizardData] Image restoration:', {
-    attachmentImages: recordData.attachments?.filter((att: any) => att.type === 'image')?.length || 0,
-    sectionImages: recordData.sections?.reduce((count: number, s: any) => count + (s?.images?.length || 0), 0) || 0,
-    wizardStateImages: recordData.wizardState?.sections?.reduce((count: number, s: any) => count + (s?.images?.length || 0), 0) || 0,
-    totalUniqueImages: uniqueImages.length,
-    restoredToSection: uniqueImages.length > 0 ? 'image_capture (index 1)' : 'none',
-    sampleImage: uniqueImages[0] ? {
-      name: uniqueImages[0].name,
-      url: uniqueImages[0].url,
-      hasGridfsId: !!uniqueImages[0].gridfsId,
-      type: uniqueImages[0].type
-    } : null
-  });
-
-  // Convert analysis data
-  if (recordData.aiAnalysis) {
-    console.log('[convertInspectionToWizardData] Converting aiAnalysis data:', {
-      hasAiAnalysis: !!recordData.aiAnalysis,
-      aiAnalysisKeys: Object.keys(recordData.aiAnalysis),
-      hasResults: !!recordData.aiAnalysis.results,
-      resultsLength: recordData.aiAnalysis.results?.length || 0,
-      hasMarkdownReport: !!recordData.aiAnalysis.markdownReport,
-      markdownLength: recordData.aiAnalysis.markdownReport?.length || 0,
-      hasPreviousResponseId: !!recordData.aiAnalysis.previousResponseId
-    });
-    
-    wizardData.analysisData = {
-      analysisResults: recordData.aiAnalysis.results || [],
-      markdownReport: recordData.aiAnalysis.markdownReport || '',
-      previousResponseId: recordData.aiAnalysis.previousResponseId
-    };
-
-    // Convert transcription to voiceData
-    if (recordData.aiAnalysis.transcription) {
-      wizardData.voiceData = {
-        ...wizardData.voiceData,
-        transcription: recordData.aiAnalysis.transcription
-      };
-    }
-    
-    // Restore response ID to window for immediate use
-    if (recordData.aiAnalysis.previousResponseId) {
-      (window as any).__previousResponseId = recordData.aiAnalysis.previousResponseId;
-      console.log(`🔄 Restored response ID for conversation continuity: ${recordData.aiAnalysis.previousResponseId}`);
-    }
-  }
-  
-  // ADDITIONAL FIX: Look for analysis data in section imageAnalysis (alternative storage location)
-  if ((!wizardData.analysisData?.markdownReport || wizardData.analysisData.markdownReport.length === 0) && 
-      wizardData.sections) {
-    for (const section of wizardData.sections) {
-      if (section?.imageAnalysis?.overview && section.imageAnalysis.overview.length > 0) {
-        console.log(`[convertInspectionToWizardData] Found analysis data in section ${section.id}:`, {
-          overviewLength: section.imageAnalysis.overview.length,
-          hasSuggestions: !!section.imageAnalysis.suggestions
-        });
-        
-        // Use section imageAnalysis as the global analysisData
-        wizardData.analysisData = {
-          ...wizardData.analysisData,
-          markdownReport: section.imageAnalysis.overview,
-          analysisResults: section.imageAnalysis.suggestions || []
-        };
-        break;
-      }
-    }
-  }
-
-  // Convert wizard state
-  if (recordData.wizardState) {
-    wizardData.currentStep = recordData.wizardState.currentStep || 0;
-    wizardData.completedSteps = recordData.wizardState.completedSteps || [];
-    console.log('[convertInspectionToWizardData] Restored wizard state:', {
-      currentStep: wizardData.currentStep,
-      completedSteps: wizardData.completedSteps
-    });
-  } else {
-    // CRITICAL FIX: Infer current step for existing inspections without wizardState
-    // If we have sections with data, assume we're at the end of the wizard
-    const sectionsWithData = wizardData.sections?.filter(s => s && s.formData && Object.keys(s.formData).length > 0) || [];
-    
-    if (sectionsWithData.length > 0) {
-      // If we have form data in sections, assume we're at the last step (PDF generation)
-      const totalSections = wizardData.sections?.length || 0;
-      
-      // Calculate total steps the same way as the progress calculation
-      // This should match the calculation in getStepProgress()
-      // Note: We can't access config here, so we assume no input step for existing inspections
-      const hasInputStep = false; // Most existing inspections don't have input step
-      const totalSteps = totalSections + 1 + (hasInputStep ? 1 : 0);
-      
-      // Set current step to the last step (PDF generation step)
-      wizardData.currentStep = totalSteps - 1; // Last step index (0-indexed)
-      
-      // Mark all steps as completed except the current one
-      wizardData.completedSteps = Array.from({ length: totalSteps - 1 }, (_, i) => i);
-      
-      console.log('[convertInspectionToWizardData] Inferred wizard state for existing inspection:', {
-        sectionsWithDataCount: sectionsWithData.length,
-        totalSections,
-        totalSteps,
-        inferredCurrentStep: wizardData.currentStep,
-        inferredCompletedStepsCount: wizardData.completedSteps.length,
-        inferredCompletedSteps: wizardData.completedSteps
-      });
-    }
-  }
-
-  console.log('[convertInspectionToWizardData] Conversion complete:', {
-    finalCurrentStep: wizardData.currentStep,
-    finalCompletedSteps: wizardData.completedSteps,
-    finalSectionsCount: wizardData.sections?.length || 0,
-    finalSections: wizardData.sections?.map((s: any, i: number) => ({ 
-      index: i,
-      isNull: s === null,
-      id: s?.id, 
-      formDataKeys: s?.formData ? Object.keys(s.formData) : []
-    }))
-  });
-
-  return wizardData;
-}
-
-// Legacy export retained for compatibility
-export const convertInspectionToWizardData = convertRecordToWizardData;
-
-export function normalizeRestoredSections(config: AIAnalysisWizardConfig, savedSections: Array<any> | undefined): NonNullable<AIAnalysisWizardData['sections']> {
-  const cfgSections = (config.steps.sections || []).map(s => ({ id: s.id, title: s.title }));
-  const savedById = new Map<string, any>();
-  for (const s of (savedSections || [])) { if (s && typeof s.id === 'string') savedById.set(s.id, s); }
-  let normalizedSections = cfgSections.map(({ id, title }) => {
-    const saved = savedById.get(id) || {};
-    return { id, title, formData: saved.formData || {}, textData: saved.textData || '', voiceData: saved.voiceData || {}, images: saved.images || [], imageAnalysis: saved.imageAnalysis || undefined };
-  });
-  return normalizedSections;
-}
-
-export function clamp(n: number, min: number, max: number) { return Math.max(min, Math.min(max, n)); }
-export function uniq<T>(arr: T[]) { return Array.from(new Set(arr)); }

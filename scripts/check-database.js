@@ -25,13 +25,15 @@ if (count > 0) {
         // Check document types
         const types = await collection.distinct('type');
         if (types.length > 0) {
-}
+          console.log(`Collection ${collectionInfo.name} types:`, types);
+        }
         
         // Show sample document structure
         const sample = await collection.findOne({});
         if (sample) {
           const fields = Object.keys(sample).slice(0, 10);
-}
+          console.log(`Sample fields for ${collectionInfo.name}:`, fields);
+        }
       }
     }
     

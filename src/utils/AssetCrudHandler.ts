@@ -129,6 +129,8 @@ console.log('🏢 Company data for edit:', {
       key: 'company-form',
       label: isEdit ? 'Edit Company' : 'Add Company',
       workspace: 'asset-manager/company-form',
+      workspaceId: 'asset-manager/company-form',
+      returnTo: 'asset-manager/asset-management',
       params: {
         id: companyId || 'new',
         mode: isEdit ? 'edit' : 'create',
@@ -164,6 +166,8 @@ const isEdit = !!site;
       key: 'site-form',
       label: isEdit ? 'Edit Site' : 'Add Site',
       workspace: 'asset-manager/site-form',
+      workspaceId: 'asset-manager/site-form',
+      returnTo: 'asset-manager/asset-management',
       params: {
         id: siteId || 'new',
         mode: isEdit ? 'edit' : 'create',
@@ -199,6 +203,8 @@ const isEdit = !!assetGroup;
       key: 'asset-group-form',
       label: isEdit ? 'Edit Asset Group' : 'Add Asset Group',
       workspace: 'asset-manager/asset-group-form',
+      workspaceId: 'asset-manager/asset-group-form',
+      returnTo: 'asset-manager/asset-management',
       params: {
         id: assetGroupId || 'new',
         mode: isEdit ? 'edit' : 'create',
@@ -234,6 +240,8 @@ const isEdit = !!asset;
       key: 'asset-form',
       label: isEdit ? 'Edit Asset' : 'Add Asset',
       workspace: 'asset-manager/asset-form',
+      workspaceId: 'asset-manager/asset-form',
+      returnTo: 'asset-manager/asset-management',
       params: {
         id: assetId || 'new',
         mode: isEdit ? 'edit' : 'create',

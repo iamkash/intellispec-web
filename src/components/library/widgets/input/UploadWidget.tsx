@@ -226,7 +226,6 @@ export const UploadWidget: React.FC<UploadWidgetProps> = ({
   const [validationError, setValidationError] = useState<string | undefined>();
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
 
   const currentFileList = fileList !== undefined ? fileList : internalFileList;
 
@@ -301,7 +300,7 @@ export const UploadWidget: React.FC<UploadWidgetProps> = ({
 
     setValidationError(undefined);
     return true;
-  }, [validator, maxCount, maxSize, accept, formatFileSize, errorMessages]);
+  }, [validator, maxCount, effectiveMaxSize, accept, formatFileSize, errorMessages]);
 
   const handleChange = useCallback(async (info: { file: UploadFile; fileList: UploadFile[] }) => {
     const { file, fileList: newFileList } = info;
@@ -351,7 +350,6 @@ export const UploadWidget: React.FC<UploadWidgetProps> = ({
 
     setPreviewImage(file.url || file.preview || '');
     setPreviewVisible(true);
-    setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
     
     onPreview?.(file);
   }, [previewFile, onPreview]);

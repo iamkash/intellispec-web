@@ -92,7 +92,7 @@ export function buildPromptText(template: string, opts: PromptBuildOptions): str
 }
 
 function collectTemplateVars(template: string): string[] {
-  const regex = /\{\{\s*([a-zA-Z0-9_\.\-\[\]'\"]+)\s*\}\}/g;
+  const regex = /\{\{\s*([-\\[\]a-zA-Z0-9_.'"]+)\s*\}\}/g;
   const keys = new Set<string>();
   let m: RegExpExecArray | null;
   while ((m = regex.exec(template))) keys.add(m[1]);
@@ -118,5 +118,3 @@ function toPathParts(path: string): string[] {
     .replace(/\[\s*(\d+)\s*\]/g, '.$1'); // [0]
   return normalized.split('.').filter(Boolean);
 }
-
-

@@ -1,5 +1,5 @@
 {
-  "id": "inspection-plan-dashboard",
+  "id": "intelliINSPECT/inspection-plan/dashboard",
   "title": "Inspection Plan Intelligence",
   "description": "An AI-powered command center for optimizing inspection planning, providing predictive insights and actionable intelligence.",
   "layout": "dashboard",
@@ -55,7 +55,13 @@
         "id": "date_range",
         "type": "daterange",
         "label": "Inspection Due Date",
-        "presets": ["Overdue", "Today", "This Week", "This Month", "Next 90 Days"],
+        "presets": [
+          "Overdue",
+          "Today",
+          "This Week",
+          "This Month",
+          "Next 90 Days"
+        ],
         "refreshTrigger": true
       }
     ]
@@ -199,7 +205,13 @@
             "id": "date_range",
             "type": "daterange",
             "label": "Inspection Due Date",
-            "presets": ["Overdue", "Today", "This Week", "This Month", "Next 90 Days"],
+            "presets": [
+              "Overdue",
+              "Today",
+              "This Week",
+              "This Month",
+              "Next 90 Days"
+            ],
             "refreshTrigger": true
           }
         ],
@@ -280,7 +292,11 @@
             "dataPath": "data.result",
             "widgetProps": {
               "unit": "%",
-              "thresholds": { "good": 95, "warn": 85, "bad": 0 }
+              "thresholds": {
+                "good": 95,
+                "warn": 85,
+                "bad": 0
+              }
             }
           },
           {
@@ -292,26 +308,52 @@
             "aggregationConfig": {
               "name": "inspectionsInProgress",
               "collection": "documents",
-              "baseFilter": { 
-                "type": "inspection",
-                "status": "in_progress"
+              "baseFilter": {
+                "type": "wizard",
+                "$or": [
+                  {
+                    "domain": "inspection"
+                  },
+                  {
+                    "identity.domain": "inspection"
+                  }
+                ]
               },
-               "fieldMappings": {
-                "date_range": "formData.inspectionDate",
-                "company_id": "formData.companyId",
-                "site_id": "formData.siteId"
+              "fieldMappings": {
+                "domain": "identity.domain",
+                "inspection_type": "identity.domainSubType",
+                "status": "status",
+                "date_range": "recordContext.inspection.date",
+                "company_id": "recordContext.company.id",
+                "site_id": "recordContext.site.id",
+                "asset_group_id": "recordContext.assetGroup.id",
+                "asset_id": "recordContext.asset.id",
+                "inspector": "recordContext.inspection.inspectorName"
               },
               "groupBy": {
                 "_id": null,
                 "fields": {
-                  "count": {
-                    "expression": { "$sum": 1 }
+                  "inProgress": {
+                    "expression": {
+                      "$sum": {
+                        "$cond": [
+                          {
+                            "$eq": [
+                              "$status",
+                              "in_progress"
+                            ]
+                          },
+                          1,
+                          0
+                        ]
+                      }
+                    }
                   }
                 }
               }
             },
-            "dataPath": "data.0.count",
-             "widgetProps": {
+            "dataPath": "data.0.inProgress",
+            "widgetProps": {
               "unit": "Inspections",
               "color": "blue"
             }
@@ -332,7 +374,7 @@
                   "$ne": null
                 }
               },
-               "fieldMappings": {
+              "fieldMappings": {
                 "company_id": "company_id",
                 "site_id": "site_id",
                 "date_range": "inspection.next_inspection_date"
@@ -400,7 +442,10 @@
                 {
                   "type": "calculation",
                   "expression": "const totalInspections = data.reduce((sum, item) => sum + item.inspectionCount, 0); const uniqueInspectors = data.length; const daysInRange = (filterContext.date_range.end - filterContext.date_range.start) / (1000 * 60 * 60 * 24); const weeksInRange = daysInRange / 7; return uniqueInspectors > 0 && weeksInRange > 0 ? (totalInspections / uniqueInspectors) / weeksInRange : 0;",
-                  "variables": ["data", "filterContext"]
+                  "variables": [
+                    "data",
+                    "filterContext"
+                  ]
                 }
               ]
             },
@@ -508,7 +553,10 @@
                   "$match": {
                     "inspectionDate": {
                       "$gte": {
-                        "$subtract": ["$$NOW", 7776000000]
+                        "$subtract": [
+                          "$$NOW",
+                          7776000000
+                        ]
                       }
                     }
                   }
@@ -558,115 +606,58 @@
           "caseInsensitive": true,
           "trimWhitespace": true,
           "mappings": {
-            "Air Cooler": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Boiler": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Column": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Pipe": "intelliINSPECT/pipework-inspection-wizard",
-            "Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Pump": "intelliINSPECT/rotating-equipment-wizard",
-            "Compressor": "intelliINSPECT/rotating-equipment-wizard",
-            "Turbine": "intelliINSPECT/rotating-equipment-wizard",
-            "Condenser": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Evaporator": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Fired Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Furnace": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Shell and Tube": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Plate Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
-            "Pressure Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Storage Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Spherical Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Bullet Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Separator": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Knock-out Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Scrubber": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Absorber": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Reactor": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Tower": "intelliINSPECT/pressure-vessel-tank-wizard",
-            "Piping": "intelliINSPECT/pipework-inspection-wizard",
-            "Pipeline": "intelliINSPECT/pipework-inspection-wizard",
-            "Process Pipeline": "intelliINSPECT/pipework-inspection-wizard",
-            "Ducting": "intelliINSPECT/pipework-inspection-wizard",
-            "Centrifugal Pump": "intelliINSPECT/rotating-equipment-wizard",
-            "Positive Displacement Pump": "intelliINSPECT/rotating-equipment-wizard",
-            "Gas Compressor": "intelliINSPECT/rotating-equipment-wizard",
-            "Reciprocating Compressor": "intelliINSPECT/rotating-equipment-wizard",
-            "Steam Turbine": "intelliINSPECT/rotating-equipment-wizard",
-            "Gas Turbine": "intelliINSPECT/rotating-equipment-wizard",
-            "Motor": "intelliINSPECT/rotating-equipment-wizard",
-            "Fan": "intelliINSPECT/rotating-equipment-wizard",
-            "Blower": "intelliINSPECT/rotating-equipment-wizard"
+            "pressure_vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "pressure_vessel_tank_wizard": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "pressure_vessel_and_tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "pressure vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "pressure vessel & tank": "intelliINSPECT/pressure-vessel-tank-wizard",
+            "pipework": "intelliINSPECT/pipework-inspection-wizard",
+            "pipework_inspection": "intelliINSPECT/pipework-inspection-wizard",
+            "pipework_inspection_wizard": "intelliINSPECT/pipework-inspection-wizard",
+            "piping": "intelliINSPECT/pipework-inspection-wizard",
+            "piping system": "intelliINSPECT/pipework-inspection-wizard",
+            "heat_exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "heat_exchanger_boiler_wizard": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "heat_exchanger_and_boiler": "intelliINSPECT/heat-exchanger-boiler-wizard",
+            "rotating_equipment": "intelliINSPECT/rotating-equipment-wizard",
+            "rotating_equipment_wizard": "intelliINSPECT/rotating-equipment-wizard",
+            "rotating equipment": "intelliINSPECT/rotating-equipment-wizard"
           },
           "patternMappings": [
             {
               "matchType": "includes",
-              "value": ["exchanger", "boiler", "heater", "condenser", "evaporator", "cooler"],
-              "workspace": "intelliINSPECT/heat-exchanger-boiler-wizard"
-            },
-            {
-              "matchType": "includes",
-              "value": ["vessel", "tank", "separator", "drum", "reactor", "column", "tower", "scrubber", "absorber"],
+              "value": [
+                "pressure",
+                "vessel"
+              ],
               "workspace": "intelliINSPECT/pressure-vessel-tank-wizard"
             },
             {
               "matchType": "includes",
-              "value": ["pipe", "pipeline", "ducting"],
+              "value": [
+                "pipe",
+                "piping"
+              ],
               "workspace": "intelliINSPECT/pipework-inspection-wizard"
             },
             {
               "matchType": "includes",
-              "value": ["pump", "compressor", "turbine", "motor", "fan", "blower"],
+              "value": [
+                "heat",
+                "exchanger",
+                "boiler"
+              ],
+              "workspace": "intelliINSPECT/heat-exchanger-boiler-wizard"
+            },
+            {
+              "matchType": "includes",
+              "value": [
+                "rotating",
+                "equipment"
+              ],
               "workspace": "intelliINSPECT/rotating-equipment-wizard"
             }
           ]
-        },
-        "legacyWorkspaceMapping": {
-          "Air Cooler": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Boiler": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Column": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Pipe": "intelliINSPECT/pipework-inspection-wizard",
-          "Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Pump": "intelliINSPECT/rotating-equipment-wizard",
-          "Compressor": "intelliINSPECT/rotating-equipment-wizard",
-          "Turbine": "intelliINSPECT/rotating-equipment-wizard",
-          "Condenser": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Evaporator": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Fired Heater": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Furnace": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Shell and Tube": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Plate Heat Exchanger": "intelliINSPECT/heat-exchanger-boiler-wizard",
-          "Pressure Vessel": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Storage Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Spherical Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Bullet Tank": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Separator": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Knock-out Drum": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Scrubber": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Absorber": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Reactor": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Tower": "intelliINSPECT/pressure-vessel-tank-wizard",
-          "Piping": "intelliINSPECT/pipework-inspection-wizard",
-          "Pipeline": "intelliINSPECT/pipework-inspection-wizard",
-          "Process Pipeline": "intelliINSPECT/pipework-inspection-wizard",
-          "Ducting": "intelliINSPECT/pipework-inspection-wizard",
-          "Centrifugal Pump": "intelliINSPECT/rotating-equipment-wizard",
-          "Positive Displacement Pump": "intelliINSPECT/rotating-equipment-wizard",
-          "Gas Compressor": "intelliINSPECT/rotating-equipment-wizard",
-          "Reciprocating Compressor": "intelliINSPECT/rotating-equipment-wizard",
-          "Steam Turbine": "intelliINSPECT/rotating-equipment-wizard",
-          "Gas Turbine": "intelliINSPECT/rotating-equipment-wizard",
-          "Motor": "intelliINSPECT/rotating-equipment-wizard",
-          "Fan": "intelliINSPECT/rotating-equipment-wizard",
-          "Blower": "intelliINSPECT/rotating-equipment-wizard"
         },
         "viewFilters": [
           {
@@ -724,11 +715,26 @@
             "title": "Status",
             "type": "status",
             "statusConfig": {
-              "draft": { "label": "Draft", "color": "gray" },
-              "in_progress": { "label": "In Progress", "color": "blue" },
-              "completed": { "label": "Completed", "color": "green" },
-              "approved": { "label": "Approved", "color": "green" },
-              "archived": { "label": "Archived", "color": "gray" }
+              "draft": {
+                "label": "Draft",
+                "color": "gray"
+              },
+              "in_progress": {
+                "label": "In Progress",
+                "color": "blue"
+              },
+              "completed": {
+                "label": "Completed",
+                "color": "green"
+              },
+              "approved": {
+                "label": "Approved",
+                "color": "green"
+              },
+              "archived": {
+                "label": "Archived",
+                "color": "gray"
+              }
             }
           },
           {
@@ -745,7 +751,10 @@
                 "showWhen": {
                   "field": "inspection.status",
                   "operator": "in",
-                  "value": ["in_progress", "draft"]
+                  "value": [
+                    "in_progress",
+                    "draft"
+                  ]
                 },
                 "onClick": {
                   "type": "workspace",
@@ -755,6 +764,7 @@
                     "asset_type": "{asset_type}",
                     "asset_name": "{name}",
                     "inspection_id": "{inspection.id}",
+                    "documentId": "{inspection.id}",
                     "mode": "edit"
                   }
                 }
@@ -773,6 +783,8 @@
                   "workspace": "{wizard_mapping}",
                   "params": {
                     "record_id": "{id}",
+                    "asset_type": "{asset_type}",
+                    "asset_name": "{name}",
                     "mode": "create"
                   }
                 }
@@ -785,7 +797,11 @@
                 "showWhen": {
                   "field": "inspection.status",
                   "operator": "in",
-                  "value": ["completed", "approved", "archived"]
+                  "value": [
+                    "completed",
+                    "approved",
+                    "archived"
+                  ]
                 },
                 "onClick": {
                   "type": "workspace",
@@ -795,6 +811,7 @@
                     "asset_type": "{asset_type}",
                     "asset_name": "{name}",
                     "inspection_id": "{inspection.id}",
+                    "documentId": "{inspection.id}",
                     "mode": "view"
                   }
                 }
@@ -806,7 +823,10 @@
           "enableCreate": false,
           "enableExport": true,
           "exportFileName": "inspection-workload",
-          "exportFormats": ["excel", "csv"]
+          "exportFormats": [
+            "excel",
+            "csv"
+          ]
         },
         "pagination": {
           "pageSize": 10
@@ -831,19 +851,19 @@
             "id": "forecast-by-month-chart",
             "title": "90-Day Forecast by Type",
             "description": "Number of inspections due over the next 90 days, grouped by asset type",
-        "chartType": "bar",
+            "chartType": "bar",
             "dataSource": {
               "endpoint": "/api/aggregation",
               "method": "POST",
               "body": {
                 "config": {
-          "name": "forecastByType",
-          "collection": "documents",
+                  "name": "forecastByType",
+                  "collection": "documents",
                   "baseFilter": {
                     "type": "asset"
                   },
-           "fieldMappings": {
-            "company_id": "company_id",
+                  "fieldMappings": {
+                    "company_id": "company_id",
                     "site_id": "site_id",
                     "asset_type": "asset_type",
                     "asset_id": "id",
@@ -864,16 +884,25 @@
                       "$addFields": {
                         "inspectionDateObj": {
                           "$cond": {
-                            "if": { "$eq": [{ "$type": "$inspection.next_inspection_date" }, "date"] },
+                            "if": {
+                              "$eq": [
+                                {
+                                  "$type": "$inspection.next_inspection_date"
+                                },
+                                "date"
+                              ]
+                            },
                             "then": "$inspection.next_inspection_date",
-                            "else": { "$toDate": "$inspection.next_inspection_date" }
+                            "else": {
+                              "$toDate": "$inspection.next_inspection_date"
+                            }
                           }
                         }
                       }
                     },
                     {
                       "$group": {
-            "_id": {
+                        "_id": {
                           "$dateToString": {
                             "format": "%Y-%m",
                             "date": "$inspectionDateObj"
@@ -887,11 +916,15 @@
                             }
                           }
                         },
-                        "count": { "$sum": 1 }
+                        "count": {
+                          "$sum": 1
+                        }
                       }
                     },
                     {
-                      "$sort": { "_id": 1 }
+                      "$sort": {
+                        "_id": 1
+                      }
                     },
                     {
                       "$project": {
@@ -921,7 +954,12 @@
                 "dataKey": "count",
                 "color": "hsl(var(--chart-1))",
                 "itemStyle": {
-                  "borderRadius": [4, 4, 0, 0]
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
                 }
               }
             ],
@@ -990,22 +1028,37 @@
                       "$addFields": {
                         "inspectionDateObj": {
                           "$cond": {
-                            "if": { "$eq": [{ "$type": "$inspection.next_inspection_date" }, "date"] },
+                            "if": {
+                              "$eq": [
+                                {
+                                  "$type": "$inspection.next_inspection_date"
+                                },
+                                "date"
+                              ]
+                            },
                             "then": "$inspection.next_inspection_date",
-                            "else": { "$toDate": "$inspection.next_inspection_date" }
+                            "else": {
+                              "$toDate": "$inspection.next_inspection_date"
+                            }
                           }
-        }
-      }
-    },
-    {
-                      "$group": {
-                        "_id": "$asset_type",
-                        "assetType": { "$first": "$asset_type" },
-                        "count": { "$sum": 1 }
+                        }
                       }
                     },
                     {
-                      "$sort": { "count": -1 }
+                      "$group": {
+                        "_id": "$asset_type",
+                        "assetType": {
+                          "$first": "$asset_type"
+                        },
+                        "count": {
+                          "$sum": 1
+                        }
+                      }
+                    },
+                    {
+                      "$sort": {
+                        "count": -1
+                      }
                     },
                     {
                       "$project": {
@@ -1035,7 +1088,12 @@
                 "dataKey": "count",
                 "color": "hsl(var(--chart-2))",
                 "itemStyle": {
-                  "borderRadius": [4, 4, 0, 0]
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
                 }
               }
             ],
@@ -1076,7 +1134,7 @@
               "endpoint": "/api/aggregation",
               "method": "POST",
               "body": {
-      "config": {
+                "config": {
                   "name": "overdueVsPlanned",
                   "collection": "documents",
                   "baseFilter": {
@@ -1098,9 +1156,18 @@
                       "$addFields": {
                         "inspectionDateObj": {
                           "$cond": {
-                            "if": { "$eq": [{ "$type": "$inspection.next_inspection_date" }, "date"] },
+                            "if": {
+                              "$eq": [
+                                {
+                                  "$type": "$inspection.next_inspection_date"
+                                },
+                                "date"
+                              ]
+                            },
                             "then": "$inspection.next_inspection_date",
-                            "else": { "$toDate": "$inspection.next_inspection_date" }
+                            "else": {
+                              "$toDate": "$inspection.next_inspection_date"
+                            }
                           }
                         }
                       }
@@ -1109,22 +1176,33 @@
                       "$addFields": {
                         "status": {
                           "$cond": {
-                            "if": { "$lt": ["$inspectionDateObj", "$$NOW"] },
+                            "if": {
+                              "$lt": [
+                                "$inspectionDateObj",
+                                "$$NOW"
+                              ]
+                            },
                             "then": "Overdue",
                             "else": "Planned"
                           }
-        }
-      }
-    },
-    {
-                      "$group": {
-                        "_id": "$status",
-                        "status": { "$first": "$status" },
-                        "count": { "$sum": 1 }
+                        }
                       }
                     },
                     {
-                      "$sort": { "_id": 1 }
+                      "$group": {
+                        "_id": "$status",
+                        "status": {
+                          "$first": "$status"
+                        },
+                        "count": {
+                          "$sum": 1
+                        }
+                      }
+                    },
+                    {
+                      "$sort": {
+                        "_id": 1
+                      }
                     },
                     {
                       "$project": {
@@ -1154,7 +1232,12 @@
                 "dataKey": "count",
                 "color": "hsl(var(--chart-3))",
                 "itemStyle": {
-                  "borderRadius": [4, 4, 0, 0]
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
                 }
               }
             ],

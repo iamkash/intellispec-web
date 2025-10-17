@@ -7,12 +7,9 @@
  */
 
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { TreeSelect, Space, Typography, Tooltip, Button } from 'antd';
+import { TreeSelect, Space, Tooltip, Button } from 'antd';
 import { ReloadOutlined, ExpandOutlined, CompressOutlined } from '@ant-design/icons';
 import { sanitizeData } from '../../../../utils/sanitizeData';
-import type { DataNode } from 'antd/es/tree';
-
-const { Text } = Typography;
 
 // TreeSelect option interface
 export interface TreeSelectOption {
@@ -287,7 +284,7 @@ export const TreeSelectWidget: React.FC<TreeSelectWidgetProps> = ({
   }, [value]);
 
   // Render action buttons
-  const renderActions = () => {
+  const renderActions = useCallback(() => {
     if (!actions) return null;
     
     return (
@@ -344,7 +341,7 @@ export const TreeSelectWidget: React.FC<TreeSelectWidgetProps> = ({
         )}
       </Space>
     );
-  };
+  }, [actions, handleRefresh, handleExpandAll, handleCollapseAll, multiple, handleSelectAll, handleClearAll, isExpanded]);
 
   // Custom dropdown render
   const customDropdownRender = useCallback((menu: React.ReactNode) => {

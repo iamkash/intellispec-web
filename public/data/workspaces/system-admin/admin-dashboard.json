@@ -1,5 +1,5 @@
 {
-  "id": "admin-dashboard",
+  "id": "system-admin/admin-dashboard",
   "title": "Super Admin Dashboard",
   "description": "Central hub for system administration and multi-tenant management",
   "layout": "dashboard",
@@ -216,7 +216,11 @@
   "metadata": {
     "created": "2025-01-24T12:00:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "dashboard", "overview"],
+    "tags": [
+      "admin",
+      "dashboard",
+      "overview"
+    ],
     "description": "Super Admin central dashboard with quick actions and system overview",
     "features": [
       "Quick action buttons for common tasks",
@@ -225,7 +229,9 @@
       "Direct navigation to key admin areas"
     ],
     "permissions": {
-      "required": ["super_admin"],
+      "required": [
+        "super_admin"
+      ],
       "actions": [
         "admin:view_dashboard",
         "admin:view_stats",
@@ -234,4 +240,3 @@
     }
   }
 }
-

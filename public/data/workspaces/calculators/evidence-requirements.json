@@ -1,5 +1,5 @@
 {
-  "id": "calculator-evidence-requirements",
+  "id": "calculators/evidence-requirements",
   "type": "form",
   "title": "Evidence Photo Requirements",
   "description": "Calculate required evidence photos based on inspection scope and asset type",

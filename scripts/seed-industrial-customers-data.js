@@ -427,7 +427,7 @@ const industrialCustomersData = {
     { groupCode: "PKG", name: "Bottle Filling Line", asset_tag: "BFL-301", asset_type: "brewing_equipment", manufacturer: "KHS", model: "Innofill Glass DRS" },
     
     // Paper Mill Assets
-    { groupCode: "DIG", name: "Continuous Digester", asset_tag: "CD-101", asset_tag: "CD-101", asset_type: "pulp_equipment", manufacturer: "Andritz", model: "Compact Cooking" },
+    { groupCode: "DIG", name: "Continuous Digester", asset_tag: "CD-101", asset_type: "pulp_equipment", manufacturer: "Andritz", model: "Compact Cooking" },
     { groupCode: "PM", name: "Paper Machine #1", asset_tag: "PM-1", asset_type: "pulp_equipment", manufacturer: "Valmet", model: "OptiFlo Headbox" },
     
     { groupCode: "RB", name: "Recovery Boiler RB-1", asset_tag: "RB-1", asset_type: "pulp_equipment", manufacturer: "Andritz", model: "Single Drum" },

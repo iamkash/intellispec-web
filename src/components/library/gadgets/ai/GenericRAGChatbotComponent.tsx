@@ -8,7 +8,7 @@ import {
     UserOutlined
 } from '@ant-design/icons';
 import { Avatar, Badge, Button, Card, Input, Space, Spin, Tooltip, Typography } from 'antd';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useWorkspaceFilters } from '../../../../contexts/WorkspaceFilterContext';
 import { useThemeColors } from '../../../../hooks/useThemeColors';
@@ -77,6 +77,7 @@ export const GenericRAGChatbotComponent: React.FC<GenericRAGChatbotComponentProp
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioStreamRef = useRef<MediaStream | null>(null);
   const inputRef = useRef<any>(null);
+  const initializedRef = useRef(false);
 
   // Configuration with safe defaults
   const { chatbot = {}, rag = {}, ai = {}, features = {}, ui = {}, api = {} } = gadgetConfig;
@@ -92,7 +93,7 @@ export const GenericRAGChatbotComponent: React.FC<GenericRAGChatbotComponentProp
   };
 
   // Ensure rag has safe defaults
-  const safeRag = {
+  const safeRag = useMemo(() => ({
     enabled: false,
     vectorStore: 'mongodb_atlas',
     embeddingModel: 'text-embedding-ada-002',
@@ -105,7 +106,7 @@ export const GenericRAGChatbotComponent: React.FC<GenericRAGChatbotComponentProp
     contextSources: [],
     semanticFields: [],
     ...(rag && typeof rag === 'object' ? rag as Record<string, any> : {})
-  };
+  }), [rag]);
 
   // Ensure ai has safe defaults
   const defaultAi = {
@@ -153,7 +154,7 @@ export const GenericRAGChatbotComponent: React.FC<GenericRAGChatbotComponentProp
   };
 
   // Ensure api has safe defaults
-  const safeApi = {
+  const safeApi = useMemo(() => ({
     endpoint: '/api/rag/chat',
     method: 'POST',
     headers: {
@@ -161,7 +162,7 @@ export const GenericRAGChatbotComponent: React.FC<GenericRAGChatbotComponentProp
     },
     requestFormat: {},
     ...(api && typeof api === 'object' ? api as Record<string, any> : {})
-  };
+  }), [api]);
 
   // Ensure features has safe defaults
   const safeFeatures = {
@@ -214,78 +215,10 @@ export const GenericRAGChatbotComponent: React.FC<GenericRAGChatbotComponentProp
     }
   };
 
-  // Initialize component
-  useEffect(() => {
-    // Add welcome message
-    if (safeChatbot.welcomeMessage && messages.length === 0) {
-      const welcomeMessage: ChatMessage = {
-        id: `welcome_${Date.now()}`,
-        role: 'assistant',
-        content: safeChatbot.welcomeMessage,
-        timestamp: new Date()
-      };
-      setMessages([welcomeMessage]);
-    }
-
-    // Initialize Realtime API if enabled
-    if (safeFeatures.realtimeAudio && safeAi.realtimeApi?.enabled) {
-      initializeRealtimeClient();
-    }
-
-    return () => {
-      // Cleanup
-      if (audioStreamRef.current) {
-        audioStreamRef.current.getTracks().forEach(track => track.stop());
-      }
-      if (realtimeClient) {
-        realtimeClient.disconnect?.();
-      }
-    };
-  }, []);
-
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  /**
-   * Initialize OpenAI Realtime API client
-   */
-  const initializeRealtimeClient = async () => {
-    if (!safeAi.realtimeApi?.enabled) return;
-
-    try {
-      setConnectionStatus('connecting');
-      
-      // Note: In a real implementation, you would use the OpenAI Realtime API SDK
-      // This is a placeholder for the actual implementation
-      const client = {
-        connect: async () => {
-// Simulate connection
-          setTimeout(() => setConnectionStatus('connected'), 1000);
-        },
-        disconnect: () => {
-setConnectionStatus('disconnected');
-        },
-        sendMessage: async (message: string) => {
-return handleMessage(message, true);
-        },
-        startRecording: async () => {
-return startAudioRecording();
-        },
-        stopRecording: async () => {
-return stopAudioRecording();
-        }
-      };
-
-      await client.connect();
-      setRealtimeClient(client);
-
-    } catch (error) {
-      console.error('Failed to initialize Realtime API:', error);
-      setConnectionStatus('disconnected');
-    }
-  };
 
   /**
    * Handle sending a message
@@ -367,12 +300,12 @@ return stopAudioRecording();
       setIsLoading(false);
       setInputMessage('');
     }
-  }, [safeApi, context, filterContext.filters, gadgetConfig, safeRag, realtimeClient, safeFeatures.realtimeAudio, previousResponseId]);
+  }, [safeApi, filterContext.filters, gadgetConfig, safeRag, realtimeClient, safeFeatures.realtimeAudio, previousResponseId, token]);
 
   /**
    * Start audio recording
    */
-  const startAudioRecording = async () => {
+  const startAudioRecording = useCallback(async () => {
     if (!safeFeatures.voiceInput) return;
 
     try {
@@ -387,19 +320,79 @@ return stopAudioRecording();
       console.error('Failed to start audio recording:', error);
       setIsRecording(false);
     }
-  };
+  }, [safeFeatures.voiceInput]);
 
   /**
    * Stop audio recording
    */
-  const stopAudioRecording = async () => {
+  const stopAudioRecording = useCallback(async () => {
     setIsRecording(false);
-    
+
     if (audioStreamRef.current) {
       audioStreamRef.current.getTracks().forEach(track => track.stop());
       audioStreamRef.current = null;
     }
-};
+  }, []);
+
+  /**
+   * Initialize OpenAI Realtime API client
+   */
+  const initializeRealtimeClient = useCallback(async () => {
+    if (!safeAi.realtimeApi?.enabled) return;
+
+    try {
+      setConnectionStatus('connecting');
+
+      const client = {
+        connect: async () => {
+          setTimeout(() => setConnectionStatus('connected'), 1000);
+        },
+        disconnect: () => {
+          setConnectionStatus('disconnected');
+        },
+        sendMessage: async (message: string) => handleMessage(message, true),
+        startRecording: async () => startAudioRecording(),
+        stopRecording: async () => stopAudioRecording()
+      };
+
+      await client.connect();
+      setRealtimeClient(client);
+
+    } catch (error) {
+      console.error('Failed to initialize Realtime API:', error);
+      setConnectionStatus('disconnected');
+    }
+  }, [handleMessage, safeAi.realtimeApi?.enabled, startAudioRecording, stopAudioRecording]);
+
+  // Initialize component
+  useEffect(() => {
+    if (!initializedRef.current) {
+      if (safeChatbot.welcomeMessage && messages.length === 0) {
+        const welcomeMessage: ChatMessage = {
+          id: `welcome_${Date.now()}`,
+          role: 'assistant',
+          content: safeChatbot.welcomeMessage,
+          timestamp: new Date()
+        };
+        setMessages([welcomeMessage]);
+      }
+
+      if (safeFeatures.realtimeAudio && safeAi.realtimeApi?.enabled) {
+        initializeRealtimeClient();
+      }
+
+      initializedRef.current = true;
+    }
+
+    return () => {
+      if (audioStreamRef.current) {
+        audioStreamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (realtimeClient) {
+        realtimeClient.disconnect?.();
+      }
+    };
+  }, [safeChatbot.welcomeMessage, messages.length, safeFeatures.realtimeAudio, safeAi.realtimeApi?.enabled, initializeRealtimeClient, realtimeClient]);
 
   /**
    * Handle voice recording toggle

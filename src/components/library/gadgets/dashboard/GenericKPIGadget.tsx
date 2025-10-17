@@ -8,7 +8,7 @@
  * This extends the basic KPIGadget to support complex workspace configurations like VOC analytics.
  */
 
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import WorkspaceFilterContext, { WorkspaceFilterContextValue } from '../../../../contexts/WorkspaceFilterContext';
 import { ValidationResult } from '../../core/base';
 import { BaseGadget, GadgetConfig, GadgetContext, GadgetMetadata, GadgetSchema, GadgetType } from '../base';
@@ -230,37 +230,15 @@ export default class GenericKPIGadget extends BaseGadget {
 // Functional component for the actual rendering logic
 const GenericKPIGadgetComponent: React.FC<any> = ({ kpis, context, ...props }) => {
   // Extract KPIs from either direct prop or nested config
-  const actualKpis = kpis || props.kpis || props.config?.kpis || [];
+  const actualKpis = useMemo(() => {
+    if (kpis && kpis.length > 0) return kpis;
+    if (props.kpis && props.kpis.length > 0) return props.kpis;
+    return props.config?.kpis || [];
+  }, [kpis, props.config?.kpis, props.kpis]);
   const [kpiData, setKpiData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const filterContext = useContext(WorkspaceFilterContext) as WorkspaceFilterContextValue | undefined;
-
-  // Format value based on KPI configuration
-  const formatValue = useCallback((value: any, kpi: KPIConfig): string => {
-    if (value === undefined || value === null || value === '') {
-      return 'N/A';
-    }
-
-    const numValue = typeof value === 'string' ? parseFloat(value) : value;
-    if (isNaN(numValue)) {
-      return String(value);
-    }
-
-    const decimals = kpi.decimals ?? (kpi.format === 'percentage' ? 1 : 0);
-
-    switch (kpi.format) {
-      case 'percentage':
-        return `${numValue.toFixed(decimals)}%`;
-      case 'currency':
-        return `$${numValue.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`;
-      case 'decimal':
-        return numValue.toFixed(decimals);
-      case 'number':
-      default:
-        return numValue.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
-    }
-  }, []);
 
   // Extract value from data using dataPath
   const extractValue = useCallback((data: any, dataPath: string): any => {
@@ -325,25 +303,19 @@ const GenericKPIGadgetComponent: React.FC<any> = ({ kpis, context, ...props }) =
 
               // Apply filter context mappings
               if (kpi.aggregationConfig.fieldMappings && filterContext?.filters) {
-// Process all filters and check if any have actual values
                 Object.entries(filterContext.filters).forEach(([filterKey, filterObj]) => {
-
                   const filterValue = filterObj?.value;
-if (filterValue !== undefined && filterValue !== null && filterValue !== '') {
-                    // Pass filter values directly - the aggregation API will handle field mappings
-                    if (Array.isArray(filterValue) && filterValue.length > 0) {
-                      filters[filterKey] = filterValue;
-} else if (!Array.isArray(filterValue)) {
-                      filters[filterKey] = filterValue;
-} else {
-}
-                  } else {
-}
+                  if (filterValue === undefined || filterValue === null || filterValue === '') {
+                    return;
+                  }
+
+                  if (Array.isArray(filterValue) && filterValue.length > 0) {
+                    filters[filterKey] = filterValue;
+                  } else if (!Array.isArray(filterValue)) {
+                    filters[filterKey] = filterValue;
+                  }
                 });
-
-                const hasActiveFilters = Object.keys(filters).length > 0;
-}
-
+              }
               // Build aggregation request with correct API structure
               const aggregationRequest: any = {
                 config: kpi.aggregationConfig
@@ -455,7 +427,7 @@ value = responseData;
     } finally {
       setLoading(false);
     }
-  }, [actualKpis, filterContext?.filters, formatValue, extractValue, props.dataUrl, props.config?.dataUrl]); // Specific dependencies only
+  }, [actualKpis, filterContext?.filters, extractValue, props.config?.dataUrl, props.dataUrl]); // Specific dependencies only
 
   // Initial load
   useEffect(() => {
@@ -467,7 +439,7 @@ value = responseData;
     if (filterContext?.refreshTrigger !== undefined && filterContext.refreshTrigger > 0) {
       fetchKPIData();
     }
-  }, [filterContext?.refreshTrigger]); // Only depend on refreshTrigger
+  }, [fetchKPIData, filterContext?.refreshTrigger]); // Depend on refreshTrigger and fetcher
 
   // Auto refresh
   useEffect(() => {
@@ -477,7 +449,7 @@ value = responseData;
       fetchKPIData();
     }, props.refreshInterval || 300000);
     return () => clearInterval(interval);
-  }, [props.autoRefresh, props.refreshInterval]); // Removed fetchKPIData from deps
+  }, [fetchKPIData, props.autoRefresh, props.refreshInterval]);
 
   // Get the KPI widget from registry
   const widgetRegistry = (context as any)?.widgetRegistry;

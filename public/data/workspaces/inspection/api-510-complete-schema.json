@@ -64,10 +64,22 @@
       "sectionId": "vessel-identification",
       "required": true,
       "options": [
-        {"label": "ASME Section VIII, Division 1", "value": "asme-viii-div1"},
-        {"label": "ASME Section VIII, Division 2", "value": "asme-viii-div2"},
-        {"label": "API 510", "value": "api-510"},
-        {"label": "Other", "value": "other"}
+        {
+          "label": "ASME Section VIII, Division 1",
+          "value": "asme-viii-div1"
+        },
+        {
+          "label": "ASME Section VIII, Division 2",
+          "value": "asme-viii-div2"
+        },
+        {
+          "label": "API 510",
+          "value": "api-510"
+        },
+        {
+          "label": "Other",
+          "value": "other"
+        }
       ]
     },
     {
@@ -85,15 +97,42 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "External Inspection", "value": "external"},
-        {"label": "Internal Inspection", "value": "internal"},
-        {"label": "Confined Space Entry", "value": "confined-space"},
-        {"label": "Hot Work Area", "value": "hot-work"},
-        {"label": "Elevated Work", "value": "elevated"},
-        {"label": "Underwater/Submerged", "value": "underwater"},
-        {"label": "High Pressure System", "value": "high-pressure"},
-        {"label": "High Temperature System", "value": "high-temperature"},
-        {"label": "Other", "value": "other"}
+        {
+          "label": "External Inspection",
+          "value": "external"
+        },
+        {
+          "label": "Internal Inspection",
+          "value": "internal"
+        },
+        {
+          "label": "Confined Space Entry",
+          "value": "confined-space"
+        },
+        {
+          "label": "Hot Work Area",
+          "value": "hot-work"
+        },
+        {
+          "label": "Elevated Work",
+          "value": "elevated"
+        },
+        {
+          "label": "Underwater/Submerged",
+          "value": "underwater"
+        },
+        {
+          "label": "High Pressure System",
+          "value": "high-pressure"
+        },
+        {
+          "label": "High Temperature System",
+          "value": "high-temperature"
+        },
+        {
+          "label": "Other",
+          "value": "other"
+        }
       ]
     },
     {
@@ -112,8 +151,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -141,8 +186,14 @@
       "label": "Confined space entry permit obtained",
       "sectionId": "safety-preparation",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -170,8 +221,14 @@
       "label": "Hot work permit obtained if required",
       "sectionId": "safety-preparation",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -200,8 +257,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -220,8 +283,14 @@
       "label": "Scaffolding or access equipment inspected and certified",
       "sectionId": "safety-preparation",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -241,8 +310,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -262,8 +337,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -283,8 +364,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -303,8 +390,14 @@
       "label": "Pressure monitoring equipment calibrated and functional",
       "sectionId": "safety-preparation",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -324,8 +417,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -344,8 +443,14 @@
       "label": "Heat protection equipment available and properly fitted",
       "sectionId": "safety-preparation",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -365,8 +470,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -386,8 +497,14 @@
       "sectionId": "safety-preparation",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -406,11 +523,26 @@
       "label": "General Condition",
       "sectionId": "visual-inspection",
       "options": [
-        {"label": "Excellent", "value": "excellent"},
-        {"label": "Good", "value": "good"},
-        {"label": "Fair", "value": "fair"},
-        {"label": "Poor", "value": "poor"},
-        {"label": "Not Applicable", "value": "na"}
+        {
+          "label": "Excellent",
+          "value": "excellent"
+        },
+        {
+          "label": "Good",
+          "value": "good"
+        },
+        {
+          "label": "Fair",
+          "value": "fair"
+        },
+        {
+          "label": "Poor",
+          "value": "poor"
+        },
+        {
+          "label": "Not Applicable",
+          "value": "na"
+        }
       ]
     },
     {
@@ -429,11 +561,26 @@
       "label": "Weld Condition",
       "sectionId": "visual-inspection",
       "options": [
-        {"label": "Excellent", "value": "excellent"},
-        {"label": "Good", "value": "good"},
-        {"label": "Fair", "value": "fair"},
-        {"label": "Poor", "value": "poor"},
-        {"label": "Not Applicable", "value": "na"}
+        {
+          "label": "Excellent",
+          "value": "excellent"
+        },
+        {
+          "label": "Good",
+          "value": "good"
+        },
+        {
+          "label": "Fair",
+          "value": "fair"
+        },
+        {
+          "label": "Poor",
+          "value": "poor"
+        },
+        {
+          "label": "Not Applicable",
+          "value": "na"
+        }
       ]
     },
     {
@@ -445,7 +592,11 @@
       "watchField": "weld-condition",
       "showWhen": "fair,poor",
       "description": "Array of finding descriptions for weld condition issues. Each finding should be a detailed description of the defect or condition observed.",
-      "example": ["Visible porosity and pitting in the weld joint", "Discoloration indicating potential overheating", "Presence of small holes suggesting gas entrapment"]
+      "example": [
+        "Visible porosity and pitting in the weld joint",
+        "Discoloration indicating potential overheating",
+        "Presence of small holes suggesting gas entrapment"
+      ]
     },
     {
       "id": "corrosion-observed",
@@ -454,8 +605,14 @@
       "label": "Corrosion or rust observed",
       "sectionId": "visual-inspection",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -474,8 +631,14 @@
       "label": "Cracking or fractures observed",
       "sectionId": "visual-inspection",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -494,8 +657,14 @@
       "label": "Deformation or distortion observed",
       "sectionId": "visual-inspection",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -514,8 +683,14 @@
       "label": "Leakage or seepage observed",
       "sectionId": "visual-inspection",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -534,11 +709,26 @@
       "label": "Weld Quality Assessment",
       "sectionId": "visual-inspection",
       "options": [
-        {"label": "Excellent", "value": "excellent"},
-        {"label": "Good", "value": "good"},
-        {"label": "Fair", "value": "fair"},
-        {"label": "Poor", "value": "poor"},
-        {"label": "Not Applicable", "value": "na"}
+        {
+          "label": "Excellent",
+          "value": "excellent"
+        },
+        {
+          "label": "Good",
+          "value": "good"
+        },
+        {
+          "label": "Fair",
+          "value": "fair"
+        },
+        {
+          "label": "Poor",
+          "value": "poor"
+        },
+        {
+          "label": "Not Applicable",
+          "value": "na"
+        }
       ]
     },
     {
@@ -557,8 +747,14 @@
       "label": "Thickness measurements taken",
       "sectionId": "measurements-tests",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -577,8 +773,14 @@
       "label": "Pressure test performed",
       "sectionId": "measurements-tests",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -598,10 +800,22 @@
       "sectionId": "findings-assessment",
       "required": true,
       "options": [
-        {"label": "Fit for Service", "value": "fit-for-service"},
-        {"label": "Fit for Service with Monitoring", "value": "fit-with-monitoring"},
-        {"label": "Limited Service", "value": "limited-service"},
-        {"label": "Unfit for Service", "value": "unfit-for-service"}
+        {
+          "label": "Fit for Service",
+          "value": "fit-for-service"
+        },
+        {
+          "label": "Fit for Service with Monitoring",
+          "value": "fit-with-monitoring"
+        },
+        {
+          "label": "Limited Service",
+          "value": "limited-service"
+        },
+        {
+          "label": "Unfit for Service",
+          "value": "unfit-for-service"
+        }
       ]
     },
     {
@@ -611,8 +825,14 @@
       "label": "Critical findings identified",
       "sectionId": "findings-assessment",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -633,8 +853,14 @@
       "label": "Safety concerns identified",
       "sectionId": "findings-assessment",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -655,8 +881,14 @@
       "label": "Immediate actions required",
       "sectionId": "findings-assessment",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -676,9 +908,18 @@
       "sectionId": "findings-assessment",
       "required": true,
       "options": [
-        {"label": "Compliant", "value": "compliant"},
-        {"label": "Non-Compliant", "value": "non-compliant"},
-        {"label": "Conditional Compliance", "value": "conditional"}
+        {
+          "label": "Compliant",
+          "value": "compliant"
+        },
+        {
+          "label": "Non-Compliant",
+          "value": "non-compliant"
+        },
+        {
+          "label": "Conditional Compliance",
+          "value": "conditional"
+        }
       ]
     },
     {
@@ -698,11 +939,26 @@
       "sectionId": "findings-assessment",
       "required": true,
       "options": [
-        {"label": "3 Months", "value": "3-months"},
-        {"label": "6 Months", "value": "6-months"},
-        {"label": "1 Year", "value": "1-year"},
-        {"label": "2 Years", "value": "2-years"},
-        {"label": "5 Years", "value": "5-years"}
+        {
+          "label": "3 Months",
+          "value": "3-months"
+        },
+        {
+          "label": "6 Months",
+          "value": "6-months"
+        },
+        {
+          "label": "1 Year",
+          "value": "1-year"
+        },
+        {
+          "label": "2 Years",
+          "value": "2-years"
+        },
+        {
+          "label": "5 Years",
+          "value": "5-years"
+        }
       ]
     },
     {
@@ -721,8 +977,14 @@
       "label": "Photographs taken during inspection",
       "sectionId": "documentation-report",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -741,8 +1003,14 @@
       "label": "Technical drawings or sketches created",
       "sectionId": "documentation-report",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -761,8 +1029,14 @@
       "label": "Additional supporting documents attached",
       "sectionId": "documentation-report",
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -782,8 +1056,14 @@
       "sectionId": "documentation-report",
       "required": true,
       "options": [
-        {"label": "Yes", "value": "yes"},
-        {"label": "No", "value": "no"}
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        }
       ]
     },
     {
@@ -857,5 +1137,6 @@
       "title": "Documentation & Report",
       "description": "Supporting documents, report generation, and final submission"
     }
-  ]
-} 
+  ],
+  "id": "inspection/api-510-complete-schema"
+}

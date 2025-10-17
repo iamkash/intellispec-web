@@ -29,8 +29,14 @@
     "groupId": "thickness-measurements-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -97,8 +103,14 @@
     "watchField": "thickness-measurements-taken",
     "showWhen": "yes",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -131,10 +143,22 @@
     "watchField": "thickness-measurements-taken",
     "showWhen": "yes",
     "options": [
-      {"label": "Acceptable", "value": "acceptable"},
-      {"label": "Below Minimum", "value": "below-minimum"},
-      {"label": "Critical", "value": "critical"},
-      {"label": "Not Applicable", "value": "na"}
+      {
+        "label": "Acceptable",
+        "value": "acceptable"
+      },
+      {
+        "label": "Below Minimum",
+        "value": "below-minimum"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      },
+      {
+        "label": "Not Applicable",
+        "value": "na"
+      }
     ]
   },
   {
@@ -170,8 +194,14 @@
     "groupId": "pressure-tests-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -213,9 +243,18 @@
     "watchField": "hydrostatic-test",
     "showWhen": "yes",
     "options": [
-      {"label": "Pass", "value": "pass"},
-      {"label": "Fail", "value": "fail"},
-      {"label": "Not Applicable", "value": "na"}
+      {
+        "label": "Pass",
+        "value": "pass"
+      },
+      {
+        "label": "Fail",
+        "value": "fail"
+      },
+      {
+        "label": "Not Applicable",
+        "value": "na"
+      }
     ]
   },
   {
@@ -230,8 +269,14 @@
     "watchField": "hydrostatic-test",
     "showWhen": "yes",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -264,4 +309,4 @@
     "watchField": "hydrostatic-test",
     "showWhen": "yes"
   }
-] 
+]

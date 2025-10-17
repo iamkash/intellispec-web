@@ -1,19 +1,52 @@
-export interface InspectionType {
+export interface DomainTypeOption {
   label: string;
   value: string;
+}
+
+export type WizardPersistenceMode = 'create' | 'update' | 'progress';
+
+export interface WizardEndpointConfig {
+  url: string;
+  method: 'POST' | 'PUT' | 'PATCH';
+}
+
+export interface WizardIdentityConfig {
+  recordType: string;
+  domain: string;
+  domainLabel?: string;
+  domainSubType: string;
+  domainTypeLabel?: string;
+  domainSubTypeLabel?: string;
+  label?: string;
+}
+
+export interface WizardPersistenceConfig {
+  create: WizardEndpointConfig;
+  update: WizardEndpointConfig;
+  progress: WizardEndpointConfig;
+  recordIdPath: string | string[];
+  successMessages?: Partial<Record<WizardPersistenceMode, string>>;
+  errorMessages?: Partial<Record<WizardPersistenceMode, string>>;
 }
 
 export interface AIAnalysisWizardData {
   currentStep: number;
   completedSteps: number[];
-  inspectionType?: string;
-  inspectionTypeLabel?: string;
-  detectedEquipmentType?: string;
+  domain?: string;
+  domainLabel?: string;
+  domainType?: string;
+  domainTypeLabel?: string;
+  domainSubType?: string;
+  domainSubTypeLabel?: string;
+  recordType?: string;
+  detectedType?: string;
+  status?: string;
+  progress?: number;
   globalFormData?: Record<string, any>;
   disabledFields?: string[];
   recordContext?: Record<string, any>;
   recordParams?: Record<string, any>;
-  documentSummary?: Record<string, any>;
+  summary?: Record<string, any>;
   grids?: Record<string, any>;
   sections?: Array<{
     id: string;
@@ -59,7 +92,7 @@ export interface AIAnalysisWizardConfig {
       enabled: boolean;
       title: string;
       description: string;
-      inspectionTypes: InspectionType[];
+      domainTypeOptions: DomainTypeOption[];
       nextLabel?: string;
       voice: { enabled: boolean; maxDuration: number; showVisualization: boolean; transcriptionModel: string };
       images: { enabled: boolean; maxCount: number; maxSize: number; drawingEnabled: boolean; drawingTools: Array<'pen' | 'line' | 'circle' | 'rectangle' | 'text' | 'arrow'> };
@@ -122,6 +155,7 @@ export interface AIAnalysisWizardConfig {
     cache?: boolean;
   };
   domainConfig?: {
+    domain?: string;
     payloadType?: string;
     defaultType?: string;
     typeMap?: Record<string, string>;
@@ -150,4 +184,6 @@ export interface AIAnalysisWizardConfig {
       homeSuffix?: string;
     };
   };
+  identity?: WizardIdentityConfig;
+  persistence?: WizardPersistenceConfig;
 }

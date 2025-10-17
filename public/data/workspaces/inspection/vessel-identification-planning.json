@@ -71,11 +71,26 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "vessel-details-group",
     "options": [
-      {"label": "ASME Section VIII, Division 1", "value": "asme-viii-div1"},
-      {"label": "ASME Section VIII, Division 2", "value": "asme-viii-div2"},
-      {"label": "API 620", "value": "api-620"},
-      {"label": "API 650", "value": "api-650"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "ASME Section VIII, Division 1",
+        "value": "asme-viii-div1"
+      },
+      {
+        "label": "ASME Section VIII, Division 2",
+        "value": "asme-viii-div2"
+      },
+      {
+        "label": "API 620",
+        "value": "api-620"
+      },
+      {
+        "label": "API 650",
+        "value": "api-650"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -127,7 +142,7 @@
     "label": "Corrosion Allowance (inches)",
     "placeholder": "Enter corrosion allowance",
     "required": true,
-    "size": 8 ,
+    "size": 8,
     "sectionId": "vessel-identification-planning",
     "groupId": "design-data-group"
   },
@@ -165,8 +180,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "design-data-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -261,10 +282,22 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "inspection-planning-group",
     "options": [
-      {"label": "Internal Inspection", "value": "internal"},
-      {"label": "External Inspection", "value": "external"},
-      {"label": "On-Stream Inspection", "value": "on-stream"},
-      {"label": "Combined Internal/External", "value": "combined"}
+      {
+        "label": "Internal Inspection",
+        "value": "internal"
+      },
+      {
+        "label": "External Inspection",
+        "value": "external"
+      },
+      {
+        "label": "On-Stream Inspection",
+        "value": "on-stream"
+      },
+      {
+        "label": "Combined Internal/External",
+        "value": "combined"
+      }
     ]
   },
   {
@@ -299,8 +332,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "inspection-planning-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -316,8 +355,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "inspection-planning-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -333,8 +378,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "inspection-planning-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -346,12 +397,21 @@
     "direction": "horizontal",
     "buttonStyle": "solid",
     "watchField": "inspection-type",
-    "showWhen": ["internal", "combined"],
+    "showWhen": [
+      "internal",
+      "combined"
+    ],
     "sectionId": "vessel-identification-planning",
     "groupId": "inspection-planning-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -364,7 +424,6 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "inspection-planning-group"
   },
-
   {
     "id": "rbi-assessment-group",
     "type": "group",
@@ -387,8 +446,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "rbi-assessment-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -413,10 +478,22 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "rbi-assessment-group",
     "options": [
-      {"label": "Low", "value": "low"},
-      {"label": "Medium", "value": "medium"},
-      {"label": "High", "value": "high"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Low",
+        "value": "low"
+      },
+      {
+        "label": "Medium",
+        "value": "medium"
+      },
+      {
+        "label": "High",
+        "value": "high"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -430,17 +507,40 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "rbi-assessment-group",
     "options": [
-      {"label": "General Corrosion", "value": "general-corrosion"},
-      {"label": "Localized Corrosion", "value": "localized-corrosion"},
-      {"label": "Stress Corrosion Cracking", "value": "scc"},
-      {"label": "Fatigue", "value": "fatigue"},
-      {"label": "Creep", "value": "creep"},
-      {"label": "Erosion", "value": "erosion"},
-      {"label": "Mechanical Damage", "value": "mechanical-damage"},
-      {"label": "Brittle Fracture", "value": "brittle-fracture"}
+      {
+        "label": "General Corrosion",
+        "value": "general-corrosion"
+      },
+      {
+        "label": "Localized Corrosion",
+        "value": "localized-corrosion"
+      },
+      {
+        "label": "Stress Corrosion Cracking",
+        "value": "scc"
+      },
+      {
+        "label": "Fatigue",
+        "value": "fatigue"
+      },
+      {
+        "label": "Creep",
+        "value": "creep"
+      },
+      {
+        "label": "Erosion",
+        "value": "erosion"
+      },
+      {
+        "label": "Mechanical Damage",
+        "value": "mechanical-damage"
+      },
+      {
+        "label": "Brittle Fracture",
+        "value": "brittle-fracture"
+      }
     ]
   },
-  
   {
     "id": "safety-requirements-group",
     "type": "group",
@@ -463,8 +563,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "safety-requirements-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -479,8 +585,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "safety-requirements-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -494,8 +606,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "safety-requirements-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -507,14 +625,38 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "safety-requirements-group",
     "options": [
-      {"label": "Hard Hat", "value": "hard-hat"},
-      {"label": "Safety Glasses", "value": "safety-glasses"},
-      {"label": "Safety Boots", "value": "safety-boots"},
-      {"label": "Gloves", "value": "gloves"},
-      {"label": "Respirator", "value": "respirator"},
-      {"label": "Hearing Protection", "value": "hearing-protection"},
-      {"label": "Fall Protection", "value": "fall-protection"},
-      {"label": "Chemical Suit", "value": "chemical-suit"}
+      {
+        "label": "Hard Hat",
+        "value": "hard-hat"
+      },
+      {
+        "label": "Safety Glasses",
+        "value": "safety-glasses"
+      },
+      {
+        "label": "Safety Boots",
+        "value": "safety-boots"
+      },
+      {
+        "label": "Gloves",
+        "value": "gloves"
+      },
+      {
+        "label": "Respirator",
+        "value": "respirator"
+      },
+      {
+        "label": "Hearing Protection",
+        "value": "hearing-protection"
+      },
+      {
+        "label": "Fall Protection",
+        "value": "fall-protection"
+      },
+      {
+        "label": "Chemical Suit",
+        "value": "chemical-suit"
+      }
     ]
   },
   {
@@ -590,10 +732,22 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "crew-information-group",
     "options": [
-      {"label": "API 510 Certified", "value": "api-510"},
-      {"label": "ASNT Level II", "value": "asnt-ii"},
-      {"label": "ASNT Level III", "value": "asnt-iii"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "API 510 Certified",
+        "value": "api-510"
+      },
+      {
+        "label": "ASNT Level II",
+        "value": "asnt-ii"
+      },
+      {
+        "label": "ASNT Level III",
+        "value": "asnt-iii"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -644,8 +798,14 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "contractor-information-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -732,7 +892,8 @@
     "size": 24,
     "sectionId": "vessel-identification-planning",
     "groupId": "schedule-coordination-group"
-  },{
+  },
+  {
     "id": "planning-status-group",
     "type": "group",
     "title": "Planning Status",
@@ -754,12 +915,30 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "planning-status-group",
     "options": [
-      {"label": "Draft", "value": "draft"},
-      {"label": "Under Review", "value": "under-review"},
-      {"label": "Approved", "value": "approved"},
-      {"label": "Rejected", "value": "rejected"},
-      {"label": "In Progress", "value": "in-progress"},
-      {"label": "Completed", "value": "completed"}
+      {
+        "label": "Draft",
+        "value": "draft"
+      },
+      {
+        "label": "Under Review",
+        "value": "under-review"
+      },
+      {
+        "label": "Approved",
+        "value": "approved"
+      },
+      {
+        "label": "Rejected",
+        "value": "rejected"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      },
+      {
+        "label": "Completed",
+        "value": "completed"
+      }
     ]
   },
   {
@@ -795,4 +974,4 @@
     "sectionId": "vessel-identification-planning",
     "groupId": "planning-status-group"
   }
-] 
+]

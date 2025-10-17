@@ -33,7 +33,7 @@ import {
 import type { RcFile } from 'antd/es/upload';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 const { Dragger } = Upload;
 
 export interface GridFSImageWithDrawing {
@@ -112,7 +112,7 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
     layout = 'grid'
 }) => {
     const [fileList, setFileList] = useState<GridFSImageWithDrawing[]>(value || []);
-    const [uploading, setUploading] = useState<Record<string, boolean>>({});
+    const [, setUploading] = useState<Record<string, boolean>>({});
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewImage, setPreviewImage] = useState('');
     const [previewTitle, setPreviewTitle] = useState('');
@@ -123,7 +123,7 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
     const [currentTool, setCurrentTool] = useState<string>('pen');
     const [currentColor, setCurrentColor] = useState('#000000');
     const [currentStrokeWidth, setCurrentStrokeWidth] = useState(2);
-    const [drawingHistory, setDrawingHistory] = useState<string[]>([]);
+    const [, setDrawingHistory] = useState<string[]>([]);
     const [historyIndex, setHistoryIndex] = useState(-1);
     
     // Refs for drawing
@@ -156,9 +156,7 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
 
     // Sync with parent value
     useEffect(() => {
-        if (value && JSON.stringify(value) !== JSON.stringify(fileList)) {
-            setFileList(value);
-        }
+        setFileList(Array.isArray(value) ? value : []);
     }, [value]);
 
     // Custom upload to GridFS
@@ -436,8 +434,6 @@ export const ImageUploadWithDrawingGridFS: React.FC<ImageUploadWithDrawingGridFS
         setEditingImage(null);
         message.success('Drawing saved! Image marked as modified.');
     }, [editingImage, fileList, onChange]);
-
-    const isUploading = Object.keys(uploading).length > 0;
 
     return (
         <div className={`image-upload-drawing-gridfs ${className}`} style={style}>

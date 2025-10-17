@@ -1,5 +1,5 @@
 {
-  "id": "api-510-inspection",
+  "id": "inspection/api-510-inspection",
   "type": "wizard",
   "title": "API 510 Inspection",
   "description": "Streamlined API 510 inspection wizard focused on core inspection workflow",
@@ -128,26 +128,26 @@
       }
     }
   ],
-      "smartDefaults": {
-      "findings-assessment": {
-        "overall-condition": "good",
-        "vessel-status": "fit-for-service",
-        "critical-issues": "no",
-        "safety-concerns": "no",
-        "immediate-actions": "no",
-        "maintenance-recommendations": "routine",
-        "next-inspection-date": "6-months",
-        "api-510-compliance": "compliant",
-        "inspection-approval": "approved"
-      },
-      "documentation-report": {
-        "photographs-taken": "yes",
-        "photograph-quality": "good",
-        "supporting-documents": "yes",
-        "report-format": "pdf",
-        "report-template": "api-510-standard",
-        "report-verification": "verified",
-        "report-submission": "submitted"
-      }
+  "smartDefaults": {
+    "findings-assessment": {
+      "overall-condition": "good",
+      "vessel-status": "fit-for-service",
+      "critical-issues": "no",
+      "safety-concerns": "no",
+      "immediate-actions": "no",
+      "maintenance-recommendations": "routine",
+      "next-inspection-date": "6-months",
+      "api-510-compliance": "compliant",
+      "inspection-approval": "approved"
+    },
+    "documentation-report": {
+      "photographs-taken": "yes",
+      "photograph-quality": "good",
+      "supporting-documents": "yes",
+      "report-format": "pdf",
+      "report-template": "api-510-standard",
+      "report-verification": "verified",
+      "report-submission": "submitted"
     }
-} 
+  }
+}

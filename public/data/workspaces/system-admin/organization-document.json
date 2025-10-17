@@ -1,5 +1,5 @@
 {
-  "id": "organization-document",
+  "id": "system-admin/organization-document",
   "title": "Organization Configuration",
   "description": "Create and manage organizations that can contain multiple tenants",
   "layout": "dashboard",
@@ -77,8 +77,14 @@
             "size": 12,
             "defaultValue": "active",
             "options": [
-              { "value": "active", "label": "Active" },
-              { "value": "inactive", "label": "Inactive" }
+              {
+                "value": "active",
+                "label": "Active"
+              },
+              {
+                "value": "inactive",
+                "label": "Inactive"
+              }
             ],
             "description": "Current organizational status"
           },
@@ -109,10 +115,16 @@
   "metadata": {
     "created": "2025-01-24T10:35:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "organization", "form"],
+    "tags": [
+      "admin",
+      "organization",
+      "form"
+    ],
     "description": "Organization creation and editing form",
     "permissions": {
-      "required": ["super_admin"],
+      "required": [
+        "super_admin"
+      ],
       "actions": [
         "organization:create",
         "organization:update"
@@ -120,4 +132,3 @@
     }
   }
 }
-

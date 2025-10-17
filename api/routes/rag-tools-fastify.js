@@ -17,8 +17,8 @@ async function registerRagToolsRoutes(fastify) {
    */
   fastify.post('/api/tools/search_data', { preHandler: requireAuth }, async (request, reply) => {
     try {
-      const { arguments: args, context } = request.body;
-      const { query, filters } = args;
+      const { arguments: args } = request.body;
+      const { query } = args;
       const tenantId = request.headers['x-tenant-id'];
 
       const { documentType } = args;
@@ -237,7 +237,6 @@ const matchConditions = {
     try {
       const { arguments: args } = request.body;
       const { reportType, parameters } = args;
-      const tenantId = request.headers['x-tenant-id'];
 // This would typically generate a PDF or Excel report
       // For now, return structured data
       const reportData = {

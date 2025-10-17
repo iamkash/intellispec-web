@@ -19,7 +19,8 @@
 
 const jwt = require('jsonwebtoken');
 const { logger } = require('./Logger');
-const { NotFoundError, AuthenticationError, AuthorizationError } = require('./ErrorHandler');
+const { RequestContextManager } = require('./RequestContext');
+const { AuthenticationError, AuthorizationError } = require('./ErrorHandler');
 
 /**
  * Get JWT secret from environment
@@ -111,6 +112,10 @@ async function requireAuth(request, reply) {
       platformRole: decoded.platformRole,
       roles: decoded.roles || []
     };
+
+    RequestContextManager.refreshContext(request, reply, { reason: 'auth:optional' });
+
+    RequestContextManager.refreshContext(request, reply, { reason: 'auth' });
     
     logger.debug('[Auth] User authenticated', {
       userId: request.user.userId,
@@ -168,6 +173,8 @@ async function requirePlatformAdmin(request, reply) {
       userId: request.user.userId,
       email: request.user.email
     });
+
+    RequestContextManager.refreshContext(request, reply, { reason: 'auth:platform-admin' });
     
   } catch (error) {
     logger.warn('[Auth] Platform admin authentication failed', {
@@ -207,6 +214,7 @@ async function requireTenantAdmin(request, reply) {
         isPlatformAdmin: true,
         isTenantAdmin: true
       };
+      RequestContextManager.refreshContext(request, reply, { reason: 'auth:tenant-admin-platform' });
       return;
     }
     
@@ -231,6 +239,8 @@ async function requireTenantAdmin(request, reply) {
       userId: request.user.userId,
       tenantId: request.user.tenantId
     });
+
+    RequestContextManager.refreshContext(request, reply, { reason: 'auth:tenant-admin' });
     
   } catch (error) {
     logger.warn('[Auth] Tenant admin authentication failed', {
@@ -267,6 +277,8 @@ async function optionalAuth(request, reply) {
       platformRole: decoded.platformRole,
       roles: decoded.roles || []
     };
+
+    RequestContextManager.refreshContext(request, reply, { reason: 'auth:optional' });
   } catch (error) {
     // Silently fail - user remains undefined
     request.user = null;
@@ -300,6 +312,7 @@ function requirePermission(permissions) {
           platformRole: decoded.platformRole,
           isPlatformAdmin: true
         };
+        RequestContextManager.refreshContext(request, reply, { reason: 'auth:require-permission-platform' });
         return;
       }
       
@@ -321,6 +334,8 @@ function requirePermission(permissions) {
         tenantId: decoded.tenantId,
         permissions: decoded.permissions
       };
+
+      RequestContextManager.refreshContext(request, reply, { reason: 'auth:require-permission' });
       
     } catch (error) {
       const statusCode = error.statusCode || (error.message.includes('permission') ? 403 : 401);
@@ -406,6 +421,3 @@ module.exports = {
   verifyPlatformAdmin: requirePlatformAdmin,
   requireSuperAdmin: requirePlatformAdmin
 };
-
-
-

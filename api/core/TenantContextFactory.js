@@ -33,6 +33,12 @@ class TenantContextFactory {
       return jwtContext;
     }
 
+    // Strategy 1b: Auth middleware populated request.user
+    const userContext = this._tryExtractFromRequestUser(request);
+    if (userContext) {
+      return userContext;
+    }
+
     // Strategy 2: Header-based (legacy)
     const headerContext = this._tryExtractFromHeaders(request);
     if (headerContext) {
@@ -72,6 +78,25 @@ class TenantContextFactory {
       logger.warn('JWT verification failed', { error: error.message });
       return null;
     }
+  }
+
+  /**
+   * Try to extract context from request.user
+   * (populated by centralized auth middleware)
+   * @private
+   */
+  static _tryExtractFromRequestUser(request) {
+    const user = request.user;
+    if (!user || !user.userId) {
+      return null;
+    }
+
+    return new TenantContext({
+      userId: user.userId,
+      tenantId: user.tenantId || null,
+      isPlatformAdmin: user.platformRole === 'platform_admin' || user.isPlatformAdmin === true,
+      allowedTenants: Array.isArray(user.allowedTenants) ? user.allowedTenants : (user.tenants || [])
+    });
   }
 
   /**

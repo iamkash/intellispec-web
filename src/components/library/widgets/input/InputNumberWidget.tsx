@@ -116,7 +116,7 @@ export const InputNumberWidget: React.FC<InputNumberWidgetProps> = ({
     }
 
     onChange?.(newValue);
-  }, [value, validator, onChange]);
+  }, [validator, onChange]);
 
   const handleReset = useCallback(() => {
     const resetValue = defaultValue !== undefined ? defaultValue : null;

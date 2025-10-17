@@ -23,22 +23,6 @@ const ActionSchema = z.object({
   disabled: z.boolean().optional().default(false)
 });
 
-const DataSourceSchema = z.object({
-  url: z.string().url('Data source URL must be valid'),
-  method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).optional().default('GET'),
-  headers: z.record(z.string()).optional(),
-  valueMapping: z.object({
-    dataPath: z.string().optional(),
-    filterBy: z.record(z.any()).optional(),
-    sortBy: z.object({
-      field: z.string(),
-      order: z.enum(['asc', 'desc']).optional().default('asc')
-    }).optional(),
-    fields: z.record(z.string()).optional(),
-    maxItems: z.number().positive().optional()
-  }).optional()
-});
-
 // Simplified Flat ActionPanelGadget configuration schema
 const ActionPanelGadgetConfigSchema = z.object({
   // Core gadget properties  
@@ -157,7 +141,7 @@ class ActionPanelDataFetcher extends React.Component<any, any> {
 
   render() {
     const { data, loading, error } = this.state;
-    const { actionPanelWidget, widgetRegistry, size, theme, columns, title } = this.props;
+    const { actionPanelWidget, widgetRegistry, size, theme, columns } = this.props;
 
     if (loading) {
       return React.createElement(

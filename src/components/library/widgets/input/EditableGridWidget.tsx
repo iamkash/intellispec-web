@@ -60,12 +60,12 @@ export const EditableGridWidget: React.FC<EditableGridWidgetProps> = ({ rows, on
       isInternalUpdate.current = false;
     }
   }, [data, onChange]);
+  const defaultPageSize = features?.pageSizeOptions?.[0];
   React.useEffect(() => {
-    const sz = features?.pageSizeOptions?.[0];
-    if (typeof sz === 'number' && Number.isFinite(sz) && sz > 0 && pagination.pageSize !== sz) {
-      setPagination(prev => ({ ...prev, pageSize: sz }));
+    if (typeof defaultPageSize === 'number' && Number.isFinite(defaultPageSize) && defaultPageSize > 0 && pagination.pageSize !== defaultPageSize) {
+      setPagination(prev => ({ ...prev, pageSize: defaultPageSize }));
     }
-  }, [features]);
+  }, [defaultPageSize, pagination.pageSize]);
 
   // Fetch options for select columns with optionsUrl
   React.useEffect(() => {
@@ -157,35 +157,43 @@ export const EditableGridWidget: React.FC<EditableGridWidgetProps> = ({ rows, on
         fetchOptionsForColumn(col);
       } else if (col.type === 'select' && col.options) {
         // Use static options
-        console.log(`[EditableGridWidget] Setting static options for ${col.key}:`, col.options);
-        setColumnOptions(prev => ({ ...prev, [col.key]: col.options || [] }));
+        setColumnOptions(prev => {
+          if (prev[col.key]) {
+            return prev;
+          }
+          console.log(`[EditableGridWidget] Setting static options for ${col.key}:`, col.options);
+          return { ...prev, [col.key]: col.options || [] };
+        });
       }
     });
-  }, [columnsMeta, urlParams]);
+  }, [columnsMeta, urlParams, columnOptions]);
+
+  const columnMeta: EditableGridColumnMeta[] = React.useMemo(
+    () => (Array.isArray(columnsMeta) && columnsMeta.length > 0) ? columnsMeta : [],
+    [columnsMeta]
+  );
 
   const readOnly = Boolean(features?.readOnly);
-  const startEdit = (id: string) => setEditingId(id);
-  const cancelEdit = () => setEditingId(null);
-  const commitEdit = () => setEditingId(null);
+  const startEdit = React.useCallback((id: string) => setEditingId(id), []);
+  const cancelEdit = React.useCallback(() => setEditingId(null), []);
+  const commitEdit = React.useCallback(() => setEditingId(null), []);
 
-  const addRow = () => {
+  const addRow = React.useCallback(() => {
     const newRow: EditableGridRow = { id: `r-${Date.now()}` };
     // Initialize known keys from column meta
-    (columnsMeta || []).forEach(cm => { if (!(cm.key in newRow)) (newRow as any)[cm.key] = ''; });
+    (columnMeta || []).forEach(cm => { if (!(cm.key in newRow)) (newRow as any)[cm.key] = ''; });
     isInternalUpdate.current = true;
     setData(prev => [...prev, newRow]);
     setEditingId(newRow.id);
-  };
-  const update = (id: string, patch: Partial<EditableGridRow>) => {
+  }, [columnMeta]);
+  const update = React.useCallback((id: string, patch: Partial<EditableGridRow>) => {
     isInternalUpdate.current = true;
     setData(prev => prev.map(r => r.id === id ? { ...r, ...patch } : r));
-  };
-  const remove = (id: string) => {
+  }, []);
+  const remove = React.useCallback((id: string) => {
     isInternalUpdate.current = true;
     setData(prev => prev.filter(r => r.id !== id));
-  };
-
-  const columnMeta: EditableGridColumnMeta[] = (Array.isArray(columnsMeta) && columnsMeta.length > 0) ? columnsMeta : [];
+  }, []);
 
   const columns = React.useMemo<ColumnDef<EditableGridRow>[]>(() => {
     const selectionCol: ColumnDef<EditableGridRow> | null = (features?.enableSelection === false) ? null : {
@@ -308,7 +316,19 @@ export const EditableGridWidget: React.FC<EditableGridWidgetProps> = ({ rows, on
     };
     const cols = readOnly ? baseCols : [...baseCols, actionsCol];
     return selectionCol ? [selectionCol, ...cols] : cols;
-  }, [columnMeta, editingId, readOnly, features?.enableSelection]);
+  }, [
+    columnMeta,
+    editingId,
+    readOnly,
+    features?.enableSelection,
+    columnOptions,
+    loadingOptions,
+    update,
+    remove,
+    startEdit,
+    commitEdit,
+    cancelEdit,
+  ]);
 
   const table = useReactTable({
     data: data,
@@ -420,4 +440,3 @@ export const EditableGridWidget: React.FC<EditableGridWidgetProps> = ({ rows, on
 };
 
 export default EditableGridWidget;
-

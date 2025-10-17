@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Button, DatePicker, Input, Segmented, Select, Space, Tooltip, Upload, message } from 'antd';
-import { UploadOutlined, FileExcelOutlined, DatabaseOutlined, PlusOutlined, FilterOutlined, DownloadOutlined, InboxOutlined, CloudDownloadOutlined } from '@ant-design/icons';
+import { UploadOutlined, FileExcelOutlined, DatabaseOutlined, PlusOutlined, FilterOutlined, DownloadOutlined, CloudDownloadOutlined } from '@ant-design/icons';
 import type { UploadProps } from 'antd';
 import { EditableGridWidget } from './EditableGridWidget';
 
@@ -233,7 +233,7 @@ export const AssetSelectorWidget: React.FC<AssetSelectorWidgetProps> = ({
         <EditableGridWidget
           rows={rows}
           onChange={(r) => { isInternal.current = true; setRows(r as AssetRow[]); }}
-          columnsMeta={DEFAULT_COLUMNS as any}
+          columnsMeta={columnsMeta as any}
           features={{ enableFiltering: true, enableSorting: true, pageSizeOptions: [5, 10, 20], readOnly: Boolean(readOnly), bordered: false }}
         />
       </div>
@@ -242,5 +242,4 @@ export const AssetSelectorWidget: React.FC<AssetSelectorWidgetProps> = ({
 };
 
 export default AssetSelectorWidget;
-
 

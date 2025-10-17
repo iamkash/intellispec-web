@@ -1,22 +1,27 @@
 {
-  "id": "ladder-scaffold-inspection",
-  "title": "Ladder/Scaffold Inspection Checklist",
-  "description": "Inspection checklist for ladders and scaffolds.",
+  "id": "intelliSAFTEY/ppe-inspection-log",
+  "title": "PPE Inspection Log",
+  "description": "Track PPE inspections; AI can suggest categories and items.",
   "gadgets": [
     {
-      "id": "ladder-scaffold-inspection-gadget",
+      "id": "ppe-inspection-log-gadget",
       "type": "ai-analysis-wizard-gadget",
-      "title": "Ladder/Scaffold Inspection",
+      "title": "PPE Inspection Log",
       "config": {
         "sections": [
           {
             "id": "inspection_items",
-            "title": "Inspection Items",
+            "title": "PPE Items",
             "includeInPdf": true,
             "grid": {
-              "title": "Checklist",
+              "title": "Items",
               "dataKey": "items",
               "columns": [
+                {
+                  "key": "category",
+                  "title": "Category",
+                  "editable": true
+                },
                 {
                   "key": "item",
                   "title": "Item",
@@ -60,7 +65,7 @@
             "lgSpan": 12
           },
           {
-            "id": "date",
+            "id": "inspection_date",
             "label": "Date",
             "type": "date",
             "groupId": "signoff_group",
@@ -89,7 +94,7 @@
               139
             ],
             "fontSize": 6,
-            "leftText": "Ladder/Scaffold",
+            "leftText": "PPE Log",
             "centerText": "Confidential",
             "rightText": "Page {page} of {pages}"
           }
@@ -98,12 +103,12 @@
           "itemsPopulate": {
             "modelConfig": {
               "model": "gpt-5-nano",
-              "max_completion_tokens": 700,
+              "max_completion_tokens": 800,
               "temperature": 0.3
             },
             "promptConfig": {
-              "systemPrompt": "Generate a ladder/scaffold checklist.",
-              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"item\": \"string\", \"status\": \"OK|Repair|N/A\", \"notes\": \"string\" } ]"
+              "systemPrompt": "Propose PPE inspection items with statuses. JSON array only.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"category\": \"string\", \"item\": \"string\", \"status\": \"OK|Replace|Clean|N/A\", \"notes\": \"string\" } ]"
             }
           }
         },
@@ -129,32 +134,82 @@
           "responseSelector": "data.0"
         },
         "domainConfig": {
-          "payloadType": "inspection",
-          "defaultType": "general_inspection",
+          "payloadType": "safety",
+          "defaultType": "ppe_inspection_log",
           "fields": {
-            "type": "inspection_type",
-            "detectedType": "detected_equipment_type",
-            "id": "equipment_id",
-            "name": "assetName",
-            "owner": "inspector_name",
-            "date": "inspection_date"
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
           },
           "outputKeys": {
-            "id": "equipmentId",
-            "type": "equipmentType",
-            "owner": "inspectorName",
-            "date": "inspectionDate"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
           },
           "payloadKeys": {
-            "type": "inspectionType"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
           },
           "navigation": {
-            "listingSuffix": "inspections",
+            "listingSuffix": "responses",
             "homeSuffix": "home"
+          },
+          "typeMap": {
+            "ppe_inspection_log": "PPE Inspection Log"
+          }
+        },
+        "type": "safety",
+        "documentType": "ppe_inspection_log",
+        "label": "PPE Inspection Log",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "ppe_inspection_log",
+          "domainSubTypeLabel": "PPE Inspection Log"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },
       "position": 24
     }
-  ]
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
 }

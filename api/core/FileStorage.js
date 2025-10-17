@@ -166,13 +166,27 @@ class FileStorage {
       downloadStream.on('error', (error) => {
         logger.error('Error streaming file', { fileId, error: error.message });
         if (reply) {
-          reply.code(404).send({ error: 'File not found' });
+          // Ensure JSON response headers before sending structured payloads
+          if (!reply.sent) {
+            reply.removeHeader('Content-Type');
+            reply.removeHeader('Content-Disposition');
+            const notFound =
+              error.code === 'ENOENT' ||
+              (typeof error.message === 'string' && error.message.includes('FileNotFound'));
+            reply
+              .code(notFound ? 404 : 500)
+              .type('application/json')
+              .send(
+                JSON.stringify({
+                  error: notFound ? 'File not found' : 'Failed to stream file'
+                })
+              );
+          }
         }
       });
 
       // If Fastify reply provided, stream directly
       if (reply) {
-        reply.header('Content-Type', 'application/octet-stream');
         reply.header('Cache-Control', 'no-cache');
         return reply.send(downloadStream);
       }
@@ -185,7 +199,14 @@ class FileStorage {
         error: error.message
       });
       if (reply) {
-        reply.code(500).send({ error: 'Internal server error' });
+        if (!reply.sent) {
+          reply.removeHeader('Content-Type');
+          reply.removeHeader('Content-Disposition');
+          reply
+            .code(500)
+            .type('application/json')
+            .send(JSON.stringify({ error: 'Internal server error' }));
+        }
       }
       throw error;
     }
@@ -352,4 +373,3 @@ class FileStorage {
 }
 
 module.exports = FileStorage;
-

@@ -91,8 +91,10 @@ console.log(`📊 Summary of data to be deleted:`);
     
     let totalDocuments = 0;
     for (const [collection, count] of Object.entries(dataAnalysis)) {
-totalDocuments += count;
+      totalDocuments += count;
+      console.log(`  • ${collection}: ${count} documents`);
     }
+    console.log(`Total documents slated for deletion: ${totalDocuments}`);
 console.log(`\n⏳ Starting deletion in 5 seconds... (Press Ctrl+C to cancel)`);
     
     // Wait 5 seconds to allow cancellation
@@ -135,9 +137,11 @@ console.log(`=====================================`);
     let totalDeleted = 0;
     for (const [collection, result] of Object.entries(deletionResults)) {
       if (typeof result === 'number') {
-totalDeleted += result;
+        totalDeleted += result;
+        console.log(`  • ${collection}: ${result} documents deleted`);
       } else {
-}
+        console.warn(`  • ${collection}: ${result}`);
+      }
     }
 console.log(`🎉 Total documents deleted: ${totalDeleted}`);
 // Verify cleanup

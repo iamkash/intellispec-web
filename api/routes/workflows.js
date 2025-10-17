@@ -10,7 +10,6 @@
  * - Uses ExecutionEngine for workflow execution
  */
 
-const mongoose = require('mongoose');
 const { logger } = require('../core/Logger');
 const { requireAuth } = require('../core/AuthMiddleware');
 

@@ -1,5 +1,5 @@
 import { Button, Card, Space, message } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useOpenAI } from '../../../../../../hooks/useOpenAI';
 import { getOpenAIConfig } from '../../../../../../utils/config';
 import type { AIAnalysisWizardConfig, AIAnalysisWizardData } from '../AIAnalysisWizardGadget.types';
@@ -16,10 +16,11 @@ interface SectionStepProps {
   sections: any[];
   wizardData: AIAnalysisWizardData;
   updateSectionData: (sectionIndex: number, update: any) => void;
-  openAI: any;
+  openAI?: any;
   config: AIAnalysisWizardConfig;
   getFormFieldValue: (fieldId: string) => any;
   disabledFields?: string[];
+  onUpdateResponseId?: (responseId?: string | null, patch?: Partial<AIAnalysisWizardData['analysisData']>) => void;
 }
 
 export const SectionStep: React.FC<SectionStepProps> = ({
@@ -31,11 +32,13 @@ export const SectionStep: React.FC<SectionStepProps> = ({
   openAI,
   config,
   getFormFieldValue,
-  disabledFields = []
+  disabledFields = [],
+  onUpdateResponseId
 }) => {
-  const data = (wizardData.sections || [])[sectionIndex] || {};
+  const data = useMemo(() => (wizardData.sections || [])[sectionIndex] || {}, [wizardData.sections, sectionIndex]);
   const openAIHook = useOpenAI(getOpenAIConfig());
   const [populateLoading, setPopulateLoading] = useState(false);
+  const gridOpenAI = openAI || openAIHook;
   
   console.log('[SectionStep] Rendering section:', {
     sectionId: section.id,
@@ -210,20 +213,14 @@ Only include fields that can be reasonably populated based on the context.`;
             
             // Save response ID for conversation continuity
             if (result.responseId) {
-              (window as any).__previousResponseId = result.responseId;
-              
-              // Also save in wizard data for persistence
-              const currentAnalysisData = (wizardData as any)?.analysisData || {};
-              updateSectionData(sectionIndex, { 
-                formData: updatedFormData,
-                analysisData: { ...currentAnalysisData, previousResponseId: result.responseId }
-              });
-              
-              console.log(`💾 Saved response ID for continuity: ${result.responseId}`);
-            } else {
-              updateSectionData(sectionIndex, { formData: updatedFormData });
+              try {
+                (window as any).__previousResponseId = result.responseId;
+              } catch {}
+              onUpdateResponseId?.(result.responseId);
             }
-            
+
+            updateSectionData(sectionIndex, { formData: updatedFormData });
+
             message.success(`Populated ${Object.keys(parsedData).length} field(s) using AI`);
           } else {
             message.warning('AI returned invalid data format');
@@ -237,7 +234,7 @@ Only include fields that can be reasonably populated based on the context.`;
       console.error('Error populating form:', error);
       message.error('Failed to populate form with AI');
     }
-  }, [section, data, updateSectionData, sectionIndex, getFormFieldValue, openAIHook]);
+  }, [section, data, updateSectionData, sectionIndex, getFormFieldValue, openAIHook, config, wizardData, onUpdateResponseId]);
 
   // Listen for auto-populate events from wizard navigation
   useEffect(() => {
@@ -351,8 +348,9 @@ Only include fields that can be reasonably populated based on the context.`;
               wizardData={wizardData}
               data={data}
               updateSectionData={updateSectionData}
-              openAI={openAI}
+              openAI={gridOpenAI}
               config={config}
+              onUpdateResponseId={onUpdateResponseId}
             />
           )}
           
@@ -365,6 +363,7 @@ Only include fields that can be reasonably populated based on the context.`;
               updateSectionData={updateSectionData}
               gadget={null}
               triggerRerender={() => {}}
+              onUpdateResponseId={onUpdateResponseId}
             />
           )}
         </Space>

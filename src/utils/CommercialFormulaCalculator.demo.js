@@ -110,3 +110,4 @@ calculator.registerFunction('AUDIT_SCORE', (...args) => {
 });
 
 const customResult = calculator.evaluate('=AUDIT_SCORE(q1, q5, q6, q7, q8, q9, q11)');
+console.log('AUDIT_SCORE result:', customResult);

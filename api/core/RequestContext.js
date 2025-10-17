@@ -30,9 +30,9 @@ const asyncLocalStorage = new AsyncLocalStorage();
  * Encapsulates all request-scoped information
  */
 class RequestContext {
-  constructor(request, reply) {
-    this.requestId = request.id || uuidv4();
-    this.startTime = Date.now();
+  constructor(request, reply, overrides = {}) {
+    this.requestId = overrides.requestId || request.id || uuidv4();
+    this.startTime = overrides.startTime || Date.now();
     
     // HTTP metadata
     this.method = request.method;
@@ -45,19 +45,19 @@ class RequestContext {
     this.userAgent = request.headers['user-agent'];
     
     // Tenant context
-    this.tenantContext = TenantContextFactory.fromRequest(request);
+    this.tenantContext = overrides.tenantContext || TenantContextFactory.fromRequest(request);
     
     // Logger with context
-    this.logger = createRequestLogger(request, this.tenantContext);
+    this.logger = overrides.logger || createRequestLogger(request, this.tenantContext);
     
     // Session (if exists)
-    this.session = request.session || null;
+    this.session = request.session || overrides.session || null;
     
     // Custom data storage
-    this.data = new Map();
+    this.data = overrides.data instanceof Map ? new Map(overrides.data) : new Map();
     
     // Reply reference (for middleware)
-    this._reply = reply;
+    this._reply = overrides.reply || reply;
     
     // Track if response sent
     this.responseSent = false;
@@ -239,7 +239,47 @@ class RequestContextManager {
   static getCurrentContext() {
     return asyncLocalStorage.getStore() || null;
   }
-  
+
+  /**
+   * Rebuild request context after authentication or tenant changes
+   *
+   * @param {Object} request - Fastify request
+   * @param {Object} [reply] - Fastify reply
+   * @param {Object} [meta] - Additional logging metadata
+   * @returns {RequestContext}
+   */
+  static refreshContext(request, reply, meta = {}) {
+    const current = request.context || asyncLocalStorage.getStore() || null;
+    const overrides = current
+      ? {
+          requestId: current.requestId,
+          startTime: current.startTime,
+          data: current.data,
+          reply: current._reply,
+          session: current.session
+        }
+      : {};
+
+    const context = new RequestContext(
+      request,
+      reply || current?._reply || request.raw,
+      overrides
+    );
+
+    request.context = context;
+    asyncLocalStorage.enterWith(context);
+
+    if (meta?.log !== false) {
+      context.logger.debug('Request context refreshed', {
+        userId: context.userId,
+        tenantId: context.tenantId,
+        reason: meta.reason || 'unknown'
+      });
+    }
+
+    return context;
+  }
+
   /**
    * Run function with specific context
    * 
@@ -255,4 +295,3 @@ module.exports = {
   RequestContext,
   RequestContextManager
 };
-

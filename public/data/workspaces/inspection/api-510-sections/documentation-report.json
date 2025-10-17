@@ -28,8 +28,14 @@
     "groupId": "technical-drawings-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -48,24 +54,69 @@
     "maxFileSize": 10485760,
     "accept": ".pdf,.jpg,.jpeg,.png,.dwg,.dxf,.svg",
     "categoryOptions": [
-      {"label": "Vessel Drawings", "value": "vessel-drawings", "color": "blue"},
-      {"label": "Nozzle Details", "value": "nozzle-details", "color": "green"},
-      {"label": "Support Structures", "value": "support-structures", "color": "orange"},
-      {"label": "Piping Diagrams", "value": "piping-diagrams", "color": "purple"},
-      {"label": "Instrumentation", "value": "instrumentation", "color": "cyan"},
-      {"label": "Other", "value": "other", "color": "default"}
+      {
+        "label": "Vessel Drawings",
+        "value": "vessel-drawings",
+        "color": "blue"
+      },
+      {
+        "label": "Nozzle Details",
+        "value": "nozzle-details",
+        "color": "green"
+      },
+      {
+        "label": "Support Structures",
+        "value": "support-structures",
+        "color": "orange"
+      },
+      {
+        "label": "Piping Diagrams",
+        "value": "piping-diagrams",
+        "color": "purple"
+      },
+      {
+        "label": "Instrumentation",
+        "value": "instrumentation",
+        "color": "cyan"
+      },
+      {
+        "label": "Other",
+        "value": "other",
+        "color": "default"
+      }
     ],
-    "defaultCategories": ["vessel-drawings"],
+    "defaultCategories": [
+      "vessel-drawings"
+    ],
     "tagOptions": [
-      {"label": "Current", "value": "current", "color": "green"},
-      {"label": "Historical", "value": "historical", "color": "blue"},
-      {"label": "As-Built", "value": "as-built", "color": "orange"},
-      {"label": "Design", "value": "design", "color": "purple"},
-      {"label": "Reference", "value": "reference", "color": "cyan"}
+      {
+        "label": "Current",
+        "value": "current",
+        "color": "green"
+      },
+      {
+        "label": "Historical",
+        "value": "historical",
+        "color": "blue"
+      },
+      {
+        "label": "As-Built",
+        "value": "as-built",
+        "color": "orange"
+      },
+      {
+        "label": "Design",
+        "value": "design",
+        "color": "purple"
+      },
+      {
+        "label": "Reference",
+        "value": "reference",
+        "color": "cyan"
+      }
     ],
     "addUploadText": "Add Technical Drawing"
   },
-
   {
     "id": "supporting-documents-group",
     "type": "group",
@@ -86,8 +137,14 @@
     "groupId": "supporting-documents-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -106,25 +163,91 @@
     "maxFileSize": 52428800,
     "accept": ".pdf,.doc,.docx,.xls,.xlsx,.txt,.csv,.zip,.rar",
     "categoryOptions": [
-      {"label": "Manufacturer Data", "value": "manufacturer-data", "color": "blue"},
-      {"label": "Previous Reports", "value": "previous-reports", "color": "green"},
-      {"label": "Maintenance Records", "value": "maintenance-records", "color": "orange"},
-      {"label": "Operating Procedures", "value": "operating-procedures", "color": "purple"},
-      {"label": "Safety Data Sheets", "value": "safety-data", "color": "red"},
-      {"label": "Calibration Certificates", "value": "calibration-certs", "color": "cyan"},
-      {"label": "Material Certificates", "value": "material-certs", "color": "magenta"},
-      {"label": "Weld Procedures", "value": "weld-procedures", "color": "geekblue"},
-      {"label": "NDE Reports", "value": "nde-reports", "color": "lime"},
-      {"label": "Other", "value": "other", "color": "default"}
+      {
+        "label": "Manufacturer Data",
+        "value": "manufacturer-data",
+        "color": "blue"
+      },
+      {
+        "label": "Previous Reports",
+        "value": "previous-reports",
+        "color": "green"
+      },
+      {
+        "label": "Maintenance Records",
+        "value": "maintenance-records",
+        "color": "orange"
+      },
+      {
+        "label": "Operating Procedures",
+        "value": "operating-procedures",
+        "color": "purple"
+      },
+      {
+        "label": "Safety Data Sheets",
+        "value": "safety-data",
+        "color": "red"
+      },
+      {
+        "label": "Calibration Certificates",
+        "value": "calibration-certs",
+        "color": "cyan"
+      },
+      {
+        "label": "Material Certificates",
+        "value": "material-certs",
+        "color": "magenta"
+      },
+      {
+        "label": "Weld Procedures",
+        "value": "weld-procedures",
+        "color": "geekblue"
+      },
+      {
+        "label": "NDE Reports",
+        "value": "nde-reports",
+        "color": "lime"
+      },
+      {
+        "label": "Other",
+        "value": "other",
+        "color": "default"
+      }
     ],
-    "defaultCategories": ["manufacturer-data"],
+    "defaultCategories": [
+      "manufacturer-data"
+    ],
     "tagOptions": [
-      {"label": "Important", "value": "important", "color": "red"},
-      {"label": "Reference", "value": "reference", "color": "blue"},
-      {"label": "Historical", "value": "historical", "color": "green"},
-      {"label": "Current", "value": "current", "color": "orange"},
-      {"label": "Required", "value": "required", "color": "purple"},
-      {"label": "Optional", "value": "optional", "color": "default"}
+      {
+        "label": "Important",
+        "value": "important",
+        "color": "red"
+      },
+      {
+        "label": "Reference",
+        "value": "reference",
+        "color": "blue"
+      },
+      {
+        "label": "Historical",
+        "value": "historical",
+        "color": "green"
+      },
+      {
+        "label": "Current",
+        "value": "current",
+        "color": "orange"
+      },
+      {
+        "label": "Required",
+        "value": "required",
+        "color": "purple"
+      },
+      {
+        "label": "Optional",
+        "value": "optional",
+        "color": "default"
+      }
     ],
     "addUploadText": "Add Supporting Document"
   },
@@ -148,8 +271,14 @@
     "groupId": "photographic-documentation-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -168,21 +297,71 @@
     "maxFileSize": 20971520,
     "accept": ".jpg,.jpeg,.png,.gif,.bmp,.tiff",
     "categoryOptions": [
-      {"label": "Overall Vessel Views", "value": "overall-views", "color": "blue"},
-      {"label": "Component Details", "value": "component-details", "color": "green"},
-      {"label": "Safety Conditions", "value": "safety-conditions", "color": "orange"},
-      {"label": "Access Points", "value": "access-points", "color": "purple"},
-      {"label": "Support Structures", "value": "support-structures", "color": "cyan"},
-      {"label": "General Documentation", "value": "general-docs", "color": "magenta"},
-      {"label": "Other", "value": "other", "color": "default"}
+      {
+        "label": "Overall Vessel Views",
+        "value": "overall-views",
+        "color": "blue"
+      },
+      {
+        "label": "Component Details",
+        "value": "component-details",
+        "color": "green"
+      },
+      {
+        "label": "Safety Conditions",
+        "value": "safety-conditions",
+        "color": "orange"
+      },
+      {
+        "label": "Access Points",
+        "value": "access-points",
+        "color": "purple"
+      },
+      {
+        "label": "Support Structures",
+        "value": "support-structures",
+        "color": "cyan"
+      },
+      {
+        "label": "General Documentation",
+        "value": "general-docs",
+        "color": "magenta"
+      },
+      {
+        "label": "Other",
+        "value": "other",
+        "color": "default"
+      }
     ],
-    "defaultCategories": ["overall-views"],
+    "defaultCategories": [
+      "overall-views"
+    ],
     "tagOptions": [
-      {"label": "Overview", "value": "overview", "color": "blue"},
-      {"label": "Detail", "value": "detail", "color": "green"},
-      {"label": "Before", "value": "before", "color": "orange"},
-      {"label": "After", "value": "after", "color": "purple"},
-      {"label": "Reference", "value": "reference", "color": "cyan"}
+      {
+        "label": "Overview",
+        "value": "overview",
+        "color": "blue"
+      },
+      {
+        "label": "Detail",
+        "value": "detail",
+        "color": "green"
+      },
+      {
+        "label": "Before",
+        "value": "before",
+        "color": "orange"
+      },
+      {
+        "label": "After",
+        "value": "after",
+        "color": "purple"
+      },
+      {
+        "label": "Reference",
+        "value": "reference",
+        "color": "cyan"
+      }
     ],
     "addUploadText": "Add Photo Collection"
   },
@@ -196,7 +375,6 @@
     "size": 12,
     "collapsible": false
   },
-
   {
     "id": "completion-group",
     "type": "group",
@@ -218,8 +396,14 @@
     "groupId": "completion-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -275,4 +459,4 @@
     "watchField": "inspection-complete",
     "showWhen": "yes"
   }
-] 
+]

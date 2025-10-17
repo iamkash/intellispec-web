@@ -27,13 +27,6 @@ const iconNameMap: Record<string, string> = {
   BuildOutlined: 'BuildOutlined', // This exists in AntD
 };
 
-function getClosestAntdIconName(requested: string): string | undefined {
-  // Try to find a close match (case-insensitive, contains)
-  const available = Object.keys(AntIcons);
-  const lower = requested.toLowerCase();
-  return available.find(name => name.toLowerCase().includes(lower));
-}
-
 function createIconElement(iconName: string): React.ReactNode {
   try {
     const IconComponent = (AntIcons as any)[iconName];

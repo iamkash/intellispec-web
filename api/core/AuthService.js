@@ -360,17 +360,6 @@ class AuthService {
   }
 
   /**
-   * Generate JWT token
-   * 
-   * @param {Object} payload - Token payload
-   * @returns {String} JWT token
-   */
-  static generateToken(payload) {
-    const JWT_EXPIRES_IN = '24h';
-    return jwt.sign(payload, AuthService.JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
-  }
-
-  /**
    * Hash password
    * 
    * @param {String} password - Plain text password
@@ -478,4 +467,3 @@ class AuthService {
 }
 
 module.exports = AuthService;
-

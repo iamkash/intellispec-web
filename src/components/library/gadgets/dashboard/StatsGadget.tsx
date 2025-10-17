@@ -8,7 +8,7 @@
 import React from 'react';
 import { BaseGadget, GadgetType, GadgetMetadata, GadgetSchema, GadgetConfig } from '../base';
 import { ValidationResult } from '../../core/base';
-import { Card, Row, Col, Statistic } from 'antd';
+import { Card, Row, Col } from 'antd';
 import { 
   ArrowUpOutlined, 
   ArrowDownOutlined, 
@@ -181,7 +181,6 @@ console.log('StatsGadget renderBody - data:', data);
     // Ensure data is an array
     const statsData = Array.isArray(data) ? data : [];
     const maxItems = config.maxItems || 4;
-    const layout = config.layout || 'grid';
     const showTrends = config.showTrends !== false;
     const showIcons = config.showIcons !== false;
     const size = config.size || 'medium';
@@ -220,14 +219,14 @@ console.log('StatsGadget renderBody - data:', data);
       }
     };
 
-    const getCardSize = () => {
+    const getCardPadding = () => {
       switch (size) {
         case 'small':
-          return { padding: '12px' };
+          return '12px';
         case 'large':
-          return { padding: '10px' };
+          return '10px';
         default:
-          return { padding: '16px' };
+          return '16px';
       }
     };
 
@@ -260,7 +259,7 @@ console.log('StatsGadget renderBody - data:', data);
             minHeight: '120px'
           }}
           bodyStyle={{ 
-            padding: '16px',
+            padding: getCardPadding(),
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

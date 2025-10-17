@@ -1,5 +1,5 @@
 {
-  "id": "rotating-equipment-wizard",
+  "id": "intelliINSPECT/rotating-equipment-wizard",
   "title": "Rotating Equipment Inspection Wizard",
   "description": "AI-powered inspection wizard for pumps, compressors, turbines, and rotating machinery",
   "layout": "dashboard",
@@ -996,7 +996,7 @@
             },
             "promptConfig": {
               "systemPrompt": "Generate standard API 610/617/618 inspection report. Use only factual data from voice transcript and images. Do not include disclaimers about 'not provided', 'photographic evidence', or 'insufficient data'. If data is not available, leave field blank or use 'N/A'. Standard report format only.",
-              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard API inspection report using voice data and images:\n\n**ROTATING EQUIPMENT INSPECTION REPORT**\n**API 610/617/618 STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [pump/compressor/motor] |\n| Manufacturer | [from nameplate] |\n| Model | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Rated Capacity | [from nameplate/voice] |\n| Rated Speed | [RPM from nameplate/voice] |\n| Power Rating | [HP/kW from nameplate/voice] |\n| Bearing Type | [from voice/visual] |\n| Coupling Type | [from voice/visual] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Casing/Housing | [condition from voice/visual] | [details] |\n| Bearings | [condition from voice/visual] | [details] |\n| Coupling | [alignment status from voice/visual] | [details] |\n| Foundation | [condition from voice/visual] | [details] |\n| Seals | [leakage status from voice/visual] | [details] |\n| Lubrication | [oil condition from voice/visual] | [details] |\n\n**MEASUREMENTS:**\n| Parameter | Reading | Unit |\n|-----------|---------|------|\n| Vibration | [reading from voice] | mils |\n| Temperature | [reading from voice] | \u00b0F |\n| Noise Level | [reading from voice] | dB |\n| Alignment | [status from voice] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per API standards] |\n| Next Inspection Due | [Date per API interval] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| API Certification | [API 610/617/618] |"
+              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard API inspection report using voice data and images:\n\n**ROTATING EQUIPMENT INSPECTION REPORT**\n**API 610/617/618 STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [pump/compressor/motor] |\n| Manufacturer | [from nameplate] |\n| Model | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Rated Capacity | [from nameplate/voice] |\n| Rated Speed | [RPM from nameplate/voice] |\n| Power Rating | [HP/kW from nameplate/voice] |\n| Bearing Type | [from voice/visual] |\n| Coupling Type | [from voice/visual] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Casing/Housing | [condition from voice/visual] | [details] |\n| Bearings | [condition from voice/visual] | [details] |\n| Coupling | [alignment status from voice/visual] | [details] |\n| Foundation | [condition from voice/visual] | [details] |\n| Seals | [leakage status from voice/visual] | [details] |\n| Lubrication | [oil condition from voice/visual] | [details] |\n\n**MEASUREMENTS:**\n| Parameter | Reading | Unit |\n|-----------|---------|------|\n| Vibration | [reading from voice] | mils |\n| Temperature | [reading from voice] | °F |\n| Noise Level | [reading from voice] | dB |\n| Alignment | [status from voice] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per API standards] |\n| Next Inspection Due | [Date per API interval] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| API Certification | [API 610/617/618] |"
             },
             "streaming": {
               "enabled": true,
@@ -1116,8 +1116,8 @@
           "disablePopulatedFields": true,
           "urlParams": [
             {
-              "name": "recordId",
-              "queryParam": "record_id",
+              "name": "documentId",
+              "queryParam": "documentId",
               "required": true
             }
           ],
@@ -1125,8 +1125,8 @@
             "url": "/api/documents",
             "method": "GET",
             "query": {
-              "type": "asset",
-              "id": "{params.recordId}"
+              "type": "wizard",
+              "id": "{params.documentId}"
             }
           },
           "responseSelector": "data.0"
@@ -1163,6 +1163,38 @@
             "pump": "Pump",
             "compressor": "Compressor",
             "turbine": "Turbine"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "inspection",
+          "domainLabel": "Inspection",
+          "domainSubType": "rotating_equipment_wizard",
+          "domainSubTypeLabel": "Rotating Equipment Inspection Wizard"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },

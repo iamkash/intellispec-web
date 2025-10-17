@@ -6,10 +6,8 @@
  */
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Button, Input, Space, Typography } from 'antd';
-import { ScanOutlined, CameraOutlined } from '@ant-design/icons';
-
-const { Text } = Typography;
+import { Button, Input, Space } from 'antd';
+import { ScanOutlined } from '@ant-design/icons';
 
 export interface QRCodeScannerWidgetProps {
   id: string;
@@ -35,7 +33,6 @@ export const QRCodeScannerWidget: React.FC<QRCodeScannerWidgetProps> = ({
   style,
 }) => {
   const [inputValue, setInputValue] = useState(value || '');
-  const [isScanning, setIsScanning] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {

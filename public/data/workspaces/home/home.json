@@ -1,5 +1,5 @@
 {
-  "id": "home",
+  "id": "home/home",
   "title": "Project Management Dashboard",
   "description": "Comprehensive project management dashboard with quick actions, KPIs, and project overview",
   "layout": "dashboard",
@@ -114,7 +114,6 @@
       },
       "position": 24
     },
-    
     {
       "id": "workload-snapshot",
       "type": "stats-gadget",
@@ -169,7 +168,8 @@
         "showSeverity": true
       },
       "position": 24
-    },{
+    },
+    {
       "id": "upcoming-milestones",
       "type": "activity-feed-gadget",
       "title": "Upcoming Milestones",
@@ -202,7 +202,13 @@
   "metadata": {
     "created": "2024-01-15T10:00:00Z",
     "version": "2.0.0",
-    "tags": ["home", "dashboard", "project-management", "kpis", "milestones"],
+    "tags": [
+      "home",
+      "dashboard",
+      "project-management",
+      "kpis",
+      "milestones"
+    ],
     "description": "Comprehensive project management dashboard with quick actions, KPI summary, active projects, milestones, workload, and activity tracking."
   }
-} 
+}

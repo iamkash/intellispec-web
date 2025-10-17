@@ -1,12 +1,15 @@
 {
-  "id": "intelliNDT-calculators",
+  "id": "intelliNDT/calculators",
   "type": "dashboard",
   "title": "NDT Calculators",
   "description": "Browse and access NDT calculation tools",
   "icon": "CalculatorOutlined",
   "mode": "dashboard",
   "layout": "grid",
-  "filterContext": { "enabled": true, "filterDefinitions": [] },
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": []
+  },
   "gadgets": [
     {
       "id": "calculators-mega-menu",
@@ -29,7 +32,11 @@
         "enableFavorites": true,
         "enableSorting": true,
         "enableViewToggle": true,
-        "searchFields": ["label", "description", "tags"],
+        "searchFields": [
+          "label",
+          "description",
+          "tags"
+        ],
         "cardSize": "medium"
       }
     }
@@ -44,5 +51,3 @@
     }
   }
 }
-
-

@@ -42,7 +42,7 @@ export class FormValidator {
   private static EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
   // Phone validation regex - supports international format
-  private static PHONE_REGEX = /^[\+]?[1-9][\d]{0,15}$/;
+  private static PHONE_REGEX = /^[+]?[1-9][\d]{0,15}$/;
   
   // Strong password requirements
   private static PASSWORD_REQUIREMENTS = {
@@ -77,7 +77,7 @@ export class FormValidator {
     }
     
     // Remove common phone number formatting characters
-    const cleanValue = value.replace(/[\s\-\(\)\.]/g, '');
+    const cleanValue = value.replace(/[\s().-]/g, '');
     const isValid = this.PHONE_REGEX.test(cleanValue);
     
     return {

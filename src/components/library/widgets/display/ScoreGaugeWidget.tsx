@@ -96,6 +96,7 @@ export class ScoreGaugeWidget extends BaseWidget {
     }
 
     const customFormat = format || ((percent) => `${roundedValue}/${maxValue}`);
+    const showCustomIndicator = showInfo !== false;
 
     // Detect dark theme
     const isDarkTheme = context?.theme?.isDarkMode || 
@@ -237,7 +238,7 @@ export class ScoreGaugeWidget extends BaseWidget {
               percent={roundedPercent}
               size={size}
               strokeWidth={strokeWidth}
-              showInfo={false} // We'll show custom info
+              showInfo={!showCustomIndicator}
               format={customFormat}
               strokeColor={strokeColor}
               trailColor={isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'}
@@ -245,9 +246,11 @@ export class ScoreGaugeWidget extends BaseWidget {
               status={status}
             />
             {/* Custom score display */}
-            <div style={scoreIndicatorStyle}>
-              {roundedValue}
-            </div>
+            {showCustomIndicator && (
+              <div style={scoreIndicatorStyle}>
+                {roundedValue}
+              </div>
+            )}
           </div>
           
           {description && (

@@ -1,0 +1,195 @@
+{
+  "id": "intelliSAFTEY/home",
+  "type": "dashboard",
+  "title": "intelliSAFTEY Home",
+  "description": "Main safety dashboard with quick access to rescue workflows, permits, and readiness logs",
+  "icon": "HomeOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "gadgets": [
+    {
+      "id": "safety-quicklinks-gadget",
+      "type": "action-panel-gadget",
+      "title": "Safety Command Tools",
+      "description": "Quick access to safety command workflows and documentation",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "title": "Safety Command Tools",
+        "layout": "grid",
+        "columns": 4,
+        "size": "large",
+        "maxItems": 60,
+        "showIcons": true,
+        "showLabels": true,
+        "actions": [
+          {
+            "id": "rescue-preplan",
+            "label": "Rescue Pre-Plan",
+            "description": "Pre-plan confined space rescue operations with AI-assisted analysis",
+            "icon": "RobotOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/rescue-preplan",
+            "category": "rescue_operations",
+            "tags": ["rescue", "planning", "ai"]
+          },
+          {
+            "id": "confined-space-rescue-briefing",
+            "label": "Rescue Briefing",
+            "description": "Generate a structured confined space rescue briefing for responders",
+            "icon": "ReadOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/confined-space-rescue-briefing",
+            "category": "rescue_operations",
+            "tags": ["briefing", "confined-space", "operations"]
+          },
+          {
+            "id": "rescue-drill-report",
+            "label": "Rescue Drill Report",
+            "description": "Capture after-action learnings from rescue drills and exercises",
+            "icon": "FileTextOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/rescue-drill-report",
+            "category": "rescue_operations",
+            "tags": ["drills", "after-action", "lessons-learned"]
+          },
+          {
+            "id": "rope-system-plan",
+            "label": "Rope System Plan",
+            "description": "Design rope access and rigging plans with equipment requirements",
+            "icon": "DeploymentUnitOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/rope-system-plan",
+            "category": "rescue_operations",
+            "tags": ["rope-access", "rigging", "planning"]
+          },
+          {
+            "id": "confined-space-entry-permit",
+            "label": "Confined Space Entry Permit",
+            "description": "Issue and manage confined space entry permits with safety controls",
+            "icon": "FileProtectOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/confined-space-entry-permit",
+            "category": "permits_compliance",
+            "tags": ["confined-space", "permit", "compliance"]
+          },
+          {
+            "id": "hot-work-permit",
+            "label": "Hot Work Permit",
+            "description": "Authorize hot work with hazard analysis, monitoring, and approvals",
+            "icon": "FireOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/hot-work-permit",
+            "category": "permits_compliance",
+            "tags": ["hot-work", "permit", "compliance"]
+          },
+          {
+            "id": "fall-protection-plan",
+            "label": "Fall Protection Plan",
+            "description": "Document fall protection systems, anchors, and controls",
+            "icon": "SafetyCertificateOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/fall-protection-plan",
+            "category": "permits_compliance",
+            "tags": ["fall-protection", "planning", "osha"]
+          },
+          {
+            "id": "anchor-point-assessment",
+            "label": "Anchor Point Assessment",
+            "description": "Evaluate and document anchor point capacity and suitability",
+            "icon": "AimOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/anchor-point-assessment",
+            "category": "permits_compliance",
+            "tags": ["anchors", "assessment", "fall-protection"]
+          },
+          {
+            "id": "rescue-equipment-readiness",
+            "label": "Equipment Readiness",
+            "description": "Track rescue equipment inspections, readiness, and assignments",
+            "icon": "ToolOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/rescue-equipment-readiness",
+            "category": "readiness_logs",
+            "tags": ["equipment", "inspection", "readiness"]
+          },
+          {
+            "id": "rescue-vehicle-inspection",
+            "label": "Vehicle Inspection",
+            "description": "Inspect and document rescue vehicle readiness and maintenance",
+            "icon": "CarOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/rescue-vehicle-inspection",
+            "category": "readiness_logs",
+            "tags": ["vehicle", "inspection", "readiness"]
+          },
+          {
+            "id": "atmospheric-monitoring-log",
+            "label": "Atmospheric Monitoring Log",
+            "description": "Log atmospheric monitoring data and alarm thresholds",
+            "icon": "CloudOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/atmospheric-monitoring-log",
+            "category": "readiness_logs",
+            "tags": ["gas-monitoring", "log", "confined-space"]
+          },
+          {
+            "id": "gas-detector-calibration-log",
+            "label": "Gas Detector Calibration",
+            "description": "Track detector calibration, bump tests, and certification records",
+            "icon": "DashboardOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/gas-detector-calibration-log",
+            "category": "readiness_logs",
+            "tags": ["calibration", "instrumentation", "gas-detection"]
+          },
+          {
+            "id": "ppe-inspection-log",
+            "label": "PPE Inspection Log",
+            "description": "Maintain inspection history for PPE, harnesses, and respiratory gear",
+            "icon": "SafetyCertificateOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/ppe-inspection-log",
+            "category": "readiness_logs",
+            "tags": ["ppe", "inspection", "safety"]
+          },
+          {
+            "id": "ladder-scaffold-inspection",
+            "label": "Ladder & Scaffold Inspection",
+            "description": "Inspect ladders, scaffolds, and temporary access systems",
+            "icon": "BuildOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/ladder-scaffold-inspection",
+            "category": "readiness_logs",
+            "tags": ["scaffold", "ladder", "inspection"]
+          },
+          {
+            "id": "emergency-contact-roster",
+            "label": "Emergency Contact Roster",
+            "description": "Maintain emergency contact details and command structure",
+            "icon": "ContactsOutlined",
+            "type": "workspace",
+            "workspace": "intelliSAFTEY/emergency-contact-roster",
+            "category": "communications",
+            "tags": ["contacts", "command", "communication"]
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "safety-quicklinks-gadget": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": true,
+      "showCategories": [
+        "rescue_operations",
+        "permits_compliance",
+        "readiness_logs",
+        "communications"
+      ]
+    }
+  }
+}

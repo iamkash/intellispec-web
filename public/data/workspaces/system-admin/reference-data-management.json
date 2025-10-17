@@ -1,5 +1,5 @@
 {
-  "id": "reference-data-management",
+  "id": "system-admin/reference-data-management",
   "title": "Reference Data Management",
   "description": "Manage reference data lists and options - the single source of truth for all dropdown/select options",
   "layout": "dashboard",
@@ -31,11 +31,31 @@
             "category": {
               "required": true,
               "options": [
-                { "value": "general", "label": "General", "icon": "AppstoreOutlined" },
-                { "value": "user", "label": "User Management", "icon": "TeamOutlined" },
-                { "value": "system", "label": "System", "icon": "ToolOutlined" },
-                { "value": "business", "label": "Business", "icon": "ShoppingOutlined" },
-                { "value": "workflow", "label": "Workflow", "icon": "BranchesOutlined" }
+                {
+                  "value": "general",
+                  "label": "General",
+                  "icon": "AppstoreOutlined"
+                },
+                {
+                  "value": "user",
+                  "label": "User Management",
+                  "icon": "TeamOutlined"
+                },
+                {
+                  "value": "system",
+                  "label": "System",
+                  "icon": "ToolOutlined"
+                },
+                {
+                  "value": "business",
+                  "label": "Business",
+                  "icon": "ShoppingOutlined"
+                },
+                {
+                  "value": "workflow",
+                  "label": "Workflow",
+                  "icon": "BranchesOutlined"
+                }
               ]
             },
             "description": {
@@ -46,17 +66,37 @@
               "required": true,
               "default": "label",
               "options": [
-                { "value": "label", "label": "By Label (A-Z)", "icon": "SortAscendingOutlined" },
-                { "value": "value", "label": "By Value", "icon": "TagOutlined" },
-                { "value": "order", "label": "By Sort Order", "icon": "DatabaseOutlined" }
+                {
+                  "value": "label",
+                  "label": "By Label (A-Z)",
+                  "icon": "SortAscendingOutlined"
+                },
+                {
+                  "value": "value",
+                  "label": "By Value",
+                  "icon": "TagOutlined"
+                },
+                {
+                  "value": "order",
+                  "label": "By Sort Order",
+                  "icon": "DatabaseOutlined"
+                }
               ]
             },
             "allowCustom": {
               "required": true,
               "default": false,
               "options": [
-                { "value": false, "label": "No - Fixed list only", "icon": "LockOutlined" },
-                { "value": true, "label": "Yes - Users can add custom values", "icon": "UnlockOutlined" }
+                {
+                  "value": false,
+                  "label": "No - Fixed list only",
+                  "icon": "LockOutlined"
+                },
+                {
+                  "value": true,
+                  "label": "Yes - Users can add custom values",
+                  "icon": "UnlockOutlined"
+                }
               ]
             }
           }
@@ -98,11 +138,26 @@
             "type": "select",
             "required": true,
             "options": [
-              { "value": "general", "label": "General" },
-              { "value": "user", "label": "User Management" },
-              { "value": "system", "label": "System" },
-              { "value": "business", "label": "Business" },
-              { "value": "workflow", "label": "Workflow" }
+              {
+                "value": "general",
+                "label": "General"
+              },
+              {
+                "value": "user",
+                "label": "User Management"
+              },
+              {
+                "value": "system",
+                "label": "System"
+              },
+              {
+                "value": "business",
+                "label": "Business"
+              },
+              {
+                "value": "workflow",
+                "label": "Workflow"
+              }
             ]
           },
           {
@@ -118,9 +173,18 @@
             "type": "select",
             "required": true,
             "options": [
-              { "value": "label", "label": "By Label (A-Z)" },
-              { "value": "value", "label": "By Value" },
-              { "value": "order", "label": "By Sort Order" }
+              {
+                "value": "label",
+                "label": "By Label (A-Z)"
+              },
+              {
+                "value": "value",
+                "label": "By Value"
+              },
+              {
+                "value": "order",
+                "label": "By Sort Order"
+              }
             ]
           },
           {
@@ -129,8 +193,14 @@
             "type": "select",
             "required": true,
             "options": [
-              { "value": false, "label": "No - Fixed list only" },
-              { "value": true, "label": "Yes - Users can add custom values" }
+              {
+                "value": false,
+                "label": "No - Fixed list only"
+              },
+              {
+                "value": true,
+                "label": "Yes - Users can add custom values"
+              }
             ]
           }
         ]
@@ -171,8 +241,14 @@
             "required": true,
             "defaultValue": false,
             "options": [
-              { "value": false, "label": "No - Add to existing options" },
-              { "value": true, "label": "Yes - Replace all existing options" }
+              {
+                "value": false,
+                "label": "No - Add to existing options"
+              },
+              {
+                "value": true,
+                "label": "Yes - Replace all existing options"
+              }
             ],
             "description": "⚠️ Warning: Selecting 'Yes' will delete all current options for this list type"
           }
@@ -192,11 +268,25 @@
     }
   ],
   "permissions": {
-    "view": ["admin", "super_admin"],
-    "create": ["admin", "super_admin"],
-    "edit": ["admin", "super_admin"],
-    "delete": ["super_admin"],
-    "ai_generate": ["admin", "super_admin"]
+    "view": [
+      "admin",
+      "super_admin"
+    ],
+    "create": [
+      "admin",
+      "super_admin"
+    ],
+    "edit": [
+      "admin",
+      "super_admin"
+    ],
+    "delete": [
+      "super_admin"
+    ],
+    "ai_generate": [
+      "admin",
+      "super_admin"
+    ]
   },
   "help": {
     "overview": "This dashboard manages all reference data lists used throughout the application. Create list types (like 'User Status', 'Priority Levels') and their options (like 'Active', 'Inactive'). All dropdown menus in forms will pull from these centralized lists.",

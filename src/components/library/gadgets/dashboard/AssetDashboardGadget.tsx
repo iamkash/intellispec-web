@@ -207,23 +207,7 @@ export class AssetDashboardGadget extends BaseGadget {
 const AssetDashboardComponent: React.FC<AssetDashboardGadgetProps> = ({ config, context, selectedNode }) => {
   const [nodeData, setNodeData] = useState<AssetNode | null>(null);
   const [kpiData, setKpiData] = useState<Record<string, any>>({});
-  const [loading, setLoading] = useState(false);
-
-  // Update selected node when context changes
-  useEffect(() => {
-    // Listen for node selection events from context
-    if (context?.eventBus) {
-      const handleNodeSelect = (event: any) => {
-if (event.node) {
-          setNodeData(event.node);
-          loadNodeDetails(event.node);
-        }
-      };
-
-      context.eventBus.on('nodeSelect', handleNodeSelect);
-      return () => context.eventBus.off('nodeSelect', handleNodeSelect);
-    }
-  }, [context]);
+  const [, setLoading] = useState(false);
 
   // Load detailed node data and KPIs
   const loadNodeDetails = useCallback(async (node: AssetNode) => {
@@ -231,7 +215,7 @@ if (event.node) {
 
     try {
       setLoading(true);
-// Load additional data based on node type
+      // Load additional data based on node type
       const promises = [];
 
       if (node.nodeType === 'site') {
@@ -278,6 +262,22 @@ if (event.node) {
       setLoading(false);
     }
   }, []);
+
+  // Update selected node when context changes
+  useEffect(() => {
+    // Listen for node selection events from context
+    if (context?.eventBus) {
+      const handleNodeSelect = (event: any) => {
+        if (event.node) {
+          setNodeData(event.node);
+          loadNodeDetails(event.node);
+        }
+      };
+
+      context.eventBus.on('nodeSelect', handleNodeSelect);
+      return () => context.eventBus.off('nodeSelect', handleNodeSelect);
+    }
+  }, [context, loadNodeDetails]);
 
   // Render basic information section
   const renderBasicInfo = (section: DashboardSection) => {

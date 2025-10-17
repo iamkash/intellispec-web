@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useRef, useCallback } from 'react';
-import { Button, Space, Typography, Progress } from 'antd';
+import { Button, Space, Typography } from 'antd';
 import { AudioOutlined, PlayCircleOutlined, PauseCircleOutlined, StopOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;

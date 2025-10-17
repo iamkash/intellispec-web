@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Checkbox, Typography, Space, Card, Button, Tooltip, Divider } from 'antd';
-import { CheckOutlined, ClearOutlined, MinusOutlined } from '@ant-design/icons';
+import { CheckOutlined, ClearOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 

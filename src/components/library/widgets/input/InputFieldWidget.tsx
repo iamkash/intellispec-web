@@ -7,7 +7,7 @@
 
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Input, Space, Typography } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const { Text } = Typography;
 
@@ -131,8 +131,8 @@ export const InputFieldWidget: React.FC<InputFieldWidgetProps> = ({
 }) => {
   const [internalValue, setInternalValue] = useState(value || defaultValue || '');
   const [validationError, setValidationError] = useState<string | undefined>();
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
-  const [validationTimer, setValidationTimer] = useState<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const validationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Always use internal value for immediate display, update from props when they change
   useEffect(() => {
@@ -144,18 +144,14 @@ export const InputFieldWidget: React.FC<InputFieldWidgetProps> = ({
   // Cleanup timers on unmount
   useEffect(() => {
     return () => {
-      setDebounceTimer(prevTimer => {
-        if (prevTimer) {
-          clearTimeout(prevTimer);
-        }
-        return null;
-      });
-      setValidationTimer(prevTimer => {
-        if (prevTimer) {
-          clearTimeout(prevTimer);
-        }
-        return null;
-      });
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+      if (validationTimerRef.current) {
+        clearTimeout(validationTimerRef.current);
+        validationTimerRef.current = null;
+      }
     };
   }, []);
 
@@ -167,33 +163,28 @@ export const InputFieldWidget: React.FC<InputFieldWidgetProps> = ({
 
     // Debounced validation to prevent excessive validation calls
     if (validator) {
-      setValidationTimer(prevTimer => {
-        if (prevTimer) {
-          clearTimeout(prevTimer);
+      if (validationTimerRef.current) {
+        clearTimeout(validationTimerRef.current);
+      }
+      validationTimerRef.current = setTimeout(() => {
+        const validation = validator(newValue);
+        if (!validation.isValid) {
+          setValidationError(validation.message);
+        } else {
+          setValidationError(undefined);
         }
-        return setTimeout(() => {
-          const validation = validator(newValue);
-          if (!validation.isValid) {
-            setValidationError(validation.message);
-          } else {
-            setValidationError(undefined);
-          }
-        }, 200); // 200ms debounce for validation
-      });
+      }, 200); // 200ms debounce for validation
     }
 
     // Handle debounced onChange
     if (onChange) {
       if (debounceDelay > 0) {
-        // Use functional update to avoid dependency on debounceTimer
-        setDebounceTimer(prevTimer => {
-          if (prevTimer) {
-            clearTimeout(prevTimer);
-          }
-          return setTimeout(() => {
-            onChange(newValue);
-          }, debounceDelay);
-        });
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+        debounceTimerRef.current = setTimeout(() => {
+          onChange(newValue);
+        }, debounceDelay);
       } else {
         onChange(newValue);
       }
@@ -202,16 +193,14 @@ export const InputFieldWidget: React.FC<InputFieldWidgetProps> = ({
 
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
     // Clear debounce timer on blur to trigger immediate onChange
-    setDebounceTimer(prevTimer => {
-      if (prevTimer) {
-        clearTimeout(prevTimer);
-        if (onChange) {
-          onChange(e.target.value);
-        }
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+      if (onChange) {
+        onChange(e.target.value);
       }
-      return null;
-    });
-    
+    }
+
     onBlur?.(e);
   }, [onChange, onBlur]); // Removed debounceTimer from dependencies
 

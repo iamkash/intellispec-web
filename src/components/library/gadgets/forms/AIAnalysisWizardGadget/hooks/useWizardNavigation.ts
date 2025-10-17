@@ -85,7 +85,7 @@ export const useWizardNavigation = (
     
     // Check if the condition is met
     return watchedValue === section.showWhen;
-  }, [wizardData, wizardData.sections]);
+  }, [wizardData]);
 
   return {
     currentStep,

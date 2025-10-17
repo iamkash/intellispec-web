@@ -37,5 +37,7 @@ for (const key in mockFormData) {
   if (value === 'no') noCount++;
   if (value === 'na') naCount++;
 }
+
+console.log('Manual COUNT results', { yesCount, noCount, naCount });
 // Manual test of FIELD logic
 // Test the data structure that the formula calculator expects

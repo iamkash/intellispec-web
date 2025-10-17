@@ -76,8 +76,9 @@ calculations.forEach(calc => {
   const result = calc.calculation();
   const isCorrect = Math.abs(result - calc.expected) < 0.01;
   const status = isCorrect ? '✅' : '❌';
-console.log(`  Formula: ${calc.formula}`);
-console.log(`  Actual: ${result}`);
+  console.log(`${status} ${calc.name}`);
+  console.log(`  Formula: ${calc.formula}`);
+  console.log(`  Actual: ${result}`);
 });
 
 // Test Excel-style calculations
@@ -111,6 +112,7 @@ excelCalculations.forEach(calc => {
     ? Math.abs(result - calc.expected) < 0.01
     : result === calc.expected;
   const status = isCorrect ? '✅' : '❌';
-console.log(`  Formula: ${calc.formula}`);
-console.log(`  Actual: ${result}`);
+  console.log(`${status} ${calc.name}`);
+  console.log(`  Formula: ${calc.formula}`);
+  console.log(`  Actual: ${result}`);
 });

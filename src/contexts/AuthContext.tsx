@@ -79,7 +79,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const storedUser = localStorage.getItem('user');
 
       if (storedToken && storedUser) {
-        const user = JSON.parse(storedUser);
         
         // Verify token is still valid
         const response = await fetch(getApiFullUrl('/api/auth/me'), {

@@ -1,5 +1,5 @@
 {
-  "id": "scaffolding-project-plan-wizard",
+  "id": "construction/scaffolding-project-plan-wizard",
   "title": "Scaffolding Project Plan Wizard",
   "description": "Capture site notes and images, then generate a comprehensive scaffolding project plan (BOM, labor, schedule, risks, quotation).",
   "gadgets": [
@@ -36,8 +36,8 @@
                 "temperature": 0.2
               },
               "promptConfig": {
-                "systemPrompt": "ROLE: You are a senior scaffolding planner. GOAL: Produce a complete, professional scaffolding project plan in Markdown from IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Permits and Safety, ## Equipment and Tools, ## Materials and Consumables (BOM), ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation, ## Design & Compliance. TABLES (required formats): - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials/BOM: | Component | Spec | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - WBS: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CONTENT GUIDANCE: Include typical scaffold elements (standards, ledgers, transoms, braces, couplers, base plates, sole boards, boards/decks, stairs, toeboards, guardrails, ties/anchors, netting/mesh). Cover erection/dismantle sequencing, access, working platforms, edge protection, tie patterns, allowable loads, and exclusion zones. CALCULATIONS: Compute Extended and totals; include Labor Subtotal and Grand Total with USD formatting (e.g., $12,345). COMPLIANCE: Reference relevant standards (OSHA 1926 Subpart L and/or EN 12811) and note design criteria/load class if inferable. RULES: No duplicate headings; concise, actionable, field\u2011ready; prefer tables where possible.",
-                "userPrompt": "Context (transcript and notes):\n{text}\n\nUsing the images and transcript above, generate the scaffolding project plan using the specified headings and table formats. Include a domain\u2011appropriate BOM and compute Extended (Qty \u00d7 Hours \u00d7 Rate) and totals (Labor Subtotal and Grand Total) with USD formatting. Return Markdown only."
+                "systemPrompt": "ROLE: You are a senior scaffolding planner. GOAL: Produce a complete, professional scaffolding project plan in Markdown from IMAGES and USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS (use each at most once): # Project Plan, ## Objectives, ## Scope, ## Assumptions, ## Site Conditions, ## Permits and Safety, ## Equipment and Tools, ## Materials and Consumables (BOM), ## Team and Roles, ## Work Breakdown Structure and Estimates, ## Schedule, ## Risks and Mitigations, ## Deliverables, ## Acceptance Criteria, ## Quotation, ## Design & Compliance. TABLES (required formats): - Equipment and Tools: | Item | Category | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Materials/BOM: | Component | Spec | Qty | Unit Rate (USD) | Extended (USD) | Notes | - Team and Roles: | Role | Qty (persons) | Hours | Hourly Rate (USD) | Extended (USD) | - WBS: | Task | Duration | Labor Hours | Roles | Dependencies | - Schedule: | Task | Start | Finish | Duration | Predecessors | Critical | - Risks: | Risk | Likelihood | Impact | Mitigation | Owner | - Quotation: | Item | Amount (USD) | Notes | CONTENT GUIDANCE: Include typical scaffold elements (standards, ledgers, transoms, braces, couplers, base plates, sole boards, boards/decks, stairs, toeboards, guardrails, ties/anchors, netting/mesh). Cover erection/dismantle sequencing, access, working platforms, edge protection, tie patterns, allowable loads, and exclusion zones. CALCULATIONS: Compute Extended and totals; include Labor Subtotal and Grand Total with USD formatting (e.g., $12,345). COMPLIANCE: Reference relevant standards (OSHA 1926 Subpart L and/or EN 12811) and note design criteria/load class if inferable. RULES: No duplicate headings; concise, actionable, field‑ready; prefer tables where possible.",
+                "userPrompt": "Context (transcript and notes):\n{text}\n\nUsing the images and transcript above, generate the scaffolding project plan using the specified headings and table formats. Include a domain‑appropriate BOM and compute Extended (Qty × Hours × Rate) and totals (Labor Subtotal and Grand Total) with USD formatting. Return Markdown only."
               },
               "streaming": {
                 "enabled": true,
@@ -808,7 +808,7 @@
               "temperature": 0.2
             },
             "promptConfig": {
-              "systemPrompt": "Return ONLY JSON with acceptance_criteria_text (Markdown bullets for completion/inspection/hand\u2011back)."
+              "systemPrompt": "Return ONLY JSON with acceptance_criteria_text (Markdown bullets for completion/inspection/hand‑back)."
             }
           },
           "quotationPopulate": {
@@ -867,6 +867,38 @@
           "navigation": {
             "listingSuffix": "inspections",
             "homeSuffix": "home"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "construction",
+          "domainLabel": "Construction",
+          "domainSubType": "scaffolding_project_plan_wizard",
+          "domainSubTypeLabel": "Scaffolding Project Plan"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },

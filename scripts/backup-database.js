@@ -51,11 +51,13 @@ const db = mongoose.connection.db;
         if (documents.length > 0) {
           const backupFile = path.join(backupDir, `${collectionName}.json`);
           await fs.writeFile(backupFile, JSON.stringify(documents, null, 2));
-backedUpCollections++;
+          backedUpCollections++;
         } else {
-}
+          console.log(`ℹ️  ${collectionName} is empty - nothing to back up.`);
+        }
       } catch (error) {
-}
+        console.error(`⚠️  Failed to back up ${collectionName}:`, error);
+      }
     }
 
     // Create a restore script
@@ -103,9 +105,10 @@ restore();
 `;
 
     await fs.writeFile(path.join(backupDir, 'restore.js'), restoreScript);
-console.log(`📊 Summary:`);
-console.log(`   - Backup location: ${backupDir}`);
-return backupDir;
+    console.log(`📊 Summary:`);
+    console.log(`   - Backup location: ${backupDir}`);
+    console.log(`   - Collections backed up: ${backedUpCollections}`);
+    return backupDir;
   } catch (error) {
     console.error('❌ Backup failed:', error);
     throw error;

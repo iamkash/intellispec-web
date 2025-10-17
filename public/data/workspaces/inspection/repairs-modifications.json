@@ -1,5 +1,5 @@
 {
-  "id": "repairs-modifications",
+  "id": "inspection/repairs-modifications",
   "type": "section",
   "title": "Repairs & Modifications",
   "description": "Documentation of repairs, modifications, pressure testing, and quality assurance",
@@ -26,9 +26,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "Planned", "value": "planned"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "Planned",
+              "value": "planned"
+            }
           ]
         },
         {
@@ -51,11 +60,26 @@
           "watchField": "repairs-required",
           "showWhen": "yes,planned",
           "options": [
-            {"label": "Welding", "value": "welding"},
-            {"label": "Patch Repair", "value": "patch"},
-            {"label": "Replacement", "value": "replacement"},
-            {"label": "Cladding", "value": "cladding"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "Welding",
+              "value": "welding"
+            },
+            {
+              "label": "Patch Repair",
+              "value": "patch"
+            },
+            {
+              "label": "Replacement",
+              "value": "replacement"
+            },
+            {
+              "label": "Cladding",
+              "value": "cladding"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -150,8 +174,14 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            }
           ]
         },
         {
@@ -183,12 +213,30 @@
           "watchField": "modifications-made",
           "showWhen": "yes",
           "options": [
-            {"label": "Nozzle Addition", "value": "nozzle-addition"},
-            {"label": "Nozzle Removal", "value": "nozzle-removal"},
-            {"label": "Support Modification", "value": "support-modification"},
-            {"label": "Internal Modification", "value": "internal-modification"},
-            {"label": "External Modification", "value": "external-modification"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "Nozzle Addition",
+              "value": "nozzle-addition"
+            },
+            {
+              "label": "Nozzle Removal",
+              "value": "nozzle-removal"
+            },
+            {
+              "label": "Support Modification",
+              "value": "support-modification"
+            },
+            {
+              "label": "Internal Modification",
+              "value": "internal-modification"
+            },
+            {
+              "label": "External Modification",
+              "value": "external-modification"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -212,9 +260,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Approved", "value": "approved"},
-            {"label": "Pending", "value": "pending"},
-            {"label": "Not Required", "value": "not-required"}
+            {
+              "label": "Approved",
+              "value": "approved"
+            },
+            {
+              "label": "Pending",
+              "value": "pending"
+            },
+            {
+              "label": "Not Required",
+              "value": "not-required"
+            }
           ]
         },
         {
@@ -248,9 +305,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "Conditional", "value": "conditional"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "Conditional",
+              "value": "conditional"
+            }
           ]
         },
         {
@@ -263,10 +329,22 @@
           "watchField": "pressure-test-required",
           "showWhen": "yes,conditional",
           "options": [
-            {"label": "Hydrostatic Test", "value": "hydrostatic"},
-            {"label": "Pneumatic Test", "value": "pneumatic"},
-            {"label": "Leak Test", "value": "leak"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "Hydrostatic Test",
+              "value": "hydrostatic"
+            },
+            {
+              "label": "Pneumatic Test",
+              "value": "pneumatic"
+            },
+            {
+              "label": "Leak Test",
+              "value": "leak"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -320,9 +398,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Passed", "value": "passed"},
-            {"label": "Failed", "value": "failed"},
-            {"label": "Conditional", "value": "conditional"}
+            {
+              "label": "Passed",
+              "value": "passed"
+            },
+            {
+              "label": "Failed",
+              "value": "failed"
+            },
+            {
+              "label": "Conditional",
+              "value": "conditional"
+            }
           ]
         },
         {
@@ -366,9 +453,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "Conditional", "value": "conditional"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "Conditional",
+              "value": "conditional"
+            }
           ]
         },
         {
@@ -409,12 +505,30 @@
           "watchField": "qa-verified",
           "showWhen": "yes,conditional",
           "options": [
-            {"label": "Weld Procedures", "value": "weld-procedures"},
-            {"label": "Material Verification", "value": "material-verification"},
-            {"label": "NDE Requirements", "value": "nde-requirements"},
-            {"label": "Pressure Testing", "value": "pressure-testing"},
-            {"label": "Documentation", "value": "documentation"},
-            {"label": "Other", "value": "other"}
+            {
+              "label": "Weld Procedures",
+              "value": "weld-procedures"
+            },
+            {
+              "label": "Material Verification",
+              "value": "material-verification"
+            },
+            {
+              "label": "NDE Requirements",
+              "value": "nde-requirements"
+            },
+            {
+              "label": "Pressure Testing",
+              "value": "pressure-testing"
+            },
+            {
+              "label": "Documentation",
+              "value": "documentation"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
           ]
         },
         {
@@ -464,9 +578,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "In Progress", "value": "in-progress"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "In Progress",
+              "value": "in-progress"
+            }
           ]
         },
         {
@@ -479,9 +602,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "Not Applicable", "value": "not-applicable"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "Not Applicable",
+              "value": "not-applicable"
+            }
           ]
         },
         {
@@ -494,9 +626,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Yes", "value": "yes"},
-            {"label": "No", "value": "no"},
-            {"label": "Conditional", "value": "conditional"}
+            {
+              "label": "Yes",
+              "value": "yes"
+            },
+            {
+              "label": "No",
+              "value": "no"
+            },
+            {
+              "label": "Conditional",
+              "value": "conditional"
+            }
           ]
         },
         {
@@ -518,9 +659,18 @@
           "direction": "horizontal",
           "buttonStyle": "solid",
           "options": [
-            {"label": "Approved", "value": "approved"},
-            {"label": "Conditional Approval", "value": "conditional"},
-            {"label": "Not Approved", "value": "not-approved"}
+            {
+              "label": "Approved",
+              "value": "approved"
+            },
+            {
+              "label": "Conditional Approval",
+              "value": "conditional"
+            },
+            {
+              "label": "Not Approved",
+              "value": "not-approved"
+            }
           ]
         },
         {
@@ -536,4 +686,4 @@
       ]
     }
   ]
-} 
+}

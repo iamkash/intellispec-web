@@ -19,7 +19,7 @@
  * - Comprehensive logging and monitoring
  */
 
-import { User, Role, Tenant, AuthLog, IUser, IRole, ITenant } from '../models';
+import { User, Role, Tenant, AuthLog, IUser, IRole } from '../models';
 import mongoose from 'mongoose';
 
 // ==================== TYPES AND INTERFACES ====================
@@ -883,7 +883,7 @@ export async function initializeTenantRBAC(tenantId: string): Promise<IRole[]> {
 // Export singleton instance
 export const rbacService = RBACService.getInstance();
 
-export default {
+const RbacExports = {
   RBACService,
   rbacService,
   PERMISSIONS,
@@ -895,3 +895,5 @@ export default {
   getUserPermissions,
   initializeTenantRBAC
 };
+
+export default RbacExports;

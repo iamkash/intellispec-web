@@ -89,16 +89,18 @@ const vocTypes = [
     ];
     
     for (const { type, description } of vocTypes) {
-      const count = await documentsCollection.countDocuments({ 
-        type, 
-        embedding: { $exists: true } 
+      const count = await documentsCollection.countDocuments({
+        type,
+        embedding: { $exists: true }
       });
-}
+      console.log(`  • ${description} (${type}): ${count} documents with embeddings`);
+    }
     
     const totalVOCDocs = await documentsCollection.countDocuments({
       type: { $in: ['paintInvoice', 'paint_specifications', 'company', 'site'] },
       embedding: { $exists: true }
     });
+    console.log(`\nTotal VOC-enabled documents: ${totalVOCDocs}`);
 console.log('\n📋 Test Commands (run after index is ready):');
 console.log('$env:DATABASE_NAME="test"; node scripts/test-rag-chatbot.js --endpoint=http://localhost:4000');
     

@@ -76,10 +76,22 @@
     "groupId": "vessel-details-group",
     "defaultValue": "",
     "options": [
-      {"label": "ASME Section VIII, Division 1", "value": "asme-viii-div1"},
-      {"label": "ASME Section VIII, Division 2", "value": "asme-viii-div2"},
-      {"label": "API 510", "value": "api-510"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "ASME Section VIII, Division 1",
+        "value": "asme-viii-div1"
+      },
+      {
+        "label": "ASME Section VIII, Division 2",
+        "value": "asme-viii-div2"
+      },
+      {
+        "label": "API 510",
+        "value": "api-510"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -93,4 +105,4 @@
     "groupId": "vessel-details-group",
     "defaultValue": null
   }
-] 
+]

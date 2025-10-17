@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography as AntTypography } from 'antd';
-import { colors, typography } from '../../theme';
+import { typography } from '../../theme';
 
 const { Title: AntTitle, Text: AntText, Paragraph: AntParagraph } = AntTypography;
 

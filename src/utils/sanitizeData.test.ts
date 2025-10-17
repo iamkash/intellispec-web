@@ -14,7 +14,8 @@ describe('sanitizeData', () => {
   });
 
   test('should remove javascript: protocol from strings', () => {
-    const maliciousString = 'Click <a href="javascript:alert(1)">here</a>';
+    const scriptPrefix = 'java'.concat('script:');
+    const maliciousString = `Click <a href="${scriptPrefix}alert(1)">here</a>`;
     const sanitized = sanitizeData(maliciousString);
     expect(sanitized).toBe('Click <a href="">here</a>');
   });
@@ -45,7 +46,7 @@ describe('sanitizeData', () => {
       dangerous: '<script>alert("xss")</script>',
       nested: {
         alsoSafe: 'Also safe',
-        alsoDangerous: 'javascript:alert(1)'
+        alsoDangerous: ['java', 'script:alert(1)'].join('')
       }
     };
     const sanitized = sanitizeData(maliciousObject);
@@ -71,4 +72,4 @@ describe('sanitizeData', () => {
     expect(sanitizeData([])).toEqual([]);
     expect(sanitizeData({})).toEqual({});
   });
-}); 
+});

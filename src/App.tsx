@@ -8,6 +8,7 @@ import { WorkspaceContainer, WorkspaceProvider } from './components/containers/W
 import { initializeRegistries } from './components/library/core/RegistryInitializer';
 import { ShellDemo } from './components/pages/ShellDemo';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { NavigationProvider, useNavigation } from './contexts/NavigationContext';
 import { ThemeProvider } from './providers/ThemeProvider';
 import './styles/globals.css';
 import './styles/theme-icon.css';
@@ -59,166 +60,149 @@ const PlaceholderPage: React.FC<{ title: string; description?: string }> = ({ ti
 
 // Inner app component that uses the module context
 const AppContent: React.FC = () => {
-  const [currentWorkspaceId, setCurrentWorkspaceId] = useState<string>('home/home');
   const [currentMenuItem, setCurrentMenuItem] = useState<any>(null);
   const { currentModule, moduleDefinition } = useModule();
   const { isAuthenticated, isLoading, user, logout } = useAuth();
+  const {
+    currentWorkspaceId,
+    openWorkspace,
+    getLastWorkspaceForModule,
+  } = useNavigation();
   const previousModuleIdRef = useRef<string | null>(null);
 
   const handleMenuClick = useCallback((menuItem: any) => {
-    // Store the current menu item for reference
     setCurrentMenuItem(menuItem);
-    
-    // Check if the menu item has a workspace property
     if (menuItem.workspace) {
-      // Store current workspace in sessionStorage for navigation back support
-      // CRITICAL: Read from URL, not state, to get the ACTUAL current workspace
-      const currentUrl = new URL(window.location.href);
-      const currentWorkspace = currentUrl.searchParams.get('workspace');
-      
-      if (currentWorkspace && currentWorkspace !== menuItem.workspace) {
-        sessionStorage.setItem('navigation-source', JSON.stringify(currentWorkspace));
+      const params: Record<string, string> = {};
+      if (menuItem.restoreId) {
+        params.restoreId = String(menuItem.restoreId);
       }
-      
-      setCurrentWorkspaceId(menuItem.workspace);
-
-      // Reflect selection in URL (?workspace=... [&restoreId=...]) to support single-route deep linking
-      try {
-        const url = new URL(window.location.href);
-        url.searchParams.set('workspace', menuItem.workspace);
-        if (menuItem.restoreId) {
-          url.searchParams.set('restoreId', menuItem.restoreId);
-        } else {
-          url.searchParams.delete('restoreId');
-        }
-        // Clear existing parameters except workspace and restoreId
-        const paramsToKeep = ['workspace', 'restoreId'];
-        const existingParams = Array.from(url.searchParams.keys());
-        existingParams.forEach(param => {
-          if (!paramsToKeep.includes(param)) {
-            url.searchParams.delete(param);
+      if (menuItem.params) {
+        Object.entries(menuItem.params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            params[key] = String(value);
           }
         });
-        
-        // Handle additional parameters from navigation payload
-        if (menuItem.params) {
-          Object.entries(menuItem.params).forEach(([key, value]) => {
-            if (value) {
-              url.searchParams.set(key, String(value));
-            }
-          });
-        }
-        window.history.pushState({}, '', url.toString());
-      } catch (error) {
-        console.error('[App] Error updating URL:', error);
       }
-    } else {
-      // Clear workspace ID to show placeholder
-      setCurrentWorkspaceId('');
-    }
-  }, []);
 
-  // Sync workspace with ?workspace=... query param
-  useEffect(() => {
-    try {
-      const url = new URL(window.location.href);
-      const ws = url.searchParams.get('workspace');
-      if (ws) {
-        setCurrentWorkspaceId(ws);
-      }
-    } catch (error) {
-      console.error('[App] Error syncing workspace from URL:', error);
+      openWorkspace(menuItem.workspace, {
+        params,
+        returnTo: currentWorkspaceId ?? null,
+      });
     }
-  }, []);
+  }, [currentWorkspaceId, openWorkspace]);
 
   // Auto-select default menu item when module loads
   useEffect(() => {
-    const isWizardCloseNavigation = sessionStorage.getItem('wizard-close-navigation');
-    if (isWizardCloseNavigation) {
-      sessionStorage.removeItem('wizard-close-navigation');
-      return;
-    }
-
     if (!currentModule) {
       return;
     }
 
     const moduleId = currentModule.id;
     const previousModuleId = previousModuleIdRef.current;
-    const workspaceModuleId = currentWorkspaceId ? currentWorkspaceId.split('/')[0] : null;
+    const workspaceModuleId = currentWorkspaceId
+      ? currentWorkspaceId.split('/')[0]
+      : null;
     const moduleChanged = previousModuleId !== moduleId;
     const menuItems = moduleDefinition?.menu_items ?? [];
+
     const matchingMenuItem =
-      menuItems.find((item: any) => item.workspace === currentWorkspaceId) || null;
+      menuItems.find((item: any) => item.workspace === currentWorkspaceId) ||
+      null;
 
-    let urlWorkspace: string | null = null;
-    try {
-      const url = new URL(window.location.href);
-      urlWorkspace = url.searchParams.get('workspace');
-    } catch (error) {
-      console.error('[App] Failed parsing URL for workspace during module auto-selection', error);
+    if (
+      currentWorkspaceId &&
+      matchingMenuItem &&
+      currentMenuItem?.key !== matchingMenuItem.key
+    ) {
+      setCurrentMenuItem(matchingMenuItem);
     }
 
-    if (urlWorkspace && urlWorkspace.split('/')[0] === moduleId && urlWorkspace !== currentWorkspaceId) {
-      previousModuleIdRef.current = moduleId;
-      const urlMenuItem = menuItems.find((item: any) => item.workspace === urlWorkspace) || {
-        key: urlWorkspace,
-        label: currentModule.label || 'Workspace',
-        workspace: urlWorkspace,
-        type: 'item'
-      };
-      handleMenuClick(urlMenuItem);
-      return;
-    }
-
-    if (!moduleChanged && workspaceModuleId === moduleId) {
-      if (matchingMenuItem && currentMenuItem?.key !== matchingMenuItem.key) {
+    if (
+      moduleChanged ||
+      !currentWorkspaceId ||
+      workspaceModuleId !== moduleId
+    ) {
+      const lastWorkspace = getLastWorkspaceForModule(moduleId);
+      if (
+        moduleChanged &&
+        lastWorkspace &&
+        lastWorkspace !== currentWorkspaceId
+      ) {
         previousModuleIdRef.current = moduleId;
-        handleMenuClick(matchingMenuItem);
+        openWorkspace(lastWorkspace, { replace: true });
+        setCurrentMenuItem(
+          menuItems.find((item: any) => item.workspace === lastWorkspace) || null
+        );
         return;
       }
 
-      previousModuleIdRef.current = moduleId;
-      return;
+      const defaultMenuItem =
+        menuItems.find((item: any) => item.is_default && item.workspace) ||
+        null;
+
+      const moduleDefaultWorkspace = currentModule.default_workspace;
+      const moduleDefaultMenuItem =
+        moduleDefaultWorkspace
+          ? menuItems.find(
+              (item: any) => item.workspace === moduleDefaultWorkspace
+            ) ||
+            {
+              key: `${moduleId}-default`,
+              label: currentModule.label || 'Default',
+              workspace: moduleDefaultWorkspace,
+              type: 'item',
+            }
+          : null;
+
+      const firstModuleWorkspace =
+        menuItems.find(
+          (item: any) =>
+            item.workspace && item.workspace.split('/')[0] === moduleId
+        ) || null;
+
+      const fallbackMenuItem =
+        defaultMenuItem || moduleDefaultMenuItem || firstModuleWorkspace || null;
+
+      if (fallbackMenuItem?.workspace) {
+        previousModuleIdRef.current = moduleId;
+        openWorkspace(fallbackMenuItem.workspace, { replace: true });
+        setCurrentMenuItem(fallbackMenuItem);
+        return;
+      }
     }
 
-    const defaultMenuItem =
-      menuItems.find((item: any) => item.is_default && item.workspace) || null;
-
-    const moduleDefaultMenuItem =
-      menuItems.find((item: any) => item.workspace === currentModule.default_workspace) || null;
-
-    const firstModuleWorkspace =
-      menuItems.find(
-        (item: any) => item.workspace && item.workspace.split('/')[0] === moduleId
-      ) || null;
-
-    const fallbackMenuItem =
-      defaultMenuItem ||
-      moduleDefaultMenuItem ||
-      firstModuleWorkspace ||
-      (currentModule.default_workspace
-        ? {
-            key: `${moduleId}-default`,
-            label: currentModule.label || 'Default',
-            workspace: currentModule.default_workspace,
-            type: 'item'
-          }
-        : null);
-
-    if (fallbackMenuItem) {
-      previousModuleIdRef.current = moduleId;
-      handleMenuClick(fallbackMenuItem);
-      return;
+    if (
+      currentWorkspaceId &&
+      currentMenuItem?.workspace &&
+      currentMenuItem.workspace !== currentWorkspaceId &&
+      !matchingMenuItem
+    ) {
+      setCurrentMenuItem(null);
+    } else if (matchingMenuItem && !currentMenuItem) {
+      setCurrentMenuItem(matchingMenuItem);
     }
 
-    previousModuleIdRef.current = moduleId;
-  }, [currentModule, moduleDefinition, currentWorkspaceId, currentMenuItem, handleMenuClick]);
+    if (!currentWorkspaceId && currentMenuItem) {
+      setCurrentMenuItem(null);
+    }
+
+    if (moduleChanged) {
+      previousModuleIdRef.current = moduleId;
+    }
+  }, [
+    currentMenuItem,
+    currentModule,
+    currentWorkspaceId,
+    getLastWorkspaceForModule,
+    moduleDefinition,
+    openWorkspace,
+  ]);
 
   // Handle form save navigation events
   useEffect(() => {
     const handleFormSaveNavigate = (event: CustomEvent) => {
-const { workspace, target } = event.detail;
+      const { workspace, target } = event.detail;
       const navigationTarget = workspace || target;
       
       if (navigationTarget) {
@@ -227,7 +211,8 @@ const { workspace, target } = event.detail;
           label: 'Return to Dashboard',
           workspace: navigationTarget
         };
-        handleMenuClick(menuItem);
+        setCurrentMenuItem(menuItem);
+        openWorkspace(navigationTarget, { replace: false });
       }
     };
 
@@ -236,7 +221,7 @@ const { workspace, target } = event.detail;
     return () => {
       window.removeEventListener('form-save-navigate', handleFormSaveNavigate as EventListener);
     };
-  }, [handleMenuClick]);
+  }, [openWorkspace]);
 
   // Show loading spinner while checking authentication
   if (isLoading) {
@@ -285,46 +270,87 @@ const { workspace, target } = event.detail;
 
   // Render content based on menu item
   const renderContent = () => {
-    // Check if this is a shell demo component
+    // Check if this is a workspace
     if (currentMenuItem?.component === 'shell-demo') {
       return <ShellDemo />;
     }
-    
-    // Check if this is a workspace
-    if (currentWorkspaceId) {
+
+    const shouldRenderWorkspace =
+      !!currentWorkspaceId &&
+      (!currentMenuItem || currentMenuItem.workspace === currentWorkspaceId);
+
+    if (shouldRenderWorkspace) {
       return (
         <WorkspaceContainer 
           workspaceId={currentWorkspaceId}
           onAction={async (action, payload) => {
-// Handle navigation actions from quicklinks
-            if (action === 'navigate' && payload?.workspace) {
+            const workspaceTarget = payload?.workspace ?? payload?.workspaceId;
+            const returnToTarget = payload?.returnTo ?? currentWorkspaceId ?? null;
+            if (action === 'navigate' && workspaceTarget) {
               const menuItem = {
                 key: payload.key,
                 label: payload.label,
                 route: payload.route,
-                workspace: payload.workspace,
+                workspace: workspaceTarget,
                 type: payload.type,
                 restoreId: payload.restoreId,
                 params: payload.params
               };
-              handleMenuClick(menuItem);
+              setCurrentMenuItem(menuItem);
+              const params: Record<string, string> = {};
+              if (payload.restoreId) {
+                params.restoreId = String(payload.restoreId);
+              }
+              if (payload.params) {
+                Object.entries(payload.params).forEach(([key, value]) => {
+                  if (value !== undefined && value !== null) {
+                    params[key] = String(value);
+                  }
+                });
+              }
+              openWorkspace(workspaceTarget, {
+                params,
+                returnTo: returnToTarget,
+              });
             } else if (action === 'contextAction') {
               // Handle context menu actions - extract the nested action
               const crudHandler = AssetCrudHandler.getInstance();
               // Pass context for navigation
               crudHandler.setContext({
                 onAction: async (contextAction: string, contextPayload: any) => {
-                  if (contextAction === 'navigate' && contextPayload?.workspace) {
+                  if (contextAction === 'navigate') {
+                    const workspaceTarget =
+                      contextPayload?.workspace ?? contextPayload?.workspaceId;
+                    if (!workspaceTarget) {
+                      return;
+                    }
                     const menuItem = {
                       key: contextPayload.key,
                       label: contextPayload.label,
                       route: contextPayload.route,
-                      workspace: contextPayload.workspace,
+                      workspace: workspaceTarget,
                       type: contextPayload.type,
                       restoreId: contextPayload.restoreId,
                       params: contextPayload.params
                     };
-                    handleMenuClick(menuItem);
+                    setCurrentMenuItem(menuItem);
+                    const params: Record<string, string> = {};
+                    if (contextPayload?.restoreId) {
+                      params.restoreId = String(contextPayload.restoreId);
+                    }
+                    if (contextPayload?.params) {
+                      Object.entries(contextPayload.params).forEach(([key, value]) => {
+                        if (value !== undefined && value !== null) {
+                          params[key] = String(value);
+                        }
+                      });
+                    }
+                    const ctxReturnTo =
+                      contextPayload?.returnTo ?? currentWorkspaceId ?? null;
+                    openWorkspace(workspaceTarget, {
+                      params,
+                      returnTo: ctxReturnTo,
+                    });
                   }
                 }
               });
@@ -335,17 +361,38 @@ const { workspace, target } = event.detail;
               // Pass context for navigation
               crudHandler.setContext({
                 onAction: async (contextAction: string, contextPayload: any) => {
-                  if (contextAction === 'navigate' && contextPayload?.workspace) {
+                  if (contextAction === 'navigate') {
+                    const workspaceTarget = contextPayload?.workspace ?? contextPayload?.workspaceId;
+                    if (!workspaceTarget) {
+                      return;
+                    }
                     const menuItem = {
                       key: contextPayload.key,
                       label: contextPayload.label,
                       route: contextPayload.route,
-                      workspace: contextPayload.workspace,
+                      workspace: workspaceTarget,
                       type: contextPayload.type,
                       restoreId: contextPayload.restoreId,
                       params: contextPayload.params
                     };
-                    handleMenuClick(menuItem);
+                    setCurrentMenuItem(menuItem);
+                    const params: Record<string, string> = {};
+                    if (contextPayload?.restoreId) {
+                      params.restoreId = String(contextPayload.restoreId);
+                    }
+                    if (contextPayload?.params) {
+                      Object.entries(contextPayload.params).forEach(([key, value]) => {
+                        if (value !== undefined && value !== null) {
+                          params[key] = String(value);
+                        }
+                      });
+                    }
+                    const ctxReturnTo =
+                      contextPayload?.returnTo ?? currentWorkspaceId ?? null;
+                    openWorkspace(workspaceTarget, {
+                      params,
+                      returnTo: ctxReturnTo,
+                    });
                   }
                 }
               });
@@ -358,9 +405,13 @@ const { workspace, target } = event.detail;
     
     // Default placeholder
     return (
-      <PlaceholderPage 
-        title={currentMenuItem?.label || 'Page'} 
-        description={currentMenuItem?.route ? `Route: ${currentMenuItem.route}` : undefined}
+      <PlaceholderPage
+        title={currentMenuItem?.label || 'Page'}
+        description={
+          currentMenuItem?.route
+            ? `Route: ${currentMenuItem.route}`
+            : undefined
+        }
       />
     );
   };
@@ -403,7 +454,9 @@ const App: React.FC = () => {
         <ThemeProvider>
           <AuthProvider>
             <ModuleContainer>
-              <AppContent />
+              <NavigationProvider>
+                <AppContent />
+              </NavigationProvider>
             </ModuleContainer>
           </AuthProvider>
         </ThemeProvider>

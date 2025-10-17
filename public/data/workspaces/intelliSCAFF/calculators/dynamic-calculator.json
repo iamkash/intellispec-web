@@ -1,12 +1,15 @@
 {
-  "id": "intelliSCAFF-dynamic-calculator",
+  "id": "intelliSCAFF/calculators/dynamic-calculator",
   "type": "form",
   "title": "Scaffolding Calculator",
   "description": "Dynamic calculator workspace for scaffolding calculations",
   "icon": "CalculatorOutlined",
   "mode": "form",
   "layout": "dashboard",
-  "filterContext": { "enabled": true, "filterDefinitions": [] },
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": []
+  },
   "gadgets": [
     {
       "id": "dynamic-calculator-gadget",

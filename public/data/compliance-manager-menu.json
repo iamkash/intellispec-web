@@ -59,7 +59,7 @@
       "route": "/compliance/tsti-audit-form",
       "type": "item",
       "permissions": ["compliance.tsti_audit.view", "compliance.tsti_audit.create"],
-      "workspace": "compliance/tsti-audit-form",
+      "workspace": "compliance-manager/tsti-audit-form",
       "description": "Form for conducting TSTI (Task-Specific Task Instruction) audits."
     },
     {
@@ -73,7 +73,7 @@
       "route": "/compliance/employee-time-card",
       "type": "item",
       "permissions": ["compliance.timecard.view", "compliance.timecard.create"],
-      "workspace": "compliance/employee-time-card",
+      "workspace": "compliance-manager/employee-time-card",
       "description": "Form for capturing employee time cards with daily entries, weekly totals, and approval workflow."
     },
     {

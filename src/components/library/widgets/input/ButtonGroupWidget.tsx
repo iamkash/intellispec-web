@@ -7,11 +7,9 @@
  */
 
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { Button, Space, Typography, Tooltip, theme } from 'antd';
+import { Button, Space, Tooltip, theme } from 'antd';
 import { CheckOutlined } from '@ant-design/icons';
 import { sanitizeData } from '../../../../utils/sanitizeData';
-
-const { Text } = Typography;
 
 // Button option interface
 export interface ButtonOption {
@@ -423,9 +421,9 @@ export const ButtonGroupWidget: React.FC<ButtonGroupWidgetProps> = ({
     shape,
     block,
     direction,
-    activeColor,
-    inactiveColor,
     buttonStyle,
+    buttonStyles,
+    themeColors,
     handleOptionClick,
     handleFocus,
     handleBlur,

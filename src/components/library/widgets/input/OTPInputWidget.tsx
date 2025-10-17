@@ -7,12 +7,9 @@
  */
 
 import React, { useCallback, useMemo, useState, useEffect, useRef } from 'react';
-import { Input, Space, Typography, Button, Alert } from 'antd';
-import { ReloadOutlined, DeleteOutlined } from '@ant-design/icons';
-import { sanitizeData } from '../../../../utils/sanitizeData';
+import { Input, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import type { InputRef } from 'antd';
-
-const { Text } = Typography;
 
 // OTP input widget props
 export interface OTPInputWidgetProps {
@@ -150,10 +147,10 @@ export const OTPInputWidget: React.FC<OTPInputWidgetProps> = ({
 }) => {
   const [internalValue, setInternalValue] = useState<string>(value || defaultValue || '');
   const [validationError, setValidationError] = useState<string | null>(null);
-  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const [, setFocusedIndex] = useState<number>(-1);
   const [resendTimer, setResendTimer] = useState<number>(0);
   const [timer, setTimer] = useState<number>(timerDuration);
-  const [isComplete, setIsComplete] = useState<boolean>(false);
+  const [, setIsComplete] = useState<boolean>(false);
   
   const inputRefs = useRef<(InputRef | null)[]>([]);
   const resendIntervalRef = useRef<NodeJS.Timeout | null>(null);

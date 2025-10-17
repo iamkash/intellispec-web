@@ -1,26 +1,14 @@
 {
-  "id": "rescue-vehicle-inspection",
-  "title": "Rescue Vehicle Inspection Checklist",
-  "description": "Vehicle inspection with AI-suggested checklist and PDF.",
+  "id": "intelliSAFTEY/ladder-scaffold-inspection",
+  "title": "Ladder/Scaffold Inspection Checklist",
+  "description": "Inspection checklist for ladders and scaffolds.",
   "gadgets": [
     {
-      "id": "rescue-vehicle-inspection-gadget",
+      "id": "ladder-scaffold-inspection-gadget",
       "type": "ai-analysis-wizard-gadget",
-      "title": "Rescue Vehicle Inspection",
+      "title": "Ladder/Scaffold Inspection",
       "config": {
         "sections": [
-          {
-            "id": "vehicle_details",
-            "title": "Vehicle Details",
-            "sectionType": "form",
-            "pdfLayout": {
-              "type": "grid",
-              "columns": 4
-            },
-            "btnLabel": "Populate Details",
-            "promptRef": "detailsPopulate",
-            "includeInPdf": true
-          },
           {
             "id": "inspection_items",
             "title": "Inspection Items",
@@ -57,12 +45,6 @@
         ],
         "groups": [
           {
-            "id": "vehicle_group",
-            "title": "Vehicle",
-            "sectionId": "vehicle_details",
-            "lgSpan": 24
-          },
-          {
             "id": "signoff_group",
             "title": "Signoff",
             "sectionId": "attachments_signoff",
@@ -71,36 +53,6 @@
         ],
         "fields": [
           {
-            "id": "unit_id",
-            "label": "Unit ID",
-            "type": "text",
-            "required": true,
-            "groupId": "vehicle_group",
-            "lgSpan": 6
-          },
-          {
-            "id": "make_model",
-            "label": "Make/Model",
-            "type": "text",
-            "required": true,
-            "groupId": "vehicle_group",
-            "lgSpan": 6
-          },
-          {
-            "id": "mileage",
-            "label": "Mileage",
-            "type": "number",
-            "groupId": "vehicle_group",
-            "lgSpan": 6
-          },
-          {
-            "id": "last_service",
-            "label": "Last Service Date",
-            "type": "date",
-            "groupId": "vehicle_group",
-            "lgSpan": 6
-          },
-          {
             "id": "inspector",
             "label": "Inspector",
             "type": "text",
@@ -108,7 +60,7 @@
             "lgSpan": 12
           },
           {
-            "id": "inspection_date",
+            "id": "date",
             "label": "Date",
             "type": "date",
             "groupId": "signoff_group",
@@ -137,30 +89,20 @@
               139
             ],
             "fontSize": 6,
-            "leftText": "Vehicle Inspection",
+            "leftText": "Ladder/Scaffold",
             "centerText": "Confidential",
             "rightText": "Page {page} of {pages}"
           }
         },
         "prompts": {
-          "detailsPopulate": {
-            "modelConfig": {
-              "model": "gpt-5-nano",
-              "max_completion_tokens": 600
-            },
-            "promptConfig": {
-              "systemPrompt": "Populate vehicle details from transcript if present.",
-              "userPrompt": "Transcript:\n{{transcript}}\n\nTARGET_FIELDS_JSON: {{schema_fields_json}}\n\nReturn only JSON."
-            }
-          },
           "itemsPopulate": {
             "modelConfig": {
               "model": "gpt-5-nano",
-              "max_completion_tokens": 800,
+              "max_completion_tokens": 700,
               "temperature": 0.3
             },
             "promptConfig": {
-              "systemPrompt": "Suggest a vehicle safety checklist. JSON array only.",
+              "systemPrompt": "Generate a ladder/scaffold checklist.",
               "userPrompt": "Transcript:\n{{transcript}}\n\nReturn array: [ { \"item\": \"string\", \"status\": \"OK|Repair|N/A\", \"notes\": \"string\" } ]"
             }
           }
@@ -187,32 +129,82 @@
           "responseSelector": "data.0"
         },
         "domainConfig": {
-          "payloadType": "inspection",
-          "defaultType": "general_inspection",
+          "payloadType": "safety",
+          "defaultType": "ladder_scaffold_inspection",
           "fields": {
-            "type": "inspection_type",
-            "detectedType": "detected_equipment_type",
-            "id": "equipment_id",
-            "name": "assetName",
-            "owner": "inspector_name",
-            "date": "inspection_date"
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
           },
           "outputKeys": {
-            "id": "equipmentId",
-            "type": "equipmentType",
-            "owner": "inspectorName",
-            "date": "inspectionDate"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
           },
           "payloadKeys": {
-            "type": "inspectionType"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
           },
           "navigation": {
-            "listingSuffix": "inspections",
+            "listingSuffix": "responses",
             "homeSuffix": "home"
+          },
+          "typeMap": {
+            "ladder_scaffold_inspection": "Ladder/Scaffold Inspection Checklist"
+          }
+        },
+        "type": "safety",
+        "documentType": "ladder_scaffold_inspection",
+        "label": "Ladder/Scaffold Inspection Checklist",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "ladder_scaffold_inspection",
+          "domainSubTypeLabel": "Ladder/Scaffold Inspection"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },
       "position": 24
     }
-  ]
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
 }

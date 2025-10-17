@@ -307,7 +307,8 @@ return result;
         timestamp: event.metadata?.timestamp
       }
     };
-// await emailService.send(emailData);
+    console.debug('[SubscriptionLifecycle] Prepared email notification payload', emailData);
+    // await emailService.send(emailData);
   }
 
   /**
@@ -326,7 +327,8 @@ return result;
       data: event.metadata,
       timestamp: new Date().toISOString()
     };
-// await fetch(this.notificationConfig.webhookUrl, {
+    console.debug('[SubscriptionLifecycle] Prepared webhook notification payload', webhookData);
+    // await fetch(this.notificationConfig.webhookUrl, {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify(webhookData)

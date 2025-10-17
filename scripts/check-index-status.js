@@ -39,24 +39,29 @@ if (index.status === 'READY') {
       const vocIndex = indexes.find(idx => idx.name === 'voc_vector_search');
       
       if (vocIndex) {
-if (vocIndex.status === 'READY') {
-} else {
-}
+        if (vocIndex.status === 'READY') {
+          console.log('✅ voc_vector_search index is ready.');
+        } else {
+          console.log(`⌛ Index status: ${vocIndex.status} (building)`);
+        }
       } else {
-}
+        console.warn('⚠️  voc_vector_search index not found.');
+      }
       
     } catch (indexError) {
       console.error('❌ Error listing indexes:', indexError.message);
     }
     
     // Show document readiness
-const totalWithEmbeddings = await documentsCollection.countDocuments({ 
-      embedding: { $exists: true } 
+    const totalWithEmbeddings = await documentsCollection.countDocuments({
+      embedding: { $exists: true }
     });
-const vocDocs = await documentsCollection.countDocuments({
+    const vocDocs = await documentsCollection.countDocuments({
       type: { $in: ['paintInvoice', 'paint_specifications', 'company', 'site'] },
       embedding: { $exists: true }
     });
+    console.log(`📦 Documents with embeddings: ${totalWithEmbeddings}`);
+    console.log(`🎯 VOC-related documents with embeddings: ${vocDocs}`);
 } catch (error) {
     console.error('❌ Status check failed:', error);
   } finally {

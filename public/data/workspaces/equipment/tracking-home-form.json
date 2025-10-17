@@ -1,11 +1,11 @@
 {
-  "id": "equipment-tracking-form",
+  "id": "equipment/tracking-home-form",
   "title": "Equipment Tracking Form",
   "description": "Advanced equipment tracking workspace with sectioned form layout.",
   "layout": "form",
   "gadgets": [
     {
-    "position": 24,
+      "position": 24,
       "id": "sectioned-form",
       "type": "document-form-gadget",
       "title": "Equipment Tracking Form",
@@ -110,10 +110,22 @@
             "placeholder": "Select equipment type",
             "required": true,
             "options": [
-              { "label": "Heavy Machinery", "value": "heavy" },
-              { "label": "Light Equipment", "value": "light" },
-              { "label": "Tools", "value": "tools" },
-              { "label": "Vehicles", "value": "vehicles" }
+              {
+                "label": "Heavy Machinery",
+                "value": "heavy"
+              },
+              {
+                "label": "Light Equipment",
+                "value": "light"
+              },
+              {
+                "label": "Tools",
+                "value": "tools"
+              },
+              {
+                "label": "Vehicles",
+                "value": "vehicles"
+              }
             ]
           },
           {
@@ -147,10 +159,22 @@
             "label": "What is the current status of the equipment?",
             "required": true,
             "options": [
-              { "label": "Operational", "value": "operational" },
-              { "label": "Under Maintenance", "value": "maintenance" },
-              { "label": "Out of Service", "value": "out_of_service" },
-              { "label": "Retired", "value": "retired" }
+              {
+                "label": "Operational",
+                "value": "operational"
+              },
+              {
+                "label": "Under Maintenance",
+                "value": "maintenance"
+              },
+              {
+                "label": "Out of Service",
+                "value": "out_of_service"
+              },
+              {
+                "label": "Retired",
+                "value": "retired"
+              }
             ]
           },
           {
@@ -191,8 +215,14 @@
             "placeholder": "Select option",
             "required": true,
             "options": [
-              { "label": "Yes", "value": "yes" },
-              { "label": "No", "value": "no" }
+              {
+                "label": "Yes",
+                "value": "yes"
+              },
+              {
+                "label": "No",
+                "value": "no"
+              }
             ]
           },
           {
@@ -235,4 +265,4 @@
       }
     }
   ]
-} 
+}

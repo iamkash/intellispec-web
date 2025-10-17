@@ -1,5 +1,5 @@
 {
-  "id": "organization-list",
+  "id": "system-admin/organization-list",
   "title": "Organization Management",
   "description": "Manage organizations and view their associated tenants",
   "layout": "dashboard",
@@ -123,8 +123,16 @@
               "type": "select",
               "required": true,
               "options": [
-                { "value": "active", "label": "Active", "color": "green" },
-                { "value": "inactive", "label": "Inactive", "color": "gray" }
+                {
+                  "value": "active",
+                  "label": "Active",
+                  "color": "green"
+                },
+                {
+                  "value": "inactive",
+                  "label": "Inactive",
+                  "color": "gray"
+                }
               ]
             }
           },
@@ -181,8 +189,14 @@
               "label": "Status",
               "type": "select",
               "options": [
-                { "value": "active", "label": "Active" },
-                { "value": "inactive", "label": "Inactive" }
+                {
+                  "value": "active",
+                  "label": "Active"
+                },
+                {
+                  "value": "inactive",
+                  "label": "Inactive"
+                }
               ]
             }
           ]
@@ -209,7 +223,11 @@
   "metadata": {
     "created": "2025-01-24T10:30:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "organization", "management"],
+    "tags": [
+      "admin",
+      "organization",
+      "management"
+    ],
     "description": "Organization management workspace for Super Admin",
     "features": [
       "View all organizations",
@@ -218,7 +236,9 @@
       "Organization statistics"
     ],
     "permissions": {
-      "required": ["super_admin"],
+      "required": [
+        "super_admin"
+      ],
       "actions": [
         "organization:create",
         "organization:read",

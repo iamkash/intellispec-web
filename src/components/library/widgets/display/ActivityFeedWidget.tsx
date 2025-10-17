@@ -10,10 +10,9 @@
  */
 
 import React, { useState, useMemo, useCallback } from 'react';
-import { Card, Avatar, Tag, Input, Select, Space, Empty, Spin, Tooltip } from 'antd';
-import { 
-  SearchOutlined, 
-  FilterOutlined, 
+import { Input, Select, Empty, Spin } from 'antd';
+import {
+  SearchOutlined,
   ClearOutlined,
   SwapOutlined,
   ToolOutlined,
@@ -27,17 +26,7 @@ import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
   SyncOutlined,
-  // Priority icons
-  ExclamationOutlined,
-  WarningOutlined,
-  MinusCircleOutlined,
-  // Status icons
-  PlayCircleOutlined,
-  PauseCircleOutlined,
-  StopOutlined,
-  RocketOutlined,
-  EyeOutlined,
-  LinkOutlined
+  EyeOutlined
 } from '@ant-design/icons';
 import { BaseWidget, WidgetConfig, WidgetType } from '../base';
 // Note: Using CSS variables directly instead of useTheme for better compatibility
@@ -130,38 +119,6 @@ const getActivityIcon = (iconName?: string, type?: string) => {
       return <EnvironmentOutlined />;
     case 'customer-access':
       return <UserOutlined />;
-    default:
-      return <ClockCircleOutlined />;
-  }
-};
-
-const getPriorityIcon = (priority?: string) => {
-  switch (priority?.toLowerCase()) {
-    case 'high':
-      return <ExclamationOutlined />;
-    case 'medium':
-      return <WarningOutlined />;
-    case 'low':
-      return <MinusCircleOutlined />;
-    case 'normal':
-      return <CheckCircleOutlined />;
-    default:
-      return <ClockCircleOutlined />;
-  }
-};
-
-const getStatusIcon = (status?: string) => {
-  switch (status?.toLowerCase()) {
-    case 'completed':
-      return <CheckCircleOutlined />;
-    case 'in-progress':
-      return <PlayCircleOutlined />;
-    case 'pending':
-      return <PauseCircleOutlined />;
-    case 'scheduled':
-      return <ScheduleOutlined />;
-    case 'active':
-      return <RocketOutlined />;
     case 'investigating':
       return <EyeOutlined />;
     default:
@@ -303,37 +260,6 @@ export const ActivityFeedWidget: React.FC<ActivityFeedWidgetProps> = ({
     setSelectedType('all');
     setSelectedStatus('all');
     setSelectedPriority('all');
-  };
-
-  const iosCardStyle: React.CSSProperties = {
-    backgroundColor: 'hsl(var(--card))',
-    borderRadius: '16px',
-    border: 'none',
-    boxShadow: '0 2px 20px hsl(var(--shadow) / 0.08)',
-    overflow: 'hidden',
-    transition: 'all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-    ...cardStyle
-  };
-
-  const searchBarStyle: React.CSSProperties = {
-    borderRadius: '12px',
-    backgroundColor: 'hsl(var(--background))',
-    border: '1px solid hsl(var(--border))',
-    padding: '12px 16px',
-    fontSize: '16px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
-    transition: 'all 0.2s ease',
-  };
-
-  const activityCardStyle: React.CSSProperties = {
-    backgroundColor: 'hsl(var(--card))',
-    borderRadius: '12px',
-    border: 'none',
-    marginBottom: '12px',
-    padding: '16px',
-    boxShadow: '0 1px 8px hsl(var(--shadow) / 0.04)',
-    transition: 'all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-    cursor: 'pointer'
   };
 
   return (
@@ -575,7 +501,8 @@ export const ActivityFeedWidget: React.FC<ActivityFeedWidgetProps> = ({
               key={activity.id}
               className="ios-activity-card"
               style={{
-                animationDelay: `${index * 0.05}s`
+                animationDelay: `${index * 0.05}s`,
+                ...cardStyle
               }}
             >
               {showAvatar && (
@@ -610,6 +537,18 @@ export const ActivityFeedWidget: React.FC<ActivityFeedWidgetProps> = ({
                         fontWeight: '500'
                       }}>
                         {activity.type}
+                      </span>
+                    )}
+                    {activity.status && (
+                      <span style={{
+                        fontSize: '9px',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        backgroundColor: getStatusColor(activity.status),
+                        color: 'white',
+                        fontWeight: '500'
+                      }}>
+                        {activity.status}
                       </span>
                     )}
                     {activity.priority && (

@@ -1,0 +1,46 @@
+{
+  "actions": [
+    {
+      "id": "new-plan",
+      "title": "New Rescue Plan",
+      "icon": "FormOutlined",
+      "workspace": "intelliSAFTEY/rescue-preplan"
+    },
+    {
+      "id": "entry-permit",
+      "title": "Confined Space Entry Permit",
+      "icon": "FormOutlined",
+      "workspace": "intelliSAFTEY/confined-space-entry-permit"
+    },
+    {
+      "id": "equipment-readiness",
+      "title": "Rescue Equipment Readiness",
+      "icon": "FormOutlined",
+      "workspace": "intelliSAFTEY/rescue-equipment-readiness"
+    },
+    {
+      "id": "atmospheric-log",
+      "title": "Atmospheric Monitoring Log",
+      "icon": "FormOutlined",
+      "workspace": "intelliSAFTEY/atmospheric-monitoring-log"
+    },
+    {
+      "id": "rescue-briefing",
+      "title": "Rescue Briefing",
+      "icon": "FormOutlined",
+      "workspace": "intelliSAFTEY/confined-space-rescue-briefing"
+    },
+    { "id": "drill-report", "title": "Rescue Drill Report / AAR", "icon": "FormOutlined", "workspace": "intelliSAFTEY/rescue-drill-report" },
+    { "id": "anchor-assessment", "title": "Anchor Point Assessment", "icon": "FormOutlined", "workspace": "intelliSAFTEY/anchor-point-assessment" },
+    { "id": "rigging-plan", "title": "Rope System / Rigging Plan", "icon": "FormOutlined", "workspace": "intelliSAFTEY/rope-system-plan" },
+    { "id": "vehicle-inspection", "title": "Rescue Vehicle Inspection", "icon": "FormOutlined", "workspace": "intelliSAFTEY/rescue-vehicle-inspection" },
+    { "id": "ppe-log", "title": "PPE Inspection Log", "icon": "FormOutlined", "workspace": "intelliSAFTEY/ppe-inspection-log" },
+    { "id": "calibration-log", "title": "Gas Detector Calibration Log", "icon": "FormOutlined", "workspace": "intelliSAFTEY/gas-detector-calibration-log" },
+    { "id": "ladder-scaffold", "title": "Ladder/Scaffold Inspection", "icon": "FormOutlined", "workspace": "intelliSAFTEY/ladder-scaffold-inspection" },
+    { "id": "hot-work", "title": "Hot Work Permit", "icon": "FormOutlined", "workspace": "intelliSAFTEY/hot-work-permit" },
+    { "id": "fall-protection", "title": "Fall Protection Plan", "icon": "FormOutlined", "workspace": "intelliSAFTEY/fall-protection-plan" },
+    { "id": "emergency-roster", "title": "Emergency Contact Roster", "icon": "FormOutlined", "workspace": "intelliSAFTEY/emergency-contact-roster" }
+  ]
+}
+
+

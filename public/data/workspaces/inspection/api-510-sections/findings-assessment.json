@@ -30,10 +30,22 @@
     "groupId": "overall-assessment-group",
     "defaultValue": "",
     "options": [
-      {"label": "Fit for Service", "value": "fit-for-service"},
-      {"label": "Fit for Service with Monitoring", "value": "fit-with-monitoring"},
-      {"label": "Limited Service", "value": "limited-service"},
-      {"label": "Unfit for Service", "value": "unfit-for-service"}
+      {
+        "label": "Fit for Service",
+        "value": "fit-for-service"
+      },
+      {
+        "label": "Fit for Service with Monitoring",
+        "value": "fit-with-monitoring"
+      },
+      {
+        "label": "Limited Service",
+        "value": "limited-service"
+      },
+      {
+        "label": "Unfit for Service",
+        "value": "unfit-for-service"
+      }
     ]
   },
   {
@@ -56,8 +68,14 @@
     "groupId": "critical-findings-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -93,8 +111,14 @@
     "groupId": "safety-concerns-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -130,8 +154,14 @@
     "groupId": "immediate-actions-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -169,9 +199,18 @@
     "groupId": "compliance-recommendations-group",
     "defaultValue": "",
     "options": [
-      {"label": "Compliant", "value": "compliant"},
-      {"label": "Non-Compliant", "value": "non-compliant"},
-      {"label": "Conditional Compliance", "value": "conditional"}
+      {
+        "label": "Compliant",
+        "value": "compliant"
+      },
+      {
+        "label": "Non-Compliant",
+        "value": "non-compliant"
+      },
+      {
+        "label": "Conditional Compliance",
+        "value": "conditional"
+      }
     ]
   },
   {
@@ -207,11 +246,26 @@
     "groupId": "inspection-planning-group",
     "defaultValue": "",
     "options": [
-      {"label": "3 Months", "value": "3-months"},
-      {"label": "6 Months", "value": "6-months"},
-      {"label": "1 Year", "value": "1-year"},
-      {"label": "2 Years", "value": "2-years"},
-      {"label": "5 Years", "value": "5-years"}
+      {
+        "label": "3 Months",
+        "value": "3-months"
+      },
+      {
+        "label": "6 Months",
+        "value": "6-months"
+      },
+      {
+        "label": "1 Year",
+        "value": "1-year"
+      },
+      {
+        "label": "2 Years",
+        "value": "2-years"
+      },
+      {
+        "label": "5 Years",
+        "value": "5-years"
+      }
     ]
   },
   {
@@ -235,4 +289,4 @@
     "groupId": "assessment-notes-group",
     "defaultValue": ""
   }
-] 
+]

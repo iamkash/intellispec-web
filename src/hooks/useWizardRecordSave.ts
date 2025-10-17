@@ -2,266 +2,204 @@ import { message } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 import { httpClient } from '../services/HttpClient';
 
-interface WizardRecordOptions {
-  documentType?: string;
-  workspaceId?: string;
+type HttpMethod = 'POST' | 'PUT' | 'PATCH';
+
+export interface EndpointConfig {
+  url: string;
+  method: HttpMethod;
 }
 
-interface WizardRecordPayload {
+type SaveMode = 'create' | 'update' | 'progress';
+
+export interface PersistRequest {
+  payload: Record<string, any>;
+  /**
+   * Explicit record identifier to use for update requests.
+   * If omitted the hook will fall back to the last known record id.
+   */
   recordId?: string;
-  documentType?: string;
-  workspaceId?: string;
-  sectionId?: string;
-  sectionData?: any;
-  wizardState?: any;
-  documentSummary?: Record<string, any>;
-  summary?: Record<string, any>;
-  inspectionType?: string;
-  inspectionTypeLabel?: string;
-  detectedEquipmentType?: string;
-  [key: string]: any;
+  /**
+   * Override the resolved mode (create/update/progress).
+   * When omitted the hook infers the mode from endpoint availability + record id.
+   */
+  mode?: SaveMode;
+  /**
+   * Override the endpoint information for this specific request.
+   */
+  endpointOverride?: EndpointConfig;
 }
 
-interface SaveResult {
-  id?: string;
-  _id?: string;
-  sections?: any[];
-  wizardState?: any;
-  documentSummary?: Record<string, any>;
-  inspectionType?: string;
-  inspectionTypeLabel?: string;
-  detectedEquipmentType?: string;
-  [key: string]: any;
+export interface WizardRecordSaveOptions {
+  endpoints: {
+    create: EndpointConfig;
+    update: EndpointConfig;
+    progress: EndpointConfig;
+  };
+  /**
+   * Allows the caller to resolve the canonical record identifier from the server response.
+   * Returning `undefined` leaves the previously known id untouched.
+   */
+  resolveRecordId: (response: any, request: PersistRequest) => string | undefined;
+  /**
+   * Success messages by save mode. If a specific mode is not provided no toast is shown.
+   */
+  successMessages?: Partial<Record<SaveMode, string>>;
+  /**
+   * Optional override for error messages per mode.
+   */
+  errorMessages?: Partial<Record<SaveMode, string>>;
 }
 
-const mergeSummaryFields = (target: Record<string, any>, summary?: Record<string, any>) => {
-  if (!summary || typeof summary !== 'object') return;
-  Object.entries(summary).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      target[key] = value;
-    }
-  });
+const METHOD_MAP: Record<HttpMethod, keyof HttpClientDispatch> = {
+  POST: 'post',
+  PUT: 'put',
+  PATCH: 'patch'
 };
 
-const resolveDocumentId = (result: SaveResult | Response): string | undefined => {
-  if (!result) return undefined;
-  if (result instanceof Response) return undefined;
-  return (result.id as string) || (result._id as string) || (result as any)?.data?.id;
+type HttpClientDispatch = Pick<typeof httpClient, 'post' | 'put' | 'patch'>;
+
+const normaliseMethod = (method: HttpMethod): HttpMethod => {
+  const upper = method.toUpperCase() as HttpMethod;
+  if (!METHOD_MAP[upper]) {
+    throw new Error(`Unsupported HTTP method "${method}" supplied to useWizardRecordSave`);
+  }
+  return upper;
 };
 
-export const useWizardRecordSave = (options?: WizardRecordOptions) => {
+const applyRecordIdToUrl = (url: string, recordId?: string): string => {
+  if (!recordId) {
+    return url;
+  }
+  return url
+    .replace('{id}', recordId)
+    .replace(':id', recordId);
+};
+
+const tryParseJson = async (response: Response) => {
+  try {
+    return await response.json();
+  } catch {
+    return undefined;
+  }
+};
+
+export interface WizardRecordSaveHook {
+  recordId: string | null;
+  saving: boolean;
+  saveRecord: (request: PersistRequest) => Promise<any>;
+  saveRecordProgress: (request: PersistRequest) => Promise<any>;
+  setRecordId: (id: string | null) => void;
+}
+
+export const useWizardRecordSave = (options: WizardRecordSaveOptions): WizardRecordSaveHook => {
+  if (!options?.endpoints?.create || !options?.endpoints?.update || !options?.endpoints?.progress) {
+    throw new Error('useWizardRecordSave requires create, update, and progress endpoints');
+  }
+  if (typeof options.resolveRecordId !== 'function') {
+    throw new Error('useWizardRecordSave requires a resolveRecordId function');
+  }
+
   const [recordId, setRecordId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  const documentType = useMemo(() => options?.documentType || 'inspection', [options?.documentType]);
-  const workspaceId = options?.workspaceId;
+  const endpoints = useMemo(() => ({
+    create: options.endpoints.create,
+    update: options.endpoints.update,
+    progress: options.endpoints.progress
+  }), [options.endpoints.create, options.endpoints.update, options.endpoints.progress]);
 
-  const persistDocument = useCallback(async (payload: WizardRecordPayload, id?: string) => {
-    const type = payload.documentType || payload.type || documentType;
-    const body = {
-      ...payload,
-      type,
-      workspaceId: payload.workspaceId || workspaceId,
-    };
-
-    const summaryFromSection = payload.sectionData?.documentSummary;
-    const summaryFromWizard = payload.wizardState?.documentSummary;
-    const declaredSummary = payload.documentSummary || payload.summary;
-
-    mergeSummaryFields(body, summaryFromSection);
-    mergeSummaryFields(body, summaryFromWizard);
-    mergeSummaryFields(body, declaredSummary);
-
-    if (summaryFromSection || summaryFromWizard || declaredSummary) {
-      body.documentSummary = {
-        ...(summaryFromWizard || {}),
-        ...(summaryFromSection || {}),
-        ...(declaredSummary || {})
-      };
+  const resolveMode = useCallback((request: PersistRequest, currentId: string | null): SaveMode => {
+    if (request.mode) {
+      return request.mode;
     }
 
-    const url = id ? `/api/documents/${id}` : '/api/documents';
-    const method = id ? 'put' : 'post';
+    const targetId = request.recordId ?? currentId;
+    return targetId ? 'update' : 'create';
+  }, []);
 
-    const response = await (method === 'put'
-      ? httpClient.put(url, body)
-      : httpClient.post(url, body));
-
-    if (!response.ok) {
-      let errorMessage = `Failed to save record: ${response.status} ${response.statusText}`;
-      try {
-        const errorData = await response.json();
-        if (errorData?.error) {
-          errorMessage = errorData.error;
-        }
-      } catch {}
-      throw new Error(errorMessage);
+  // Derive which endpoint to hit for a given request, respecting overrides and available metadata
+  const resolveEndpoint = useCallback((
+    mode: SaveMode,
+    request: PersistRequest,
+    currentId: string | null
+  ): { endpoint: EndpointConfig; resolvedMode: SaveMode; targetId: string | null } => {
+    if (request.endpointOverride) {
+      return { endpoint: request.endpointOverride, resolvedMode: mode, targetId: request.recordId ?? currentId };
     }
 
-    try {
-      return await response.json();
-    } catch {
-      return {};
-    }
-  }, [documentType, workspaceId]);
+    const targetId = request.recordId ?? currentId;
 
-  const saveRecord = useCallback(async (payload: WizardRecordPayload) => {
+    if (mode === 'progress') {
+      if (!targetId) {
+        throw new Error('Cannot persist progress without a record identifier');
+      }
+      return { endpoint: endpoints.progress, resolvedMode: 'progress', targetId };
+    }
+
+    if (mode === 'update') {
+      if (!targetId) {
+        throw new Error('Attempted to update a wizard record without an identifier');
+      }
+      return { endpoint: endpoints.update, resolvedMode: 'update', targetId };
+    }
+
+    return { endpoint: endpoints.create, resolvedMode: 'create', targetId };
+  }, [endpoints]);
+
+  // Single persistence pipeline that normalizes HTTP method, request URL, and record id bookkeeping
+  const persist = useCallback(async (request: PersistRequest, explicitMode?: SaveMode) => {
+    const mode = explicitMode ?? resolveMode(request, recordId);
+    const { endpoint, resolvedMode, targetId } = resolveEndpoint(mode, request, recordId);
+
+    const method = normaliseMethod(endpoint.method);
+    const dispatchKey = METHOD_MAP[method];
+    const requestUrl = applyRecordIdToUrl(endpoint.url, targetId ?? request.recordId);
+
     try {
       setSaving(true);
-      const targetId = payload.recordId ?? recordId ?? undefined;
-      const result = await persistDocument(payload, targetId);
-      const newId = resolveDocumentId(result) || targetId;
-      if (newId && newId !== recordId) {
-        setRecordId(newId);
+      const response = await httpClient[dispatchKey](requestUrl, request.payload);
+      const result = await tryParseJson(response);
+
+      if (options.successMessages?.[resolvedMode]) {
+        message.success(options.successMessages[resolvedMode]);
       }
-      message.success('Record saved successfully');
-      return result;
+
+      let nextRecordId = targetId ?? request.recordId ?? recordId;
+
+      if (resolvedMode === 'create') {
+        const resolvedId = options.resolveRecordId(result ?? (response as any), request);
+        if (resolvedId === undefined || resolvedId === null || resolvedId === '') {
+          throw new Error('Wizard persistence could not resolve a record identifier from the create response');
+        }
+        nextRecordId = resolvedId;
+      }
+
+      if (nextRecordId && nextRecordId !== recordId) {
+        setRecordId(nextRecordId);
+      }
+
+      return result ?? response;
     } catch (error) {
-      console.error('[useWizardRecordSave] saveRecord failed:', error);
-      message.error((error as Error)?.message || 'Failed to save record');
+      const err = error as Error;
+      const errorMessage = options.errorMessages?.[resolvedMode] ?? err.message;
+      message.error(errorMessage);
       throw error;
     } finally {
       setSaving(false);
     }
-  }, [persistDocument, recordId]);
+  }, [recordId, options, resolveEndpoint, resolveMode]);
 
-  const saveRecordProgress = useCallback(async (
-    sectionId: string,
-    sectionData: any,
-    wizardState?: any
-  ) => {
-    try {
-      setSaving(true);
-
-      const summaryFields: Record<string, any> = {};
-      const combinedSummarySources = {
-        ...(wizardState?.documentSummary || {}),
-        ...(sectionData?.documentSummary || {})
-      };
-      Object.entries(combinedSummarySources).forEach(([key, value]) => {
-        if (value !== undefined && value !== null) {
-          summaryFields[key] = value;
-        }
-      });
-
-      const cloneSection = (data: any) => {
-        if (!data) return data;
-        try {
-          const structuredCloneFn = (globalThis as any)?.structuredClone;
-          if (typeof structuredCloneFn === 'function') {
-            return structuredCloneFn(data);
-          }
-        } catch {}
-        try {
-          return JSON.parse(JSON.stringify(data));
-        } catch {
-          return { ...data };
-        }
-      };
-
-      const sectionPayload = cloneSection(sectionData) || {};
-      if (Object.keys(summaryFields).length > 0) {
-        sectionPayload.documentSummary = {
-          ...(sectionPayload.documentSummary || {}),
-          ...summaryFields
-        };
-        mergeSummaryFields(sectionPayload, summaryFields);
-      }
-
-      const normalizedWizardState = {
-        ...(cloneSection(wizardState) || {}),
-        lastSavedSectionId: sectionId,
-        updatedAt: new Date().toISOString(),
-        documentSummary: Object.keys(summaryFields).length > 0
-          ? {
-              ...(wizardState?.documentSummary || {}),
-              ...summaryFields
-            }
-          : wizardState?.documentSummary
-      };
-
-      if (summaryFields.inspectionType) {
-        (normalizedWizardState as any).inspectionType = summaryFields.inspectionType;
-      }
-      if (summaryFields.inspectionTypeLabel) {
-        (normalizedWizardState as any).inspectionTypeLabel = summaryFields.inspectionTypeLabel;
-      }
-      if (summaryFields.detectedEquipmentType) {
-        (normalizedWizardState as any).detectedEquipmentType = summaryFields.detectedEquipmentType;
-      }
-
-      const payload: WizardRecordPayload = {
-        recordId: recordId ?? undefined,
-        documentType,
-        workspaceId,
-        sectionId,
-        sectionData: sectionPayload,
-        wizardState: normalizedWizardState,
-        globalFormData: wizardState?.globalFormData,
-        recordContext: wizardState?.recordContext,
-        analysisData: wizardState?.analysisData,
-        completedSteps: wizardState?.completedSteps,
-        currentStep: wizardState?.currentStep,
-      };
-
-      if (Object.keys(summaryFields).length > 0) {
-        payload.documentSummary = summaryFields;
-        mergeSummaryFields(payload as Record<string, any>, summaryFields);
-      }
-
-      payload.inspectionType = payload.inspectionType
-        || sectionPayload.inspectionType
-        || normalizedWizardState.documentSummary?.inspectionType
-        || normalizedWizardState.inspectionType
-        || wizardState?.inspectionType;
-
-      payload.inspectionTypeLabel = payload.inspectionTypeLabel
-        || sectionPayload.inspectionTypeLabel
-        || normalizedWizardState.documentSummary?.inspectionTypeLabel
-        || normalizedWizardState.inspectionTypeLabel
-        || wizardState?.inspectionTypeLabel;
-
-      payload.detectedEquipmentType = payload.detectedEquipmentType
-        || sectionPayload.detectedEquipmentType
-        || normalizedWizardState.documentSummary?.detectedEquipmentType
-        || normalizedWizardState.detectedEquipmentType
-        || wizardState?.detectedEquipmentType;
-
-      if (sectionPayload.grids) {
-        payload.grids = {
-          ...(payload.grids || {}),
-          ...sectionPayload.grids
-        };
-      }
-
-      const result = await persistDocument(payload, recordId ?? undefined);
-      const newId = resolveDocumentId(result);
-      if (newId && newId !== recordId) {
-        setRecordId(newId);
-      }
-
-      const response: SaveResult = {
-        ...(typeof result === 'object' ? result : {}),
-        id: newId || recordId || undefined,
-        sections: normalizedWizardState?.sections || [],
-        wizardState: normalizedWizardState
-      };
-
-      console.debug('[useWizardRecordSave] saveRecordProgress result:', {
-        id: response.id,
-        sectionsCount: response.sections?.length || 0
-      });
-
-      message.success('Progress saved');
-      return response;
-    } catch (error) {
-      console.error('[useWizardRecordSave] saveRecordProgress failed:', error);
-      message.error((error as Error)?.message || 'Failed to save progress');
-      throw error;
-    } finally {
-      setSaving(false);
+  const saveRecord = useCallback((request: PersistRequest) => persist(request, request.mode), [persist]);
+  const saveRecordProgress = useCallback((request: PersistRequest) => {
+    const inferredRecordId = request.recordId ?? recordId;
+    if (!inferredRecordId) {
+      throw new Error('Cannot persist wizard progress without a record identifier');
     }
-  }, [documentType, persistDocument, recordId, workspaceId]);
+    return persist(
+      { ...request, recordId: inferredRecordId, mode: 'progress' },
+      'progress'
+    );
+  }, [persist, recordId]);
 
   return {
     recordId,

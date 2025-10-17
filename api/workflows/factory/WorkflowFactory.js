@@ -13,7 +13,6 @@
 const { StateGraph, START, END } = require('@langchain/langgraph');
 const { z } = require('zod');
 const { logger } = require('../../core/Logger');
-const { ValidationError } = require('../../core/ErrorHandler');
 
 class WorkflowFactory {
   constructor(agentRegistry, workflowRouter) {

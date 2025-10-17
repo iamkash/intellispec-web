@@ -370,7 +370,6 @@ const processed = {
 
     // Check for conflicting or inconsistent data
     // This is a simplified implementation
-    const keys = Object.keys(data);
     let consistent = true;
 
     // Basic consistency checks

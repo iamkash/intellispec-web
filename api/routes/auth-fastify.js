@@ -28,15 +28,7 @@ const UserSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-const TenantSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  name: String,
-  status: { type: String, default: 'active' },
-  createdAt: { type: Date, default: Date.now }
-});
-
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
-const Tenant = mongoose.models.Tenant || mongoose.model('Tenant', TenantSchema);
 
 async function registerAuthRoutes(fastify) {
   

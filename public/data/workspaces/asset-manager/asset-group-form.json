@@ -1,5 +1,5 @@
 {
-  "id": "asset-group-form-workspace",
+  "id": "asset-manager/asset-group-form",
   "title": "Asset Group Management",
   "description": "Process unit/asset group management with classification and capacity details",
   "layout": "dashboard",
@@ -163,10 +163,22 @@
             "size": 8,
             "order": 6,
             "options": [
-              { "value": "critical", "label": "Critical" },
-              { "value": "high", "label": "High" },
-              { "value": "medium", "label": "Medium" },
-              { "value": "low", "label": "Low" }
+              {
+                "value": "critical",
+                "label": "Critical"
+              },
+              {
+                "value": "high",
+                "label": "High"
+              },
+              {
+                "value": "medium",
+                "label": "Medium"
+              },
+              {
+                "value": "low",
+                "label": "Low"
+              }
             ]
           },
           {
@@ -216,13 +228,34 @@
             "size": 12,
             "order": 1,
             "options": [
-              { "value": "production", "label": "Production" },
-              { "value": "processing", "label": "Processing" },
-              { "value": "storage", "label": "Storage" },
-              { "value": "utilities", "label": "Utilities" },
-              { "value": "support", "label": "Support" },
-              { "value": "safety", "label": "Safety Systems" },
-              { "value": "environmental", "label": "Environmental" }
+              {
+                "value": "production",
+                "label": "Production"
+              },
+              {
+                "value": "processing",
+                "label": "Processing"
+              },
+              {
+                "value": "storage",
+                "label": "Storage"
+              },
+              {
+                "value": "utilities",
+                "label": "Utilities"
+              },
+              {
+                "value": "support",
+                "label": "Support"
+              },
+              {
+                "value": "safety",
+                "label": "Safety Systems"
+              },
+              {
+                "value": "environmental",
+                "label": "Environmental"
+              }
             ]
           },
           {
@@ -237,10 +270,22 @@
             "size": 12,
             "order": 2,
             "options": [
-              { "value": "continuous", "label": "Continuous" },
-              { "value": "batch", "label": "Batch" },
-              { "value": "semi_continuous", "label": "Semi-Continuous" },
-              { "value": "intermittent", "label": "Intermittent" }
+              {
+                "value": "continuous",
+                "label": "Continuous"
+              },
+              {
+                "value": "batch",
+                "label": "Batch"
+              },
+              {
+                "value": "semi_continuous",
+                "label": "Semi-Continuous"
+              },
+              {
+                "value": "intermittent",
+                "label": "Intermittent"
+              }
             ]
           },
           {
@@ -255,11 +300,26 @@
             "size": 8,
             "order": 3,
             "options": [
-              { "value": "very_high", "label": "Very High" },
-              { "value": "high", "label": "High" },
-              { "value": "medium", "label": "Medium" },
-              { "value": "low", "label": "Low" },
-              { "value": "very_low", "label": "Very Low" }
+              {
+                "value": "very_high",
+                "label": "Very High"
+              },
+              {
+                "value": "high",
+                "label": "High"
+              },
+              {
+                "value": "medium",
+                "label": "Medium"
+              },
+              {
+                "value": "low",
+                "label": "Low"
+              },
+              {
+                "value": "very_low",
+                "label": "Very Low"
+              }
             ],
             "description": "Based on PSM/RMP assessment"
           },
@@ -462,11 +522,26 @@
             "size": 12,
             "order": 1,
             "options": [
-              { "value": "reactive", "label": "Reactive (Run-to-Failure)" },
-              { "value": "preventive", "label": "Preventive (Time-Based)" },
-              { "value": "predictive", "label": "Predictive (Condition-Based)" },
-              { "value": "reliability_centered", "label": "Reliability Centered (RCM)" },
-              { "value": "total_productive", "label": "Total Productive Maintenance (TPM)" }
+              {
+                "value": "reactive",
+                "label": "Reactive (Run-to-Failure)"
+              },
+              {
+                "value": "preventive",
+                "label": "Preventive (Time-Based)"
+              },
+              {
+                "value": "predictive",
+                "label": "Predictive (Condition-Based)"
+              },
+              {
+                "value": "reliability_centered",
+                "label": "Reliability Centered (RCM)"
+              },
+              {
+                "value": "total_productive",
+                "label": "Total Productive Maintenance (TPM)"
+              }
             ]
           },
           {
@@ -481,14 +556,38 @@
             "size": 12,
             "order": 2,
             "options": [
-              { "value": "daily", "label": "Daily" },
-              { "value": "weekly", "label": "Weekly" },
-              { "value": "monthly", "label": "Monthly" },
-              { "value": "quarterly", "label": "Quarterly" },
-              { "value": "semi_annual", "label": "Semi-Annual" },
-              { "value": "annual", "label": "Annual" },
-              { "value": "biennial", "label": "Biennial (2 years)" },
-              { "value": "custom", "label": "Custom" }
+              {
+                "value": "daily",
+                "label": "Daily"
+              },
+              {
+                "value": "weekly",
+                "label": "Weekly"
+              },
+              {
+                "value": "monthly",
+                "label": "Monthly"
+              },
+              {
+                "value": "quarterly",
+                "label": "Quarterly"
+              },
+              {
+                "value": "semi_annual",
+                "label": "Semi-Annual"
+              },
+              {
+                "value": "annual",
+                "label": "Annual"
+              },
+              {
+                "value": "biennial",
+                "label": "Biennial (2 years)"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              }
             ]
           },
           {

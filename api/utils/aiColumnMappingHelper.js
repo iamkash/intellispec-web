@@ -11,7 +11,7 @@
  * ALL prompts, models, and configurations come from metadata.
  */
 
-const { generateWithAI, interpolateTemplate } = require('../core/AIService');
+const { generateWithAI } = require('../core/AIService');
 const { logger } = require('../core/Logger');
 
 /**
@@ -166,4 +166,3 @@ module.exports = {
   buildVerificationContext,
   buildSuggestionContext
 };
-

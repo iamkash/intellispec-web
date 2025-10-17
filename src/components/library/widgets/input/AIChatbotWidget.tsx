@@ -7,51 +7,27 @@
  */
 
 import React, { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import { 
-  Card, 
-  Input, 
-  Button, 
-  Space, 
-  Typography, 
-  Avatar, 
-  List, 
-  message, 
-  Tooltip, 
-  Popover,
-  Divider,
-  Tag,
-  Spin,
-  Badge,
-  Collapse,
-  Alert,
+import {
+  Input,
+  Button,
+  Space,
+  Avatar,
+  Tooltip,
   Drawer,
   FloatButton
 } from 'antd';
-import { 
-  SendOutlined, 
-  RobotOutlined, 
-  UserOutlined, 
+import {
+  SendOutlined,
+  RobotOutlined,
+  UserOutlined,
   AudioOutlined,
   PictureOutlined,
-  FileTextOutlined,
   QuestionCircleOutlined,
-  BulbOutlined,
-  CheckCircleOutlined,
-  LoadingOutlined,
-  UploadOutlined,
-  EyeOutlined,
-  MessageOutlined,
-  CloseOutlined,
-  PlusOutlined
+  UploadOutlined
 } from '@ant-design/icons';
 import { useOpenAI, OpenAIModelConfig, OpenAIPromptConfig } from '../../../../hooks/useOpenAI';
-import { VoiceRecorderWidget } from './VoiceRecorderWidget';
-import { ImageUploadWithDrawingWidget } from './ImageUploadWithDrawingWidget';
-import { DocumentUploadWidget } from './DocumentUploadWidget';
 
-const { Text, Title, Paragraph } = Typography;
 const { TextArea } = Input;
-const { Panel } = Collapse;
 
 export interface ChatMessage {
   id: string;
@@ -80,6 +56,9 @@ export interface FormField {
   required?: boolean;
   defaultValue?: any;
   options?: Array<{ label: string; value: any }>;
+  location?: string;
+  defaultSeverity?: string;
+  defaultInspector?: string;
   validation?: {
     pattern?: string;
     min?: number;
@@ -184,7 +163,6 @@ export const AIChatbotWidget: React.FC<AIChatbotWidgetProps> = ({
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [uploadedDocuments, setUploadedDocuments] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -192,7 +170,7 @@ export const AIChatbotWidget: React.FC<AIChatbotWidgetProps> = ({
   // Refs
   const inputRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   // OpenAI hook
   const openai = useOpenAI({
     apiKey: openaiConfig?.apiKey || '',
@@ -203,6 +181,16 @@ export const AIChatbotWidget: React.FC<AIChatbotWidgetProps> = ({
   // Load complete form schema
   const [completeFormSchema, setCompleteFormSchema] = useState<any>(null);
   const [isLoadingSchema, setIsLoadingSchema] = useState(false);
+
+  const effectiveFormSchema = useMemo<FormField[]>(
+    () => (completeFormSchema?.formSchema as FormField[] | undefined) || formSchema,
+    [completeFormSchema, formSchema]
+  );
+
+  const effectiveSections = useMemo(
+    () => completeFormSchema?.sections || [],
+    [completeFormSchema]
+  );
 
   // Load complete form schema on mount
   useEffect(() => {
@@ -230,10 +218,10 @@ export const AIChatbotWidget: React.FC<AIChatbotWidgetProps> = ({
 
   // System prompt generation
   const systemPrompt = useMemo(() => {
-    const schemaToUse = completeFormSchema?.formSchema || formSchema;
-    const sections = completeFormSchema?.sections || [];
+    const schemaToUse = effectiveFormSchema;
+    const sections = effectiveSections;
     
-    const formFields = schemaToUse.map((field: any) => ({
+    const formFields = schemaToUse.map((field: FormField) => ({
       id: field.id,
       type: field.type || 'text',
       title: field.title,
@@ -265,8 +253,8 @@ AI Instructions from Schema:
 - Examples: ${JSON.stringify(aiInstructions.examples, null, 2)}
 ` : ''}
 
-Available form fields: ${formFields.map((f: any) => `${f.id} (${f.type}): ${f.title}`).join(', ')}`;
-  }, [completeFormSchema, formSchema, currentSection, currentField, currentFormData]);
+Available form fields: ${formFields.map((field) => `${field.id} (${field.type}): ${field.title}`).join(', ')}`;
+  }, [effectiveFormSchema, effectiveSections, completeFormSchema?.metadata, currentSection, currentField, currentFormData]);
 
   // Add message helper
   const addMessage = useCallback((message: Omit<ChatMessage, 'id' | 'timestamp'>) => {
@@ -277,6 +265,77 @@ Available form fields: ${formFields.map((f: any) => `${f.id} (${f.type}): ${f.ti
     };
     setMessages(prev => [...prev, newMessage]);
   }, []);
+
+  // Parse field updates from AI response
+  const parseFieldUpdates = useCallback((response: string): Record<string, any> | null => {
+    try {
+      if (!response || typeof response !== 'string') {
+        return null;
+      }
+
+      const jsonPatterns = [
+        /\{[\s\S]*?\}/g,
+        /```json\s*(\{[\s\S]*?\})\s*```/g,
+        /```\s*(\{[\s\S]*?\})\s*```/g
+      ];
+
+      for (const pattern of jsonPatterns) {
+        const matches = response.match(pattern);
+        if (matches) {
+          for (const match of matches) {
+            try {
+              let jsonStr = match;
+              if (match.includes('```json')) {
+                jsonStr = match.replace(/```json\s*/, '').replace(/\s*```/, '');
+              } else if (match.includes('```')) {
+                jsonStr = match.replace(/```\s*/, '').replace(/\s*```/, '');
+              }
+
+              const parsed = JSON.parse(jsonStr);
+              return parsed;
+            } catch (parseError) {
+              console.warn('Failed to parse JSON match:', match, parseError);
+              continue;
+            }
+          }
+        }
+      }
+      return null;
+    } catch (error) {
+      console.warn('Failed to parse field updates from response:', error);
+      return null;
+    }
+  }, []);
+
+  // Generate suggestions based on response
+  const generateSuggestions = useCallback((response: string): string[] => {
+    const suggestions: string[] = [];
+
+    if (!response || typeof response !== 'string') {
+      suggestions.push('Show me form progress', 'Help me complete this section');
+      return suggestions.slice(0, 4);
+    }
+
+    if (response.includes('field') || response.includes('form')) {
+      suggestions.push('What other fields need attention?');
+    }
+
+    if (response.includes('image') || response.includes('photo')) {
+      suggestions.push('Upload another image for analysis');
+    }
+
+    if (response.includes('voice') || response.includes('audio')) {
+      suggestions.push('Use voice input for this field');
+    }
+
+    if (currentSection) {
+      suggestions.push(`Help me with ${currentSection} section`);
+    }
+
+    suggestions.push('Show me form progress', 'Help me complete this section');
+
+    return suggestions.slice(0, 4);
+  }, [currentSection]);
 
   // Send message to OpenAI
   const sendMessage = useCallback(async (content: string, metadata?: any) => {
@@ -304,7 +363,7 @@ Available form fields: ${formFields.map((f: any) => `${f.id} (${f.type}): ${f.ti
     try {
       // Prepare context with form data and schema
       const context = {
-        formSchema,
+        formSchema: effectiveFormSchema,
         currentFormData,
         currentSection,
         currentField,
@@ -332,7 +391,7 @@ Available form fields: ${formFields.map((f: any) => `${f.id} (${f.type}): ${f.ti
       
       // Parse response for field updates
       const fieldUpdates = parseFieldUpdates(response.data);
-console.log('Available form fields:', formSchema.map(f => `${f.id} (${f.type})`));
+console.log('Available form fields:', effectiveFormSchema.map((field) => `${field.id} (${field.type})`));
 // Add assistant response
       addMessage({
         type: 'assistant',
@@ -345,11 +404,11 @@ console.log('Available form fields:', formSchema.map(f => `${f.id} (${f.type})`)
       
       // Apply field updates
       if (fieldUpdates && typeof fieldUpdates === 'object') {
-const schemaToUse = completeFormSchema?.formSchema || formSchema;
+const schemaToUse = effectiveFormSchema;
         
         Object.entries(fieldUpdates).forEach(([fieldId, value]) => {
 // Find the field definition to understand its type
-          const fieldDef = schemaToUse.find((f: any) => f.id === fieldId);
+          const fieldDef = schemaToUse.find((field) => field.id === fieldId);
           
           if (fieldDef?.type === 'inspection-findings' && Array.isArray(value)) {
             // Convert string array to proper finding objects for inspection-findings type
@@ -385,82 +444,24 @@ onFieldUpdate?.(fieldId, value);
     } finally {
       setIsAnalyzing(false);
     }
-  }, [openai, systemPrompt, modelConfig, promptConfig, formSchema, currentFormData, currentSection, currentField, uploadedImages, uploadedDocuments, messages, addMessage, onFieldUpdate, openaiConfig?.apiKey]);
-  
-  // Parse field updates from AI response
-  const parseFieldUpdates = useCallback((response: string): Record<string, any> | null => {
-    try {
-      // Check if response exists and is a string
-      if (!response || typeof response !== 'string') {
-        return null;
-      }
-// Look for JSON patterns in the response - try multiple patterns
-      const jsonPatterns = [
-        /\{[\s\S]*?\}/g,  // Any JSON object
-        /```json\s*(\{[\s\S]*?\})\s*```/g,  // JSON in code blocks
-        /```\s*(\{[\s\S]*?\})\s*```/g  // JSON in generic code blocks
-      ];
-      
-      for (const pattern of jsonPatterns) {
-        const matches = response.match(pattern);
-        if (matches) {
-          for (const match of matches) {
-            try {
-              // Clean up the match (remove markdown formatting if present)
-              let jsonStr = match;
-              if (match.includes('```json')) {
-                jsonStr = match.replace(/```json\s*/, '').replace(/\s*```/, '');
-              } else if (match.includes('```')) {
-                jsonStr = match.replace(/```\s*/, '').replace(/\s*```/, '');
-              }
-              
-              const parsed = JSON.parse(jsonStr);
-return parsed;
-            } catch (parseError) {
-              console.warn('Failed to parse JSON match:', match, parseError);
-              continue;
-            }
-          }
-        }
-      }
-return null;
-    } catch (error) {
-      console.warn('Failed to parse field updates from response:', error);
-      return null;
-    }
-  }, []);
-  
-  // Generate suggestions based on response
-  const generateSuggestions = useCallback((response: string): string[] => {
-    const suggestions: string[] = [];
-    
-    // Check if response exists and is a string
-    if (!response || typeof response !== 'string') {
-      suggestions.push('Show me form progress', 'Help me complete this section');
-      return suggestions.slice(0, 4);
-    }
-    
-    // Add context-aware suggestions
-    if (response.includes('field') || response.includes('form')) {
-      suggestions.push('What other fields need attention?');
-    }
-    
-    if (response.includes('image') || response.includes('photo')) {
-      suggestions.push('Upload another image for analysis');
-    }
-    
-    if (response.includes('voice') || response.includes('audio')) {
-      suggestions.push('Use voice input for this field');
-    }
-    
-    if (currentSection) {
-      suggestions.push(`Help me with ${currentSection} section`);
-    }
-    
-    suggestions.push('Show me form progress', 'Help me complete this section');
-    
-    return suggestions.slice(0, 4);
-  }, [currentSection]);
+  }, [
+    openai,
+    systemPrompt,
+    modelConfig,
+    promptConfig,
+    effectiveFormSchema,
+    currentFormData,
+    currentSection,
+    currentField,
+    uploadedImages,
+    uploadedDocuments,
+    messages,
+    addMessage,
+    onFieldUpdate,
+    openaiConfig?.apiKey,
+    parseFieldUpdates,
+    generateSuggestions
+  ]);
   
   // Convert image to supported format for OpenAI Vision API
   const convertImageToSupportedFormat = useCallback(async (imageUrl: string): Promise<string> => {

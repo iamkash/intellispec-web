@@ -1,5 +1,5 @@
 {
-  "id": "paint-invoice-dashboard",
+  "id": "asset-manager/paint-invoice-dashboard",
   "title": "Paint Invoice Dashboard",
   "description": "Manage paint invoices and purchase tracking with comprehensive search and editing capabilities",
   "layout": "dashboard",
@@ -73,7 +73,7 @@
             }
           },
           {
-            "key": "facilityName", 
+            "key": "facilityName",
             "title": "Facility",
             "width": "20%",
             "field": {
@@ -127,7 +127,7 @@
             "workspace": "asset-manager/paint-invoice-form",
             "params": {
               "mode": "edit",
-              "id": "{_id}"
+              "id": "{id}"
             }
           },
           {
@@ -137,7 +137,7 @@
             "workspace": "asset-manager/paint-invoice-form",
             "params": {
               "mode": "view",
-              "id": "{_id}"
+              "id": "{id}"
             }
           },
           {
@@ -185,7 +185,13 @@
   "metadata": {
     "created": "2024-01-15T00:00:00Z",
     "version": "1.0.0",
-    "tags": ["paint", "invoices", "purchase", "tracking", "assets"],
+    "tags": [
+      "paint",
+      "invoices",
+      "purchase",
+      "tracking",
+      "assets"
+    ],
     "description": "Paint invoice dashboard with comprehensive search, editing, and tracking capabilities."
   }
 }

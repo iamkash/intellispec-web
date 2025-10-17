@@ -1,5 +1,5 @@
 {
-  "id": "intelliNDT-home",
+  "id": "intelliNDT/home",
   "type": "dashboard",
   "title": "IntelliNDT Home",
   "description": "Welcome to IntelliNDT - NDT AI Assistant",
@@ -31,7 +31,10 @@
             "type": "workspace",
             "workspace": "inspection/ai-inspection-assistant",
             "category": "ai",
-            "tags": ["ai", "ndt"]
+            "tags": [
+              "ai",
+              "ndt"
+            ]
           }
         ]
       }
@@ -47,5 +50,3 @@
     }
   }
 }
-
-

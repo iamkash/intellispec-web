@@ -18,6 +18,7 @@ import { BaseGadgetContainer } from '../../../../ui/workspace/BaseGadgetContaine
 import { DatePickerWidget } from '../../../widgets/input/DatePickerWidget';
 import { InputFieldWidget } from '../../../widgets/input/InputFieldWidget';
 import { InputNumberWidget } from '../../../widgets/input/InputNumberWidget';
+import { useNavigation } from '../../../../../contexts/NavigationContext';
 import { BaseGadget, GadgetConfig, GadgetMetadata, GadgetSchema, GadgetType } from '../../base';
 
 // Helper function to get nested values from objects
@@ -32,6 +33,17 @@ const getNestedValue = (obj: any, path: string): any => {
   } catch {
     return undefined;
   }
+};
+
+const pickFirstValueFromPaths = (record: any, paths: (string | undefined)[]): any => {
+  for (const path of paths) {
+    if (!path) continue;
+    const value = getNestedValue(record, path);
+    if (value !== undefined && value !== null && value !== '') {
+      return value;
+    }
+  }
+  return undefined;
 };
 
 // Stable Column Filter Component to maintain focus
@@ -92,6 +104,7 @@ interface ColumnMeta {
   key: string;
   title: string;
   width?: number;
+  valuePath?: string | string[];
   type?: 'text' | 'date' | 'status' | 'actions';
   field?: {
     type?: 'text' | 'email' | 'password' | 'select' | 'date' | 'number' | 'textarea';
@@ -127,6 +140,25 @@ interface ColumnMeta {
     confirmText?: string;
   }>;
 }
+
+const getColumnValue = (record: any, column: ColumnMeta): any => {
+  const paths = Array.isArray(column.valuePath)
+    ? column.valuePath
+    : column.valuePath
+    ? [column.valuePath]
+    : [column.key];
+
+  const value = pickFirstValueFromPaths(record, paths);
+  if (value !== undefined && value !== null) {
+    return value;
+  }
+
+  if (column.key.includes('.')) {
+    return getNestedValue(record, column.key);
+  }
+
+  return record?.[column.key];
+};
 
 interface ToolbarConfig {
   enableCreate?: boolean;
@@ -183,7 +215,6 @@ interface SGridSearchViewProps {
   fieldMappings?: Record<string, string>; // Maps filter IDs to API parameter names
   defaultSort?: { field: string; order: 'asc' | 'desc' }; // Default sorting configuration
   recordWorkspaceRouting?: RecordWorkspaceRoutingConfig;
-  legacyWorkspaceMapping?: Record<string, string>;
 }
 
 const SGridSearchView: React.FC<SGridSearchViewProps> = ({
@@ -202,8 +233,9 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
   defaultSort,
   pagination: paginationConfig,
   recordWorkspaceRouting,
-  legacyWorkspaceMapping = {},
 }) => {
+  const navigation = useNavigation();
+  const currentWorkspaceId = navigation.currentWorkspaceId;
   const [data, setData] = useState<any[]>(Array.isArray(injectedData) ? injectedData : []);
   const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
@@ -294,34 +326,13 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
           }
         }
 
-        if (routing.defaultWorkspace) {
-          return routing.defaultWorkspace;
-        }
+      if (routing.defaultWorkspace) {
+        return routing.defaultWorkspace;
       }
+    }
 
-      if (valueString && legacyWorkspaceMapping) {
-        const trimmedLegacyValue = valueString.trim();
-        const directLegacy =
-          legacyWorkspaceMapping[valueString] ||
-          legacyWorkspaceMapping[trimmedLegacyValue];
-        if (directLegacy) {
-          return directLegacy;
-        }
-
-        const lower = valueString.toLowerCase();
-        if (lower) {
-          for (const [key, workspace] of Object.entries(legacyWorkspaceMapping)) {
-            if (key.toLowerCase() === lower) {
-              return workspace;
-            }
-          }
-        }
-      }
-
-      return routing?.defaultWorkspace;
-    },
-    [recordWorkspaceRouting, legacyWorkspaceMapping]
-  );
+    return routing?.defaultWorkspace;
+  }, [recordWorkspaceRouting]);
 
   // Initialize sorting with default sort if provided
   const initialSorting = useMemo<SortingState>(() => {
@@ -586,7 +597,7 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
     columns.forEach(col => {
       if (col.field?.type === 'select' && col.field?.optionsUrl && dynamicOptions[col.key]) {
         const options = dynamicOptions[col.key];
-        const currentValue = record[col.key];
+        const currentValue = getColumnValue(record, col);
         const matchingOption = options.find((opt: any) =>
           (typeof opt === 'string' ? opt : opt.value) === currentValue
         );
@@ -618,6 +629,8 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
 
       onNavigate('navigate', {
         workspace: actionConfig.workspace,
+        workspaceId: actionConfig.workspace,
+        returnTo: currentWorkspaceId ?? undefined,
         params
       });
       return;
@@ -654,6 +667,8 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
 
         onNavigate('navigate', {
           workspace: targetWorkspace,
+          workspaceId: targetWorkspace,
+          returnTo: currentWorkspaceId ?? undefined,
           params
         });
         return;
@@ -714,6 +729,7 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
     dataUrl,
     rowActions,
     onNavigate,
+    currentWorkspaceId,
     setModalMode,
     setCurrentRecord,
     setIsModalVisible,
@@ -774,14 +790,7 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
         />
       </div>
     ) : c.title,
-    accessorFn: (row: any) => {
-      try {
-        const parts = c.key.split('.');
-        let cur: any = row;
-        for (const p of parts) cur = cur?.[p];
-        return cur;
-      } catch { return undefined; }
-    },
+    accessorFn: (row: any) => getColumnValue(row, c),
       cell: (ctx: any) => {
         const value = ctx.getValue();
         const record = ctx.row.original;
@@ -848,14 +857,25 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
                       return acc;
                     }, {});
 
-                    const searchParams = new URLSearchParams();
-                    searchParams.set('workspace', workspaceTarget);
-                    Object.entries(resolvedParams).forEach(([paramKey, paramValue]) => {
-                      searchParams.append(paramKey, paramValue);
-                    });
+                    if (onNavigate) {
+                      onNavigate('navigate', {
+                        workspace: workspaceTarget,
+                        workspaceId: workspaceTarget,
+                        returnTo: currentWorkspaceId ?? undefined,
+                        params: {
+                          ...resolvedParams,
+                        },
+                      });
+                    } else {
+                      const searchParams = new URLSearchParams();
+                      searchParams.set('workspace', workspaceTarget);
+                      Object.entries(resolvedParams).forEach(([paramKey, paramValue]) => {
+                        searchParams.append(paramKey, paramValue);
+                      });
 
-                    const queryString = searchParams.toString();
-                    window.location.href = queryString ? `/?${queryString}` : '/';
+                      const queryString = searchParams.toString();
+                      window.location.href = queryString ? `/?${queryString}` : '/';
+                    }
                   } else {
                     handleRowAction(action.key, record);
                   }
@@ -999,7 +1019,9 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
     focusedColumn,
     resolveWizardWorkspace,
     recordWorkspaceRouting,
-    handleRowAction
+    handleRowAction,
+    onNavigate,
+    currentWorkspaceId,
   ]);
 
   const table = useReactTable({
@@ -1225,6 +1247,8 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
       // Navigate to create workspace
       onNavigate('navigate', {
         workspace: toolbar.createWorkspace,
+        workspaceId: toolbar.createWorkspace,
+        returnTo: currentWorkspaceId ?? undefined,
         params: toolbar.createParams || { mode: 'create' }
       });
     } else {
@@ -1278,9 +1302,7 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
       const exportData = allData.map((item: any) => {
         const rowData: any = {};
         columns.forEach(col => {
-          const value = col.key.includes('.') 
-            ? col.key.split('.').reduce((obj, key) => obj?.[key], item)
-            : item[col.key];
+        const value = getColumnValue(item, col);
           rowData[col.title] = value ?? '';
         });
         return rowData;
@@ -1340,9 +1362,7 @@ const SGridSearchView: React.FC<SGridSearchViewProps> = ({
       const exportData = allData.map((item: any) => {
         const rowData: any = {};
         columns.forEach(col => {
-          const value = col.key.includes('.') 
-            ? col.key.split('.').reduce((obj, key) => obj?.[key], item)
-            : item[col.key];
+        const value = getColumnValue(item, col);
           rowData[col.title] = value ?? '';
         });
         return rowData;
@@ -1718,10 +1738,6 @@ export default class SGridSearchGadget extends BaseGadget {
         },
         description: 'Metadata-driven configuration for resolving wizard workspaces per record'
       },
-      legacyWorkspaceMapping: {
-        type: 'object',
-        description: 'Legacy record type to workspace mapping (deprecated in favor of recordWorkspaceRouting)'
-      }
     },
     required: [],
     widgetSchemas: {}
@@ -1734,15 +1750,13 @@ export default class SGridSearchGadget extends BaseGadget {
 
   renderBody(props: any): React.ReactNode {
     // Extract config from the new props structure and spread it for compatibility
-    const { config, context, ...otherProps } = props;
+    const { config, ...otherProps } = props;
     
     // SGridSearchView expects props directly, so spread config properties
     return (
       <SGridSearchView
         {...(config || props)}
-        context={context}
         recordWorkspaceRouting={(config || props)?.recordWorkspaceRouting}
-        legacyWorkspaceMapping={(config || props)?.legacyWorkspaceMapping}
         {...otherProps}
       />
     );

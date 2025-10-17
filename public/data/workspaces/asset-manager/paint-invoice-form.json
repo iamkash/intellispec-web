@@ -1,5 +1,5 @@
 {
-  "id": "paint-invoice-form",
+  "id": "asset-manager/paint-invoice-form",
   "title": "Paint Invoice Form",
   "description": "Create and edit paint invoices with line item details",
   "layout": "dashboard",
@@ -214,15 +214,21 @@
         "calculatedFields": {
           "totalQuantity": {
             "formula": "SUM(lineItems.quantityPurchased)",
-            "dependencies": ["lineItems"]
+            "dependencies": [
+              "lineItems"
+            ]
           },
           "companyName": {
             "formula": "LOOKUP(companyId, '/api/documents?type=company&fields=id,name', 'name')",
-            "dependencies": ["companyId"]
+            "dependencies": [
+              "companyId"
+            ]
           },
           "facilityName": {
             "formula": "LOOKUP(facilityId, '/api/documents?type=Site&fields=id,name', 'name')",
-            "dependencies": ["facilityId"]
+            "dependencies": [
+              "facilityId"
+            ]
           }
         }
       },
@@ -240,7 +246,13 @@
   "metadata": {
     "created": "2024-01-15T00:00:00Z",
     "version": "1.0.0",
-    "tags": ["paint", "invoice", "form", "create", "edit"],
+    "tags": [
+      "paint",
+      "invoice",
+      "form",
+      "create",
+      "edit"
+    ],
     "description": "Paint invoice form for creating and editing invoices with line item details."
   }
 }

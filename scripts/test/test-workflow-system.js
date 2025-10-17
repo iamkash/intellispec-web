@@ -3,8 +3,6 @@
  * Tests workflow creation, agent registration, and basic functionality
  */
 
-const mongoose = require('mongoose');
-
 // Import our workflow components
 const WorkflowFactory = require('./api/workflows/factory/WorkflowFactory');
 const AgentRegistry = require('./api/workflows/agents/AgentRegistry');
@@ -44,6 +42,7 @@ if (!validation.isValid) {
 
     // Test workflow creation
 const workflow = workflowFactory.createWorkflow(testMetadata);
+console.log('✅ Workflow Creation: WORKING', { hasWorkflow: Boolean(workflow) });
 // Test agent execution (mock data)
 const mockInputs = {
       voice_data: { transcript: 'Test transcript', confidence: 0.9 },

@@ -1,5 +1,5 @@
 {
-  "id": "heat-exchanger-boiler-wizard",
+  "id": "intelliINSPECT/heat-exchanger-boiler-wizard",
   "title": "Heat Exchanger, Boiler & Fired Heater Inspection Wizard",
   "description": "AI-powered inspection wizard for heat transfer equipment",
   "layout": "dashboard",
@@ -460,7 +460,7 @@
                 },
                 {
                   "key": "temperature",
-                  "title": "Temperature (\u00b0F)",
+                  "title": "Temperature (°F)",
                   "editable": true,
                   "summary": "average"
                 },
@@ -1095,7 +1095,7 @@
           },
           {
             "id": "design_temperature",
-            "label": "Design Temperature (\u00b0F)",
+            "label": "Design Temperature (°F)",
             "type": "number",
             "groupId": "thermal_design",
             "lgSpan": 8
@@ -1123,7 +1123,7 @@
           },
           {
             "id": "operating_temperature",
-            "label": "Operating Temperature (\u00b0F)",
+            "label": "Operating Temperature (°F)",
             "type": "number",
             "groupId": "operating_conditions",
             "lgSpan": 8
@@ -1432,7 +1432,7 @@
             },
             "promptConfig": {
               "systemPrompt": "Generate standard TEMA/ASME/API heat transfer equipment inspection report. Use only factual data from voice transcript and images. Do not include disclaimers about 'not provided', 'photographic evidence', or 'insufficient data'. If data is not available, leave field blank or use 'N/A'. Standard report format only.",
-              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard heat transfer equipment inspection report using voice data and images:\n\n**HEAT TRANSFER EQUIPMENT INSPECTION REPORT**\n**TEMA/ASME/API STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [exchanger/boiler/heater type from voice/visual] |\n| Manufacturer | [from nameplate] |\n| Model Number | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Heat Duty | [MMBtu/hr from nameplate/voice] |\n| Design Pressure Shell | [psi from nameplate/voice] |\n| Design Pressure Tube | [psi from nameplate/voice] |\n| Design Temperature | [\u00b0F from nameplate/voice] |\n| Tube Count | [from nameplate/voice] |\n| Shell Material | [from nameplate/voice] |\n| Tube Material | [from nameplate/voice] |\n\n**INSPECTION SCOPE:**\n| Parameter | Value |\n|-----------|-------|\n| Inspection Type | [External/Internal from voice] |\n| Inspection Date | [today] |\n| Inspector | [name from voice] |\n| Certification | [TEMA/ASME/API from voice] |\n| Methods Used | [from voice] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Shell/Casing | [condition from voice/visual] | [details] |\n| Tube Bundle | [condition from voice/visual] | [details] |\n| Tube Sheet | [condition from voice/visual] | [details] |\n| Refractory | [condition from voice/visual - fired heaters] | [details] |\n| Fins/Air System | [condition from voice/visual - air coolers] | [details] |\n| Support Structure | [condition from voice/visual] | [details] |\n\n**THERMAL PERFORMANCE:**\n| Parameter | Value | Unit |\n|-----------|-------|------|\n| Heat Duty | [actual vs design from voice] | MMBtu/hr |\n| Inlet Temperature | [\u00b0F from voice] | \u00b0F |\n| Outlet Temperature | [\u00b0F from voice] | \u00b0F |\n| Pressure Drop | [psi from voice] | psi |\n| Fouling Factor | [observed from voice/visual] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per TEMA/ASME/API] |\n| Next Inspection Due | [Date per standards] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| Certification | [TEMA/ASME/API from voice] |"
+              "userPrompt": "VOICE TRANSCRIPT: {text}\n\nGenerate standard heat transfer equipment inspection report using voice data and images:\n\n**HEAT TRANSFER EQUIPMENT INSPECTION REPORT**\n**TEMA/ASME/API STANDARD**\n\n**EQUIPMENT IDENTIFICATION:**\n| Parameter | Value |\n|-----------|-------|\n| Equipment Tag | [from voice/nameplate] |\n| Equipment Type | [exchanger/boiler/heater type from voice/visual] |\n| Manufacturer | [from nameplate] |\n| Model Number | [from nameplate] |\n| Serial Number | [from nameplate] |\n| Installation Date | [from voice/records] |\n\n**DESIGN DATA:**\n| Parameter | Value |\n|-----------|-------|\n| Heat Duty | [MMBtu/hr from nameplate/voice] |\n| Design Pressure Shell | [psi from nameplate/voice] |\n| Design Pressure Tube | [psi from nameplate/voice] |\n| Design Temperature | [°F from nameplate/voice] |\n| Tube Count | [from nameplate/voice] |\n| Shell Material | [from nameplate/voice] |\n| Tube Material | [from nameplate/voice] |\n\n**INSPECTION SCOPE:**\n| Parameter | Value |\n|-----------|-------|\n| Inspection Type | [External/Internal from voice] |\n| Inspection Date | [today] |\n| Inspector | [name from voice] |\n| Certification | [TEMA/ASME/API from voice] |\n| Methods Used | [from voice] |\n\n**INSPECTION FINDINGS:**\n| Component | Condition | Notes |\n|-----------|-----------|-------|\n| Shell/Casing | [condition from voice/visual] | [details] |\n| Tube Bundle | [condition from voice/visual] | [details] |\n| Tube Sheet | [condition from voice/visual] | [details] |\n| Refractory | [condition from voice/visual - fired heaters] | [details] |\n| Fins/Air System | [condition from voice/visual - air coolers] | [details] |\n| Support Structure | [condition from voice/visual] | [details] |\n\n**THERMAL PERFORMANCE:**\n| Parameter | Value | Unit |\n|-----------|-------|------|\n| Heat Duty | [actual vs design from voice] | MMBtu/hr |\n| Inlet Temperature | [°F from voice] | °F |\n| Outlet Temperature | [°F from voice] | °F |\n| Pressure Drop | [psi from voice] | psi |\n| Fouling Factor | [observed from voice/visual] | - |\n\n**DEFECTS NOTED:**\n| Location | Defect Type | Severity | Action Required |\n|----------|-------------|----------|----------------|\n| [location from voice/visual] | [defect type] | [High/Medium/Low] | [immediate action] |\n\n**REPAIRS REQUIRED:**\n| Priority | Repair Description |\n|----------|-------------------|\n| [Critical/High/Medium] | [repair details from findings] |\n\n**INSPECTION SUMMARY:**\n| Parameter | Value |\n|-----------|-------|\n| Compliance Status | [Pass/Fail per TEMA/ASME/API] |\n| Next Inspection Due | [Date per standards] |\n| Inspector | [Name from voice] |\n| Date | [Today's date] |\n| Certification | [TEMA/ASME/API from voice] |"
             },
             "streaming": {
               "enabled": true,
@@ -1649,8 +1649,8 @@
           "disablePopulatedFields": true,
           "urlParams": [
             {
-              "name": "recordId",
-              "queryParam": "record_id",
+              "name": "documentId",
+              "queryParam": "documentId",
               "required": true
             }
           ],
@@ -1658,8 +1658,8 @@
             "url": "/api/documents",
             "method": "GET",
             "query": {
-              "type": "asset",
-              "id": "{params.recordId}"
+              "type": "wizard",
+              "id": "{params.documentId}"
             }
           },
           "responseSelector": "data.0"
@@ -1696,6 +1696,38 @@
             "pump": "Pump",
             "compressor": "Compressor",
             "turbine": "Turbine"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "inspection",
+          "domainLabel": "Inspection",
+          "domainSubType": "heat_exchanger_boiler_wizard",
+          "domainSubTypeLabel": "Heat Exchanger, Boiler & Fired Heater Inspection Wizard"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },

@@ -1,5 +1,5 @@
 {
-  "id": "asset-form-workspace",
+  "id": "asset-manager/asset-form",
   "title": "Asset Management",
   "description": "Enterprise asset/equipment management with complete lifecycle tracking",
   "layout": "dashboard",
@@ -171,15 +171,42 @@
             "order": 6,
             "defaultValue": "active",
             "options": [
-              { "value": "active", "label": "Active / Operating" },
-              { "value": "standby", "label": "Standby" },
-              { "value": "inactive", "label": "Inactive" },
-              { "value": "maintenance", "label": "Maintenance" },
-              { "value": "repair", "label": "Under Repair" },
-              { "value": "retired", "label": "Retired" },
-              { "value": "decommissioned", "label": "Decommissioned" },
-              { "value": "stored", "label": "Stored" },
-              { "value": "disposed", "label": "Disposed" }
+              {
+                "value": "active",
+                "label": "Active / Operating"
+              },
+              {
+                "value": "standby",
+                "label": "Standby"
+              },
+              {
+                "value": "inactive",
+                "label": "Inactive"
+              },
+              {
+                "value": "maintenance",
+                "label": "Maintenance"
+              },
+              {
+                "value": "repair",
+                "label": "Under Repair"
+              },
+              {
+                "value": "retired",
+                "label": "Retired"
+              },
+              {
+                "value": "decommissioned",
+                "label": "Decommissioned"
+              },
+              {
+                "value": "stored",
+                "label": "Stored"
+              },
+              {
+                "value": "disposed",
+                "label": "Disposed"
+              }
             ]
           },
           {
@@ -194,10 +221,22 @@
             "size": 8,
             "order": 7,
             "options": [
-              { "value": "critical", "label": "Critical (A)" },
-              { "value": "high", "label": "High (B)" },
-              { "value": "medium", "label": "Medium (C)" },
-              { "value": "low", "label": "Low (D)" }
+              {
+                "value": "critical",
+                "label": "Critical (A)"
+              },
+              {
+                "value": "high",
+                "label": "High (B)"
+              },
+              {
+                "value": "medium",
+                "label": "Medium (C)"
+              },
+              {
+                "value": "low",
+                "label": "Low (D)"
+              }
             ],
             "description": "Based on RCM analysis"
           },
@@ -453,11 +492,26 @@
             "order": 4,
             "defaultValue": "ft",
             "options": [
-              { "value": "ft", "label": "Feet (ft)" },
-              { "value": "in", "label": "Inches (in)" },
-              { "value": "m", "label": "Meters (m)" },
-              { "value": "cm", "label": "Centimeters (cm)" },
-              { "value": "mm", "label": "Millimeters (mm)" }
+              {
+                "value": "ft",
+                "label": "Feet (ft)"
+              },
+              {
+                "value": "in",
+                "label": "Inches (in)"
+              },
+              {
+                "value": "m",
+                "label": "Meters (m)"
+              },
+              {
+                "value": "cm",
+                "label": "Centimeters (cm)"
+              },
+              {
+                "value": "mm",
+                "label": "Millimeters (mm)"
+              }
             ]
           },
           {
@@ -485,10 +539,22 @@
             "order": 6,
             "defaultValue": "lbs",
             "options": [
-              { "value": "lbs", "label": "Pounds (lbs)" },
-              { "value": "kg", "label": "Kilograms (kg)" },
-              { "value": "tons", "label": "Tons (US)" },
-              { "value": "tonnes", "label": "Tonnes (Metric)" }
+              {
+                "value": "lbs",
+                "label": "Pounds (lbs)"
+              },
+              {
+                "value": "kg",
+                "label": "Kilograms (kg)"
+              },
+              {
+                "value": "tons",
+                "label": "Tons (US)"
+              },
+              {
+                "value": "tonnes",
+                "label": "Tonnes (Metric)"
+              }
             ]
           },
           {
@@ -795,11 +861,26 @@
             "size": 12,
             "order": 1,
             "options": [
-              { "value": "preventive", "label": "Preventive" },
-              { "value": "predictive", "label": "Predictive" },
-              { "value": "corrective", "label": "Corrective" },
-              { "value": "breakdown", "label": "Breakdown" },
-              { "value": "condition_based", "label": "Condition-Based" }
+              {
+                "value": "preventive",
+                "label": "Preventive"
+              },
+              {
+                "value": "predictive",
+                "label": "Predictive"
+              },
+              {
+                "value": "corrective",
+                "label": "Corrective"
+              },
+              {
+                "value": "breakdown",
+                "label": "Breakdown"
+              },
+              {
+                "value": "condition_based",
+                "label": "Condition-Based"
+              }
             ]
           },
           {
@@ -814,14 +895,38 @@
             "size": 12,
             "order": 2,
             "options": [
-              { "value": "daily", "label": "Daily" },
-              { "value": "weekly", "label": "Weekly" },
-              { "value": "monthly", "label": "Monthly" },
-              { "value": "quarterly", "label": "Quarterly" },
-              { "value": "semi_annual", "label": "Semi-Annual" },
-              { "value": "annual", "label": "Annual" },
-              { "value": "biennial", "label": "Biennial" },
-              { "value": "condition_based", "label": "Condition-Based" }
+              {
+                "value": "daily",
+                "label": "Daily"
+              },
+              {
+                "value": "weekly",
+                "label": "Weekly"
+              },
+              {
+                "value": "monthly",
+                "label": "Monthly"
+              },
+              {
+                "value": "quarterly",
+                "label": "Quarterly"
+              },
+              {
+                "value": "semi_annual",
+                "label": "Semi-Annual"
+              },
+              {
+                "value": "annual",
+                "label": "Annual"
+              },
+              {
+                "value": "biennial",
+                "label": "Biennial"
+              },
+              {
+                "value": "condition_based",
+                "label": "Condition-Based"
+              }
             ]
           },
           {
@@ -899,13 +1004,34 @@
             "size": 12,
             "order": 1,
             "options": [
-              { "value": "api_510", "label": "API 510 - Pressure Vessels" },
-              { "value": "api_570", "label": "API 570 - Piping" },
-              { "value": "api_653", "label": "API 653 - Tanks" },
-              { "value": "api_580", "label": "API 580 - RBI" },
-              { "value": "asme_b31_3", "label": "ASME B31.3 - Process Piping" },
-              { "value": "nace", "label": "NACE - Corrosion" },
-              { "value": "other", "label": "Other" }
+              {
+                "value": "api_510",
+                "label": "API 510 - Pressure Vessels"
+              },
+              {
+                "value": "api_570",
+                "label": "API 570 - Piping"
+              },
+              {
+                "value": "api_653",
+                "label": "API 653 - Tanks"
+              },
+              {
+                "value": "api_580",
+                "label": "API 580 - RBI"
+              },
+              {
+                "value": "asme_b31_3",
+                "label": "ASME B31.3 - Process Piping"
+              },
+              {
+                "value": "nace",
+                "label": "NACE - Corrosion"
+              },
+              {
+                "value": "other",
+                "label": "Other"
+              }
             ]
           },
           {
@@ -920,14 +1046,38 @@
             "size": 12,
             "order": 2,
             "options": [
-              { "value": "monthly", "label": "Monthly" },
-              { "value": "quarterly", "label": "Quarterly" },
-              { "value": "semi_annual", "label": "Semi-Annual (6 months)" },
-              { "value": "annual", "label": "Annual (12 months)" },
-              { "value": "biennial", "label": "Biennial (24 months)" },
-              { "value": "5_year", "label": "5-Year" },
-              { "value": "10_year", "label": "10-Year" },
-              { "value": "rbi_based", "label": "RBI-Based" }
+              {
+                "value": "monthly",
+                "label": "Monthly"
+              },
+              {
+                "value": "quarterly",
+                "label": "Quarterly"
+              },
+              {
+                "value": "semi_annual",
+                "label": "Semi-Annual (6 months)"
+              },
+              {
+                "value": "annual",
+                "label": "Annual (12 months)"
+              },
+              {
+                "value": "biennial",
+                "label": "Biennial (24 months)"
+              },
+              {
+                "value": "5_year",
+                "label": "5-Year"
+              },
+              {
+                "value": "10_year",
+                "label": "10-Year"
+              },
+              {
+                "value": "rbi_based",
+                "label": "RBI-Based"
+              }
             ]
           },
           {
@@ -969,14 +1119,38 @@
               "mode": "multiple"
             },
             "options": [
-              { "value": "vt", "label": "Visual Testing (VT)" },
-              { "value": "ut", "label": "Ultrasonic (UT)" },
-              { "value": "rt", "label": "Radiography (RT)" },
-              { "value": "mt", "label": "Magnetic Particle (MT)" },
-              { "value": "pt", "label": "Liquid Penetrant (PT)" },
-              { "value": "et", "label": "Eddy Current (ET)" },
-              { "value": "paut", "label": "Phased Array (PAUT)" },
-              { "value": "tofd", "label": "TOFD" }
+              {
+                "value": "vt",
+                "label": "Visual Testing (VT)"
+              },
+              {
+                "value": "ut",
+                "label": "Ultrasonic (UT)"
+              },
+              {
+                "value": "rt",
+                "label": "Radiography (RT)"
+              },
+              {
+                "value": "mt",
+                "label": "Magnetic Particle (MT)"
+              },
+              {
+                "value": "pt",
+                "label": "Liquid Penetrant (PT)"
+              },
+              {
+                "value": "et",
+                "label": "Eddy Current (ET)"
+              },
+              {
+                "value": "paut",
+                "label": "Phased Array (PAUT)"
+              },
+              {
+                "value": "tofd",
+                "label": "TOFD"
+              }
             ]
           },
           {
@@ -1057,10 +1231,22 @@
             "size": 6,
             "order": 5,
             "options": [
-              { "value": "straight_line", "label": "Straight Line" },
-              { "value": "declining_balance", "label": "Declining Balance" },
-              { "value": "units_of_production", "label": "Units of Production" },
-              { "value": "sum_of_years", "label": "Sum of Years Digits" }
+              {
+                "value": "straight_line",
+                "label": "Straight Line"
+              },
+              {
+                "value": "declining_balance",
+                "label": "Declining Balance"
+              },
+              {
+                "value": "units_of_production",
+                "label": "Units of Production"
+              },
+              {
+                "value": "sum_of_years",
+                "label": "Sum of Years Digits"
+              }
             ]
           },
           {
@@ -1118,12 +1304,30 @@
             "size": 8,
             "order": 1,
             "options": [
-              { "value": "none", "label": "None" },
-              { "value": "class_1", "label": "Class 1 - Flammable Gas" },
-              { "value": "class_2", "label": "Class 2 - Toxic Gas" },
-              { "value": "class_3", "label": "Class 3 - Flammable Liquid" },
-              { "value": "class_4", "label": "Class 4 - Corrosive" },
-              { "value": "class_5", "label": "Class 5 - Oxidizer" }
+              {
+                "value": "none",
+                "label": "None"
+              },
+              {
+                "value": "class_1",
+                "label": "Class 1 - Flammable Gas"
+              },
+              {
+                "value": "class_2",
+                "label": "Class 2 - Toxic Gas"
+              },
+              {
+                "value": "class_3",
+                "label": "Class 3 - Flammable Liquid"
+              },
+              {
+                "value": "class_4",
+                "label": "Class 4 - Corrosive"
+              },
+              {
+                "value": "class_5",
+                "label": "Class 5 - Oxidizer"
+              }
             ]
           },
           {

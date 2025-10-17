@@ -6,7 +6,6 @@
 
 import React from 'react';
 import { Badge, Tooltip, Alert } from 'antd';
-import { CheckCircleOutlined, ExclamationCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import { UseWorkspaceValidationResult } from '../../../hooks/useWorkspaceValidation';
 
 interface ValidationBadgeProps {
@@ -42,12 +41,6 @@ export const ValidationBadge: React.FC<ValidationBadgeProps> = ({
     if (hasErrors) return `${errorCount} error${errorCount !== 1 ? 's' : ''}`;
     if (hasWarnings) return `${warningCount} warning${warningCount !== 1 ? 's' : ''}`;
     return 'Valid';
-  };
-
-  const getIcon = () => {
-    if (hasErrors) return <ExclamationCircleOutlined />;
-    if (hasWarnings) return <WarningOutlined />;
-    return <CheckCircleOutlined />;
   };
 
   const getTooltipContent = () => {

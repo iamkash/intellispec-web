@@ -1,5 +1,5 @@
 {
-  "id": "audit-dashboard",
+  "id": "system-admin/audit-dashboard",
   "title": "Audit Log Dashboard",
   "description": "Comprehensive audit trail of all administrative actions performed by Super Admin",
   "layout": "dashboard",
@@ -177,7 +177,12 @@
               "key": "dateRange",
               "label": "Date Range",
               "type": "daterange",
-              "presets": ["Today", "Last 7 Days", "Last 30 Days", "Last 90 Days"]
+              "presets": [
+                "Today",
+                "Last 7 Days",
+                "Last 30 Days",
+                "Last 90 Days"
+              ]
             }
           ]
         },
@@ -185,7 +190,12 @@
           "pageSize": 50,
           "showSizeChanger": true,
           "showQuickJumper": true,
-          "pageSizeOptions": [25, 50, 100, 200]
+          "pageSizeOptions": [
+            25,
+            50,
+            100,
+            200
+          ]
         },
         "toolbar": {
           "enableCreate": false,
@@ -217,7 +227,12 @@
   "metadata": {
     "created": "2025-01-24T11:00:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "audit", "compliance", "logs"],
+    "tags": [
+      "admin",
+      "audit",
+      "compliance",
+      "logs"
+    ],
     "description": "Comprehensive audit dashboard for tracking all administrative actions",
     "features": [
       "View all audit logs",
@@ -228,7 +243,9 @@
       "Real-time statistics"
     ],
     "permissions": {
-      "required": ["super_admin"],
+      "required": [
+        "super_admin"
+      ],
       "actions": [
         "audit:read",
         "audit:export"
@@ -236,4 +253,3 @@
     }
   }
 }
-

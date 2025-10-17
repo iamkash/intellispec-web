@@ -6,10 +6,8 @@
  */
 
 import React, { useRef, useState, useCallback } from 'react';
-import { Button, Space, Typography } from 'antd';
-import { EditOutlined, ClearOutlined } from '@ant-design/icons';
-
-const { Text } = Typography;
+import { Button, Space } from 'antd';
+import { ClearOutlined } from '@ant-design/icons';
 
 export interface DrawingWidgetProps {
   id: string;

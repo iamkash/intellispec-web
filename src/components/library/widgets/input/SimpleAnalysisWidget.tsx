@@ -43,8 +43,6 @@ export const SimpleAnalysisWidget: React.FC<Props> = ({ title, images, text, pro
   const lastAnalysisRef = React.useRef<string>(''); // Prevent duplicate calls
   const [retryCount, setRetryCount] = React.useState(0); // Track retry attempts
 
-  const normalize = (raw: any): SimpleAnalysisResult => ({ overview: typeof raw === 'string' ? raw : (typeof raw?.overview === 'string' ? raw.overview : '') });
-
 // Remove duplicate markdown sections and handle full content duplication
 const removeDuplicateSections = (text: string): string => {
   if (!text || typeof text !== 'string') return text;
@@ -532,5 +530,4 @@ setStreamingProgress(accumulatedText);
 };
 
 export default SimpleAnalysisWidget;
-
 

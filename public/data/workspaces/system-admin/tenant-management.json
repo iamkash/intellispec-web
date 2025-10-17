@@ -1,5 +1,5 @@
 {
-  "id": "tenant-management",
+  "id": "system-admin/tenant-management",
   "title": "Multi-Tenant Dashboard",
   "description": "Overview dashboard for multi-tenant B2B SaaS platform with key metrics and quick actions",
   "layout": "dashboard",
@@ -58,7 +58,6 @@
         ]
       },
       "position": 24
-
     },
     {
       "id": "quick-actions",
@@ -159,7 +158,16 @@
   "metadata": {
     "created": "2025-01-22T10:00:00Z",
     "version": "3.0.0",
-    "tags": ["admin", "tenant", "saas", "multi-tenant", "subscription", "entitlements", "lifecycle", "b2b"],
+    "tags": [
+      "admin",
+      "tenant",
+      "saas",
+      "multi-tenant",
+      "subscription",
+      "entitlements",
+      "lifecycle",
+      "b2b"
+    ],
     "description": "Multi-tenant B2B SaaS management dashboard for super administrators. Manage tenants, organizations, subscriptions, entitlements, and user memberships with full audit trails.",
     "features": [
       "Tenant lifecycle management",
@@ -172,7 +180,9 @@
       "Advanced filtering and search"
     ],
     "permissions": {
-      "required": ["super_admin"],
+      "required": [
+        "super_admin"
+      ],
       "actions": [
         "tenant:create",
         "tenant:read",

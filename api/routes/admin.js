@@ -3,7 +3,6 @@
  * These routes fetch data directly from the database collections
  */
 
-const { logger } = require('../core/Logger');
 const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 const { requirePlatformAdmin } = require('../core/AuthMiddleware');
@@ -88,7 +87,6 @@ async function registerAdminRoutes(fastify) {
         return reply.code(500).send({ error: 'Database not connected' });
       }
       const tenantsCol = db.collection('tenants');
-      const usersCol = db.collection('users');
 
       // Check if this is a request for options format (for dropdowns)
       const { format } = request.query;
@@ -209,7 +207,6 @@ async function registerAdminRoutes(fastify) {
         return reply.code(500).send({ error: 'Database not connected' });
       }
       const rolesCol = db.collection('roles');
-      const usersCol = db.collection('users');
 
       // Check if this is a request for options format (for dropdowns)
       const { format } = request.query;

@@ -147,7 +147,6 @@ class WorkflowService {
 
       // Calculate new success rate (simple moving average)
       const currentRate = workflow.successRate || 0;
-      const currentCount = workflow.executionCount || 1;
       const successValue = success ? 100 : 0;
       
       // Weighted average giving more weight to recent executions
@@ -283,4 +282,3 @@ class WorkflowService {
 }
 
 module.exports = WorkflowService;
-

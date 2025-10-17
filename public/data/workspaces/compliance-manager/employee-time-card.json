@@ -1,5 +1,5 @@
 {
-  "id": "employee-time-card",
+  "id": "compliance-manager/employee-time-card",
   "title": "Employee Time Card",
   "description": "Comprehensive weekly time tracking form for employees and supervisors.",
   "layout": "form",

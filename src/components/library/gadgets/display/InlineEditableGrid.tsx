@@ -10,12 +10,11 @@ import { Table, Input, InputNumber, Select, Button, Space, message, Typography, 
 import { PlusOutlined, SaveOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import { BaseGadget } from '../base';
 import dayjs from 'dayjs';
-import type { 
-  DataRecord, 
-  ColumnDefinition, 
-  CrudEndpoints, 
-  GridConfig, 
-  InlineEditableGridProps 
+import type {
+  DataRecord,
+  ColumnDefinition,
+  GridConfig,
+  InlineEditableGridProps
 } from './InlineEditableGrid.types';
 
 const { Text } = Typography;
@@ -95,19 +94,72 @@ let processedOptions = Array.isArray(options) ? options : options.data || [];
             processedOptions = processedOptions.map((item: any) => {
               const valueField = column.optionsValueField || column.optionValue || 'value';
               const labelField = column.optionsLabelField || column.optionLabel || 'label';
-              
-              let label = item[labelField] || item.name || item.label || item.title || String(item[valueField]);
-              
-              // Handle template strings like "{manufacturer} - {product} ({product_code})"
+
+              const resolveValue = () => {
+                const direct = item?.[valueField];
+                if (direct !== undefined && direct !== null) return direct;
+                if (item?.formData && item.formData[valueField] !== undefined) return item.formData[valueField];
+                if (item?.data && item.data[valueField] !== undefined) return item.data[valueField];
+                if (item?.id !== undefined) return item.id;
+                if (item?._id !== undefined) return item._id;
+                return item?.value;
+              };
+
+              const resolvedValueRaw = resolveValue();
+              const optionValue =
+                resolvedValueRaw !== undefined && resolvedValueRaw !== null
+                  ? String(resolvedValueRaw)
+                  : '';
+              const toLabelString = (candidate: any) => {
+                if (candidate === undefined || candidate === null) return '';
+                return String(candidate);
+              };
+
+              const resolveTemplatePlaceholder = (key: string) => {
+                const trimmed = key.trim();
+                if (trimmed.length === 0) return '';
+                if (Object.prototype.hasOwnProperty.call(item, trimmed)) {
+                  return toLabelString(item[trimmed]);
+                }
+                if (item?.formData && Object.prototype.hasOwnProperty.call(item.formData, trimmed)) {
+                  return toLabelString(item.formData[trimmed]);
+                }
+                if (item?.data && Object.prototype.hasOwnProperty.call(item.data, trimmed)) {
+                  return toLabelString(item.data[trimmed]);
+                }
+                return '';
+              };
+
+              let label = '';
               if (typeof labelField === 'string' && labelField.includes('{') && labelField.includes('}')) {
-                label = labelField.replace(/\{(\w+)\}/g, (match, fieldName) => {
-                  return item[fieldName] || match;
-                });
+                label = labelField
+                  .replace(/\{([^}]+)\}/g, (_match, fieldName) => resolveTemplatePlaceholder(fieldName))
+                  .replace(/\s+/g, ' ')
+                  .trim();
+              } else {
+                const directLabel = item?.[labelField];
+                if (directLabel !== undefined && directLabel !== null) {
+                  label = toLabelString(directLabel);
+                } else if (item?.formData && item.formData[labelField] !== undefined) {
+                  label = toLabelString(item.formData[labelField]);
+                } else if (item?.data && item.data[labelField] !== undefined) {
+                  label = toLabelString(item.data[labelField]);
+                } else {
+                  label =
+                    toLabelString(item?.name) ||
+                    toLabelString(item?.label) ||
+                    toLabelString(item?.title) ||
+                    '';
+                }
               }
-              
+
+              if (!label) {
+                label = optionValue;
+              }
+
               return {
-                value: item[valueField] || item.id || item.value,
-                label: label
+                value: optionValue,
+                label
               };
             });
           }
@@ -497,7 +549,8 @@ console.log('🔵 gridConfig.newRecordDefaults:', gridConfig.newRecordDefaults);
   const EditableCell: React.FC<{
     column: ColumnDefinition;
     record: DataRecord;
-  }> = React.memo(({ column, record }) => {
+    options: any[];
+  }> = React.memo(({ column, record, options }) => {
     const value = record[column.dataIndex];
     const recordId = record._id!;
     const dataIndex = column.dataIndex;
@@ -523,7 +576,7 @@ console.log('🔵 gridConfig.newRecordDefaults:', gridConfig.newRecordDefaults);
       timeoutRef.current = setTimeout(() => {
         handleFieldChange(recordId, dataIndex, newValue);
       }, 300); // 300ms debounce
-    }, [recordId, dataIndex, handleFieldChange]);
+    }, [recordId, dataIndex]);
     
     const handleBlur = useCallback(() => {
       // Commit immediately on blur
@@ -531,7 +584,7 @@ console.log('🔵 gridConfig.newRecordDefaults:', gridConfig.newRecordDefaults);
         clearTimeout(timeoutRef.current);
       }
       handleFieldChange(recordId, dataIndex, localValue);
-    }, [recordId, dataIndex, localValue, handleFieldChange]);
+    }, [recordId, dataIndex, localValue]);
 
     const isChanged = changedRows.has(recordId);
     
@@ -540,9 +593,6 @@ console.log('🔵 gridConfig.newRecordDefaults:', gridConfig.newRecordDefaults);
       borderColor: isChanged ? 'hsl(var(--warning))' : 'hsl(var(--border))',
       backgroundColor: isChanged ? 'hsl(var(--warning) / 0.05)' : 'transparent'
     }), [isChanged]);
-
-    // Get options for select fields
-    const options = column.options || dynamicOptions[column.key] || [];
 
     switch (column.type) {
       case 'number':
@@ -654,7 +704,8 @@ console.log('🔵 gridConfig.newRecordDefaults:', gridConfig.newRecordDefaults);
     return (
       prevId === nextId &&
       prevDataIndex === nextDataIndex &&
-      prevValue === nextValue
+      prevValue === nextValue &&
+      prevProps.options === nextProps.options
     );
   });
 
@@ -707,7 +758,11 @@ console.log('🔵 gridConfig.newRecordDefaults:', gridConfig.newRecordDefaults);
                 ? column.render(record[column.dataIndex], record) 
                 : record[column.dataIndex]
             ) : (
-              <EditableCell column={column} record={record} />
+              <EditableCell 
+                column={column} 
+                record={record} 
+                options={column.options || dynamicOptions[column.key] || []}
+              />
             )
           )
     }));
@@ -741,7 +796,7 @@ console.log('🔵 gridConfig.newRecordDefaults:', gridConfig.newRecordDefaults);
     }
 
     return cols;
-  }, [columns, gridConfig.enableDelete, handleDelete, searchFilters, handleSearchChange]);
+  }, [EditableCell, columns, gridConfig.enableDelete, handleDelete, searchFilters, handleSearchChange, dynamicOptions]);
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>

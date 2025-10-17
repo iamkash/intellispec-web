@@ -72,11 +72,16 @@
     "sectionId": "safety-access-preparation",
     "groupId": "safety-procedures-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
-  
   {
     "id": "confined-space-permit",
     "type": "radio",
@@ -89,8 +94,14 @@
     "sectionId": "safety-access-preparation",
     "groupId": "safety-procedures-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -138,13 +149,34 @@
     "sectionId": "safety-access-preparation",
     "groupId": "access-requirements-group",
     "options": [
-      {"label": "Manhole Entry", "value": "manhole"},
-      {"label": "Nozzle Entry", "value": "nozzle"},
-      {"label": "Removable Head", "value": "removable-head"},
-      {"label": "External Access Only", "value": "external"},
-      {"label": "Scaffolding Required", "value": "scaffolding"},
-      {"label": "Crane/Lift Required", "value": "crane-lift"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "Manhole Entry",
+        "value": "manhole"
+      },
+      {
+        "label": "Nozzle Entry",
+        "value": "nozzle"
+      },
+      {
+        "label": "Removable Head",
+        "value": "removable-head"
+      },
+      {
+        "label": "External Access Only",
+        "value": "external"
+      },
+      {
+        "label": "Scaffolding Required",
+        "value": "scaffolding"
+      },
+      {
+        "label": "Crane/Lift Required",
+        "value": "crane-lift"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -196,18 +228,54 @@
     "sectionId": "safety-access-preparation",
     "groupId": "access-equipment-group",
     "options": [
-      {"label": "Ladder", "value": "ladder"},
-      {"label": "Scaffolding", "value": "scaffolding"},
-      {"label": "Manlift", "value": "manlift"},
-      {"label": "Crane", "value": "crane"},
-      {"label": "Rope Access", "value": "rope-access"},
-      {"label": "Platform", "value": "platform"},
-      {"label": "Basket", "value": "basket"},
-      {"label": "Safety Harness", "value": "safety-harness"},
-      {"label": "Fall Protection", "value": "fall-protection"},
-      {"label": "Safety Line", "value": "safety-line"},
-      {"label": "Access Platform", "value": "access-platform"},
-      {"label": "Mobile Scaffold", "value": "mobile-scaffold"}
+      {
+        "label": "Ladder",
+        "value": "ladder"
+      },
+      {
+        "label": "Scaffolding",
+        "value": "scaffolding"
+      },
+      {
+        "label": "Manlift",
+        "value": "manlift"
+      },
+      {
+        "label": "Crane",
+        "value": "crane"
+      },
+      {
+        "label": "Rope Access",
+        "value": "rope-access"
+      },
+      {
+        "label": "Platform",
+        "value": "platform"
+      },
+      {
+        "label": "Basket",
+        "value": "basket"
+      },
+      {
+        "label": "Safety Harness",
+        "value": "safety-harness"
+      },
+      {
+        "label": "Fall Protection",
+        "value": "fall-protection"
+      },
+      {
+        "label": "Safety Line",
+        "value": "safety-line"
+      },
+      {
+        "label": "Access Platform",
+        "value": "access-platform"
+      },
+      {
+        "label": "Mobile Scaffold",
+        "value": "mobile-scaffold"
+      }
     ]
   },
   {
@@ -222,9 +290,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "access-equipment-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Partial", "value": "partial"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Partial",
+        "value": "partial"
+      }
     ]
   },
   {
@@ -235,7 +312,10 @@
     "placeholder": "Add missing access equipment",
     "size": 24,
     "watchField": "access-equipment-available",
-    "showWhen": ["no", "partial"],
+    "showWhen": [
+      "no",
+      "partial"
+    ],
     "sectionId": "safety-access-preparation",
     "groupId": "access-equipment-group"
   },
@@ -261,9 +341,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "atmosphere-ventilation-checks-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -300,9 +389,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "atmosphere-ventilation-checks-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -317,10 +415,22 @@
     "sectionId": "safety-access-preparation",
     "groupId": "atmosphere-ventilation-checks-group",
     "options": [
-      {"label": "Natural Ventilation", "value": "natural"},
-      {"label": "Mechanical Ventilation", "value": "mechanical"},
-      {"label": "Forced Air", "value": "forced-air"},
-      {"label": "Exhaust Fan", "value": "exhaust-fan"}
+      {
+        "label": "Natural Ventilation",
+        "value": "natural"
+      },
+      {
+        "label": "Mechanical Ventilation",
+        "value": "mechanical"
+      },
+      {
+        "label": "Forced Air",
+        "value": "forced-air"
+      },
+      {
+        "label": "Exhaust Fan",
+        "value": "exhaust-fan"
+      }
     ]
   },
   {
@@ -345,9 +455,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "isolation-communication-checks-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -374,9 +493,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "isolation-communication-checks-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -391,11 +519,26 @@
     "sectionId": "safety-access-preparation",
     "groupId": "isolation-communication-checks-group",
     "options": [
-      {"label": "Radio", "value": "radio"},
-      {"label": "Phone", "value": "phone"},
-      {"label": "Hand Signals", "value": "hand-signals"},
-      {"label": "Visual Contact", "value": "visual-contact"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "Radio",
+        "value": "radio"
+      },
+      {
+        "label": "Phone",
+        "value": "phone"
+      },
+      {
+        "label": "Hand Signals",
+        "value": "hand-signals"
+      },
+      {
+        "label": "Visual Contact",
+        "value": "visual-contact"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -420,9 +563,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-checks-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Needs Improvement", "value": "needs-improvement"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Needs Improvement",
+        "value": "needs-improvement"
+      }
     ]
   },
   {
@@ -437,11 +589,26 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-checks-group",
     "options": [
-      {"label": "Natural Light", "value": "natural"},
-      {"label": "Portable Lights", "value": "portable"},
-      {"label": "Fixed Lighting", "value": "fixed"},
-      {"label": "Headlamps", "value": "headlamps"},
-      {"label": "Spotlights", "value": "spotlights"}
+      {
+        "label": "Natural Light",
+        "value": "natural"
+      },
+      {
+        "label": "Portable Lights",
+        "value": "portable"
+      },
+      {
+        "label": "Fixed Lighting",
+        "value": "fixed"
+      },
+      {
+        "label": "Headlamps",
+        "value": "headlamps"
+      },
+      {
+        "label": "Spotlights",
+        "value": "spotlights"
+      }
     ]
   },
   {
@@ -456,9 +623,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-checks-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Marginal", "value": "marginal"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Marginal",
+        "value": "marginal"
+      }
     ]
   },
   {
@@ -469,7 +645,11 @@
     "placeholder": "Enter temperature",
     "size": 12,
     "watchField": "temperature-check",
-    "showWhen": ["yes", "no", "marginal"],
+    "showWhen": [
+      "yes",
+      "no",
+      "marginal"
+    ],
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-checks-group"
   },
@@ -485,9 +665,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-checks-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Marginal", "value": "marginal"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Marginal",
+        "value": "marginal"
+      }
     ]
   },
   {
@@ -498,7 +687,11 @@
     "placeholder": "Describe current weather conditions",
     "size": 24,
     "watchField": "weather-conditions",
-    "showWhen": ["yes", "no", "marginal"],
+    "showWhen": [
+      "yes",
+      "no",
+      "marginal"
+    ],
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-checks-group"
   },
@@ -524,9 +717,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "rescue-equipment-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -540,13 +742,34 @@
     "sectionId": "safety-access-preparation",
     "groupId": "rescue-equipment-group",
     "options": [
-      {"label": "Tripod & Winch", "value": "tripod-winch"},
-      {"label": "Retrieval Line", "value": "retrieval-line"},
-      {"label": "SCBA", "value": "scba"},
-      {"label": "Emergency Escape", "value": "emergency-escape"},
-      {"label": "Rescue Harness", "value": "rescue-harness"},
-      {"label": "First Aid Kit", "value": "first-aid"},
-      {"label": "AED", "value": "aed"}
+      {
+        "label": "Tripod & Winch",
+        "value": "tripod-winch"
+      },
+      {
+        "label": "Retrieval Line",
+        "value": "retrieval-line"
+      },
+      {
+        "label": "SCBA",
+        "value": "scba"
+      },
+      {
+        "label": "Emergency Escape",
+        "value": "emergency-escape"
+      },
+      {
+        "label": "Rescue Harness",
+        "value": "rescue-harness"
+      },
+      {
+        "label": "First Aid Kit",
+        "value": "first-aid"
+      },
+      {
+        "label": "AED",
+        "value": "aed"
+      }
     ]
   },
   {
@@ -560,9 +783,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "rescue-equipment-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -599,8 +831,14 @@
     "sectionId": "safety-access-preparation",
     "groupId": "safety-briefing-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -647,9 +885,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "ppe-verification-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Partial", "value": "partial"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Partial",
+        "value": "partial"
+      }
     ]
   },
   {
@@ -664,9 +911,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "ppe-verification-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Partial", "value": "partial"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Partial",
+        "value": "partial"
+      }
     ]
   },
   {
@@ -677,7 +933,10 @@
     "placeholder": "Add missing PPE item",
     "size": 24,
     "watchField": "ppe-available",
-    "showWhen": ["no", "partial"],
+    "showWhen": [
+      "no",
+      "partial"
+    ],
     "showToolbar": true,
     "showIndividualControls": true,
     "showCount": true,
@@ -749,9 +1008,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "work-area-preparation-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Needs Improvement", "value": "needs-improvement"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Needs Improvement",
+        "value": "needs-improvement"
+      }
     ]
   },
   {
@@ -766,9 +1034,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "work-area-preparation-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Needs Improvement", "value": "needs-improvement"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Needs Improvement",
+        "value": "needs-improvement"
+      }
     ]
   },
   {
@@ -783,9 +1060,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "work-area-preparation-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Needs Improvement", "value": "needs-improvement"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Needs Improvement",
+        "value": "needs-improvement"
+      }
     ]
   },
   {
@@ -800,9 +1086,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "work-area-preparation-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -827,9 +1122,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "tool-equipment-safety-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -844,9 +1148,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "tool-equipment-safety-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -883,9 +1196,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "final-safety-verification-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Conditional", "value": "conditional"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Conditional",
+        "value": "conditional"
+      }
     ]
   },
   {
@@ -900,9 +1222,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "final-safety-verification-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Not Applicable", "value": "not-applicable"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Not Applicable",
+        "value": "not-applicable"
+      }
     ]
   },
   {
@@ -934,16 +1265,46 @@
     "sectionId": "safety-access-preparation",
     "groupId": "equipment-used-group",
     "options": [
-      {"label": "UT Thickness Gauge", "value": "ut-gauge"},
-      {"label": "Digital Camera", "value": "digital-camera"},
-      {"label": "Flashlight", "value": "flashlight"},
-      {"label": "Measuring Tape", "value": "measuring-tape"},
-      {"label": "Caliper", "value": "caliper"},
-      {"label": "Magnetic Particle Equipment", "value": "mt-equipment"},
-      {"label": "Liquid Penetrant Kit", "value": "pt-kit"},
-      {"label": "Radiographic Equipment", "value": "rt-equipment"},
-      {"label": "Thermal Imaging Camera", "value": "thermal-camera"},
-      {"label": "Vibration Analyzer", "value": "vibration-analyzer"}
+      {
+        "label": "UT Thickness Gauge",
+        "value": "ut-gauge"
+      },
+      {
+        "label": "Digital Camera",
+        "value": "digital-camera"
+      },
+      {
+        "label": "Flashlight",
+        "value": "flashlight"
+      },
+      {
+        "label": "Measuring Tape",
+        "value": "measuring-tape"
+      },
+      {
+        "label": "Caliper",
+        "value": "caliper"
+      },
+      {
+        "label": "Magnetic Particle Equipment",
+        "value": "mt-equipment"
+      },
+      {
+        "label": "Liquid Penetrant Kit",
+        "value": "pt-kit"
+      },
+      {
+        "label": "Radiographic Equipment",
+        "value": "rt-equipment"
+      },
+      {
+        "label": "Thermal Imaging Camera",
+        "value": "thermal-camera"
+      },
+      {
+        "label": "Vibration Analyzer",
+        "value": "vibration-analyzer"
+      }
     ]
   },
   {
@@ -1084,10 +1445,22 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-group",
     "options": [
-      {"label": "Natural Light", "value": "natural"},
-      {"label": "Artificial Light", "value": "artificial"},
-      {"label": "Mixed Lighting", "value": "mixed"},
-      {"label": "Poor Lighting", "value": "poor"}
+      {
+        "label": "Natural Light",
+        "value": "natural"
+      },
+      {
+        "label": "Artificial Light",
+        "value": "artificial"
+      },
+      {
+        "label": "Mixed Lighting",
+        "value": "mixed"
+      },
+      {
+        "label": "Poor Lighting",
+        "value": "poor"
+      }
     ]
   },
   {
@@ -1100,12 +1473,30 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-group",
     "options": [
-      {"label": "Clear", "value": "clear"},
-      {"label": "Cloudy", "value": "cloudy"},
-      {"label": "Rainy", "value": "rainy"},
-      {"label": "Snowy", "value": "snowy"},
-      {"label": "Windy", "value": "windy"},
-      {"label": "Indoor", "value": "indoor"}
+      {
+        "label": "Clear",
+        "value": "clear"
+      },
+      {
+        "label": "Cloudy",
+        "value": "cloudy"
+      },
+      {
+        "label": "Rainy",
+        "value": "rainy"
+      },
+      {
+        "label": "Snowy",
+        "value": "snowy"
+      },
+      {
+        "label": "Windy",
+        "value": "windy"
+      },
+      {
+        "label": "Indoor",
+        "value": "indoor"
+      }
     ]
   },
   {
@@ -1118,10 +1509,22 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-group",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      }
     ]
   },
   {
@@ -1134,10 +1537,22 @@
     "sectionId": "safety-access-preparation",
     "groupId": "environmental-conditions-group",
     "options": [
-      {"label": "Good", "value": "good"},
-      {"label": "Moderate", "value": "moderate"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Hazardous", "value": "hazardous"}
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Moderate",
+        "value": "moderate"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Hazardous",
+        "value": "hazardous"
+      }
     ]
   },
   {
@@ -1162,9 +1577,18 @@
     "sectionId": "safety-access-preparation",
     "groupId": "pre-inspection-approval-group",
     "options": [
-      {"label": "Approved - Safe to Proceed", "value": "approved"},
-      {"label": "Conditional Approval", "value": "conditional"},
-      {"label": "Not Approved - Do Not Proceed", "value": "not-approved"}
+      {
+        "label": "Approved - Safe to Proceed",
+        "value": "approved"
+      },
+      {
+        "label": "Conditional Approval",
+        "value": "conditional"
+      },
+      {
+        "label": "Not Approved - Do Not Proceed",
+        "value": "not-approved"
+      }
     ]
   }
-] 
+]

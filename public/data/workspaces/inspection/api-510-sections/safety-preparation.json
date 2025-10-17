@@ -30,15 +30,42 @@
     "groupId": "inspection-type-group",
     "defaultValue": "",
     "options": [
-      {"label": "External Inspection", "value": "external"},
-      {"label": "Internal Inspection", "value": "internal"},
-      {"label": "Confined Space Entry", "value": "confined-space"},
-      {"label": "Hot Work Area", "value": "hot-work"},
-      {"label": "Elevated Work", "value": "elevated"},
-      {"label": "Underwater/Submerged", "value": "underwater"},
-      {"label": "High Pressure System", "value": "high-pressure"},
-      {"label": "High Temperature System", "value": "high-temperature"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "External Inspection",
+        "value": "external"
+      },
+      {
+        "label": "Internal Inspection",
+        "value": "internal"
+      },
+      {
+        "label": "Confined Space Entry",
+        "value": "confined-space"
+      },
+      {
+        "label": "Hot Work Area",
+        "value": "hot-work"
+      },
+      {
+        "label": "Elevated Work",
+        "value": "elevated"
+      },
+      {
+        "label": "Underwater/Submerged",
+        "value": "underwater"
+      },
+      {
+        "label": "High Pressure System",
+        "value": "high-pressure"
+      },
+      {
+        "label": "High Temperature System",
+        "value": "high-temperature"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -74,8 +101,14 @@
     "groupId": "lockout-tagout-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -126,8 +159,14 @@
     "groupId": "confined-space-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -178,8 +217,14 @@
     "groupId": "hot-work-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -231,8 +276,14 @@
     "groupId": "elevated-work-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -258,8 +309,14 @@
     "groupId": "elevated-work-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -298,8 +355,14 @@
     "groupId": "underwater-safety-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -326,8 +389,14 @@
     "groupId": "underwater-safety-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -366,8 +435,14 @@
     "groupId": "pressure-safety-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -393,8 +468,14 @@
     "groupId": "pressure-safety-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -433,8 +514,14 @@
     "groupId": "temperature-safety-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -460,8 +547,14 @@
     "groupId": "temperature-safety-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -498,8 +591,14 @@
     "groupId": "safety-equipment-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -536,8 +635,14 @@
     "groupId": "emergency-procedures-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -553,4 +658,4 @@
     "watchField": "emergency-procedures",
     "showWhen": "no"
   }
-] 
+]

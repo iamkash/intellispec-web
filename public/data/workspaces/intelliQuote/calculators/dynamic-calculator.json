@@ -1,12 +1,15 @@
 {
-  "id": "intelliQuote-dynamic-calculator",
+  "id": "intelliQuote/calculators/dynamic-calculator",
   "type": "form",
   "title": "Fireproofing Estimator",
   "description": "Dynamic estimator workspace for fireproofing calculations",
   "icon": "CalculatorOutlined",
   "mode": "form",
   "layout": "dashboard",
-  "filterContext": { "enabled": true, "filterDefinitions": [] },
+  "filterContext": {
+    "enabled": true,
+    "filterDefinitions": []
+  },
   "gadgets": [
     {
       "id": "dynamic-calculator-gadget",

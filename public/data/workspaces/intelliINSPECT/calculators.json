@@ -1,5 +1,5 @@
 {
-  "id": "intelliINSPECT-calculators",
+  "id": "intelliINSPECT/calculators",
   "type": "dashboard",
   "title": "Inspection Calculators",
   "description": "Browse and access inspection calculation tools",
@@ -32,7 +32,11 @@
         "enableFavorites": true,
         "enableSorting": true,
         "enableViewToggle": true,
-        "searchFields": ["label", "description", "tags"],
+        "searchFields": [
+          "label",
+          "description",
+          "tags"
+        ],
         "cardSize": "medium"
       }
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shell, type ShellMetadata } from '../Shell';
+import { Shell } from '../Shell';
 import { ThemeSelector } from '../ui/ThemeSelector';
 import { useTheme } from '../../providers/ThemeProvider';
 

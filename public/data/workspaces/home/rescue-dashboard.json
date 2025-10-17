@@ -1,5 +1,5 @@
 {
-  "id": "rescue-plan-home",
+  "id": "home/rescue-dashboard",
   "title": "Rescue Plan Home",
   "description": "Quick links and recent rescue plans",
   "layout": "dashboard",
@@ -13,8 +13,18 @@
         "layout": "grid",
         "maxItems": 6,
         "items": [
-          { "id": "new-plan", "title": "New Rescue Plan", "icon": "FormOutlined", "route": "/shell?workspace=safety/rescue-preplan" },
-          { "id": "open-plans", "title": "Open Plans", "icon": "FolderOpenOutlined", "route": "/shell?workspace=home/rescue-dashboard" }
+          {
+            "id": "new-plan",
+            "title": "New Rescue Plan",
+            "icon": "FormOutlined",
+            "route": "/shell?workspace=intelliSAFTEY/rescue-preplan"
+          },
+          {
+            "id": "open-plans",
+            "title": "Open Plans",
+            "icon": "FolderOpenOutlined",
+            "route": "/shell?workspace=home/rescue-dashboard"
+          }
         ]
       },
       "position": 24
@@ -27,22 +37,48 @@
         "dataUrl": "/api/wizard",
         "dataSource": "localStorage:rescue-preplan:*",
         "columns": [
-          { "key": "id", "title": "ID" },
-          { "key": "data.currentStep", "title": "Step" },
-          { "key": "timestamp", "title": "Saved At" },
-          { "key": "gadgetId", "title": "Gadget" },
-          { "key": "configId", "title": "Config" }
+          {
+            "key": "id",
+            "title": "ID"
+          },
+          {
+            "key": "data.currentStep",
+            "title": "Step"
+          },
+          {
+            "key": "timestamp",
+            "title": "Saved At"
+          },
+          {
+            "key": "gadgetId",
+            "title": "Gadget"
+          },
+          {
+            "key": "configId",
+            "title": "Config"
+          }
         ],
         "rowActions": [
-          { "key": "open", "label": "Open", "type": "link", "route": "/shell?workspace=safety/rescue-preplan&restoreId={id}" },
-          { "key": "delete", "label": "Delete", "type": "danger" }
+          {
+            "key": "open",
+            "label": "Open",
+            "type": "link",
+            "route": "/shell?workspace=intelliSAFTEY/rescue-preplan&restoreId={id}"
+          },
+          {
+            "key": "delete",
+            "label": "Delete",
+            "type": "danger"
+          }
         ],
-        "search": { "placeholder": "Search plans..." },
-        "pagination": { "pageSize": 10 }
+        "search": {
+          "placeholder": "Search plans..."
+        },
+        "pagination": {
+          "pageSize": 10
+        }
       },
       "position": 24
     }
   ]
 }
-
-

@@ -312,8 +312,7 @@ export class StatsCardWidget extends BaseWidget {
   }
 
   onDataChange(data: any): void {
-    const processedData = this.processData(data);
-    
+    this.processData(data);
   }
 
   onConfigChange(config: WidgetConfig): void {

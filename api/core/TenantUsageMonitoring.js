@@ -300,6 +300,9 @@ class TenantUsageMonitor {
           };
         }
         break;
+        
+      default:
+        break;
     }
     
     return { allowed: true };
@@ -425,4 +428,3 @@ module.exports = {
   TenantUsageModel,
   TenantQuotaModel
 };
-

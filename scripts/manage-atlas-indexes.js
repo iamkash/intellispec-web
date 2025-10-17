@@ -114,14 +114,16 @@ console.log(JSON.stringify(vocIndexConfig, null, 2));
     }
     
     // Verify documents are ready
-const totalDocs = await documentsCollection.countDocuments({});
+    const totalDocs = await documentsCollection.countDocuments({});
     const withEmbeddings = await documentsCollection.countDocuments({ embedding: { $exists: true } });
-console.log(`🤖 With embeddings: ${withEmbeddings}`);
+    console.log(`📦 Total documents: ${totalDocs}`);
+    console.log(`🤖 With embeddings: ${withEmbeddings}`);
     
     const vocTypes = ['paintInvoice', 'paint_specifications', 'company', 'site'];
     for (const type of vocTypes) {
       const count = await documentsCollection.countDocuments({ type, embedding: { $exists: true } });
-}
+      console.log(`  • ${type}: ${count} documents with embeddings`);
+    }
 if (withEmbeddings > 0) {
 console.log('1. Wait 5-10 minutes for index to be ready');
 console.log('3. Use VOC workspace to ask questions about paint specs and VOC content');

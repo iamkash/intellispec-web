@@ -107,6 +107,43 @@ async function registerDocumentRoutes(fastify) {
     try {
       const { type, page = 1, limit = 10000, search, dynamicFilter, ...filters } = request.query;
 
+      // Extract projection and sort parameters up front
+      const { fields, sort: sortParam, ...rawFilters } = filters;
+      const fieldList = fields
+        ? fields
+            .split(',')
+            .map((field) => field.trim())
+            .filter(Boolean)
+        : [];
+      let projection;
+      if (fieldList.length > 0) {
+        projection = fieldList.reduce((acc, field) => {
+          acc[field] = 1;
+          return acc;
+        }, {});
+      }
+      let sortOption = { created_date: -1 };
+      if (typeof sortParam === 'string' && sortParam.trim()) {
+        try {
+          if (sortParam.startsWith('{')) {
+            const parsed = JSON.parse(sortParam);
+            if (parsed && typeof parsed === 'object') {
+              sortOption = parsed;
+            }
+          } else {
+            const [field, direction] = sortParam.split(':').map((part) => part.trim());
+            if (field) {
+              sortOption = { [field]: direction === 'asc' ? 1 : -1 };
+            }
+          }
+        } catch (e) {
+          logger.warn('Failed to parse sort parameter, defaulting to created_date desc', {
+            sortParam,
+            error: e.message
+          });
+        }
+      }
+
       // Validate type is provided
       if (!type) {
         throw new APIError('Document type is required', ErrorTypes.VALIDATION_ERROR, 400);
@@ -123,27 +160,27 @@ async function registerDocumentRoutes(fastify) {
       const queryFilters = {};
       
       // Process filter operators (e.g., company_id__in => { company_id: { $in: [...] } })
-      Object.keys(filters).forEach(key => {
+      Object.keys(rawFilters).forEach(key => {
         if (key.endsWith('__in')) {
           // Handle __in operator (multiselect filters)
           const fieldName = key.replace('__in', '');
-          const values = Array.isArray(filters[key]) ? filters[key] : [filters[key]];
+          const values = Array.isArray(rawFilters[key]) ? rawFilters[key] : [rawFilters[key]];
           queryFilters[fieldName] = { $in: values };
         } else if (key.endsWith('__gte')) {
           // Handle __gte operator
           const fieldName = key.replace('__gte', '');
-          queryFilters[fieldName] = { ...queryFilters[fieldName], $gte: filters[key] };
+          queryFilters[fieldName] = { ...queryFilters[fieldName], $gte: rawFilters[key] };
         } else if (key.endsWith('__lte')) {
           // Handle __lte operator
           const fieldName = key.replace('__lte', '');
-          queryFilters[fieldName] = { ...queryFilters[fieldName], $lte: filters[key] };
+          queryFilters[fieldName] = { ...queryFilters[fieldName], $lte: rawFilters[key] };
         } else if (key.endsWith('__ne')) {
           // Handle __ne operator
           const fieldName = key.replace('__ne', '');
-          queryFilters[fieldName] = { $ne: filters[key] };
+          queryFilters[fieldName] = { $ne: rawFilters[key] };
         } else {
           // Direct equality
-          queryFilters[key] = filters[key];
+          queryFilters[key] = rawFilters[key];
         }
       });
       
@@ -166,6 +203,7 @@ async function registerDocumentRoutes(fastify) {
       delete queryFilters.limit;
       delete queryFilters.search;
       delete queryFilters.sort;
+      delete queryFilters.fields;
       
       // ✅ This now supports ANY field filter: code, name, asset_tag, etc.
 
@@ -175,19 +213,60 @@ async function registerDocumentRoutes(fastify) {
         result = await repository.search(search, {
           page: parseInt(page),
           limit: parseInt(limit),
-          sort: { created_date: -1 }
+          sort: sortOption,
+          projection
         });
       } else {
         result = await repository.findWithPagination(queryFilters, {
           page: parseInt(page),
           limit: parseInt(limit),
-          sort: { created_date: -1 }
+          sort: sortOption,
+          projection
+        });
+      }
+
+      let responseData = result.data;
+      if (fieldList.length > 0) {
+        const resolveField = (doc, field) => {
+          if (field.includes('.')) {
+            return field.split('.').reduce((acc, key) => {
+              if (acc && Object.prototype.hasOwnProperty.call(acc, key)) {
+                return acc[key];
+              }
+              return undefined;
+            }, doc);
+          }
+          if (Object.prototype.hasOwnProperty.call(doc, field)) {
+            return doc[field];
+          }
+          if (doc.formData && Object.prototype.hasOwnProperty.call(doc.formData, field)) {
+            return doc.formData[field];
+          }
+          if (doc.data && Object.prototype.hasOwnProperty.call(doc.data, field)) {
+            return doc.data[field];
+          }
+          return undefined;
+        };
+
+        responseData = result.data.map((doc) => {
+          const trimmed = {};
+          fieldList.forEach((field) => {
+            const value = resolveField(doc, field);
+            if (value !== undefined) {
+              trimmed[field] = value;
+            }
+          });
+
+          if (!trimmed.id && doc.id) {
+            trimmed.id = doc.id;
+          }
+          return trimmed;
         });
       }
 
       return reply.send({
         success: true,
-        data: result.data,
+        data: responseData,
         pagination: {
           page: result.page,
           limit: result.limit,
@@ -472,7 +551,7 @@ async function registerDocumentRoutes(fastify) {
 
       // Set initial status if not provided
       if (!validatedData.status) {
-        validatedData.status = 'active';
+        validatedData.status = 'in_progress';
       }
 
       // Create document (tenant, audit, timestamps automatic!)
@@ -495,6 +574,38 @@ async function registerDocumentRoutes(fastify) {
     }
   });
 
+  async function processDocumentUpdate(request) {
+    const { id } = request.params;
+    const body = request.body || {};
+    const { type, ...documentData } = body;
+
+    if (!type) {
+      throw new APIError('Document type is required', ErrorTypes.VALIDATION_ERROR, 400);
+    }
+
+    const validatedData = await validateDocumentWithContext(
+      type,
+      documentData,
+      request.user,
+      'update'
+    );
+
+    if (!validatedData.status) {
+      validatedData.status = 'in_progress';
+    }
+
+    const tenantContext = TenantContextFactory.fromRequest(request);
+    const repository = new DocumentRepository(tenantContext, type, request.context);
+
+    const updated = await repository.update(id, validatedData);
+
+    if (!updated) {
+      throw new APIError('Document not found or access denied', ErrorTypes.NOT_FOUND, 404);
+    }
+
+    return { updated, type };
+  }
+
   /**
    * PUT /api/documents/:id
    * Update existing document
@@ -512,30 +623,7 @@ async function registerDocumentRoutes(fastify) {
    */
   fastify.put('/documents/:id', { preHandler: requireAuth }, async (request, reply) => {
     try {
-      const { id } = request.params;
-      const { type, ...documentData } = request.body;
-
-      if (!type) {
-        throw new APIError('Document type is required', ErrorTypes.VALIDATION_ERROR, 400);
-      }
-
-      // Validate updates
-      const validatedData = await validateDocumentWithContext(
-        type,
-        documentData,
-        request.user,
-        'update'
-      );
-
-      const tenantContext = TenantContextFactory.fromRequest(request);
-      const repository = new DocumentRepository(tenantContext, type, request.context);
-
-      // Update document (audit automatic!)
-      const updated = await repository.update(id, validatedData);
-
-      if (!updated) {
-        throw new APIError('Document not found or access denied', ErrorTypes.NOT_FOUND, 404);
-      }
+      const { updated, type } = await processDocumentUpdate(request);
 
       return reply.send({
         success: true,
@@ -545,6 +633,42 @@ async function registerDocumentRoutes(fastify) {
 
     } catch (error) {
       logger.error('Error updating document:', error);
+      return reply.code(error.statusCode || 500).send({
+        success: false,
+        error: error.message,
+        code: error.code,
+        details: error.details
+      });
+    }
+  });
+
+  /**
+   * PATCH /api/documents/:id
+   * Partially update existing document (used for wizard progress saves)
+   * 
+   * Path params:
+   * - id: Document ID
+   * 
+   * Body:
+   * - type: Document type (required)
+   * - ... fields to update
+   * 
+   * Tenant validation: AUTOMATIC
+   * Audit trail: AUTOMATIC
+   * Change tracking: AUTOMATIC
+   */
+  fastify.patch('/documents/:id', { preHandler: requireAuth }, async (request, reply) => {
+    try {
+      const { updated, type } = await processDocumentUpdate(request);
+
+      return reply.send({
+        success: true,
+        data: updated,
+        message: `${type} updated successfully`
+      });
+
+    } catch (error) {
+      logger.error('Error partially updating document:', error);
       return reply.code(error.statusCode || 500).send({
         success: false,
         error: error.message,

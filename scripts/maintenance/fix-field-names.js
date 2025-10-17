@@ -22,16 +22,19 @@ async function fixFieldNames() {
       );
       updated++;
     }
+    console.log(`Updated ${updated} reference list options with corrected field names.`);
 // Verify the fix
     const fixedCount = await mongoose.connection.db.collection('referenceListOptions')
       .countDocuments({ listTypeId: '68ba8bdd4e8d44952203ab28' });
+    console.log(`Verified ${fixedCount} documents now use listTypeId.`);
 // Sample of fixed data
     const sampleFixed = await mongoose.connection.db.collection('referenceListOptions')
       .find({ listTypeId: '68ba8bdd4e8d44952203ab28' })
       .limit(2)
       .toArray();
-sampleFixed.forEach((opt, i) => {
-});
+    sampleFixed.forEach((opt, i) => {
+      console.log(`Sample ${i + 1}:`, opt);
+    });
 
     await mongoose.disconnect();
 } catch (error) {

@@ -582,6 +582,7 @@ for (const assetData of sherwinWilliamsData.assets) {
 console.log(`📊 Summary:`);
 console.log(`   - Companies: ${sherwinWilliamsData.companies.length}`);
 console.log(`   - Asset Groups: ${sherwinWilliamsData.assetGroups.length}`);
+console.log(`   - Assets created: ${totalCreated}`);
 console.log(`\n🎨 Industries Covered:`);
 console.log(`   - Manufacturing (automotive, aerospace)`);
 console.log(`   - Construction (commercial buildings)`);

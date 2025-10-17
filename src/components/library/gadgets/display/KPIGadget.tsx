@@ -86,7 +86,6 @@ export class KPIGadget extends BaseGadget {
   };
 
   renderBody(props: any, context?: GadgetContext): React.ReactNode {
-    const config = props as KPIGadgetConfig;
     const data = props.data || [];
     
     // removed debug logs

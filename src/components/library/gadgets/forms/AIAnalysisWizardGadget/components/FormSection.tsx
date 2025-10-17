@@ -1,5 +1,5 @@
 import { Card, Col, Form, InputNumber, Row } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../../../../../../contexts/AuthContext';
 import {
     CheckboxWidget,
@@ -36,7 +36,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
   const [loadingOptions, setLoadingOptions] = useState<Record<string, boolean>>({});
 
   // Simple field options loading
-  const loadFieldOptions = async (fieldId: string, field: any) => {
+  const loadFieldOptions = useCallback(async (fieldId: string, field: any) => {
     if (!field.optionsUrl || loadingOptions[fieldId] || fieldOptions[fieldId]) return;
 
     setLoadingOptions(prev => ({ ...prev, [fieldId]: true }));
@@ -88,7 +88,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
     } finally {
       setLoadingOptions(prev => ({ ...prev, [fieldId]: false }));
     }
-  };
+  }, [fieldOptions, getFormFieldValue, loadingOptions]);
 
   // Load options for all fields when component mounts or when form data changes
   useEffect(() => {
@@ -120,7 +120,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
         });
       });
     }
-  }, [section.form?.groups, data?.formData]); // Re-run when form data changes
+  }, [section.form?.groups, data?.formData, loadFieldOptions, getFormFieldValue]); // Re-run when form data changes
   
   // Separate effect to handle dependent dropdown loading when global form data becomes available
   useEffect(() => {
@@ -143,7 +143,7 @@ export const FormSection: React.FC<FormSectionProps> = ({
         });
       });
     }
-  }, [getFormFieldValue, fieldOptions, loadingOptions]); // Trigger when getFormFieldValue changes (i.e., when global data loads)
+  }, [getFormFieldValue, fieldOptions, loadingOptions, section.form?.groups, loadFieldOptions]); // Trigger when dependencies change
 
   console.log(`[FormSection] Rendering for ${section.id}:`, {
     hasFormProperty: !!section.form,

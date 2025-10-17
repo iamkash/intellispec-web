@@ -265,7 +265,7 @@ await AuditTrail.cleanup();
 **In Route Handlers:**
 ```javascript
 // Context automatically available via Fastify decorator
-fastify.get('/api/inspections', async (request, reply) => {
+fastify.get('/api/documents', async (request, reply) => {
   const context = request.context;
   
   // Access context properties
@@ -323,8 +323,8 @@ RequestContextManager.registerMiddleware(fastify);
   
   // HTTP Details
   method: 'GET',
-  url: '/api/inspections',
-  path: '/api/inspections',
+  url: '/api/documents',
+  path: '/api/documents',
   query: { page: 1 },
   params: {},
   headers: { ... },
@@ -365,7 +365,7 @@ RequestContextManager.registerMiddleware(fastify);
   "message": "Request started",
   "requestId": "uuid",
   "method": "GET",
-  "url": "/api/inspections",
+  "url": "/api/documents",
   "userId": "user123",
   "tenantId": "t_abc"
 }
@@ -525,7 +525,7 @@ const TenantContextFactory = require('../core/TenantContextFactory');
 const InspectionRepository = require('../repositories/InspectionRepository');
 const { NotFoundError, ValidationError } = require('../core/ErrorHandler');
 
-fastify.get('/api/inspections/:id', async (request, reply) => {
+fastify.get('/api/documents/:id', async (request, reply) => {
   // 1. Context automatically created by middleware
   const context = request.context;
   
@@ -656,7 +656,7 @@ if (context) {
   "userId": "user123",
   "tenantId": "t_abc",
   "method": "GET",
-  "url": "/api/inspections",
+  "url": "/api/documents",
   "statusCode": 200,
   "duration": 45
 }
@@ -731,12 +731,12 @@ describe('Error Handling', () => {
   it('handles NotFoundError correctly', async () => {
     const response = await fastify.inject({
       method: 'GET',
-      url: '/api/inspections/invalid-id'
+      url: '/api/documents/invalid-id?type=wizard'
     });
     
     expect(response.statusCode).toBe(404);
     expect(response.json()).toMatchObject({
-      error: 'Inspection invalid-id not found',
+      error: 'Document not found',
       code: 'NOT_FOUND'
     });
   });
@@ -782,4 +782,3 @@ await repository.create(data);
 ---
 
 *Framework documentation last updated: October 4, 2025*
-

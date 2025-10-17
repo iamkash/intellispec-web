@@ -1,5 +1,5 @@
 {
-  "id": "rope-system-plan",
+  "id": "intelliSAFTEY/rope-system-plan",
   "title": "Rope System Plan / Rigging Plan",
   "description": "Plan rigging layout, anchors, devices, and actions with AI assistance.",
   "gadgets": [
@@ -7,7 +7,7 @@
       "id": "rope-system-plan-gadget",
       "type": "ai-analysis-wizard-gadget",
       "title": "Rope System Plan",
-      "description": "Images \u2192 analysis \u2192 methods/resources grids \u2192 PDF.",
+      "description": "Images → analysis → methods/resources grids → PDF.",
       "config": {
         "sections": [
           {
@@ -174,32 +174,82 @@
           "responseSelector": "data.0"
         },
         "domainConfig": {
-          "payloadType": "inspection",
-          "defaultType": "general_inspection",
+          "payloadType": "safety",
+          "defaultType": "rope_system_plan",
           "fields": {
-            "type": "inspection_type",
-            "detectedType": "detected_equipment_type",
-            "id": "equipment_id",
-            "name": "assetName",
-            "owner": "inspector_name",
-            "date": "inspection_date"
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
           },
           "outputKeys": {
-            "id": "equipmentId",
-            "type": "equipmentType",
-            "owner": "inspectorName",
-            "date": "inspectionDate"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
           },
           "payloadKeys": {
-            "type": "inspectionType"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
           },
           "navigation": {
-            "listingSuffix": "inspections",
+            "listingSuffix": "responses",
             "homeSuffix": "home"
+          },
+          "typeMap": {
+            "rope_system_plan": "Rope System Plan / Rigging Plan"
+          }
+        },
+        "type": "safety",
+        "documentType": "rope_system_plan",
+        "label": "Rope System Plan / Rigging Plan",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "rope_system_plan",
+          "domainSubTypeLabel": "Rope System Plan"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },
       "position": 24
     }
-  ]
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
 }

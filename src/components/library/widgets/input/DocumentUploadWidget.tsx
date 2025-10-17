@@ -7,7 +7,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { Upload, Typography, Space, Button, Card, Input, Select, Tag, Modal, message, Divider } from 'antd';
-import { UploadOutlined, PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, FileTextOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, FileTextOutlined } from '@ant-design/icons';
 import type { UploadProps, UploadFile } from 'antd/es/upload';
 
 const { Text, Title } = Typography;
@@ -367,7 +367,7 @@ export const DocumentUploadWidget: React.FC<DocumentUploadWidgetProps> = ({
         </div>
       </div>
     </Card>
-  ), [categoryOptions, showTags, tagOptions, getCategoryColor, getTagColor, handleEditUpload, handleDeleteUpload, handleRemoveTag, value, onChange]);
+  ), [categoryOptions, showTags, getCategoryColor, getTagColor, handleEditUpload, handleDeleteUpload, handleRemoveTag, value, onChange]);
 
   return (
     <div className={`document-upload-widget ${className}`} style={style}>

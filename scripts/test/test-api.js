@@ -1,4 +1,3 @@
-const https = require('https');
 const http = require('http');
 
 function makeRequest(options) {
@@ -32,38 +31,61 @@ async function testAPI() {
     const options = {
       hostname: 'localhost',
       port: 4000,
-      path: '/api/inspections',
+      path: '/api/documents?type=wizard&identity.domain=inspection&limit=20',
       method: 'GET',
       headers: {
         'x-tenant-id': 'pksti'
       }
     };
-    
-    const data = await makeRequest(options);
-    
+
+    const result = await makeRequest(options);
+
+    const rows = Array.isArray(result?.data) ? result.data : [];
+    const pagination = result?.pagination || {};
+
+    const getValue = (record, paths) => {
+      for (const path of paths) {
+        if (!path) continue;
+        const segments = path.split('.');
+        let current = record;
+        for (const segment of segments) {
+          current = current?.[segment];
+        }
+        if (current !== undefined && current !== null && current !== '') {
+          return current;
+        }
+      }
+      return undefined;
+    };
+
     console.log('API Response:');
-    console.log('Total:', data.total);
-    console.log('Returned:', data.data.length);
-    console.log('Page:', data.page);
-    console.log('Pages:', data.pages);
-    
-    // Check inspection types in response
+    console.log('Total:', pagination.total ?? rows.length);
+    console.log('Returned:', rows.length);
+    console.log('Page:', pagination.page ?? 1);
+    console.log('Pages:', pagination.totalPages ?? 1);
+
     const types = {};
-    data.data.forEach(item => {
-      const type = item.inspectionType || 'unknown';
+    rows.forEach(item => {
+      const type = getValue(item, [
+        'inspectionType',
+        'documentSummary.inspectionType',
+        'wizardState.documentSummary.inspectionType'
+      ]) || 'unknown';
       types[type] = (types[type] || 0) + 1;
     });
-    
+
     console.log('\nTypes in API response:', types);
-    
-    // Check if any have deleted flag
-    const deleted = data.data.filter(item => item.deleted);
+
+    const deleted = rows.filter(item => item.deleted);
     console.log('Deleted items in response:', deleted.length);
-    
-    // Show first few items
+
     console.log('\nFirst 3 items:');
-    data.data.slice(0, 3).forEach((item, i) => {
-      console.log(`${i+1}. ID: ${item.id}, Type: ${item.inspectionType}, Status: ${item.status}`);
+    rows.slice(0, 3).forEach((item, i) => {
+      const documentType = getValue(item, ['type']) || 'unknown';
+      const domain = getValue(item, ['identity.domainLabel', 'identity.domain']) || 'unknown';
+      const domainType = getValue(item, ['identity.domainSubTypeLabel', 'identity.domainSubType']) || 'unknown';
+      const status = getValue(item, ['status']) || 'unknown';
+      console.log(`${i + 1}. ID: ${item.id}, DocType: ${documentType}, Domain: ${domain}, DomainType: ${domainType}, Status: ${status}`);
     });
     
   } catch (error) {

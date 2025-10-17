@@ -166,7 +166,7 @@
 - Auth: `POST /api/auth/login`, `POST /api/auth/register`, `GET /api/auth/me`, `POST /api/auth/switch-tenant`.
 - Tenant/platform: `/api/platform/tenants`, `/api/platform/stats`, `/api/admin/tenants`, `/api/admin/organizations`, `/api/admin/memberships`.
 - Workflows: `/api/`, `/api/:id`, `/api/:id/execute`, `/api/:id/executions`.
-- Documents & inspections: `/api/documents`, `/api/inspections`, `/api/tenant-data/*`.
+- Documents & inspections: `/api/documents` (e.g., `?type=wizard&identity.domain=inspection`), `/api/tenant-data/*`.
 - Utilities: `/api/uploads/*` (GridFS), `/api/admin/system/stats`, `/api/audit-logs`, `/metrics`, `/health`.
 
 ## Change Control

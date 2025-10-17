@@ -23,17 +23,26 @@ export const InputStep: React.FC<InputStepProps> = ({
   handleDataUpdate,
   handleStepComplete
 }) => {
+  const domainTypeOptions = config.steps.input?.domainTypeOptions ?? [];
+  const domainTypeValue = wizardData.domainType;
+
   return (
     <Card className="glass-card wizard-card" title={<span style={{ color: 'hsl(var(--foreground))' }}>{config.steps.input?.title}</span>}>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Form.Item label={<span style={{ color: 'hsl(var(--foreground))' }}>{config.typeLabel || 'Inspection Type'}</span>} required>
+        <Form.Item label={<span style={{ color: 'hsl(var(--foreground))' }}>{config.typeLabel || 'Record Type'}</span>} required>
           <Select 
-            placeholder={config.typePlaceholder || 'Select inspection type'} 
-            value={wizardData.inspectionType} 
-            onChange={(value) => handleDataUpdate({ inspectionType: value })} 
+            placeholder={config.typePlaceholder || 'Choose an option'} 
+            value={domainTypeValue} 
+            onChange={(value) => {
+              const optionLabel = domainTypeOptions.find(option => option.value === value)?.label;
+              handleDataUpdate({
+                domainType: value,
+                domainTypeLabel: optionLabel
+              } as Partial<AIAnalysisWizardData>);
+            }} 
             style={{ width: '100%' }}
           >
-            {config.steps.input?.inspectionTypes?.map(type => (
+            {domainTypeOptions.map(type => (
               <Option key={type.value} value={type.value}>{type.label}</Option>
             ))}
           </Select>
@@ -97,7 +106,7 @@ export const InputStep: React.FC<InputStepProps> = ({
           <Button 
             type="primary" 
             onClick={handleStepComplete} 
-            disabled={Boolean(config.steps.input) && (!wizardData.inspectionType)} 
+            disabled={Boolean(config.steps.input) && (!domainTypeValue)} 
             style={{ backgroundColor: 'hsl(var(--primary))', borderColor: 'hsl(var(--primary))', color: 'hsl(var(--primary-foreground))' }}
           >
             Next

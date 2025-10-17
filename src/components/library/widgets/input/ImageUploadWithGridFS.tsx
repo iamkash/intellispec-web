@@ -105,7 +105,7 @@ export const ImageUploadWithGridFS: React.FC<ImageUploadWithGridFSProps> = ({
 
     // Custom upload to GridFS
     const customRequest = useCallback(async (options: any) => {
-        const { file, onSuccess, onError, onProgress } = options;
+    const { file, onSuccess, onError } = options;
         const uid = file.uid || `${Date.now()}-${Math.random()}`;
 
         // Mark as uploading

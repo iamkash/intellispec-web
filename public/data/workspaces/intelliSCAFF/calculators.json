@@ -1,5 +1,5 @@
 {
-  "id": "intelliSCAFF-calculators",
+  "id": "intelliSCAFF/calculators",
   "type": "dashboard",
   "title": "Scaffolding Calculators",
   "description": "Browse and access scaffolding calculation tools",
@@ -32,7 +32,11 @@
         "enableFavorites": true,
         "enableSorting": true,
         "enableViewToggle": true,
-        "searchFields": ["label", "description", "tags"],
+        "searchFields": [
+          "label",
+          "description",
+          "tags"
+        ],
         "cardSize": "medium"
       }
     }
@@ -47,9 +51,3 @@
     }
   }
 }
-
-
-
-
-
-

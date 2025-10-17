@@ -145,8 +145,6 @@ class BaseRepository {
     const { page = 1, limit = 20, sort = {}, projection } = options;
     const skip = (page - 1) * limit;
 
-    const query = this.buildBaseQuery(filters);
-
     const [data, total] = await Promise.all([
       this.find(filters, { projection, sort, limit, skip }),
       this.count(filters)

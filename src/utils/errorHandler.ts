@@ -84,9 +84,12 @@ class ErrorHandler {
       // Response is not JSON
     }
     
+    const resolvedCode = errorData.code || `HTTP_${response.status}`;
+    const fallbackMessage = ERROR_MESSAGES[resolvedCode] || STATUS_CODE_MESSAGES[response.status] || ERROR_MESSAGES.UNKNOWN;
+
     const error: AppError = {
-      message: errorData.error || errorData.message || STATUS_CODE_MESSAGES[response.status] || 'An error occurred',
-      code: errorData.code || `HTTP_${response.status}`,
+      message: errorData.error || errorData.message || fallbackMessage,
+      code: resolvedCode,
       statusCode: response.status,
       details: errorData.details,
       severity: this.getSeverityFromStatus(response.status)
@@ -115,9 +118,11 @@ class ErrorHandler {
    * Handle general errors
    */
   handleError(error: any, context?: string): never {
+    const resolvedCode = error.code || 'UNKNOWN';
+    const fallbackMessage = ERROR_MESSAGES[resolvedCode] || ERROR_MESSAGES.UNKNOWN;
     const appError: AppError = {
-      message: error.message || 'An unexpected error occurred',
-      code: error.code || 'UNKNOWN',
+      message: error.message || fallbackMessage,
+      code: resolvedCode,
       statusCode: error.statusCode,
       severity: error.severity || 'error',
       details: error.details
@@ -257,7 +262,6 @@ export function useErrorHandler() {
     showLoading
   };
 }
-
 
 
 

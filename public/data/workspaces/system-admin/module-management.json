@@ -1,5 +1,5 @@
 {
-  "id": "module-management",
+  "id": "system-admin/module-management",
   "title": "Module Management Dashboard",
   "description": "Super Admin module management using generic framework components",
   "layout": "dashboard",
@@ -88,8 +88,14 @@
             "required": true,
             "optionsUrl": "/api/reference-data/options-by-type/module_status?format=options",
             "options": [
-              {"value": "active", "label": "Active"},
-              {"value": "hidden", "label": "Hidden"}
+              {
+                "value": "active",
+                "label": "Active"
+              },
+              {
+                "value": "hidden",
+                "label": "Hidden"
+              }
             ]
           },
           {
@@ -102,12 +108,30 @@
             "required": false,
             "optionsUrl": "/api/reference-data/options-by-type/module_category?format=options",
             "options": [
-              {"value": "Admin", "label": "Admin"},
-              {"value": "AI", "label": "AI"},
-              {"value": "Compliance", "label": "Compliance"},
-              {"value": "Documents", "label": "Documents"},
-              {"value": "Inspection", "label": "Inspection"},
-              {"value": "Operations", "label": "Operations"}
+              {
+                "value": "Admin",
+                "label": "Admin"
+              },
+              {
+                "value": "AI",
+                "label": "AI"
+              },
+              {
+                "value": "Compliance",
+                "label": "Compliance"
+              },
+              {
+                "value": "Documents",
+                "label": "Documents"
+              },
+              {
+                "value": "Inspection",
+                "label": "Inspection"
+              },
+              {
+                "value": "Operations",
+                "label": "Operations"
+              }
             ],
             "placeholder": "Select category"
           },
@@ -157,7 +181,9 @@
           "size": "middle",
           "bordered": true,
           "striped": false,
-          "scroll": { "y": 500 }
+          "scroll": {
+            "y": 500
+          }
         }
       },
       "position": 24
@@ -272,7 +298,10 @@
               "type": "import",
               "importConfig": {
                 "url": "/api/admin/modules/import",
-                "allowedFormats": ["xlsx", "csv"],
+                "allowedFormats": [
+                  "xlsx",
+                  "csv"
+                ],
                 "templateUrl": "/api/admin/modules/template"
               }
             }
@@ -301,11 +330,21 @@
   "metadata": {
     "created": "2024-12-20T10:00:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "module", "management", "saas", "framework"],
+    "tags": [
+      "admin",
+      "module",
+      "management",
+      "saas",
+      "framework"
+    ],
     "description": "Super administrator module management dashboard for managing B2B SaaS modules with left-nav readiness.",
     "permissions": {
-      "required": ["super_admin"],
-      "roles": ["system_administrator"]
+      "required": [
+        "super_admin"
+      ],
+      "roles": [
+        "system_administrator"
+      ]
     }
   }
 }

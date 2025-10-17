@@ -1,5 +1,5 @@
 {
-  "id": "site-form-workspace",
+  "id": "asset-manager/site-form",
   "title": "Site Management",
   "description": "Enterprise facility/plant management with operational and safety details",
   "layout": "dashboard",
@@ -163,10 +163,22 @@
             "size": 8,
             "order": 6,
             "options": [
-              { "value": "critical", "label": "Critical" },
-              { "value": "high", "label": "High" },
-              { "value": "medium", "label": "Medium" },
-              { "value": "low", "label": "Low" }
+              {
+                "value": "critical",
+                "label": "Critical"
+              },
+              {
+                "value": "high",
+                "label": "High"
+              },
+              {
+                "value": "medium",
+                "label": "Medium"
+              },
+              {
+                "value": "low",
+                "label": "Low"
+              }
             ]
           },
           {
@@ -430,12 +442,30 @@
             "size": 8,
             "order": 2,
             "options": [
-              { "value": "America/New_York", "label": "Eastern (ET)" },
-              { "value": "America/Chicago", "label": "Central (CT)" },
-              { "value": "America/Denver", "label": "Mountain (MT)" },
-              { "value": "America/Los_Angeles", "label": "Pacific (PT)" },
-              { "value": "America/Anchorage", "label": "Alaska (AKT)" },
-              { "value": "Pacific/Honolulu", "label": "Hawaii (HT)" }
+              {
+                "value": "America/New_York",
+                "label": "Eastern (ET)"
+              },
+              {
+                "value": "America/Chicago",
+                "label": "Central (CT)"
+              },
+              {
+                "value": "America/Denver",
+                "label": "Mountain (MT)"
+              },
+              {
+                "value": "America/Los_Angeles",
+                "label": "Pacific (PT)"
+              },
+              {
+                "value": "America/Anchorage",
+                "label": "Alaska (AKT)"
+              },
+              {
+                "value": "Pacific/Honolulu",
+                "label": "Hawaii (HT)"
+              }
             ]
           },
           {
@@ -450,11 +480,26 @@
             "size": 8,
             "order": 3,
             "options": [
-              { "value": "continuous", "label": "Continuous (24/7)" },
-              { "value": "3_shift", "label": "3-Shift (24 hrs)" },
-              { "value": "2_shift", "label": "2-Shift (16 hrs)" },
-              { "value": "day_shift", "label": "Day Shift Only" },
-              { "value": "custom", "label": "Custom" }
+              {
+                "value": "continuous",
+                "label": "Continuous (24/7)"
+              },
+              {
+                "value": "3_shift",
+                "label": "3-Shift (24 hrs)"
+              },
+              {
+                "value": "2_shift",
+                "label": "2-Shift (16 hrs)"
+              },
+              {
+                "value": "day_shift",
+                "label": "Day Shift Only"
+              },
+              {
+                "value": "custom",
+                "label": "Custom"
+              }
             ]
           },
           {

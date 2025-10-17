@@ -35,8 +35,7 @@ const InlineEditableGridGadgetView: React.FC<InlineEditableGridGadgetViewProps> 
     baseUrl,
     endpoints,
     columns,
-    config: gridConfig = {},
-    ...otherProps
+    config: gridConfig = {}
   } = props;
 
   const handleDataChange = (data: any[]) => {

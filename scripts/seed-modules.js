@@ -211,6 +211,7 @@ async function run() {
 }
   }
 console.log(`📊 Summary:`);
+console.log(`   - Created: ${createdCount} modules`);
 console.log(`   - Updated: ${updatedCount} modules`);
 // Create indexes for better performance
 await modulesCol.createIndex({ key: 1 }, { unique: true }).catch(() => {});

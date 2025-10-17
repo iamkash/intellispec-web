@@ -1,12 +1,17 @@
 {
-  "id": "piping-inspection-wizard",
+  "id": "inspection/piping-inspection-wizard",
   "title": "AI-Powered Piping Inspection Wizard",
   "description": "Comprehensive piping inspection wizard with API 570 compliance, AI analysis, and automated work order generation",
   "icon": "ExperimentOutlined",
   "type": "wizard",
   "mode": "wizard",
   "layout": "dashboard",
-  "standards": ["API 570", "ASME B31.3", "API 574", "API 571"],
+  "standards": [
+    "API 570",
+    "ASME B31.3",
+    "API 574",
+    "API 571"
+  ],
   "gadgets": [
     {
       "id": "wizard-navigation",
@@ -252,8 +257,13 @@
           "model": "gpt-realtime",
           "sessionType": "realtime",
           "connectionType": "webrtc",
-          "modalities": ["text", "audio"],
-          "outputModalities": ["audio"],
+          "modalities": [
+            "text",
+            "audio"
+          ],
+          "outputModalities": [
+            "audio"
+          ],
           "audio": {
             "input": {
               "format": "pcm16",
@@ -265,7 +275,7 @@
             "output": {
               "format": "pcm16",
               "voice": "alloy",
-              "speed": 1.0
+              "speed": 1
             }
           },
           "instructions": "You are an expert piping inspection assistant. Guide inspectors through API 570 compliant procedures. Provide clear, step-by-step instructions and record all observations accurately. Speak clearly and briefly. Confirm understanding before taking actions.",
@@ -283,7 +293,10 @@
           "enabled": true,
           "model": "gpt-realtime",
           "sessionType": "realtime",
-          "modalities": ["text", "audio"],
+          "modalities": [
+            "text",
+            "audio"
+          ],
           "audio": {
             "output": {
               "voice": "alloy",
@@ -293,7 +306,9 @@
               "format": "pcm16"
             }
           },
-          "outputModalities": ["audio"],
+          "outputModalities": [
+            "audio"
+          ],
           "temperature": 0.3,
           "maxTokens": 150,
           "instructions": "Provide real-time feedback on inspection observations. Validate measurements, suggest follow-up actions, and ensure compliance with API 570 standards. Speak clearly and briefly. Confirm understanding before taking actions.",
@@ -502,9 +517,18 @@
                 "required": true,
                 "placeholder": "e.g., 10-P-101, Boiler Feedwater Line",
                 "options": [
-                  {"label": "10-P-101 - Boiler Feedwater", "value": "10-P-101"},
-                  {"label": "10-P-102 - Condensate Return", "value": "10-P-102"},
-                  {"label": "20-P-201 - Process Feed", "value": "20-P-201"}
+                  {
+                    "label": "10-P-101 - Boiler Feedwater",
+                    "value": "10-P-101"
+                  },
+                  {
+                    "label": "10-P-102 - Condensate Return",
+                    "value": "10-P-102"
+                  },
+                  {
+                    "label": "20-P-201 - Process Feed",
+                    "value": "20-P-201"
+                  }
                 ]
               },
               {
@@ -521,12 +545,30 @@
                 "required": true,
                 "placeholder": "Select or type fluid service",
                 "options": [
-                  {"label": "Steam", "value": "steam"},
-                  {"label": "Water", "value": "water"},
-                  {"label": "Hydrocarbon", "value": "hydrocarbon"},
-                  {"label": "Chemical", "value": "chemical"},
-                  {"label": "Air/Gas", "value": "air_gas"},
-                  {"label": "Refrigerant", "value": "refrigerant"}
+                  {
+                    "label": "Steam",
+                    "value": "steam"
+                  },
+                  {
+                    "label": "Water",
+                    "value": "water"
+                  },
+                  {
+                    "label": "Hydrocarbon",
+                    "value": "hydrocarbon"
+                  },
+                  {
+                    "label": "Chemical",
+                    "value": "chemical"
+                  },
+                  {
+                    "label": "Air/Gas",
+                    "value": "air_gas"
+                  },
+                  {
+                    "label": "Refrigerant",
+                    "value": "refrigerant"
+                  }
                 ],
                 "allowCustom": true
               },
@@ -557,9 +599,18 @@
                 "required": true,
                 "placeholder": "e.g., SA-106 Gr.B, A312 TP316",
                 "options": [
-                  {"label": "SA-106 Gr.B - Carbon Steel", "value": "SA-106 Gr.B"},
-                  {"label": "A312 TP316 - Stainless Steel", "value": "A312 TP316"},
-                  {"label": "A335 P11 - Alloy Steel", "value": "A335 P11"}
+                  {
+                    "label": "SA-106 Gr.B - Carbon Steel",
+                    "value": "SA-106 Gr.B"
+                  },
+                  {
+                    "label": "A312 TP316 - Stainless Steel",
+                    "value": "A312 TP316"
+                  },
+                  {
+                    "label": "A335 P11 - Alloy Steel",
+                    "value": "A335 P11"
+                  }
                 ]
               }
             ]
@@ -592,7 +643,7 @@
               "agents": [
                 "EquipmentIdentificationAgent",
                 "CorrosionAnalysisAgent",
-                "ThicknessMeasurementAgent", 
+                "ThicknessMeasurementAgent",
                 "ComplianceCheckAgent",
                 "RiskAssessmentAgent",
                 "RecommendationAgent"
@@ -620,11 +671,31 @@
                 "label": "Primary NDT Method",
                 "required": true,
                 "options": [
-                  {"label": "UT", "value": "ut", "tooltip": "Ultrasonic Testing - Wall thickness measurement"},
-                  {"label": "RT", "value": "rt", "tooltip": "Radiographic Testing - Weld examination"},
-                  {"label": "MT", "value": "mt", "tooltip": "Magnetic Particle Testing - Surface cracks"},
-                  {"label": "PT", "value": "pt", "tooltip": "Liquid Penetrant Testing - Surface defects"},
-                  {"label": "VT", "value": "vt", "tooltip": "Visual Testing - General examination"}
+                  {
+                    "label": "UT",
+                    "value": "ut",
+                    "tooltip": "Ultrasonic Testing - Wall thickness measurement"
+                  },
+                  {
+                    "label": "RT",
+                    "value": "rt",
+                    "tooltip": "Radiographic Testing - Weld examination"
+                  },
+                  {
+                    "label": "MT",
+                    "value": "mt",
+                    "tooltip": "Magnetic Particle Testing - Surface cracks"
+                  },
+                  {
+                    "label": "PT",
+                    "value": "pt",
+                    "tooltip": "Liquid Penetrant Testing - Surface defects"
+                  },
+                  {
+                    "label": "VT",
+                    "value": "vt",
+                    "tooltip": "Visual Testing - General examination"
+                  }
                 ]
               },
               {
@@ -633,11 +704,26 @@
                 "label": "Additional NDT Methods",
                 "required": false,
                 "options": [
-                  {"label": "Ultrasonic Testing (UT)", "value": "ut"},
-                  {"label": "Radiographic Testing (RT)", "value": "rt"},
-                  {"label": "Magnetic Particle Testing (MT)", "value": "mt"},
-                  {"label": "Liquid Penetrant Testing (PT)", "value": "pt"},
-                  {"label": "Visual Testing (VT)", "value": "vt"}
+                  {
+                    "label": "Ultrasonic Testing (UT)",
+                    "value": "ut"
+                  },
+                  {
+                    "label": "Radiographic Testing (RT)",
+                    "value": "rt"
+                  },
+                  {
+                    "label": "Magnetic Particle Testing (MT)",
+                    "value": "mt"
+                  },
+                  {
+                    "label": "Liquid Penetrant Testing (PT)",
+                    "value": "pt"
+                  },
+                  {
+                    "label": "Visual Testing (VT)",
+                    "value": "vt"
+                  }
                 ]
               },
               {
@@ -647,10 +733,22 @@
                 "required": true,
                 "placeholder": "Select or type inspection standard",
                 "options": [
-                  {"label": "ASME Section V - NDT Methods", "value": "asme_v"},
-                  {"label": "API 1104 - Welding Inspection", "value": "api_1104"},
-                  {"label": "ASME Section VIII - Pressure Vessels", "value": "asme_viii"},
-                  {"label": "API 570 - Piping Inspection", "value": "api_570"}
+                  {
+                    "label": "ASME Section V - NDT Methods",
+                    "value": "asme_v"
+                  },
+                  {
+                    "label": "API 1104 - Welding Inspection",
+                    "value": "api_1104"
+                  },
+                  {
+                    "label": "ASME Section VIII - Pressure Vessels",
+                    "value": "asme_viii"
+                  },
+                  {
+                    "label": "API 570 - Piping Inspection",
+                    "value": "api_570"
+                  }
                 ],
                 "allowCustom": true
               },
@@ -660,9 +758,18 @@
                 "label": "Inspector Certification Level",
                 "required": true,
                 "options": [
-                  {"label": "Level I", "value": "level1"},
-                  {"label": "Level II", "value": "level2"},
-                  {"label": "Level III", "value": "level3"}
+                  {
+                    "label": "Level I",
+                    "value": "level1"
+                  },
+                  {
+                    "label": "Level II",
+                    "value": "level2"
+                  },
+                  {
+                    "label": "Level III",
+                    "value": "level3"
+                  }
                 ]
               },
               {
@@ -732,13 +839,34 @@
                 "label": "Measurement Location",
                 "required": true,
                 "options": [
-                  {"label": "12 o'clock (Top)", "value": "12_oclock"},
-                  {"label": "3 o'clock", "value": "3_oclock"},
-                  {"label": "6 o'clock (Bottom)", "value": "6_oclock"},
-                  {"label": "9 o'clock", "value": "9_oclock"},
-                  {"label": "Center", "value": "center"},
-                  {"label": "Weld center", "value": "weld_center"},
-                  {"label": "Heat affected zone", "value": "haz"}
+                  {
+                    "label": "12 o'clock (Top)",
+                    "value": "12_oclock"
+                  },
+                  {
+                    "label": "3 o'clock",
+                    "value": "3_oclock"
+                  },
+                  {
+                    "label": "6 o'clock (Bottom)",
+                    "value": "6_oclock"
+                  },
+                  {
+                    "label": "9 o'clock",
+                    "value": "9_oclock"
+                  },
+                  {
+                    "label": "Center",
+                    "value": "center"
+                  },
+                  {
+                    "label": "Weld center",
+                    "value": "weld_center"
+                  },
+                  {
+                    "label": "Heat affected zone",
+                    "value": "haz"
+                  }
                 ]
               },
               {
@@ -756,9 +884,18 @@
                 "label": "Inspection Standard",
                 "required": true,
                 "options": [
-                  {"label": "ASME Section V - NDT", "value": "asme_v"},
-                  {"label": "API 570 - Piping", "value": "api_570"},
-                  {"label": "ASME B31.3 - Process Piping", "value": "asme_b31_3"}
+                  {
+                    "label": "ASME Section V - NDT",
+                    "value": "asme_v"
+                  },
+                  {
+                    "label": "API 570 - Piping",
+                    "value": "api_570"
+                  },
+                  {
+                    "label": "ASME B31.3 - Process Piping",
+                    "value": "asme_b31_3"
+                  }
                 ]
               }
             ]
@@ -832,14 +969,38 @@
                 "label": "Type of Corrosion",
                 "required": true,
                 "options": [
-                  {"label": "General Corrosion - Uniform metal loss", "value": "general"},
-                  {"label": "Pitting Corrosion - Localized deep pits", "value": "pitting"},
-                  {"label": "Crevice Corrosion - Under deposits/flanges", "value": "crevice"},
-                  {"label": "Galvanic Corrosion - Dissimilar metals", "value": "galvanic"},
-                  {"label": "Erosion Corrosion - Flow accelerated", "value": "erosion"},
-                  {"label": "Stress Corrosion Cracking - SCC", "value": "scc"},
-                  {"label": "Microbiologically Induced - MIC", "value": "mic"},
-                  {"label": "High Temperature Oxidation", "value": "oxidation"}
+                  {
+                    "label": "General Corrosion - Uniform metal loss",
+                    "value": "general"
+                  },
+                  {
+                    "label": "Pitting Corrosion - Localized deep pits",
+                    "value": "pitting"
+                  },
+                  {
+                    "label": "Crevice Corrosion - Under deposits/flanges",
+                    "value": "crevice"
+                  },
+                  {
+                    "label": "Galvanic Corrosion - Dissimilar metals",
+                    "value": "galvanic"
+                  },
+                  {
+                    "label": "Erosion Corrosion - Flow accelerated",
+                    "value": "erosion"
+                  },
+                  {
+                    "label": "Stress Corrosion Cracking - SCC",
+                    "value": "scc"
+                  },
+                  {
+                    "label": "Microbiologically Induced - MIC",
+                    "value": "mic"
+                  },
+                  {
+                    "label": "High Temperature Oxidation",
+                    "value": "oxidation"
+                  }
                 ]
               },
               {
@@ -848,11 +1009,26 @@
                 "label": "Corrosion Severity",
                 "required": true,
                 "options": [
-                  {"label": "Minor", "value": "1"},
-                  {"label": "Light", "value": "2"},
-                  {"label": "Moderate", "value": "3"},
-                  {"label": "Severe", "value": "4"},
-                  {"label": "Critical", "value": "5"}
+                  {
+                    "label": "Minor",
+                    "value": "1"
+                  },
+                  {
+                    "label": "Light",
+                    "value": "2"
+                  },
+                  {
+                    "label": "Moderate",
+                    "value": "3"
+                  },
+                  {
+                    "label": "Severe",
+                    "value": "4"
+                  },
+                  {
+                    "label": "Critical",
+                    "value": "5"
+                  }
                 ]
               },
               {
@@ -885,8 +1061,14 @@
                 "label": "Immediate Mitigation Required",
                 "required": true,
                 "options": [
-                  {"label": "Yes", "value": "yes"},
-                  {"label": "No", "value": "no"}
+                  {
+                    "label": "Yes",
+                    "value": "yes"
+                  },
+                  {
+                    "label": "No",
+                    "value": "no"
+                  }
                 ]
               },
               {
@@ -929,9 +1111,18 @@
                 "label": "Assessment Level",
                 "required": true,
                 "options": [
-                  {"label": "Level 1", "value": "level1"},
-                  {"label": "Level 2", "value": "level2"},
-                  {"label": "Level 3", "value": "level3"}
+                  {
+                    "label": "Level 1",
+                    "value": "level1"
+                  },
+                  {
+                    "label": "Level 2",
+                    "value": "level2"
+                  },
+                  {
+                    "label": "Level 3",
+                    "value": "level3"
+                  }
                 ]
               },
               {
@@ -940,9 +1131,18 @@
                 "label": "FFS Standard",
                 "required": true,
                 "options": [
-                  {"label": "API 579 - Fitness-for-Service", "value": "api_579"},
-                  {"label": "ASME Section VIII", "value": "asme_viii"},
-                  {"label": "BS 7910", "value": "bs_7910"}
+                  {
+                    "label": "API 579 - Fitness-for-Service",
+                    "value": "api_579"
+                  },
+                  {
+                    "label": "ASME Section VIII",
+                    "value": "asme_viii"
+                  },
+                  {
+                    "label": "BS 7910",
+                    "value": "bs_7910"
+                  }
                 ]
               },
               {
@@ -951,14 +1151,38 @@
                 "label": "Primary Damage Mechanism",
                 "required": true,
                 "options": [
-                  {"label": "General Corrosion", "value": "general_corrosion"},
-                  {"label": "Local Corrosion", "value": "local_corrosion"},
-                  {"label": "Pitting Corrosion", "value": "pitting"},
-                  {"label": "Crevice Corrosion", "value": "crevice"},
-                  {"label": "Stress Corrosion Cracking", "value": "scc"},
-                  {"label": "Fatigue", "value": "fatigue"},
-                  {"label": "Brittle Fracture", "value": "brittle_fracture"},
-                  {"label": "Ductile Fracture", "value": "ductile_fracture"}
+                  {
+                    "label": "General Corrosion",
+                    "value": "general_corrosion"
+                  },
+                  {
+                    "label": "Local Corrosion",
+                    "value": "local_corrosion"
+                  },
+                  {
+                    "label": "Pitting Corrosion",
+                    "value": "pitting"
+                  },
+                  {
+                    "label": "Crevice Corrosion",
+                    "value": "crevice"
+                  },
+                  {
+                    "label": "Stress Corrosion Cracking",
+                    "value": "scc"
+                  },
+                  {
+                    "label": "Fatigue",
+                    "value": "fatigue"
+                  },
+                  {
+                    "label": "Brittle Fracture",
+                    "value": "brittle_fracture"
+                  },
+                  {
+                    "label": "Ductile Fracture",
+                    "value": "ductile_fracture"
+                  }
                 ]
               },
               {
@@ -985,11 +1209,26 @@
                 "label": "Assessment Confidence Level",
                 "required": true,
                 "options": [
-                  {"label": "Low", "value": "1"},
-                  {"label": "Moderate", "value": "2"},
-                  {"label": "Good", "value": "3"},
-                  {"label": "High", "value": "4"},
-                  {"label": "Very High", "value": "5"}
+                  {
+                    "label": "Low",
+                    "value": "1"
+                  },
+                  {
+                    "label": "Moderate",
+                    "value": "2"
+                  },
+                  {
+                    "label": "Good",
+                    "value": "3"
+                  },
+                  {
+                    "label": "High",
+                    "value": "4"
+                  },
+                  {
+                    "label": "Very High",
+                    "value": "5"
+                  }
                 ]
               },
               {
@@ -998,10 +1237,22 @@
                 "label": "FFS Recommendation",
                 "required": true,
                 "options": [
-                  {"label": "Accept for continued service", "value": "accept"},
-                  {"label": "Accept with monitoring", "value": "monitor"},
-                  {"label": "Accept with repair", "value": "repair"},
-                  {"label": "Reject for continued service", "value": "reject"}
+                  {
+                    "label": "Accept for continued service",
+                    "value": "accept"
+                  },
+                  {
+                    "label": "Accept with monitoring",
+                    "value": "monitor"
+                  },
+                  {
+                    "label": "Accept with repair",
+                    "value": "repair"
+                  },
+                  {
+                    "label": "Reject for continued service",
+                    "value": "reject"
+                  }
                 ]
               },
               {
@@ -1044,10 +1295,22 @@
                 "label": "Overall Inspection Priority",
                 "required": true,
                 "options": [
-                  {"label": "Low", "value": "low"},
-                  {"label": "Medium", "value": "medium"},
-                  {"label": "High", "value": "high"},
-                  {"label": "Critical", "value": "critical"}
+                  {
+                    "label": "Low",
+                    "value": "low"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "High",
+                    "value": "high"
+                  },
+                  {
+                    "label": "Critical",
+                    "value": "critical"
+                  }
                 ]
               },
               {
@@ -1056,11 +1319,26 @@
                 "label": "Immediate Actions Required",
                 "required": false,
                 "options": [
-                  {"label": "Isolate leaking sections", "value": "isolate_leaks"},
-                  {"label": "Install temporary supports", "value": "temp_supports"},
-                  {"label": "Reduce operating pressure", "value": "reduce_pressure"},
-                  {"label": "Increase monitoring frequency", "value": "increase_monitoring"},
-                  {"label": "Schedule emergency repair", "value": "emergency_repair"}
+                  {
+                    "label": "Isolate leaking sections",
+                    "value": "isolate_leaks"
+                  },
+                  {
+                    "label": "Install temporary supports",
+                    "value": "temp_supports"
+                  },
+                  {
+                    "label": "Reduce operating pressure",
+                    "value": "reduce_pressure"
+                  },
+                  {
+                    "label": "Increase monitoring frequency",
+                    "value": "increase_monitoring"
+                  },
+                  {
+                    "label": "Schedule emergency repair",
+                    "value": "emergency_repair"
+                  }
                 ]
               },
               {
@@ -1103,8 +1381,14 @@
                 "label": "Generate Maintenance Work Orders",
                 "required": true,
                 "options": [
-                  {"label": "Yes", "value": "yes"},
-                  {"label": "No", "value": "no"}
+                  {
+                    "label": "Yes",
+                    "value": "yes"
+                  },
+                  {
+                    "label": "No",
+                    "value": "no"
+                  }
                 ]
               },
               {
@@ -1113,10 +1397,22 @@
                 "label": "Work Order Priority",
                 "required": true,
                 "options": [
-                  {"label": "Critical - Immediate action required", "value": "critical"},
-                  {"label": "High - Address within 1 week", "value": "high"},
-                  {"label": "Medium - Address within 1 month", "value": "medium"},
-                  {"label": "Low - Address within 3 months", "value": "low"}
+                  {
+                    "label": "Critical - Immediate action required",
+                    "value": "critical"
+                  },
+                  {
+                    "label": "High - Address within 1 week",
+                    "value": "high"
+                  },
+                  {
+                    "label": "Medium - Address within 1 month",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "Low - Address within 3 months",
+                    "value": "low"
+                  }
                 ]
               },
               {
@@ -1125,11 +1421,26 @@
                 "label": "Assigned Department",
                 "required": true,
                 "options": [
-                  {"label": "Maintenance - Mechanical", "value": "maintenance_mechanical"},
-                  {"label": "Maintenance - Electrical", "value": "maintenance_electrical"},
-                  {"label": "Inspection Department", "value": "inspection"},
-                  {"label": "Corrosion Engineering", "value": "corrosion_engineering"},
-                  {"label": "Process Engineering", "value": "process_engineering"}
+                  {
+                    "label": "Maintenance - Mechanical",
+                    "value": "maintenance_mechanical"
+                  },
+                  {
+                    "label": "Maintenance - Electrical",
+                    "value": "maintenance_electrical"
+                  },
+                  {
+                    "label": "Inspection Department",
+                    "value": "inspection"
+                  },
+                  {
+                    "label": "Corrosion Engineering",
+                    "value": "corrosion_engineering"
+                  },
+                  {
+                    "label": "Process Engineering",
+                    "value": "process_engineering"
+                  }
                 ]
               },
               {
@@ -1216,7 +1527,13 @@
                 "label": "Overall Equipment Condition",
                 "required": true,
                 "count": 5,
-                "tooltips": ["Poor", "Fair", "Good", "Very Good", "Excellent"]
+                "tooltips": [
+                  "Poor",
+                  "Fair",
+                  "Good",
+                  "Very Good",
+                  "Excellent"
+                ]
               },
               {
                 "id": "inspection_quality",
@@ -1224,9 +1541,18 @@
                 "label": "Inspection Quality Assurance",
                 "required": true,
                 "options": [
-                  {"label": "Limited", "value": "limited"},
-                  {"label": "Standard", "value": "standard"},
-                  {"label": "Comprehensive", "value": "comprehensive"}
+                  {
+                    "label": "Limited",
+                    "value": "limited"
+                  },
+                  {
+                    "label": "Standard",
+                    "value": "standard"
+                  },
+                  {
+                    "label": "Comprehensive",
+                    "value": "comprehensive"
+                  }
                 ]
               },
               {
@@ -1252,11 +1578,26 @@
                 "label": "Report Distribution",
                 "required": true,
                 "options": [
-                  {"label": "Asset Owner", "value": "asset_owner"},
-                  {"label": "Maintenance Manager", "value": "maintenance_manager"},
-                  {"label": "Inspection Department", "value": "inspection_dept"},
-                  {"label": "Process Engineer", "value": "process_engineer"},
-                  {"label": "Regulatory Compliance", "value": "regulatory"}
+                  {
+                    "label": "Asset Owner",
+                    "value": "asset_owner"
+                  },
+                  {
+                    "label": "Maintenance Manager",
+                    "value": "maintenance_manager"
+                  },
+                  {
+                    "label": "Inspection Department",
+                    "value": "inspection_dept"
+                  },
+                  {
+                    "label": "Process Engineer",
+                    "value": "process_engineer"
+                  },
+                  {
+                    "label": "Regulatory Compliance",
+                    "value": "regulatory"
+                  }
                 ]
               },
               {
@@ -1281,10 +1622,22 @@
                 "label": "Inspection Priority",
                 "required": true,
                 "options": [
-                  {"label": "Low", "value": "low"},
-                  {"label": "Medium", "value": "medium"},
-                  {"label": "High", "value": "high"},
-                  {"label": "Critical", "value": "critical"}
+                  {
+                    "label": "Low",
+                    "value": "low"
+                  },
+                  {
+                    "label": "Medium",
+                    "value": "medium"
+                  },
+                  {
+                    "label": "High",
+                    "value": "high"
+                  },
+                  {
+                    "label": "Critical",
+                    "value": "critical"
+                  }
                 ]
               },
               {

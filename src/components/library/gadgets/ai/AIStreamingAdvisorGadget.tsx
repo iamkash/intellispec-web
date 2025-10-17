@@ -1,6 +1,6 @@
 import { ReloadOutlined, RobotOutlined } from '@ant-design/icons';
 import { Alert, Button, Card, Spin } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { BaseGadget, GadgetMetadata, GadgetSchema, GadgetType } from '../base';
 
@@ -110,7 +110,7 @@ const AIStreamingAdvisorContent: React.FC<AIStreamingAdvisorGadgetProps> = ({ co
   const [error, setError] = useState<string | null>(null);
   const [hasLoaded, setHasLoaded] = useState(false);
 
-  const fetchDataAndStream = async () => {
+  const fetchDataAndStream = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -252,13 +252,21 @@ const AIStreamingAdvisorContent: React.FC<AIStreamingAdvisorGadgetProps> = ({ co
     } finally {
       setLoading(false);
     }
-  };
+  }, [
+    config.dataUrl,
+    config.model,
+    config.temperature,
+    config.maxTokens,
+    config.systemPrompt,
+    config.userPromptTemplate,
+    filterContext
+  ]);
 
   useEffect(() => {
     if (config.autoLoad !== false) {
       fetchDataAndStream();
     }
-  }, [config.dataUrl, filterContext]);
+  }, [config.autoLoad, fetchDataAndStream]);
 
   return (
     <Card
@@ -312,9 +320,21 @@ const AIStreamingAdvisorContent: React.FC<AIStreamingAdvisorGadgetProps> = ({ co
         }}>
           <ReactMarkdown
             components={{
-              h1: ({ node, ...props }) => <h1 style={{ fontSize: '1.5rem', fontWeight: 600, marginTop: '1rem', marginBottom: '0.5rem' }} {...props} />,
-              h2: ({ node, ...props }) => <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginTop: '1rem', marginBottom: '0.5rem' }} {...props} />,
-              h3: ({ node, ...props }) => <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginTop: '0.75rem', marginBottom: '0.5rem' }} {...props} />,
+              h1: ({ node, children, ...props }) => (
+                <h1 style={{ fontSize: '1.5rem', fontWeight: 600, marginTop: '1rem', marginBottom: '0.5rem' }} {...props}>
+                  {children}
+                </h1>
+              ),
+              h2: ({ node, children, ...props }) => (
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginTop: '1rem', marginBottom: '0.5rem' }} {...props}>
+                  {children}
+                </h2>
+              ),
+              h3: ({ node, children, ...props }) => (
+                <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginTop: '0.75rem', marginBottom: '0.5rem' }} {...props}>
+                  {children}
+                </h3>
+              ),
               p: ({ node, ...props }) => <p style={{ marginBottom: '0.75rem', lineHeight: 1.6 }} {...props} />,
               ul: ({ node, ...props }) => <ul style={{ marginLeft: '1.5rem', marginBottom: '0.75rem' }} {...props} />,
               ol: ({ node, ...props }) => <ol style={{ marginLeft: '1.5rem', marginBottom: '0.75rem' }} {...props} />,

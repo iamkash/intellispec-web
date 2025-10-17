@@ -1,0 +1,53 @@
+{
+  "id": "intelliSCAFF/projects",
+  "type": "dashboard",
+  "title": "Scaffolding Projects",
+  "description": "Central hub for managing scaffolding projects and starting new plans.",
+  "icon": "AppstoreOutlined",
+  "mode": "dashboard",
+  "layout": "grid",
+  "gadgets": [
+    {
+      "id": "projects-quicklinks-gadget",
+      "type": "action-panel-gadget",
+      "title": "Quick Links",
+      "description": "Quick navigation for common scaffolding project tasks",
+      "position": 24,
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 6,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "home",
+            "label": "Home",
+            "description": "Return to the IntelliSCAFF home dashboard",
+            "icon": "HomeOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/home"
+          },
+          {
+            "key": "new-project",
+            "label": "New Project",
+            "description": "Start planning a new scaffolding project",
+            "icon": "PlusOutlined",
+            "type": "primary",
+            "workspace": "construction/scaffolding-project-plan-wizard"
+          }
+        ]
+      }
+    }
+  ],
+  "smartDefaults": {
+    "projects-quicklinks-gadget": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": false
+    }
+  }
+}

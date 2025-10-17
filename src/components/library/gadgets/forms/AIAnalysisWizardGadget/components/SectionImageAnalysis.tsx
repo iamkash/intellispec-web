@@ -14,6 +14,7 @@ interface SectionImageAnalysisProps {
   updateSectionData: (sectionIndex: number, update: any) => void;
   gadget: any;
   triggerRerender: () => void;
+  onUpdateResponseId?: (responseId?: string | null, patch?: Partial<AIAnalysisWizardData['analysisData']>) => void;
 }
 
 export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.memo(({
@@ -22,7 +23,8 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
   wizardData,
   updateSectionData,
   gadget,
-  triggerRerender
+  triggerRerender,
+  onUpdateResponseId
 }) => {
   const section = sections[sectionIndex];
   const sectionData = React.useMemo(() => (wizardData.sections || [])[sectionIndex] || {}, [wizardData.sections, sectionIndex]);
@@ -535,7 +537,9 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
     
     try {
       if (res.responseId) {
-        (window as any).__previousResponseId = res.responseId;
+        try {
+          (window as any).__previousResponseId = res.responseId;
+        } catch {}
         gadget.updateWizardData({ analysisData: { ...((wizardData as any).analysisData || {}), previousResponseId: res.responseId } });
         triggerRerender();
       }
@@ -559,6 +563,8 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
     
     // Update both section-specific and global data
     updateSectionData(sectionIndex, { ...next, ...globalUpdate });
+
+    onUpdateResponseId?.(res.responseId || currentAnalysisData.previousResponseId, globalUpdate.analysisData);
   };
 
   // Show loading state while converting images

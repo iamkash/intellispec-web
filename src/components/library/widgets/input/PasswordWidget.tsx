@@ -7,9 +7,8 @@
  */
 
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { Input, Progress, Space, Typography, Tooltip, Alert } from 'antd';
+import { Input, Progress, Typography } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone, LockOutlined } from '@ant-design/icons';
-import { sanitizeData } from '../../../../utils/sanitizeData';
 
 const { Text } = Typography;
 const { Password } = Input;
@@ -162,38 +161,40 @@ export const PasswordWidget: React.FC<PasswordWidgetProps> = ({
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Default password requirements
-  const defaultRequirements: PasswordRequirement[] = [
-    {
-      id: 'length',
-      description: `At least ${minLength} characters`,
-      regex: new RegExp(`.{${minLength},}`),
-    },
-    {
-      id: 'uppercase',
-      description: 'At least one uppercase letter',
-      regex: /[A-Z]/,
-    },
-    {
-      id: 'lowercase',
-      description: 'At least one lowercase letter',
-      regex: /[a-z]/,
-    },
-    {
-      id: 'number',
-      description: 'At least one number',
-      regex: /[0-9]/,
-    },
-    {
-      id: 'special',
-      description: 'At least one special character',
-      regex: /[!@#$%^&*(),.?":{}|<>]/,
-    },
-  ];
-
   // Combine default and custom requirements
   const allRequirements = useMemo(() => {
-    return requirements.length > 0 ? requirements : defaultRequirements;
-  }, [requirements, defaultRequirements]);
+    if (requirements.length > 0) {
+      return requirements;
+    }
+
+    return [
+      {
+        id: 'length',
+        description: `At least ${minLength} characters`,
+        regex: new RegExp(`.{${minLength},}`),
+      },
+      {
+        id: 'uppercase',
+        description: 'At least one uppercase letter',
+        regex: /[A-Z]/,
+      },
+      {
+        id: 'lowercase',
+        description: 'At least one lowercase letter',
+        regex: /[a-z]/,
+      },
+      {
+        id: 'number',
+        description: 'At least one number',
+        regex: /[0-9]/,
+      },
+      {
+        id: 'special',
+        description: 'At least one special character',
+        regex: /[!@#$%^&*(),.?":{}|<>]/,
+      },
+    ];
+  }, [requirements, minLength]);
 
   // Calculate password strength
   const calculateStrength = useCallback((password: string): { strength: PasswordStrength; score: number } => {
@@ -288,6 +289,17 @@ export const PasswordWidget: React.FC<PasswordWidgetProps> = ({
     setIsVisible(visible);
     onVisibilityChange?.(visible);
   }, [onVisibilityChange]);
+
+  const visibilityToggleConfig = useMemo(() => {
+    if (!visibilityToggle) {
+      return false;
+    }
+
+    return {
+      visible: isVisible,
+      onVisibleChange: handleVisibilityChange,
+    } as const;
+  }, [visibilityToggle, isVisible, handleVisibilityChange]);
 
   // Handle paste prevention
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -415,7 +427,7 @@ export const PasswordWidget: React.FC<PasswordWidgetProps> = ({
         addonAfter={addonAfter}
         prefix={prefix || <LockOutlined />}
         suffix={suffix}
-        visibilityToggle={visibilityToggle}
+        visibilityToggle={visibilityToggleConfig}
         iconRender={customIconRender}
         autoComplete={autoComplete}
         onChange={handleChange}

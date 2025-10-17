@@ -1,5 +1,5 @@
 {
-  "id": "intelliINSPECT-home",
+  "id": "intelliINSPECT/home",
   "type": "dashboard",
   "title": "intelliINSPECT Home",
   "description": "Welcome to intelliINSPECT - Advanced intelligent inspection platform",
@@ -29,7 +29,11 @@
             "type": "workspace",
             "workspace": "intelliINSPECT/inspection-plan/dashboard",
             "category": "dashboard",
-            "tags": ["ai", "planning", "dashboard"]
+            "tags": [
+              "ai",
+              "planning",
+              "dashboard"
+            ]
           },
           {
             "id": "asset-management-dashboard",
@@ -39,7 +43,11 @@
             "type": "workspace",
             "workspace": "asset-manager/asset-management",
             "category": "assets",
-            "tags": ["assets", "hierarchy", "management"]
+            "tags": [
+              "assets",
+              "hierarchy",
+              "management"
+            ]
           },
           {
             "id": "inspections-list",
@@ -49,7 +57,11 @@
             "type": "workspace",
             "workspace": "intelliINSPECT/inspections",
             "category": "inspections",
-            "tags": ["inspections", "list", "manage"]
+            "tags": [
+              "inspections",
+              "list",
+              "manage"
+            ]
           },
           {
             "id": "calculators-dashboard",
@@ -59,7 +71,11 @@
             "type": "workspace",
             "workspace": "intelliINSPECT/calculators",
             "category": "tools",
-            "tags": ["calculators", "tools", "engineering"]
+            "tags": [
+              "calculators",
+              "tools",
+              "engineering"
+            ]
           }
         ]
       }

@@ -99,7 +99,7 @@ export const MentionWidget: React.FC<MentionWidgetProps> = ({
     }
 
     onChange?.(newValue);
-  }, [value, validator, onChange]);
+  }, [validator, onChange]);
 
   const finalErrorMessage = validationError || errorMessage;
 

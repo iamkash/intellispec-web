@@ -15,6 +15,7 @@ interface GridSectionProps {
   updateSectionData: (sectionIndex: number, update: any) => void;
   openAI: any;
   config: AIAnalysisWizardConfig;
+  onUpdateResponseId?: (responseId?: string | null, patch?: Partial<AIAnalysisWizardData['analysisData']>) => void;
 }
 
 export const GridSection: React.FC<GridSectionProps> = ({
@@ -25,7 +26,8 @@ export const GridSection: React.FC<GridSectionProps> = ({
   data,
   updateSectionData,
   openAI,
-  config
+  config,
+  onUpdateResponseId
 }) => {
   const [populateLoading, setPopulateLoading] = useState(false);
   const handlePopulateRef = useRef<(() => Promise<void>) | null>(null);
@@ -113,7 +115,9 @@ export const GridSection: React.FC<GridSectionProps> = ({
         context: {
           selected_recommendations_json: selectedRecommendations,
           schema_fields_json: schemaFields,
-          fill_unknown_with: 'N/A'
+          fill_unknown_with: 'N/A',
+          image_analysis_overview: imageOverview,
+          transcript_text: transcript
         }
       });
       
@@ -126,7 +130,7 @@ export const GridSection: React.FC<GridSectionProps> = ({
           maxCompletionTokens: Math.max(((deep?.modelConfig as any)?.maxCompletionTokens ?? 0), 2500)
         },
         promptConfig: { systemPrompt: deep?.promptConfig?.systemPrompt || '', userPrompt: '{text}' },
-        responseFormat: 'json' as const,
+        responseFormat: 'text' as const,
         store: true,
         previousResponseId: typeof prevId === 'string' ? prevId : undefined,
         reasoningEffort: 'low' as const
@@ -190,12 +194,19 @@ export const GridSection: React.FC<GridSectionProps> = ({
           [gridCfg.dataKey]: rowsMapped 
         } 
       });
+
+      if (response.responseId) {
+        try {
+          (window as any).__previousResponseId = response.responseId;
+        } catch {}
+        onUpdateResponseId?.(response.responseId);
+      }
       message.success(`Populated ${rowsMapped.length} row(s)`);
     } catch (error) {
       console.error('Error populating grid:', error);
       message.error('Failed to populate grid');
     }
-  }, [hasGrid, gridCfg, wizardData, sections, config, openAI, sectionIndex, data, updateSectionData]);
+  }, [hasGrid, gridCfg, wizardData, sections, config, openAI, sectionIndex, data, updateSectionData, onUpdateResponseId]);
   
   // Assign handlePopulate to ref for auto-populate access
   handlePopulateRef.current = handlePopulate;
@@ -245,7 +256,7 @@ export const GridSection: React.FC<GridSectionProps> = ({
     return () => {
       window.removeEventListener('wizard-auto-populate', handleAutoPopulate as EventListener);
     };
-  }, [sectionIndex, section.id, section.title, hasGrid, gridCfg?.promptRef, gridCfg?.populate?.promptRef]);
+  }, [sectionIndex, section, hasGrid, gridCfg]);
   
   if (!hasGrid) {
     return null;

@@ -5,18 +5,7 @@
  * for tenant management system.
  */
 
-import mongoose, { Schema, Document } from 'mongoose';
-import { 
-  Organization, 
-  Tenant, 
-  TenantEntitlements, 
-  Subscription, 
-  User, 
-  Membership,
-  Module,
-  EntitlementsHistory,
-  SubscriptionHistory
-} from './models';
+import mongoose, { Schema } from 'mongoose';
 
 // Organization Schema
 const organizationSchema = new Schema({

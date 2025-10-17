@@ -5,8 +5,6 @@
  * the application's licensable components and navigation structure.
  */
 
-import type { MenuProps } from 'antd';
-
 export interface Module {
   id: string;
   label: string;

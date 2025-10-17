@@ -591,6 +591,41 @@ export const DOCUMENT_FIELD_MAPPINGS: Record<string, {
       // Section completion
       completed_sections: 'completedSections'
     }
+  },
+  wizard: {
+    validFields: [
+      'type',
+      'workspaceId',
+      'status',
+      'progress',
+      'identity.domain',
+      'identity.domainSubType',
+      'identity.domainLabel',
+      'identity.domainSubTypeLabel',
+      'recordContext.inspection.date',
+      'recordContext.company.id',
+      'recordContext.site.id',
+      'recordContext.assetGroup.id',
+      'recordContext.asset.id',
+      'recordContext.inspection.inspectorName'
+    ],
+    filterMappings: {
+      document_type: 'type',
+      workspace_id: 'workspaceId',
+      status: 'status',
+      progress_min: 'progress',
+      progress_max: 'progress',
+      domain: 'identity.domain',
+      inspection_type: 'identity.domainSubType',
+      domain_label: 'identity.domainLabel',
+      inspection_type_label: 'identity.domainSubTypeLabel',
+      date_range: 'recordContext.inspection.date',
+      company_id: 'recordContext.company.id',
+      site_id: 'recordContext.site.id',
+      asset_group_id: 'recordContext.assetGroup.id',
+      asset_id: 'recordContext.asset.id',
+      inspector: 'recordContext.inspection.inspectorName'
+    }
   }
 };
 

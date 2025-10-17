@@ -1,5 +1,5 @@
 {
-  "id": "voc-charts-test",
+  "id": "compliance-manager/voc-charts-test",
   "title": "VOC Charts Test",
   "name": "VOC Charts Test",
   "description": "Simple test workspace for chart gadgets",
@@ -21,7 +21,11 @@
         "id": "date_range",
         "type": "daterange",
         "label": "Date Range",
-        "presets": ["MTD", "QTD", "YTD"]
+        "presets": [
+          "MTD",
+          "QTD",
+          "YTD"
+        ]
       }
     ]
   },
@@ -46,7 +50,11 @@
             "id": "date_range",
             "type": "daterange",
             "label": "Date Range",
-            "presets": ["MTD", "QTD", "YTD"]
+            "presets": [
+              "MTD",
+              "QTD",
+              "YTD"
+            ]
           }
         ],
         "filterLayout": "horizontal",
@@ -122,7 +130,12 @@
                 "dataKey": "total_gallons",
                 "color": "hsl(var(--chart-1))",
                 "itemStyle": {
-                  "borderRadius": [4, 4, 0, 0]
+                  "borderRadius": [
+                    4,
+                    4,
+                    0,
+                    0
+                  ]
                 }
               }
             ]

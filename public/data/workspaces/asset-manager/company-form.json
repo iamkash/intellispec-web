@@ -1,5 +1,5 @@
 {
-  "id": "company-form-workspace",
+  "id": "asset-manager/company-form",
   "title": "Company Management",
   "description": "Enterprise-grade company/organization management with comprehensive details",
   "layout": "dashboard",
@@ -152,11 +152,26 @@
             "order": 6,
             "defaultValue": "USD",
             "options": [
-              { "value": "USD", "label": "USD - US Dollar" },
-              { "value": "EUR", "label": "EUR - Euro" },
-              { "value": "GBP", "label": "GBP - British Pound" },
-              { "value": "CAD", "label": "CAD - Canadian Dollar" },
-              { "value": "JPY", "label": "JPY - Japanese Yen" }
+              {
+                "value": "USD",
+                "label": "USD - US Dollar"
+              },
+              {
+                "value": "EUR",
+                "label": "EUR - Euro"
+              },
+              {
+                "value": "GBP",
+                "label": "GBP - British Pound"
+              },
+              {
+                "value": "CAD",
+                "label": "CAD - Canadian Dollar"
+              },
+              {
+                "value": "JPY",
+                "label": "JPY - Japanese Yen"
+              }
             ]
           },
           {
@@ -244,12 +259,30 @@
             "size": 12,
             "order": 4,
             "options": [
-              { "value": "corporation", "label": "Corporation" },
-              { "value": "llc", "label": "LLC" },
-              { "value": "partnership", "label": "Partnership" },
-              { "value": "sole_proprietor", "label": "Sole Proprietor" },
-              { "value": "government", "label": "Government Entity" },
-              { "value": "non_profit", "label": "Non-Profit" }
+              {
+                "value": "corporation",
+                "label": "Corporation"
+              },
+              {
+                "value": "llc",
+                "label": "LLC"
+              },
+              {
+                "value": "partnership",
+                "label": "Partnership"
+              },
+              {
+                "value": "sole_proprietor",
+                "label": "Sole Proprietor"
+              },
+              {
+                "value": "government",
+                "label": "Government Entity"
+              },
+              {
+                "value": "non_profit",
+                "label": "Non-Profit"
+              }
             ]
           },
           {
@@ -499,11 +532,26 @@
             "size": 6,
             "order": 4,
             "options": [
-              { "value": "NYSE", "label": "NYSE" },
-              { "value": "NASDAQ", "label": "NASDAQ" },
-              { "value": "LSE", "label": "LSE" },
-              { "value": "TSX", "label": "TSX" },
-              { "value": "private", "label": "Private" }
+              {
+                "value": "NYSE",
+                "label": "NYSE"
+              },
+              {
+                "value": "NASDAQ",
+                "label": "NASDAQ"
+              },
+              {
+                "value": "LSE",
+                "label": "LSE"
+              },
+              {
+                "value": "TSX",
+                "label": "TSX"
+              },
+              {
+                "value": "private",
+                "label": "Private"
+              }
             ]
           },
           {
@@ -543,16 +591,46 @@
             "size": 8,
             "order": 7,
             "options": [
-              { "value": "AAA", "label": "AAA" },
-              { "value": "AA", "label": "AA" },
-              { "value": "A", "label": "A" },
-              { "value": "BBB", "label": "BBB" },
-              { "value": "BB", "label": "BB" },
-              { "value": "B", "label": "B" },
-              { "value": "CCC", "label": "CCC" },
-              { "value": "CC", "label": "CC" },
-              { "value": "C", "label": "C" },
-              { "value": "D", "label": "D" }
+              {
+                "value": "AAA",
+                "label": "AAA"
+              },
+              {
+                "value": "AA",
+                "label": "AA"
+              },
+              {
+                "value": "A",
+                "label": "A"
+              },
+              {
+                "value": "BBB",
+                "label": "BBB"
+              },
+              {
+                "value": "BB",
+                "label": "BB"
+              },
+              {
+                "value": "B",
+                "label": "B"
+              },
+              {
+                "value": "CCC",
+                "label": "CCC"
+              },
+              {
+                "value": "CC",
+                "label": "CC"
+              },
+              {
+                "value": "C",
+                "label": "C"
+              },
+              {
+                "value": "D",
+                "label": "D"
+              }
             ]
           },
           {

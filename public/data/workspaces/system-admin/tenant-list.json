@@ -1,5 +1,5 @@
 {
-  "id": "tenant-list",
+  "id": "system-admin/tenant-list",
   "title": "Tenant Management",
   "description": "Comprehensive tenant management with full CRUD operations, status management, and detailed views",
   "layout": "dashboard",
@@ -140,9 +140,21 @@
               "type": "select",
               "required": true,
               "options": [
-                { "value": "active", "label": "Active", "color": "green" },
-                { "value": "suspended", "label": "Suspended", "color": "red" },
-                { "value": "archived", "label": "Archived", "color": "gray" }
+                {
+                  "value": "active",
+                  "label": "Active",
+                  "color": "green"
+                },
+                {
+                  "value": "suspended",
+                  "label": "Suspended",
+                  "color": "red"
+                },
+                {
+                  "value": "archived",
+                  "label": "Archived",
+                  "color": "gray"
+                }
               ]
             }
           },
@@ -155,11 +167,31 @@
               "type": "select",
               "required": false,
               "options": [
-                { "value": "trialing", "label": "Trialing", "color": "blue" },
-                { "value": "active", "label": "Active", "color": "green" },
-                { "value": "grace", "label": "Grace", "color": "orange" },
-                { "value": "expired", "label": "Expired", "color": "red" },
-                { "value": "suspended", "label": "Suspended", "color": "red" }
+                {
+                  "value": "trialing",
+                  "label": "Trialing",
+                  "color": "blue"
+                },
+                {
+                  "value": "active",
+                  "label": "Active",
+                  "color": "green"
+                },
+                {
+                  "value": "grace",
+                  "label": "Grace",
+                  "color": "orange"
+                },
+                {
+                  "value": "expired",
+                  "label": "Expired",
+                  "color": "red"
+                },
+                {
+                  "value": "suspended",
+                  "label": "Suspended",
+                  "color": "red"
+                }
               ]
             }
           },
@@ -244,7 +276,10 @@
             },
             "showWhen": {
               "field": "status",
-              "values": ["suspended", "inactive"]
+              "values": [
+                "suspended",
+                "inactive"
+              ]
             }
           },
           {
@@ -264,7 +299,9 @@
             },
             "showWhen": {
               "field": "status",
-              "values": ["active"]
+              "values": [
+                "active"
+              ]
             }
           },
           {
@@ -284,7 +321,10 @@
             },
             "showWhen": {
               "field": "status",
-              "values": ["active", "suspended"]
+              "values": [
+                "active",
+                "suspended"
+              ]
             }
           }
         ],
@@ -296,9 +336,18 @@
               "label": "Status",
               "type": "select",
               "options": [
-                { "value": "active", "label": "Active" },
-                { "value": "suspended", "label": "Suspended" },
-                { "value": "archived", "label": "Archived" }
+                {
+                  "value": "active",
+                  "label": "Active"
+                },
+                {
+                  "value": "suspended",
+                  "label": "Suspended"
+                },
+                {
+                  "value": "archived",
+                  "label": "Archived"
+                }
               ]
             },
             {
@@ -306,11 +355,26 @@
               "label": "Lifecycle",
               "type": "select",
               "options": [
-                { "value": "trialing", "label": "Trialing" },
-                { "value": "active", "label": "Active" },
-                { "value": "grace", "label": "Grace Period" },
-                { "value": "expired", "label": "Expired" },
-                { "value": "suspended", "label": "Suspended" }
+                {
+                  "value": "trialing",
+                  "label": "Trialing"
+                },
+                {
+                  "value": "active",
+                  "label": "Active"
+                },
+                {
+                  "value": "grace",
+                  "label": "Grace Period"
+                },
+                {
+                  "value": "expired",
+                  "label": "Expired"
+                },
+                {
+                  "value": "suspended",
+                  "label": "Suspended"
+                }
               ]
             },
             {
@@ -329,8 +393,7 @@
         "toolbar": {
           "enableCreate": false
         }
-      },
-      "position": 24
+      }
     }
   ],
   "settings": {
@@ -348,7 +411,12 @@
   "metadata": {
     "created": "2025-01-24T04:35:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "tenant", "management", "crud"],
+    "tags": [
+      "admin",
+      "tenant",
+      "management",
+      "crud"
+    ],
     "description": "Dedicated workspace for comprehensive tenant management operations",
     "features": [
       "Full tenant CRUD operations",
@@ -358,7 +426,9 @@
       "Navigation to detailed views"
     ],
     "permissions": {
-      "required": ["super_admin"],
+      "required": [
+        "super_admin"
+      ],
       "actions": [
         "tenant:create",
         "tenant:read",

@@ -29,49 +29,55 @@ async function cleanBase64Images() {
       let inspectionBase64Removed = 0;
       
       if (inspection.wizardState?.sections && Array.isArray(inspection.wizardState.sections)) {
-        inspection.wizardState.sections.forEach((section, index) => {
+        for (const section of inspection.wizardState.sections) {
           if (section?.images && Array.isArray(section.images)) {
             const originalCount = section.images.length;
             
             // Remove any images that contain base64 data
-            section.images = section.images.filter(img => {
+            const cleanedImages = [];
+            for (const img of section.images) {
               const isBase64 = img.url && (img.url.startsWith('data:') || img.url.includes('base64'));
               if (isBase64) {
                 inspectionBase64Removed++;
                 totalBase64Removed++;
                 needsUpdate = true;
+              } else {
+                cleanedImages.push(img);
               }
-              return !isBase64; // Keep only non-base64 images
-            });
+            }
+            section.images = cleanedImages;
             
             if (originalCount !== section.images.length) {
               console.log(`🧹 Cleaned section ${section.id}: removed ${originalCount - section.images.length} base64 images`);
             }
           }
-        });
+        }
       }
       
       // Also clean sections array if it exists
       if (inspection.sections && Array.isArray(inspection.sections)) {
-        inspection.sections.forEach((section, index) => {
+        for (const section of inspection.sections) {
           if (section?.images && Array.isArray(section.images)) {
             const originalCount = section.images.length;
             
-            section.images = section.images.filter(img => {
+            const cleanedImages = [];
+            for (const img of section.images) {
               const isBase64 = img.url && (img.url.startsWith('data:') || img.url.includes('base64'));
               if (isBase64) {
                 inspectionBase64Removed++;
                 totalBase64Removed++;
                 needsUpdate = true;
+              } else {
+                cleanedImages.push(img);
               }
-              return !isBase64;
-            });
+            }
+            section.images = cleanedImages;
             
             if (originalCount !== section.images.length) {
               console.log(`🧹 Cleaned main section ${section.id}: removed ${originalCount - section.images.length} base64 images`);
             }
           }
-        });
+        }
       }
       
       if (needsUpdate) {

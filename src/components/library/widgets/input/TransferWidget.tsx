@@ -2,7 +2,7 @@
  * Transfer Widget - Move items between lists
  */
 
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Transfer, Typography, Space } from 'antd';
 
 const { Text } = Typography;
@@ -92,7 +92,7 @@ export const TransferWidget: React.FC<TransferWidgetProps> = ({
     }
 
     onChange?.(newTargetKeys, direction, moveKeys);
-  }, [targetKeys, validator, onChange]);
+  }, [validator, onChange]);
 
   const handleSelectChange = useCallback((sourceSelectedKeys: string[], targetSelectedKeys: string[]) => {
     // Always update internal state immediately for visual feedback

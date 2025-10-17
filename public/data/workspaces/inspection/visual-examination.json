@@ -29,11 +29,26 @@
     "sectionId": "visual-examination",
     "groupId": "general-condition-group",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -47,12 +62,30 @@
     "sectionId": "visual-examination",
     "groupId": "general-condition-group",
     "options": [
-      {"label": "Clean", "value": "clean"},
-      {"label": "Light Coating", "value": "light-coating"},
-      {"label": "Heavy Coating", "value": "heavy-coating"},
-      {"label": "Corroded", "value": "corroded"},
-      {"label": "Pitted", "value": "pitted"},
-      {"label": "Scratched", "value": "scratched"}
+      {
+        "label": "Clean",
+        "value": "clean"
+      },
+      {
+        "label": "Light Coating",
+        "value": "light-coating"
+      },
+      {
+        "label": "Heavy Coating",
+        "value": "heavy-coating"
+      },
+      {
+        "label": "Corroded",
+        "value": "corroded"
+      },
+      {
+        "label": "Pitted",
+        "value": "pitted"
+      },
+      {
+        "label": "Scratched",
+        "value": "scratched"
+      }
     ]
   },
   {
@@ -67,10 +100,22 @@
     "sectionId": "visual-examination",
     "groupId": "general-condition-group",
     "options": [
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "None", "value": "none"}
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "None",
+        "value": "none"
+      }
     ]
   },
   {
@@ -107,10 +152,22 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Completed", "value": "completed"},
-      {"label": "In Progress", "value": "in-progress"},
-      {"label": "Not Started", "value": "not-started"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Completed",
+        "value": "completed"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      },
+      {
+        "label": "Not Started",
+        "value": "not-started"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -125,11 +182,26 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -144,10 +216,22 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Completed", "value": "completed"},
-      {"label": "In Progress", "value": "in-progress"},
-      {"label": "Not Started", "value": "not-started"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Completed",
+        "value": "completed"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      },
+      {
+        "label": "Not Started",
+        "value": "not-started"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -162,11 +246,26 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -181,10 +280,22 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Completed", "value": "completed"},
-      {"label": "In Progress", "value": "in-progress"},
-      {"label": "Not Started", "value": "not-started"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Completed",
+        "value": "completed"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      },
+      {
+        "label": "Not Started",
+        "value": "not-started"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -199,11 +310,26 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -218,10 +344,22 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Completed", "value": "completed"},
-      {"label": "In Progress", "value": "in-progress"},
-      {"label": "Not Started", "value": "not-started"},
-      {"label": "Not Required", "value": "not-required"}
+      {
+        "label": "Completed",
+        "value": "completed"
+      },
+      {
+        "label": "In Progress",
+        "value": "in-progress"
+      },
+      {
+        "label": "Not Started",
+        "value": "not-started"
+      },
+      {
+        "label": "Not Required",
+        "value": "not-required"
+      }
     ]
   },
   {
@@ -236,11 +374,26 @@
     "sectionId": "visual-examination",
     "groupId": "component-inspection-group",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -265,9 +418,18 @@
     "sectionId": "visual-examination",
     "groupId": "anomaly-documentation-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Minor", "value": "minor"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Minor",
+        "value": "minor"
+      }
     ]
   },
   {
@@ -281,15 +443,42 @@
     "sectionId": "visual-examination",
     "groupId": "anomaly-documentation-group",
     "options": [
-      {"label": "Corrosion", "value": "corrosion"},
-      {"label": "Cracking", "value": "cracking"},
-      {"label": "Erosion", "value": "erosion"},
-      {"label": "Dents", "value": "dents"},
-      {"label": "Bulges", "value": "bulges"},
-      {"label": "Weld Defects", "value": "weld-defects"},
-      {"label": "Coating Failure", "value": "coating-failure"},
-      {"label": "Leaks", "value": "leaks"},
-      {"label": "Other", "value": "other"}
+      {
+        "label": "Corrosion",
+        "value": "corrosion"
+      },
+      {
+        "label": "Cracking",
+        "value": "cracking"
+      },
+      {
+        "label": "Erosion",
+        "value": "erosion"
+      },
+      {
+        "label": "Dents",
+        "value": "dents"
+      },
+      {
+        "label": "Bulges",
+        "value": "bulges"
+      },
+      {
+        "label": "Weld Defects",
+        "value": "weld-defects"
+      },
+      {
+        "label": "Coating Failure",
+        "value": "coating-failure"
+      },
+      {
+        "label": "Leaks",
+        "value": "leaks"
+      },
+      {
+        "label": "Other",
+        "value": "other"
+      }
     ]
   },
   {
@@ -344,9 +533,18 @@
     "sectionId": "visual-examination",
     "groupId": "photographic-documentation-group",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"},
-      {"label": "Partial", "value": "partial"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      },
+      {
+        "label": "Partial",
+        "value": "partial"
+      }
     ]
   },
   {
@@ -360,13 +558,34 @@
     "sectionId": "visual-examination",
     "groupId": "photographic-documentation-group",
     "options": [
-      {"label": "Overall Vessel Views", "value": "overall-views"},
-      {"label": "Component Close-ups", "value": "component-closeups"},
-      {"label": "Anomaly Documentation", "value": "anomaly-docs"},
-      {"label": "Surface Condition", "value": "surface-condition"},
-      {"label": "Coating Condition", "value": "coating-condition"},
-      {"label": "Access Points", "value": "access-points"},
-      {"label": "Environmental Conditions", "value": "environmental"}
+      {
+        "label": "Overall Vessel Views",
+        "value": "overall-views"
+      },
+      {
+        "label": "Component Close-ups",
+        "value": "component-closeups"
+      },
+      {
+        "label": "Anomaly Documentation",
+        "value": "anomaly-docs"
+      },
+      {
+        "label": "Surface Condition",
+        "value": "surface-condition"
+      },
+      {
+        "label": "Coating Condition",
+        "value": "coating-condition"
+      },
+      {
+        "label": "Access Points",
+        "value": "access-points"
+      },
+      {
+        "label": "Environmental Conditions",
+        "value": "environmental"
+      }
     ]
   },
   {
@@ -397,4 +616,4 @@
     "sectionId": "visual-examination",
     "groupId": "photographic-documentation-group"
   }
-] 
+]

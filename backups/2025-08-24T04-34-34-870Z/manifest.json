@@ -1,0 +1,24 @@
+{
+  "collections": [
+    {
+      "file": "referenceListTypes.json",
+      "collection": "referenceListTypes",
+      "truncate": true
+    },
+    {
+      "file": "referenceListOptions.json",
+      "collection": "referenceListOptions",
+      "truncate": true
+    },
+    {
+      "file": "roles.json",
+      "collection": "roles",
+      "truncate": true
+    },
+    {
+      "file": "modules.json",
+      "collection": "modules",
+      "truncate": true
+    }
+  ]
+}

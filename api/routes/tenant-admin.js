@@ -106,7 +106,6 @@ const TenantEntitlementsModel = getOrCreateModel('TenantEntitlements', new mongo
 
 async function registerTenantAdminRoutes(fastify) {
   const { verifyPlatformAdmin } = require('../middleware/platform-admin');
-  const AuditTrail = require('../core/AuditTrail');
   const RequestContextManager = require('../core/RequestContext');
   
   // Use framework's platform admin middleware
@@ -122,19 +121,6 @@ async function registerTenantAdminRoutes(fastify) {
       changes: { before, after },
       reason
     });
-  };
-
-  const generateDiffSummary = (before, after) => {
-    if (!before) return 'Created new record';
-    
-    const changes = [];
-    Object.keys(after).forEach(key => {
-      if (before[key] !== after[key]) {
-        changes.push(`${key}: ${before[key]} → ${after[key]}`);
-      }
-    });
-    
-    return changes.length > 0 ? changes.join(', ') : 'No changes detected';
   };
 
   // ==================== TENANT ROUTES ====================
@@ -370,10 +356,17 @@ async function registerTenantAdminRoutes(fastify) {
         await createAuditEntry('subscription_created', tenantId, 'super_admin', null, subscription);
       }
 
-      // TODO: Send invitation email if sendInvite is true
+      const invitationRequested = Boolean(sendInvite);
+      const invitationStatus = invitationRequested ? 'pending' : 'skipped';
+
+      // TODO: Send invitation email if invitationRequested is true
 
       return reply.code(201).send({
         message: 'Tenant created successfully',
+        invitation: {
+          requested: invitationRequested,
+          status: invitationStatus
+        },
         tenant: {
           ...tenant.toObject(),
           entitlements,
@@ -406,7 +399,6 @@ async function registerTenantAdminRoutes(fastify) {
       ]);
 
       // Fetch users for memberships (userId is stored as string, not reference)
-      let tenantAdmin = null;
       let adminData = null;
       let adminDisplayName = null;
       let adminDisplayEmail = null;
@@ -427,7 +419,6 @@ async function registerTenantAdminRoutes(fastify) {
         if (adminMembership) {
           const adminUser = users.find(u => u.id === adminMembership.userId);
           if (adminUser) {
-            tenantAdmin = adminUser;
             adminData = {
               createNew: 'existing',
               existingUserId: adminUser.id,
@@ -592,7 +583,7 @@ async function registerTenantAdminRoutes(fastify) {
   // GET /api/admin/memberships
   fastify.get('/memberships', { preHandler: requireSuperAdmin }, async (request, reply) => {
     try {
-      const { page = 1, limit = 15, tenant, role, status } = request.query;
+      const { page = 1, limit = 15, tenant, role } = request.query;
 
       const filter = {};
       if (tenant) filter.tenantId = tenant;

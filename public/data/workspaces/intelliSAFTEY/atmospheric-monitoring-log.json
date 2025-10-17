@@ -1,13 +1,13 @@
 {
-  "id": "confined-space-rescue-briefing",
-  "title": "Confined Space Rescue Briefing",
-  "description": "Assemble a concise pre\u2011entry briefing from notes and image analysis.",
+  "id": "intelliSAFTEY/atmospheric-monitoring-log",
+  "title": "Atmospheric Monitoring Log",
+  "description": "Log atmospheric readings over time; AI can build initial plan and hazards.",
   "gadgets": [
     {
-      "id": "confined-space-rescue-briefing-gadget",
+      "id": "atmospheric-monitoring-log-gadget",
       "type": "ai-analysis-wizard-gadget",
-      "title": "Rescue Briefing",
-      "description": "Voice/text notes, image analysis, team and steps, export PDF.",
+      "title": "Atmospheric Monitoring Log",
+      "description": "Voice/text notes, optional image analysis, tabular readings, and PDF.",
       "config": {
         "sections": [
           {
@@ -36,21 +36,21 @@
             }
           },
           {
-            "id": "team",
-            "title": "Team Assignments",
+            "id": "monitoring_plan",
+            "title": "Monitoring Plan",
             "includeInPdf": true,
             "grid": {
-              "title": "Team",
-              "dataKey": "team",
+              "title": "Plan Items",
+              "dataKey": "planItems",
               "columns": [
                 {
-                  "key": "role",
-                  "title": "Role",
+                  "key": "location",
+                  "title": "Location",
                   "editable": true
                 },
                 {
-                  "key": "name",
-                  "title": "Name",
+                  "key": "interval",
+                  "title": "Interval (min)",
                   "editable": true
                 },
                 {
@@ -59,36 +59,49 @@
                   "editable": true
                 }
               ],
-              "promptRef": "personnelPopulate",
+              "promptRef": "planPopulate",
               "btnLabel": "Populate from AI"
             }
           },
           {
-            "id": "brief_steps",
-            "title": "Briefing Steps",
+            "id": "readings",
+            "title": "Atmospheric Readings",
             "includeInPdf": true,
             "grid": {
-              "title": "Steps",
-              "dataKey": "steps",
+              "title": "Readings",
+              "dataKey": "readings",
               "columns": [
                 {
-                  "key": "stepNo",
-                  "title": "#",
+                  "key": "timestamp",
+                  "title": "Timestamp",
                   "editable": true
                 },
                 {
-                  "key": "step",
-                  "title": "Step",
+                  "key": "o2",
+                  "title": "%O2",
                   "editable": true
                 },
                 {
-                  "key": "actions",
-                  "title": "Actions",
+                  "key": "lel",
+                  "title": "%LEL",
+                  "editable": true
+                },
+                {
+                  "key": "h2s",
+                  "title": "H2S (ppm)",
+                  "editable": true
+                },
+                {
+                  "key": "co",
+                  "title": "CO (ppm)",
+                  "editable": true
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
                   "editable": true
                 }
-              ],
-              "promptRef": "actionPlanPopulate",
-              "btnLabel": "Populate from AI"
+              ]
             }
           },
           {
@@ -145,7 +158,7 @@
               139
             ],
             "fontSize": 6,
-            "leftText": "Rescue Briefing",
+            "leftText": "Atmospheric Log",
             "centerText": "Confidential",
             "rightText": "Page {page} of {pages}"
           },
@@ -178,31 +191,22 @@
           "deepImageAnalysis": {
             "modelConfig": {
               "model": "gpt-5-nano",
-              "max_completion_tokens": 1200
-            },
-            "promptConfig": {
-              "systemPrompt": "Analyze images for briefing-relevant risks and positioning. Output JSON only.",
-              "userPrompt": "JSON only"
-            }
-          },
-          "personnelPopulate": {
-            "modelConfig": {
-              "model": "gpt-5-nano",
-              "max_completion_tokens": 800
-            },
-            "promptConfig": {
-              "systemPrompt": "Assemble realistic team roles and names from context. JSON only.",
-              "userPrompt": "Transcript:\n{{transcript}}\n\nReturn { team: [ { role, name, notes } ] } or just an array. JSON only."
-            }
-          },
-          "actionPlanPopulate": {
-            "modelConfig": {
-              "model": "gpt-5-nano",
               "max_completion_tokens": 1000
             },
             "promptConfig": {
-              "systemPrompt": "Derive concise briefing steps. JSON array only.",
-              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"stepNo\": \"string|number\", \"step\": \"string\", \"actions\": \"string\" } ]"
+              "systemPrompt": "Analyze images for hazards affecting monitoring. Output JSON only.",
+              "userPrompt": "JSON only"
+            }
+          },
+          "planPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "max_completion_tokens": 800,
+              "temperature": 0.3
+            },
+            "promptConfig": {
+              "systemPrompt": "ROLE: Draft a monitoring plan (locations, interval, notes) from transcript and overview. FORMAT: JSON array rows.",
+              "userPrompt": "Transcript:\n{{transcript}}\n\nImage Overview:\n{{image_overview}}\n\nReturn array: [ { \"location\": \"string\", \"interval\": \"string|number\", \"notes\": \"string\" } ]"
             }
           }
         },
@@ -228,32 +232,82 @@
           "responseSelector": "data.0"
         },
         "domainConfig": {
-          "payloadType": "inspection",
-          "defaultType": "general_inspection",
+          "payloadType": "safety",
+          "defaultType": "atmospheric_monitoring_log",
           "fields": {
-            "type": "inspection_type",
-            "detectedType": "detected_equipment_type",
-            "id": "equipment_id",
-            "name": "assetName",
-            "owner": "inspector_name",
-            "date": "inspection_date"
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
           },
           "outputKeys": {
-            "id": "equipmentId",
-            "type": "equipmentType",
-            "owner": "inspectorName",
-            "date": "inspectionDate"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
           },
           "payloadKeys": {
-            "type": "inspectionType"
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
           },
           "navigation": {
-            "listingSuffix": "inspections",
+            "listingSuffix": "responses",
             "homeSuffix": "home"
+          },
+          "typeMap": {
+            "atmospheric_monitoring_log": "Atmospheric Monitoring Log"
+          }
+        },
+        "type": "safety",
+        "documentType": "atmospheric_monitoring_log",
+        "label": "Atmospheric Monitoring Log",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "atmospheric_monitoring_log",
+          "domainSubTypeLabel": "Atmospheric Monitoring Log"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },
       "position": 24
     }
-  ]
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
 }

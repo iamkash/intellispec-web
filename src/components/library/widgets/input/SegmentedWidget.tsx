@@ -7,7 +7,7 @@
  */
 
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
-import { Segmented, Space, Typography, Tooltip } from 'antd';
+import { Segmented, Space, Tooltip } from 'antd';
 import { sanitizeData } from '../../../../utils/sanitizeData';
 
 // Theme-aware styles
@@ -30,8 +30,6 @@ const themeStyles = {
     color: 'var(--segmented-text)',
   } as React.CSSProperties,
 };
-
-const { Text } = Typography;
 
 // Segmented option interface
 export interface SegmentedOption {

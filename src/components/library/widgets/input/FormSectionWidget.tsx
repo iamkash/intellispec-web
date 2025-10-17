@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useCallback } from 'react';
-import { Card, Typography, Space, Button, Divider } from 'antd';
+import { Card, Typography, Space } from 'antd';
 import { DownOutlined, RightOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;

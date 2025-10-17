@@ -1,5 +1,5 @@
 {
-  "id": "tenant-creation-wizard",
+  "id": "system-admin/tenant-creation-wizard",
   "title": "New Tenant Creation Wizard",
   "description": "4-step wizard to create a new tenant with entitlements, subscription, and first user",
   "layout": "wizard",
@@ -58,8 +58,16 @@
                 "required": true,
                 "defaultValue": "active",
                 "options": [
-                  { "value": "active", "label": "Active", "color": "green" },
-                  { "value": "suspended", "label": "Suspended", "color": "red" }
+                  {
+                    "value": "active",
+                    "label": "Active",
+                    "color": "green"
+                  },
+                  {
+                    "value": "suspended",
+                    "label": "Suspended",
+                    "color": "red"
+                  }
                 ]
               },
               {
@@ -95,11 +103,15 @@
                 "type": "checkbox-group",
                 "required": true,
                 "optionsUrl": "/api/admin/modules?status=active&format=options",
-                "defaultValue": ["system"],
+                "defaultValue": [
+                  "system"
+                ],
                 "help": "System Administration is always included and cannot be removed",
                 "layout": "grid",
                 "columns": 2,
-                "disabled": ["system"]
+                "disabled": [
+                  "system"
+                ]
               },
               {
                 "key": "unlimitedUsers",
@@ -108,8 +120,17 @@
                 "required": true,
                 "defaultValue": "true",
                 "options": [
-                  { "value": "true", "label": "Unlimited Users", "help": "No limit on number of users" },
-                  { "value": "false", "label": "Limited Users", "help": "Set a specific user limit", "disabled": true }
+                  {
+                    "value": "true",
+                    "label": "Unlimited Users",
+                    "help": "No limit on number of users"
+                  },
+                  {
+                    "value": "false",
+                    "label": "Limited Users",
+                    "help": "Set a specific user limit",
+                    "disabled": true
+                  }
                 ],
                 "help": "Currently only unlimited users is supported"
               }
@@ -149,8 +170,16 @@
                 "required": true,
                 "defaultValue": "tenant_admin",
                 "options": [
-                  { "value": "tenant_admin", "label": "Tenant Administrator", "color": "red" },
-                  { "value": "user", "label": "User", "color": "blue" }
+                  {
+                    "value": "tenant_admin",
+                    "label": "Tenant Administrator",
+                    "color": "red"
+                  },
+                  {
+                    "value": "user",
+                    "label": "User",
+                    "color": "blue"
+                  }
                 ],
                 "help": "Tenant Administrator has full access to manage the tenant"
               },
@@ -214,19 +243,39 @@
             "sections": [
               {
                 "title": "Tenant Information",
-                "fields": ["name", "slug", "orgId", "status", "notes"]
+                "fields": [
+                  "name",
+                  "slug",
+                  "orgId",
+                  "status",
+                  "notes"
+                ]
               },
               {
                 "title": "Entitlements",
-                "fields": ["sitesAllowed", "modules", "unlimitedUsers"]
+                "fields": [
+                  "sitesAllowed",
+                  "modules",
+                  "unlimitedUsers"
+                ]
               },
               {
                 "title": "First User",
-                "fields": ["firstUserEmail", "firstUserName", "firstUserRole", "sendInvite"]
+                "fields": [
+                  "firstUserEmail",
+                  "firstUserName",
+                  "firstUserRole",
+                  "sendInvite"
+                ]
               },
               {
                 "title": "Subscription",
-                "fields": ["termStartAt", "termEndAt", "autoRenew", "gracePeriodDays"]
+                "fields": [
+                  "termStartAt",
+                  "termEndAt",
+                  "autoRenew",
+                  "gracePeriodDays"
+                ]
               }
             ]
           }
@@ -261,7 +310,12 @@
   "metadata": {
     "created": "2025-01-22T10:00:00Z",
     "version": "1.0.0",
-    "tags": ["admin", "tenant", "wizard", "creation"],
+    "tags": [
+      "admin",
+      "tenant",
+      "wizard",
+      "creation"
+    ],
     "description": "Step-by-step wizard for creating new tenants with all required configuration"
   }
 }

@@ -1,62 +1,104 @@
-# plans.md — Exec Plan for Metadata-Driven Inspection Wizards
+# PLAN.md — Safety & Navigation Modernization Programme
 
-## Goal / End state
+## Executive Overview
 
-- Make the inspection workload grid and downstream AI wizards fully metadata-driven so routing, parameter mapping, and asset hydration require zero hard-coded fallbacks.
-- Expose configuration knobs in workspace metadata (JSON) for wizard selection, URL param names, and asset fetch behavior that the UI consumes dynamically.
-- Preserve backward compatibility during rollout while documenting the new schema requirements for workspace authors.
+The platform navigation refactor and safety portfolio uplift are now converged under a single modernisation programme. Our objectives are to (1) standardise routing and workspace metadata across every module, (2) deliver an enterprise-grade intelliSAFTEY experience that meets OSHA/NFPA expectations, and (3) provide repeatable guardrails so future teams can extend the system without bespoke wiring.
 
-## Context & background
+### Current Task — Wizard Framework Generalisation
+- **Goal:** Establish a metadata-driven wizard framework so any domain (inspection, safety, compliance, etc.) can render and persist records without bespoke logic.
+- **Context:** Existing AI Analysis wizard renderer and persistence hook embed defaults for safety workloads; upcoming pressure vessel and rescue pre-plan flows require a single generic pathway aligned to backup restore metadata contracts.
+- **Milestones:**
+  - [ ] Document required metadata contract for renderer, persistence, restore tooling, and workspace metadata.
+- [x] Refactor `GenericWizardRenderer` to resolve all behaviour from metadata (domain, domainType, domainSubType, steps, hydration, persistence).
+- [x] Refactor `useWizardRecordSave` and related utilities to rely entirely on metadata-provided endpoints and identifiers.
+- [ ] Align wizard workspace JSON with new `identity` + `persistence` contracts and validate via eslint.
+- [ ] Ship API support for wizard progress persistence via `PATCH` (CORS + route).
+- **Progress:**
+  - [x] Captured objectives/risks for wizard framework refactor in PLAN.md.
+  - [x] Introduced runtime metadata guardrails inside `GenericWizardRenderer`.
+  - [x] Hardened `useWizardRecordSave` to enforce endpoint + record id resolution contracts.
+  - [x] Replaced backup restore script with manifest-driven loader to eliminate hardcoded collection logic.
+  - [x] Audit all AI wizard workspaces for new metadata requirements.
+- [x] Run eslint across touched surfaces (`GenericWizardRenderer`, `useWizardRecordSave`, restore tooling) and remediate.
+- [x] Add audit entry once `PATCH /api/documents/:id` is live for progress saves.
+- **Risks:** Metadata gaps may surface late, blocking runtime; existing safety wizards could regress if new contracts are misaligned.
 
-- The `inspection-plan/dashboard` grid currently resolves wizard workspaces via code (string comparisons and pattern fallbacks) instead of metadata.
-- `GenericWizardRenderer` assumes query parameter names (`asset_id`) and a fixed `/api/documents` lookup, ignoring config fields that could supply these values.
-- To support richer AI prompts and future workflows, metadata must carry every dependency so that configuration changes do not require React edits.
+## Programme Objectives
 
-## Milestones & sub-tasks
+1. **Unified Navigation Platform**  
+   Deploy a shared navigation provider, typed contracts, and validation tooling so menus, quick actions, and wizards behave consistently across modules.
+2. **Workspace Hygiene & Governance**  
+   Enforce `module/workspace` conventions, automate validation, and keep module menus, quick actions, and metadata in lockstep.
+3. **Safety Command Excellence**  
+   Replace the legacy Safety Command Center with the intelliSAFTEY module, delivering compliant wizards, a professional home, and auditable records.
 
-1. **Discovery & spec**
-   - [x] Enumerate current hardcoded assumptions in `SGridSearchGadget` and `GenericWizardRenderer`.
-   - [x] Draft metadata schema additions for wizard mapping, URL param definitions, asset fetch contracts, and AI prompt contexts.
-2. **Metadata schema updates**
-   - [x] Update workspace JSON definitions (dashboard + wizards) to include the new fields with sensible defaults.
-   - [ ] Add schema validation or linting hooks to flag missing required metadata.
-3. **Runtime refactor**
-   - [x] Refactor `SGridSearchGadget` to consume metadata-only routing with graceful fallback for legacy configs.
-   - [x] Refactor `GenericWizardRenderer` (and related components) to honor metadata-driven asset fetch settings and param names.
-4. **Verification & docs**
-   - [ ] Backfill unit/interaction coverage or targeted tests for the new metadata pathways.
-   - [ ] Document the updated metadata contract for workspace authors and note migration steps in PLAN.md.
+## Status Dashboard
 
-## Progress & status
+| Stream | Lead | State | Commentary |
+| --- | --- | --- | --- |
+| Navigation provider rollout | Platform Engineering | ✅ Complete | Provider + helpers live; adoption across core consumers complete. |
+| Workspace normalization tooling | Platform Engineering | ✅ Complete | Scripts + validators shipped; CI integration pending. |
+| intelliSAFTEY module launch | Safety Solutions | ✅ Complete | Home dashboard, menu, and metadata published. |
+| Safety wizard compliance uplift | Safety Solutions | 🟡 In Progress | Metadata standardised; hazard-control gaps identified for remediation. |
+| Documentation & enablement | Developer Experience | 🟡 In Progress | Draft navigation + safety authoring guides in review. |
+| Regression & acceptance testing | QA Guild | 🔴 Not Started | Smoke passes required for intelliSAFTEY, Asset, Compliance, and System Admin modules. |
 
-- [x] Discovery & spec complete
-- [x] Metadata schema updates applied
-- [x] Runtime refactor implemented
-- [ ] Tests/docs updated
+## Delivery Milestones
 
-## Surprises & discoveries
+1. **Foundational Guardrails** *(Complete)*  
+   - Inventory of all workspaces and enforcement of prefix convention.  
+   - TypeScript definitions and validation scripts for navigation payloads.
 
-- `npx tsc --noEmit` currently fails because of upstream `@types/d3-dispatch` typedef issues (already present pre-change); capture for follow-up when tightening type checks.
+2. **Navigation Platform Implementation** *(Complete)*  
+   - `NavigationProvider` with routing, history, and helper utilities.  
+   - Migration of menus, quick actions, forms, and CRUD handlers to the new provider.
 
-## Decision log
+3. **intelliSAFTEY Modernisation** *(Complete / Expanding)*  
+   - Creation of the intelliSAFTEY module, menu, and inspection-style home workspace.  
+   - Migration of every safety wizard with standardised `type`, `documentType`, and `label` metadata for filtering.
 
-| Decision | Reasoning | Alternatives considered | Chosen option |
-| -------- | --------- | ----------------------- | ------------- |
-| Model wizard routing via `recordWorkspaceRouting` metadata | Consolidates workspace selection and pattern fallback into JSON so UI logic stays generic | Keep heuristic fallbacks in React; add more hard-coded cases over time | New `recordWorkspaceRouting` object with explicit mappings + pattern rules |
-| Describe record fetch contract in metadata `request` object | Allows the wizard to hydrate without assuming `/api/documents` or specific query params | Continue hard-coding fetch URL/query in component | `recordDataPopulation.request` with templated query + `responseSelector` |
+4. **Compliance Hardening & Enablement** *(Active)*  
+   - Close OSHA 1910.146 / NFPA 350 data gaps (atmospheric testing, isolation/LOTO, ventilation, EMS coordination).  
+   - Update checkbox schemas to use `{ label, value }` objects; broaden enumerations for rescue readiness.  
+   - Publish navigation + safety authoring documentation and embed validators into CI.  
+   - Execute regression plan and document results.
 
-## Risks & mitigation
+## Upcoming Actions
 
-- **Risk:** Existing workspaces that lack new metadata could break routing.  
-  **Mitigation:** Maintain backward-compatible defaults and log warnings when metadata is missing.
-- **Risk:** Schema changes may outpace validation.  
-  **Mitigation:** Add configuration validation (runtime or build-time) so issues surface early.
-- **Risk:** Record fetch responses might not align with prompt needs.  
-  **Mitigation:** Define a minimal required payload in documentation and implement defensive parsing in the wizard.
+- [ ] Generalize AI Analysis wizard components to use neutral `domain` and `domainType` semantics (widget + gadget refactor in progress).  
+- [ ] Extend the Rescue Pre-Plan wizard to capture atmospheric readings, isolation state, ventilation controls, retrieval systems, response time, and EMS/medical coordination.  
+- [ ] Convert all remaining checkbox options to `{ label, value }` and curate safety-specific enumerations (rescue status, requirement types, communications).  
+- [ ] Integrate `scripts/validate-workspaces.js` into CI and block merges on failure.  
+- [ ] Run cross-module smoke tests (intelliSAFTEY, Asset Manager, Compliance Manager, System Admin) and log outcomes.  
+- [ ] Publish navigation framework adoption guide and safety content authoring runbook.
 
-## Done criteria & verification
+## Decision Log
 
-- Dashboard grid routes to the correct wizard using metadata only, with no string pattern fallbacks in code.
-- Wizard reads asset ID and other context from metadata-defined params and fetch configuration.
-- Tests or manual validation confirm both legacy and updated metadata continue to work.
-- Plan updated with decisions, risks, and completion status; documentation instructs authors on new fields.
+| Date | Decision | Rationale | Outcome |
+| --- | --- | --- | --- |
+| 2025-03-09 | Replace Safety Command Center with intelliSAFTEY module | Align safety workflows with the new navigation/metadata standards and branding | Module live with dedicated menu, home, and standardised wizards |
+| 2025-03-09 | Enforce `type` / `documentType` metadata for safety wizards | Enable consistent filtering and downstream analytics for safety records | Metadata normalised across all intelliSAFTEY assets |
+
+## Surprises & Discoveries
+
+- OSHA/NFPA-required hazard controls were missing in the inherited Rescue Pre-Plan workflow; remediation is now prioritised.  
+- Legacy checkbox fields still relied on string arrays, failing the shared workspace schema.  
+- Rescue readiness terminology differed across tenants; a standard enumeration set is required for cross-tenant analytics.
+- Wizard progress saves surfaced missing `PATCH /api/documents/:id` support; CORS now allows PATCH and route is implemented.
+
+## Risks & Mitigation
+
+- **Compliance Gaps** — Without complete hazard-control data, rescue plans may fail audits.  
+  _Mitigation:_ Close identified gaps next sprint and obtain SME sign-off prior to GA.
+- **Regression Exposure** — Teams outside the initial rollout may still call deprecated navigation helpers.  
+  _Mitigation:_ Add lint rules, communicate timelines, and run focused smoke suites.
+- **Schema Drift** — Manual JSON edits risk bypassing conventions.  
+  _Mitigation:_ Enforce validation scripts via CI and pre-commit hooks.
+
+## Completion Criteria
+
+- Safety wizards capture all OSHA 1910.146 / NFPA 350 required data points, reviewed by safety SMEs.  
+- Navigation provider adoption documented and legacy APIs retired.  
+- CI enforces workspace validation, preventing schema regressions.  
+- Regression suite passes for intelliSAFTEY, Asset Manager, Compliance Manager, and System Admin.  
+- Enablement collateral published for engineering, product, and safety stakeholders.

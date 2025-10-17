@@ -131,6 +131,14 @@ describe('API smoke tests', () => {
       data: [{ id: 'doc-1', name: 'Sample Document' }]
     });
     expect(mockFindWithPagination).toHaveBeenCalledTimes(1);
-    expect(TenantContextFactory.fromRequest).toHaveBeenCalledTimes(1);
+    expect(TenantContextFactory.fromRequest).toHaveBeenCalled();
+    const lastCall =
+      TenantContextFactory.fromRequest.mock.calls[
+        TenantContextFactory.fromRequest.mock.calls.length - 1
+      ];
+    expect(lastCall?.[0]?.user).toMatchObject({
+      userId: 'user-123',
+      tenantId: 'tenant-123'
+    });
   });
 });

@@ -11,7 +11,6 @@
  */
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { generateThemeVariables, formatHSL } from '../lib/utils';
 
 // =============================================================================
 // TYPES & INTERFACES

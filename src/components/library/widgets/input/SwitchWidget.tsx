@@ -7,7 +7,6 @@
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { Switch, Typography, Space, Button, Tooltip } from 'antd';
-import { CheckOutlined, CloseOutlined, LoadingOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -261,23 +260,6 @@ export const SwitchWidget: React.FC<SwitchWidgetProps> = ({
     }
   }, [showLoadingOnChange, loadingTimeout, value, validateValue, onChange]);
 
-  const handleChange = useCallback((newValue: boolean, event?: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLButtonElement>) => {
-    if (disabled || readOnly) return;
-
-    // Handle click delay
-    if (clickDelay > 0) {
-      if (clickTimer) {
-        clearTimeout(clickTimer);
-      }
-      const timer = setTimeout(() => {
-        processChange(newValue);
-      }, clickDelay);
-      setClickTimer(timer);
-    } else {
-      processChange(newValue);
-    }
-  }, [disabled, readOnly, clickDelay, clickTimer]);
-
   const processChange = useCallback((newValue: boolean) => {
     if (showConfirmation) {
       setPendingValue(newValue);
@@ -297,6 +279,23 @@ export const SwitchWidget: React.FC<SwitchWidgetProps> = ({
       onChange?.(newValue);
     }
   }, [showConfirmation, asyncOnChange, showLoadingOnChange, handleLoadingChange, value, validateValue, onChange]);
+
+  const handleChange = useCallback((newValue: boolean, event?: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLButtonElement>) => {
+    if (disabled || readOnly) return;
+
+    // Handle click delay
+    if (clickDelay > 0) {
+      if (clickTimer) {
+        clearTimeout(clickTimer);
+      }
+      const timer = setTimeout(() => {
+        processChange(newValue);
+      }, clickDelay);
+      setClickTimer(timer);
+    } else {
+      processChange(newValue);
+    }
+  }, [disabled, readOnly, clickDelay, clickTimer, processChange]);
 
   const handleReset = useCallback(() => {
     const resetValue = defaultValue;

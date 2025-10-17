@@ -6,8 +6,8 @@
  */
 
 import React, { useState, useCallback, useMemo, useEffect } from 'react';
-import { Slider, Typography, Space, Button, InputNumber, Tooltip } from 'antd';
-import { ReloadOutlined, ClearOutlined } from '@ant-design/icons';
+import { Slider, Typography, Space, Button, InputNumber } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -202,7 +202,6 @@ export const SliderWidget: React.FC<SliderWidgetProps> = ({
 }) => {
   const [internalValue, setInternalValue] = useState<SliderValue>(value !== undefined ? value : defaultValue);
   const [validationError, setValidationError] = useState<string | undefined>();
-  const [isDragging, setIsDragging] = useState(false);
 
   // Sync internal state with prop changes
   useEffect(() => {

@@ -402,7 +402,7 @@ export const PDFStep: React.FC<PDFStepProps> = ({
           const combinedFormData = { ...globalFormData, ...sectionFormData };
           const contextSources = [
             combinedFormData,
-            wizardData.documentSummary || {},
+            wizardData.summary || {},
             wizardData.globalFormData || {},
             wizardData.recordContext || {}
           ];

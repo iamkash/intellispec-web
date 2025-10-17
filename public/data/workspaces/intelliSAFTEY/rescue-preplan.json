@@ -1,0 +1,1410 @@
+{
+  "id": "intelliSAFTEY/rescue-preplan",
+  "title": "Rescue Pre-Plan Wizard",
+  "description": "Prepopulate and generate a comprehensive Confined Space Rescue Pre-Plan for printing or digital attachment",
+  "gadgets": [
+    {
+      "id": "rescue-preplan-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Rescue Pre-Plan Wizard",
+      "description": "Prepopulate and generate a comprehensive Confined Space Rescue Pre-Plan for printing or digital attachment",
+      "config": {
+        "sections": [
+          {
+            "id": "voice_capture",
+            "title": "Voice Capture",
+            "description": "Record voice notes. Transcription will feed following steps.",
+            "sectionType": "voice",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_capture",
+            "title": "Image Capture",
+            "description": "Upload images of the space. These images will be used on the next step for AI analysis.",
+            "sectionType": "image",
+            "includeInPdf": false
+          },
+          {
+            "id": "image_analysis",
+            "title": "Space Analysis",
+            "description": "Analyze captured images to generate actionable rescue recommendations and safety assessments.",
+            "imageAnalysisPromptRef": "deepImageAnalysis",
+            "promptSourceIds": [
+              "image_capture"
+            ],
+            "includeInPdf": true,
+            "analysisWidget": "simple",
+            "pdf": {
+              "includeOverview": false,
+              "includeImages": true,
+              "imagesDataPath": "sections[image_capture].images",
+              "fit": "contain",
+              "align": "center"
+            }
+          },
+          {
+            "id": "project_permit_details",
+            "title": "General",
+            "description": "General entry details and communications.",
+            "sectionType": "form",
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4,
+              "labelPosition": "top"
+            },
+            "btnLabel": "Populate General",
+            "promptRef": "generalPopulate",
+            "includeInPdf": true
+          },
+          {
+            "id": "contacts_comm",
+            "title": "Contacts & Communication",
+            "description": "Capture plant contacts and methods to summon rescue services.",
+            "sectionType": "form",
+            "includeInPdf": true,
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4,
+              "labelPosition": "top"
+            },
+            "btnLabel": "Populate Contacts",
+            "promptRef": "contactsPopulate"
+          },
+          {
+            "id": "isolation_controls",
+            "title": "Isolation & Lockout Controls",
+            "description": "Confirm all energy sources are isolated and verified.",
+            "sectionType": "form",
+            "includeInPdf": true,
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4,
+              "labelPosition": "top"
+            },
+            "btnLabel": "Populate Isolation",
+            "promptRef": "isolationPopulate"
+          },
+          {
+            "id": "atmospheric_testing",
+            "title": "Atmospheric Testing",
+            "description": "Document atmospheric readings prior to and during entry.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Atmospheric Readings",
+              "dataKey": "atmosphericReadings",
+              "columns": [
+                {
+                  "key": "timestamp",
+                  "title": "Timestamp",
+                  "editable": true,
+                  "type": "datetime"
+                },
+                {
+                  "key": "testedBy",
+                  "title": "Tested By",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "oxygenPercent",
+                  "title": "Oxygen %",
+                  "editable": true,
+                  "type": "number"
+                },
+                {
+                  "key": "lelPercent",
+                  "title": "LEL %",
+                  "editable": true,
+                  "type": "number"
+                },
+                {
+                  "key": "carbonMonoxide",
+                  "title": "CO (ppm)",
+                  "editable": true,
+                  "type": "number"
+                },
+                {
+                  "key": "hydrogenSulfide",
+                  "title": "H2S (ppm)",
+                  "editable": true,
+                  "type": "number"
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "instrument",
+                  "title": "Instrument ID",
+                  "editable": true,
+                  "type": "text"
+                }
+              ],
+              "promptRef": "atmosphericPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "ventilation_controls",
+            "title": "Ventilation & Atmospheric Control",
+            "description": "Capture ventilation methods and continuous monitoring strategy.",
+            "sectionType": "form",
+            "includeInPdf": true,
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4,
+              "labelPosition": "top"
+            },
+            "btnLabel": "Populate Ventilation",
+            "promptRef": "ventilationPopulate"
+          },
+          {
+            "id": "retrieval_systems",
+            "title": "Retrieval Systems & Rigging",
+            "description": "Document retrieval equipment and readiness for extraction.",
+            "sectionType": "form",
+            "includeInPdf": true,
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4,
+              "labelPosition": "top"
+            },
+            "btnLabel": "Populate Retrieval",
+            "promptRef": "retrievalPopulate"
+          },
+          {
+            "id": "rescue_methods",
+            "title": "Rescue Methods & Tactics",
+            "description": "Outline anticipated rescue approaches, access paths, and rigging strategy for the standby team.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Rescue Methods Plan",
+              "dataKey": "rescueMethods",
+              "columns": [
+                {
+                  "key": "method",
+                  "title": "Method",
+                  "editable": true,
+                  "summary": "uniqueCount",
+                  "type": "text"
+                },
+                {
+                  "key": "teamRoles",
+                  "title": "Assigned Team Roles",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "approach",
+                  "title": "Approach / Access",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "equipment",
+                  "title": "Key Equipment",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "anchorage",
+                  "title": "Anchorage Available",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "haulLower",
+                  "title": "Hauling / Lowering Needed",
+                  "editable": true,
+                  "type": "yesno"
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true,
+                  "type": "text"
+                }
+              ],
+              "promptRef": "rescueMethodsPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "rescue_safety_equipment",
+            "title": "Equipments Required",
+            "description": "Consolidate resources required from selected recommendations and edit as needed.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Resources",
+              "dataKey": "resources",
+              "columns": [
+                {
+                  "key": "name",
+                  "title": "Name",
+                  "editable": true,
+                  "summary": "countMissing",
+                  "type": "text"
+                },
+                {
+                  "key": "type",
+                  "title": "Type",
+                  "editable": true,
+                  "summary": "uniqueCount",
+                  "type": "text"
+                },
+                {
+                  "key": "quantity",
+                  "title": "Quantity",
+                  "editable": true,
+                  "summary": "sum",
+                  "type": "number"
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true,
+                  "type": "text"
+                }
+              ],
+              "promptRef": "resourcesPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "rescue_plan_team",
+            "title": "Rescue Team Assignments",
+            "description": "Personnel assignments per PDF.",
+            "includeInPdf": true,
+            "grid": {
+              "title": "Rescue Personnel",
+              "dataKey": "personnel",
+              "columns": [
+                {
+                  "key": "role",
+                  "title": "Role",
+                  "editable": true,
+                  "summary": "uniqueCount",
+                  "type": "text"
+                },
+                {
+                  "key": "name",
+                  "title": "Name",
+                  "editable": true,
+                  "summary": "countMissing",
+                  "type": "text"
+                },
+                {
+                  "key": "certifications",
+                  "title": "Certifications",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "notes",
+                  "title": "Notes",
+                  "editable": true,
+                  "type": "text"
+                },
+                {
+                  "key": "contact",
+                  "title": "Contact / Radio",
+                  "editable": true,
+                  "type": "text"
+                }
+              ],
+              "promptRef": "personnelPopulate",
+              "btnLabel": "Populate from AI"
+            }
+          },
+          {
+            "id": "ems_coordination",
+            "title": "EMS & Medical Coordination",
+            "description": "Capture medical response coordination and contact details.",
+            "sectionType": "form",
+            "includeInPdf": true,
+            "pdfLayout": {
+              "type": "grid",
+              "columns": 4,
+              "labelPosition": "top"
+            },
+            "btnLabel": "Populate EMS Coordination",
+            "promptRef": "emsPopulate"
+          },
+          {
+            "id": "attachments_signoff",
+            "title": "Report Sign-Off",
+            "description": "Capture supervisor signoff per PDF.",
+            "includeInPdf": true
+          }
+        ],
+        "groups": [
+          {
+            "id": "entry_details",
+            "title": "Entry Details",
+            "sectionId": "project_permit_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "entry_description_group",
+            "title": "Entry Description",
+            "sectionId": "project_permit_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "entry_hazards_group",
+            "title": "Entry Hazards & Objective",
+            "sectionId": "project_permit_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "entry_logistics_group",
+            "title": "Entry Logistics",
+            "sectionId": "project_permit_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "contacts_comm",
+            "title": "Contacts & Communication",
+            "sectionId": "contacts_comm",
+            "lgSpan": 24
+          },
+          {
+            "id": "isolation_controls_group",
+            "title": "Isolation & Lockout",
+            "sectionId": "isolation_controls",
+            "lgSpan": 24
+          },
+          {
+            "id": "atmospheric_testing_group",
+            "title": "Atmospheric Instrument Details",
+            "sectionId": "atmospheric_testing",
+            "lgSpan": 24
+          },
+          {
+            "id": "ventilation_controls_group",
+            "title": "Ventilation Controls",
+            "sectionId": "ventilation_controls",
+            "lgSpan": 24
+          },
+          {
+            "id": "retrieval_systems_group",
+            "title": "Retrieval Systems",
+            "sectionId": "retrieval_systems",
+            "lgSpan": 24
+          },
+          {
+            "id": "ems_coordination_group",
+            "title": "EMS Coordination",
+            "sectionId": "ems_coordination",
+            "lgSpan": 24
+          },
+          {
+            "id": "special_instructions_group",
+            "title": "Special Instructions",
+            "sectionId": "attachments_signoff",
+            "lgSpan": 24
+          },
+          {
+            "id": "supervisor_signoff",
+            "title": "Supervisor Signoff",
+            "sectionId": "attachments_signoff",
+            "lgSpan": 24
+          }
+        ],
+        "fields": [
+          {
+            "id": "permit_number",
+            "label": "Confined Space Permit #",
+            "type": "text",
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "entry_date",
+            "label": "Date of Confined Space Entry",
+            "type": "date",
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "space_designation",
+            "label": "Space Designation",
+            "type": "text",
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "space_location",
+            "label": "Space Location",
+            "type": "text",
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "plant_location",
+            "label": "Plant/Entry Location",
+            "type": "text",
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "job_supervisor",
+            "label": "Job Supervisor",
+            "type": "text",
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "num_entrants",
+            "label": "Number of Entrants",
+            "type": "number",
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "space_type",
+            "label": "Space Type",
+            "type": "dropdown",
+            "options": [
+              {
+                "label": "Vertical vessel / column",
+                "value": "vertical-vessel-column"
+              },
+              {
+                "label": "Horizontal vessel / tank",
+                "value": "horizontal-vessel-tank"
+              },
+              {
+                "label": "Underground vault / pit",
+                "value": "underground-vault-pit"
+              },
+              {
+                "label": "Excavation / trench",
+                "value": "excavation-trench"
+              },
+              {
+                "label": "Pipe rack / piping system",
+                "value": "pipe-rack-piping-system"
+              },
+              {
+                "label": "Boiler / furnace",
+                "value": "boiler-furnace"
+              },
+              {
+                "label": "Silo / hopper",
+                "value": "silo-hopper"
+              },
+              {
+                "label": "Utility tunnel / corridor",
+                "value": "utility-tunnel-corridor"
+              },
+              {
+                "label": "Offshore module / marine",
+                "value": "offshore-module-marine"
+              },
+              {
+                "label": "Storage tank (floating roof)",
+                "value": "storage-tank-floating-roof"
+              },
+              {
+                "label": "Process building confined space",
+                "value": "process-building-confined-space"
+              },
+              {
+                "label": "Custom / other",
+                "value": "custom-other"
+              }
+            ],
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 12
+          },
+          {
+            "id": "rescue_status",
+            "label": "Rescue Team Status",
+            "type": "radio",
+            "options": [
+              {
+                "label": "Standby",
+                "value": "standby"
+              },
+              {
+                "label": "Available",
+                "value": "available"
+              },
+              {
+                "label": "On Scene",
+                "value": "on-scene"
+              },
+              {
+                "label": "Deployed",
+                "value": "deployed"
+              },
+              {
+                "label": "Mutual Aid",
+                "value": "mutual-aid"
+              }
+            ],
+            "required": true,
+            "groupId": "entry_details",
+            "lgSpan": 24
+          },
+          {
+            "id": "entry_description",
+            "label": "Entry Description",
+            "type": "checkbox_group",
+            "options": [
+              {
+                "label": "Elevated",
+                "value": "elevated"
+              },
+              {
+                "label": "Congested",
+                "value": "congested"
+              },
+              {
+                "label": "Vertical",
+                "value": "vertical"
+              },
+              {
+                "label": "Horizontal",
+                "value": "horizontal"
+              }
+            ],
+            "required": false,
+            "groupId": "entry_description_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "entry_objective",
+            "label": "Entry Objective",
+            "type": "textarea",
+            "required": true,
+            "groupId": "entry_hazards_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "primary_hazards",
+            "label": "Primary Hazards Identified",
+            "type": "textarea",
+            "required": true,
+            "groupId": "entry_hazards_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "hazard_classification",
+            "label": "Hazard Classification",
+            "type": "dropdown",
+            "options": [
+              {
+                "label": "Permit-required confined space",
+                "value": "permit-required"
+              },
+              {
+                "label": "Alternate procedure entry",
+                "value": "alternate-procedure"
+              },
+              {
+                "label": "Non-permit confined space",
+                "value": "non-permit"
+              },
+              {
+                "label": "Rescue-only assessment",
+                "value": "rescue-only"
+              }
+            ],
+            "required": true,
+            "groupId": "entry_hazards_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "planned_entry_start",
+            "label": "Planned Entry Start",
+            "type": "datetime",
+            "required": true,
+            "groupId": "entry_logistics_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "estimated_entry_duration",
+            "label": "Estimated Entry Duration (minutes)",
+            "type": "number",
+            "required": true,
+            "groupId": "entry_logistics_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "rescue_team_brief_time",
+            "label": "Rescue Team Briefing Time",
+            "type": "datetime",
+            "required": false,
+            "groupId": "entry_logistics_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "communication_check_time",
+            "label": "Communication Check Time",
+            "type": "datetime",
+            "required": false,
+            "groupId": "entry_logistics_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "rescue_staging_location",
+            "label": "Rescue Team Staging Location",
+            "type": "text",
+            "required": true,
+            "groupId": "entry_logistics_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "plant_contact",
+            "label": "Plant Contact",
+            "type": "text",
+            "required": true,
+            "groupId": "contacts_comm",
+            "lgSpan": 12
+          },
+          {
+            "id": "plant_contact_phone",
+            "label": "Plant Contact Phone",
+            "type": "phone",
+            "required": true,
+            "groupId": "contacts_comm",
+            "lgSpan": 12
+          },
+          {
+            "id": "backup_contact",
+            "label": "Backup Contact",
+            "type": "text",
+            "required": false,
+            "groupId": "contacts_comm",
+            "lgSpan": 12
+          },
+          {
+            "id": "backup_contact_phone",
+            "label": "Backup Contact Phone",
+            "type": "phone",
+            "required": false,
+            "groupId": "contacts_comm",
+            "lgSpan": 12
+          },
+          {
+            "id": "rescue_communication",
+            "label": "Means to Summon Rescue Services",
+            "type": "checkbox_group",
+            "options": [
+              {
+                "label": "Phone",
+                "value": "phone"
+              },
+              {
+                "label": "Radio",
+                "value": "radio"
+              },
+              {
+                "label": "Air Horn",
+                "value": "air-horn"
+              },
+              {
+                "label": "Other",
+                "value": "other"
+              },
+              {
+                "label": "Verbal",
+                "value": "verbal"
+              }
+            ],
+            "required": true,
+            "groupId": "contacts_comm",
+            "lgSpan": 24
+          },
+          {
+            "id": "rescue_communication_notes",
+            "label": "Communication Notes / Call Script",
+            "type": "textarea",
+            "required": false,
+            "groupId": "contacts_comm",
+            "lgSpan": 24
+          },
+          {
+            "id": "isolation_methods",
+            "label": "Isolation Methods Applied",
+            "type": "checkbox_group",
+            "options": [
+              {
+                "label": "Electrical LOTO applied",
+                "value": "electrical-loto-applied"
+              },
+              {
+                "label": "Mechanical isolation applied",
+                "value": "mechanical-isolation-applied"
+              },
+              {
+                "label": "Process isolation verified",
+                "value": "process-isolation-verified"
+              },
+              {
+                "label": "Zero-energy state confirmed",
+                "value": "zero-energy-state-confirmed"
+              },
+              {
+                "label": "Atmospheric purge completed",
+                "value": "atmospheric-purge-completed"
+              }
+            ],
+            "required": true,
+            "groupId": "isolation_controls_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "energy_sources",
+            "label": "Energy Sources Controlled",
+            "type": "textarea",
+            "required": true,
+            "groupId": "isolation_controls_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "isolation_verified_by",
+            "label": "Isolation Verified By",
+            "type": "text",
+            "required": true,
+            "groupId": "isolation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "isolation_verification_time",
+            "label": "Verification Time",
+            "type": "datetime",
+            "required": true,
+            "groupId": "isolation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "lockout_document_reference",
+            "label": "Lockout Document Reference",
+            "type": "text",
+            "required": false,
+            "groupId": "isolation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "isolation_notes",
+            "label": "Isolation Notes",
+            "type": "textarea",
+            "groupId": "isolation_controls_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "instrument_model",
+            "label": "Atmospheric Monitor Model",
+            "type": "text",
+            "required": true,
+            "groupId": "atmospheric_testing_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "instrument_calibration_date",
+            "label": "Calibration Date",
+            "type": "date",
+            "required": true,
+            "groupId": "atmospheric_testing_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ventilation_required",
+            "label": "Ventilation Required",
+            "type": "radio",
+            "options": [
+              {
+                "label": "Yes",
+                "value": "yes"
+              },
+              {
+                "label": "No",
+                "value": "no"
+              }
+            ],
+            "required": true,
+            "groupId": "ventilation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ventilation_method",
+            "label": "Ventilation Method",
+            "type": "text",
+            "required": false,
+            "groupId": "ventilation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ventilation_start_time",
+            "label": "Ventilation Start Time",
+            "type": "datetime",
+            "required": false,
+            "groupId": "ventilation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ventilation_flow_rate",
+            "label": "Airflow / ACH",
+            "type": "text",
+            "required": false,
+            "groupId": "ventilation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ventilation_monitor",
+            "label": "Monitoring Responsibility",
+            "type": "text",
+            "required": false,
+            "groupId": "ventilation_controls_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ventilation_monitoring",
+            "label": "Atmospheric Monitoring Plan",
+            "type": "textarea",
+            "required": true,
+            "groupId": "ventilation_controls_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "ventilation_notes",
+            "label": "Ventilation Notes",
+            "type": "textarea",
+            "groupId": "ventilation_controls_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "retrieval_system_ready",
+            "label": "Retrieval System Ready",
+            "type": "radio",
+            "options": [
+              {
+                "label": "Yes",
+                "value": "yes"
+              },
+              {
+                "label": "No",
+                "value": "no"
+              },
+              {
+                "label": "Not Applicable",
+                "value": "not-applicable"
+              }
+            ],
+            "required": true,
+            "groupId": "retrieval_systems_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "rigging_lead",
+            "label": "Rigging Lead",
+            "type": "text",
+            "required": true,
+            "groupId": "retrieval_systems_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "equipment_last_inspected",
+            "label": "Equipment Last Inspected",
+            "type": "date",
+            "required": false,
+            "groupId": "retrieval_systems_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "retrieval_equipment",
+            "label": "Retrieval Equipment",
+            "type": "checkbox_group",
+            "options": [
+              {
+                "label": "Tripod",
+                "value": "tripod"
+              },
+              {
+                "label": "Winch / Raise-assist",
+                "value": "winch-raise-assist"
+              },
+              {
+                "label": "Self-retracting lifeline",
+                "value": "self-retracting-lifeline"
+              },
+              {
+                "label": "Full-body harness",
+                "value": "full-body-harness"
+              },
+              {
+                "label": "Rescue line / Tag line",
+                "value": "rescue-line-tag-line"
+              }
+            ],
+            "required": false,
+            "groupId": "retrieval_systems_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "retrieval_notes",
+            "label": "Retrieval Notes",
+            "type": "textarea",
+            "groupId": "retrieval_systems_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "ems_notified",
+            "label": "EMS Notified",
+            "type": "radio",
+            "options": [
+              {
+                "label": "Yes",
+                "value": "yes"
+              },
+              {
+                "label": "No",
+                "value": "no"
+              }
+            ],
+            "required": true,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ems_level_of_care",
+            "label": "EMS Level of Care",
+            "type": "dropdown",
+            "options": [
+              {
+                "label": "ALS",
+                "value": "als"
+              },
+              {
+                "label": "BLS",
+                "value": "bls"
+              },
+              {
+                "label": "Industrial Medical Team",
+                "value": "industrial"
+              }
+            ],
+            "required": true,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ems_contact_name",
+            "label": "EMS / Medical Contact Name",
+            "type": "text",
+            "required": true,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ems_contact_number",
+            "label": "EMS Contact Number",
+            "type": "text",
+            "required": true,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ems_response_time",
+            "label": "Estimated Response Time (minutes)",
+            "type": "number",
+            "required": true,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ems_staging_location",
+            "label": "EMS Staging Location",
+            "type": "text",
+            "required": false,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "medical_facility",
+            "label": "Receiving Medical Facility",
+            "type": "text",
+            "required": false,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "medical_direction_contact",
+            "label": "Medical Direction Contact",
+            "type": "text",
+            "required": false,
+            "groupId": "ems_coordination_group",
+            "lgSpan": 12
+          },
+          {
+            "id": "ems_notes",
+            "label": "EMS / Medical Notes",
+            "type": "textarea",
+            "groupId": "ems_coordination_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "special_instructions",
+            "label": "Special Instructions",
+            "type": "textarea",
+            "groupId": "special_instructions_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "comments",
+            "label": "Comments",
+            "type": "textarea",
+            "groupId": "special_instructions_group",
+            "lgSpan": 24
+          },
+          {
+            "id": "supervisor_name",
+            "label": "Entry Supervisor Name",
+            "type": "text",
+            "required": true,
+            "groupId": "supervisor_signoff",
+            "lgSpan": 12
+          },
+          {
+            "id": "supervisor_radio",
+            "label": "Radio",
+            "type": "text",
+            "groupId": "supervisor_signoff",
+            "lgSpan": 12
+          },
+          {
+            "id": "signoff_date",
+            "label": "Date",
+            "type": "date",
+            "required": true,
+            "groupId": "supervisor_signoff",
+            "lgSpan": 12
+          },
+          {
+            "id": "report_completed_by",
+            "label": "Report Completed By",
+            "type": "text",
+            "required": true,
+            "groupId": "supervisor_signoff",
+            "lgSpan": 12
+          },
+          {
+            "id": "rescue_lead_name",
+            "label": "Rescue Lead Name",
+            "type": "text",
+            "required": true,
+            "groupId": "supervisor_signoff",
+            "lgSpan": 12
+          },
+          {
+            "id": "rescue_lead_signoff_time",
+            "label": "Rescue Lead Signoff Time",
+            "type": "datetime",
+            "required": true,
+            "groupId": "supervisor_signoff",
+            "lgSpan": 12
+          }
+        ],
+        "pdfStyling": {
+          "header": {
+            "backgroundColor": [
+              24,
+              24,
+              27
+            ],
+            "textColor": [
+              255,
+              255,
+              255
+            ],
+            "fontSize": 12,
+            "companyName": "PK Safety",
+            "companyAddress": ""
+          },
+          "footer": {
+            "textColor": [
+              100,
+              116,
+              139
+            ],
+            "fontSize": 6,
+            "leftText": "Rescue Pre‑Plan",
+            "centerText": "Confidential",
+            "rightText": "Page {page} of {pages}"
+          },
+          "sections": {
+            "headerFontSize": 10,
+            "contentFontSize": 8,
+            "lineSpacing": 3.5,
+            "margins": {
+              "left": 15,
+              "right": 195
+            }
+          },
+          "tables": {
+            "headerBackground": [
+              2,
+              6,
+              23
+            ],
+            "headerTextColor": [
+              255,
+              255,
+              255
+            ],
+            "headerFontSize": 8,
+            "contentFontSize": 7,
+            "cellPadding": 3
+          },
+          "images": {
+            "dpi": 400,
+            "format": "JPEG",
+            "quality": 0.92,
+            "fit": "contain",
+            "align": "center",
+            "widthPercent": 1
+          }
+        },
+        "prompts": {
+          "deepImageAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 16000
+            },
+            "promptConfig": {
+              "systemPrompt": "ROLE: You are a confined‑space rescue safety expert. GOAL: Produce a complete, professional rescue pre‑plan in Markdown using the provided IMAGES and any USER NOTES. OUTPUT: Return ONLY Markdown (no JSON). HEADINGS: Use each of these headings exactly once, only if applicable: # Overview, ## Space Assessment, ## Rescue Access Points, ## Hazard Identification, ## Equipment Requirements, ## Rescue Team Assignments, ## Rescue Action Plan, ## Rescue Methods, ## Rescue Requirements, ## Critical Safety Considerations. TABLES: Where data is structured, use Markdown tables with clear columns as specified below. CONTENT GUIDANCE: - Overview: space type, service/context, general conditions. - Space Assessment: dimensions (est.), internal configuration, surfaces, obstructions, atmosphere indications. - Rescue Access Points: entries/exits, vertical/horizontal, ladders/platforms, access constraints. - Hazard Identification: atmospheric, physical, mechanical, electrical, engulfment; include mitigations. - Equipment Requirements: safety equipment, rescue tools, monitoring devices, comms. - Rescue Team Assignments: roles and quals. - Rescue Action Plan: sequential, actionable steps. - Rescue Methods: techniques (external/internal), hauling/lower, anchorage, pre‑rigging. - Rescue Requirements: yes/no operational requirements with rationale. - Critical Safety Considerations: permits, isolation/LOTO, ventilation, standby, communication. RULES: No duplicate headings; concise, field‑ready tone; prefer bullets and tables.",
+              "userPrompt": "Context (transcript and notes):\n{text}\n\nCreate a comprehensive Markdown rescue pre‑plan from these images and notes. Use the specified headings. Where possible, convert lists to tables with these formats: - ## Hazard Identification: | Hazard | Category | Severity | Mitigation | - ## Equipment Requirements: | Item | Category | Qty | Notes | - ## Rescue Team Assignments: | Role | Qty | Qualifications | Notes | - ## Rescue Action Plan: | Step # | Step | Actions | Notes | - ## Rescue Methods: | Method | Actions | External | Internal | Hauling | Lower | Anchorage | Pre‑rigging | - ## Rescue Requirements: | Rescue Type | Required (Yes/No) | Rationale | Keep language clear, concise, and operational. Return Markdown only."
+            },
+            "streaming": {
+              "enabled": true,
+              "showProgress": true,
+              "updateInterval": 100
+            }
+          },
+          "deepAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a confined-space rescue planning assistant. Review our conversation history - you recently analyzed rescue space images and provided detailed safety assessments. Use that analysis to populate the form fields with actual rescue planning data you identified. Extract location details, space characteristics, and safety requirements from your previous analysis. Avoid N/A values when you have relevant information from the conversation. Return valid JSON with the rescue planning data you found.",
+              "userPrompt": "Based on your previous rescue space analysis in this conversation, populate the form fields with the rescue planning data you identified. Use the specific findings, space characteristics, safety requirements, and operational details from your analysis."
+            },
+            "autoPrompt": true
+          },
+          "personnelPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a rescue team specialist. Generate rescue personnel assignments based on the conversation context."
+            },
+            "autoPrompt": true
+          },
+          "generalPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1500
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a confined-space rescue planning specialist. Review our conversation history - you recently analyzed rescue space images and provided detailed safety assessments. Use that analysis to populate the general rescue planning form fields with actual data you identified. Extract location details, space characteristics, personnel requirements, and communication methods from your previous analysis. Avoid N/A values when you have relevant information from the conversation. Return valid JSON with the rescue planning data you found.",
+              "userPrompt": "Based on your previous rescue space analysis in this conversation, populate the general rescue planning form fields with the data you identified. Use the specific findings, space characteristics, safety requirements, and operational details from your analysis."
+            },
+            "autoPrompt": true
+          },
+          "resourcesPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a rescue equipment specialist. Generate rescue equipment based on the conversation context."
+            },
+            "autoPrompt": true
+          },
+          "atmosphericPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a confined-space safety specialist. Generate atmospheric monitoring readings (O2 %, LEL %, CO ppm, H2S ppm) with timestamps and relevant notes based on the conversation context. Return JSON array data only."
+            },
+            "autoPrompt": true
+          },
+          "isolationPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are an energy-isolation subject matter expert. Summarize isolation methods applied, verification personnel, verification time, and pertinent notes from the conversation context. Return JSON data aligned with the form fields."
+            },
+            "autoPrompt": true
+          },
+          "ventilationPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a ventilation planning expert. Provide whether ventilation is required, the method used, and the atmospheric monitoring plan/notes based on the conversation context. Return JSON data aligned with the form fields."
+            },
+            "autoPrompt": true
+          },
+          "retrievalPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a rescue retrieval specialist. Detail retrieval system readiness, equipment in use, and any notes based on the conversation context. Return JSON data aligned with the form fields."
+            },
+            "autoPrompt": true
+          },
+          "emsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1500
+            },
+            "promptConfig": {
+              "systemPrompt": "You are coordinating EMS support for a confined-space rescue. Provide EMS notification status, contact details, response time, receiving facility, and relevant notes based on the conversation context. Return JSON data aligned with the form fields."
+            },
+            "autoPrompt": true
+          },
+          "rescueMethodsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 2000
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a confined-space rescue planner. Recommend likely rescue methods, access paths, required equipment, anchorage availability, and hauling/lowering needs based on the conversation context. Return JSON data aligned with the rescueMethods grid."
+            },
+            "autoPrompt": true
+          },
+          "contactsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1500
+            },
+            "promptConfig": {
+              "systemPrompt": "You are coordinating confined-space rescue communications. Summarize plant contact details and primary/secondary methods to summon rescue services based on the conversation context. Return JSON aligned with the contacts & communication fields."
+            },
+            "autoPrompt": true
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "recordId",
+              "queryParam": "record_id",
+              "required": true
+            }
+          ],
+          "request": {
+            "url": "/api/documents",
+            "method": "GET",
+            "query": {
+              "type": "asset",
+              "id": "{params.recordId}"
+            }
+          },
+          "responseSelector": "data.0"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ]
+        },
+        "domainConfig": {
+          "payloadType": "safety",
+          "defaultType": "rescue_preplan",
+          "fields": {
+            "type": "wizard_type",
+            "documentType": "document_type",
+            "label": "label",
+            "id": "record_id",
+            "name": "record_name",
+            "owner": "owner",
+            "date": "created_at"
+          },
+          "outputKeys": {
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label",
+            "id": "recordId",
+            "name": "recordName",
+            "owner": "owner",
+            "date": "createdAt"
+          },
+          "payloadKeys": {
+            "type": "wizardType",
+            "documentType": "documentType",
+            "label": "label"
+          },
+          "navigation": {
+            "listingSuffix": "responses",
+            "homeSuffix": "home"
+          },
+          "typeMap": {
+            "rescue_preplan": "Rescue Pre-Plan Wizard"
+          }
+        },
+        "type": "safety",
+        "documentType": "rescue_preplan",
+        "label": "Rescue Pre-Plan Wizard",
+        "identity": {
+          "recordType": "wizard",
+          "domain": "safety",
+          "domainLabel": "Safety",
+          "domainSubType": "rescue_preplan",
+          "domainSubTypeLabel": "Rescue Pre-Plan Wizard"
+        }
+      },
+      "position": 24
+    }
+  ],
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
+}

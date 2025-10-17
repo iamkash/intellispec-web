@@ -1,5 +1,5 @@
 {
-  "id": "equipment-checkout-workspace",
+  "id": "equipment/checkout-form",
   "title": "Equipment Checkout Form",
   "description": "Workspace form for tracking contractor equipment checkouts and returns.",
   "layout": "form",
@@ -15,223 +15,223 @@
         "title": "Equipment Checkout Form",
         "description": "Form for tracking contractor equipment checkouts and returns.",
         "gadgetOptions": [
-    {
-      "id": "checkout_section",
-      "title": "Equipment Checkout",
-      "type": "section",
-      "size": 12,
-      "icon": "ToolOutlined"
-    },
-    {
-      "id": "contractor_info_group",
-      "title": "Contractor Information",
-      "type": "group",
-      "size": 12,
-      "sectionId": "checkout_section"
-    },
-    {
-      "id": "badge_scanner",
-      "title": "Scan Badge",
-      "type": "qrscanner",
-      "size": 12,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Scan Contractor Badge",
-      "props": {
-        "placeholder": "Scan QR or barcode badge to autofill contractor info"
-      }
-    },
-    {
-      "id": "ocr_card_capture",
-      "title": "OCR Card Capture",
-      "type": "camera",
-      "size": 12,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Capture ID Card Image for OCR",
-      "props": {
-        "capture": "environment",
-        "showUploadList": false
-      }
-    },
-    {
-      "id": "timestamp",
-      "title": "Timestamp",
-      "type": "date",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Checkout Time",
-      "required": true,
-      "props": {
-        "showTime": true,
-        "format": "YYYY-MM-DD HH:mm"
-      }
-    },
-    {
-      "id": "company_name",
-      "title": "Company Name",
-      "type": "combo",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Contractor Company",
-      "required": true,
-      "optionsDatasourceUrl": "/api/companies",
-      "optionsPath": "data",
-      "props": {
-        "showSearch": true,
-        "allowClear": true
-      }
-    },
-    {
-      "id": "company_contact",
-      "title": "Company Contact Info",
-      "type": "text",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "A/P Phone Number",
-      "props": {
-        "inputType": "tel"
-      }
-    },
-    {
-      "id": "company_email",
-      "title": "Company Email",
-      "type": "text",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "A/P Email Address",
-      "props": {
-        "inputType": "email"
-      }
-    },
-    {
-      "id": "contractor_receiving",
-      "title": "Receiving Contractor",
-      "type": "text",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Contractor Name (Receiving)",
-      "required": true
-    },
-    {
-      "id": "contractor_receiving_phone",
-      "title": "Receiving Contractor Phone",
-      "type": "text",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Contact Phone",
-      "props": {
-        "inputType": "tel"
-      }
-    },
-    {
-      "id": "supervisor_name",
-      "title": "Supervisor Name",
-      "type": "text",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Supervisor Name"
-    },
-    {
-      "id": "supervisor_contact",
-      "title": "Supervisor Contact",
-      "type": "text",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Supervisor Contact",
-      "props": {
-        "inputType": "tel"
-      }
-    },
-    {
-      "id": "contractor_returning",
-      "title": "Returning Contractor",
-      "type": "text",
-      "size": 6,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Contractor Name (Returning)"
-    },
-    {
-      "id": "equipment_list",
-      "title": "Equipment Items",
-      "type": "combo",
-      "size": 12,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Equipment Items",
-      "required": true,
-      "optionsDatasourceUrl": "/api/equipment",
-      "optionsPath": "data",
-      "props": {
-        "mode": "multiple",
-        "showSearch": true
-      }
-    },
-    {
-      "id": "location",
-      "title": "Location/Job Site",
-      "type": "text",
-      "size": 12,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Location/Job Site",
-      "placeholder": "e.g., Plant 1, V-703",
-      "required": true
-    },
-    {
-      "id": "fit_test_upload",
-      "title": "Fit Test Card",
-      "type": "upload",
-      "size": 12,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Fit Test Card Upload",
-      "props": {
-        "multiple": false,
-        "accept": "image/*",
-        "listType": "picture-card",
-        "showUploadList": true
-      }
-    },
-    {
-      "id": "damage_photo",
-      "title": "Damaged Equipment",
-      "type": "upload",
-      "size": 12,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Upload Photo of Damage",
-      "props": {
-        "multiple": false,
-        "accept": "image/*",
-        "listType": "picture-card",
-        "showUploadList": true
-      }
-    },
-    {
-      "id": "notes",
-      "title": "Additional Notes",
-      "type": "textarea",
-      "size": 12,
-      "sectionId": "checkout_section",
-      "groupId": "contractor_info_group",
-      "label": "Notes",
-      "props": {
-        "rows": 3,
-        "showCount": true,
-        "maxLength": 300
-      }
-    }
-  ]
+          {
+            "id": "checkout_section",
+            "title": "Equipment Checkout",
+            "type": "section",
+            "size": 12,
+            "icon": "ToolOutlined"
+          },
+          {
+            "id": "contractor_info_group",
+            "title": "Contractor Information",
+            "type": "group",
+            "size": 12,
+            "sectionId": "checkout_section"
+          },
+          {
+            "id": "badge_scanner",
+            "title": "Scan Badge",
+            "type": "qrscanner",
+            "size": 12,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Scan Contractor Badge",
+            "props": {
+              "placeholder": "Scan QR or barcode badge to autofill contractor info"
+            }
+          },
+          {
+            "id": "ocr_card_capture",
+            "title": "OCR Card Capture",
+            "type": "camera",
+            "size": 12,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Capture ID Card Image for OCR",
+            "props": {
+              "capture": "environment",
+              "showUploadList": false
+            }
+          },
+          {
+            "id": "timestamp",
+            "title": "Timestamp",
+            "type": "date",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Checkout Time",
+            "required": true,
+            "props": {
+              "showTime": true,
+              "format": "YYYY-MM-DD HH:mm"
+            }
+          },
+          {
+            "id": "company_name",
+            "title": "Company Name",
+            "type": "combo",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Contractor Company",
+            "required": true,
+            "optionsDatasourceUrl": "/api/companies",
+            "optionsPath": "data",
+            "props": {
+              "showSearch": true,
+              "allowClear": true
+            }
+          },
+          {
+            "id": "company_contact",
+            "title": "Company Contact Info",
+            "type": "text",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "A/P Phone Number",
+            "props": {
+              "inputType": "tel"
+            }
+          },
+          {
+            "id": "company_email",
+            "title": "Company Email",
+            "type": "text",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "A/P Email Address",
+            "props": {
+              "inputType": "email"
+            }
+          },
+          {
+            "id": "contractor_receiving",
+            "title": "Receiving Contractor",
+            "type": "text",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Contractor Name (Receiving)",
+            "required": true
+          },
+          {
+            "id": "contractor_receiving_phone",
+            "title": "Receiving Contractor Phone",
+            "type": "text",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Contact Phone",
+            "props": {
+              "inputType": "tel"
+            }
+          },
+          {
+            "id": "supervisor_name",
+            "title": "Supervisor Name",
+            "type": "text",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Supervisor Name"
+          },
+          {
+            "id": "supervisor_contact",
+            "title": "Supervisor Contact",
+            "type": "text",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Supervisor Contact",
+            "props": {
+              "inputType": "tel"
+            }
+          },
+          {
+            "id": "contractor_returning",
+            "title": "Returning Contractor",
+            "type": "text",
+            "size": 6,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Contractor Name (Returning)"
+          },
+          {
+            "id": "equipment_list",
+            "title": "Equipment Items",
+            "type": "combo",
+            "size": 12,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Equipment Items",
+            "required": true,
+            "optionsDatasourceUrl": "/api/equipment",
+            "optionsPath": "data",
+            "props": {
+              "mode": "multiple",
+              "showSearch": true
+            }
+          },
+          {
+            "id": "location",
+            "title": "Location/Job Site",
+            "type": "text",
+            "size": 12,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Location/Job Site",
+            "placeholder": "e.g., Plant 1, V-703",
+            "required": true
+          },
+          {
+            "id": "fit_test_upload",
+            "title": "Fit Test Card",
+            "type": "upload",
+            "size": 12,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Fit Test Card Upload",
+            "props": {
+              "multiple": false,
+              "accept": "image/*",
+              "listType": "picture-card",
+              "showUploadList": true
+            }
+          },
+          {
+            "id": "damage_photo",
+            "title": "Damaged Equipment",
+            "type": "upload",
+            "size": 12,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Upload Photo of Damage",
+            "props": {
+              "multiple": false,
+              "accept": "image/*",
+              "listType": "picture-card",
+              "showUploadList": true
+            }
+          },
+          {
+            "id": "notes",
+            "title": "Additional Notes",
+            "type": "textarea",
+            "size": 12,
+            "sectionId": "checkout_section",
+            "groupId": "contractor_info_group",
+            "label": "Notes",
+            "props": {
+              "rows": 3,
+              "showCount": true,
+              "maxLength": 300
+            }
+          }
+        ]
       }
     }
   ]

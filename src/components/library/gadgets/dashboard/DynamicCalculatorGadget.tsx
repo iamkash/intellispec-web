@@ -22,7 +22,6 @@ import remarkGfm from "remark-gfm";
 import { useOpenAI } from "../../../../hooks/useOpenAI";
 import {
   GenericPdfMetadata,
-  normalizeForPdf,
   PDFGeneratorWidget,
 } from "../../widgets/input/PDFGeneratorWidget";
 import {
@@ -209,15 +208,6 @@ const SimpleCalculatorComponent: React.FC<{
     return queryId || undefined;
   }, [config?.calculatorId]);
 
-  // Fetch calculator metadata when a valid calculatorId is available - memoized
-  useEffect(() => {
-    if (resolvedCalculatorId) {
-      fetchCalculatorMetadata(resolvedCalculatorId);
-    } else {
-      fetchCalculatorMetadata(undefined);
-    }
-  }, [resolvedCalculatorId]); // Only depend on resolvedCalculatorId
-
   const fetchCalculatorMetadata = React.useCallback(
     async (calculatorIdParam?: string) => {
       let calculatorId = calculatorIdParam || config?.calculatorId;
@@ -255,8 +245,17 @@ const SimpleCalculatorComponent: React.FC<{
         setMetadataLoading(false);
       }
     },
-    [config?.calculatorId]
+    [config]
   ); // Add dependency for useCallback
+
+  // Fetch calculator metadata when a valid calculatorId is available - memoized
+  useEffect(() => {
+    if (resolvedCalculatorId) {
+      fetchCalculatorMetadata(resolvedCalculatorId);
+    } else {
+      fetchCalculatorMetadata(undefined);
+    }
+  }, [fetchCalculatorMetadata, resolvedCalculatorId]);
 
   // Build gadgetOptions and field list from config or metadata (supports flat uiDefinition arrays)
   // Memoize with stable dependencies to prevent unnecessary re-creation
@@ -640,6 +639,88 @@ const SimpleCalculatorComponent: React.FC<{
     );
   }, []);
 
+  // Helper functions - memoized to prevent re-creation
+  const truncateIfLong = React.useCallback((value: any, maxLen = 1000): any => {
+    if (typeof value === "string") {
+      return value.length > maxLen
+        ? `${value.slice(0, maxLen)}… [truncated]`
+        : value;
+    }
+    return value;
+  }, []);
+
+  // Helper: sanitize values (especially images) for safe inclusion in prompts
+  const sanitizeValueForPrompt = React.useCallback(
+    (value: any, fieldType?: string): any => {
+      // Nullish stays null
+      if (value === undefined || value === null) return value;
+
+      // Strings: strip data URLs and truncate
+      if (typeof value === "string") {
+        if (/^data:(?:image|application)\//i.test(value)) {
+          return "[binary data omitted]";
+        }
+        return truncateIfLong(value);
+      }
+
+      // Arrays: if image-upload-like, summarize instead of embedding data
+      if (Array.isArray(value)) {
+        // Detect image object shape
+        const looksLikeImageArray =
+          value.length > 0 &&
+          typeof value[0] === "object" &&
+          ("url" in (value[0] || {}) || "base64" in (value[0] || {}));
+        if (String(fieldType || "").includes("image") || looksLikeImageArray) {
+          const names = value.map((v: any) => String(v?.name || "image"));
+          const annotated = value.filter((v: any) => !!v?.drawingData).length;
+          const dims = value
+            .map((v: any) => ({
+              w: v?.metadata?.width,
+              h: v?.metadata?.height,
+            }))
+            .filter((d: any) => Number.isFinite(d.w) && Number.isFinite(d.h));
+          return {
+            count: value.length,
+            annotatedCount: annotated,
+            names: names.slice(0, 10),
+            sizes: dims.slice(0, 10),
+          };
+        }
+        // Generic arrays: sanitize recursively but cap size
+        return value
+          .slice(0, 50)
+          .map((item: any) => sanitizeValueForPrompt(item, fieldType));
+      }
+
+      // Objects: strip base64 url fields, keep metadata
+      if (typeof value === "object") {
+        // Image-like object
+        const hasDataUrl =
+          typeof (value as any)?.url === "string" &&
+          /^data:/i.test((value as any).url);
+        if (hasDataUrl || String(fieldType || "").includes("image")) {
+          return {
+            name: (value as any)?.name || "image",
+            annotated: !!(value as any)?.drawingData,
+            width: (value as any)?.metadata?.width,
+            height: (value as any)?.metadata?.height,
+            size: (value as any)?.metadata?.size,
+          };
+        }
+        // Generic object: shallow sanitize and truncate long strings
+        const out: Record<string, any> = {};
+        Object.entries(value as Record<string, any>).forEach(([k, v]) => {
+          out[k] = sanitizeValueForPrompt(v, fieldType);
+        });
+        return out;
+      }
+
+      // Numbers/booleans
+      return value;
+    },
+    [truncateIfLong]
+  );
+
   const handleCalculate = React.useCallback(async () => {
     setLoading(true);
     setIsStreaming(true);
@@ -808,89 +889,16 @@ const SimpleCalculatorComponent: React.FC<{
       setLoading(false);
       setIsStreaming(false);
     }
-  }, [openAI, aiPrompt, fieldList, formData, fieldTypeById]); // Add dependencies for useCallback
-
-  // Helper functions - memoized to prevent re-creation
-  const truncateIfLong = React.useCallback((value: any, maxLen = 1000): any => {
-    if (typeof value === "string") {
-      return value.length > maxLen
-        ? `${value.slice(0, maxLen)}… [truncated]`
-        : value;
-    }
-    return value;
-  }, []);
-
-  // Helper: sanitize values (especially images) for safe inclusion in prompts
-  const sanitizeValueForPrompt = React.useCallback(
-    (value: any, fieldType?: string): any => {
-      // Nullish stays null
-      if (value === undefined || value === null) return value;
-
-      // Strings: strip data URLs and truncate
-      if (typeof value === "string") {
-        if (/^data:(?:image|application)\//i.test(value)) {
-          return "[binary data omitted]";
-        }
-        return truncateIfLong(value);
-      }
-
-      // Arrays: if image-upload-like, summarize instead of embedding data
-      if (Array.isArray(value)) {
-        // Detect image object shape
-        const looksLikeImageArray =
-          value.length > 0 &&
-          typeof value[0] === "object" &&
-          ("url" in (value[0] || {}) || "base64" in (value[0] || {}));
-        if (String(fieldType || "").includes("image") || looksLikeImageArray) {
-          const names = value.map((v: any) => String(v?.name || "image"));
-          const annotated = value.filter((v: any) => !!v?.drawingData).length;
-          const dims = value
-            .map((v: any) => ({
-              w: v?.metadata?.width,
-              h: v?.metadata?.height,
-            }))
-            .filter((d: any) => Number.isFinite(d.w) && Number.isFinite(d.h));
-          return {
-            count: value.length,
-            annotatedCount: annotated,
-            names: names.slice(0, 10),
-            sizes: dims.slice(0, 10),
-          };
-        }
-        // Generic arrays: sanitize recursively but cap size
-        return value
-          .slice(0, 50)
-          .map((item: any) => sanitizeValueForPrompt(item, fieldType));
-      }
-
-      // Objects: strip base64 url fields, keep metadata
-      if (typeof value === "object") {
-        // Image-like object
-        const hasDataUrl =
-          typeof (value as any)?.url === "string" &&
-          /^data:/i.test((value as any).url);
-        if (hasDataUrl || String(fieldType || "").includes("image")) {
-          return {
-            name: (value as any)?.name || "image",
-            annotated: !!(value as any)?.drawingData,
-            width: (value as any)?.metadata?.width,
-            height: (value as any)?.metadata?.height,
-            size: (value as any)?.metadata?.size,
-          };
-        }
-        // Generic object: shallow sanitize and truncate long strings
-        const out: Record<string, any> = {};
-        Object.entries(value as Record<string, any>).forEach(([k, v]) => {
-          out[k] = sanitizeValueForPrompt(v, fieldType);
-        });
-        return out;
-      }
-
-      // Numbers/booleans
-      return value;
-    },
-    [truncateIfLong]
-  );
+  }, [
+    aiPrompt,
+    fieldList,
+    fieldTypeById,
+    formData,
+    openAI,
+    sanitizeValueForPrompt,
+    streamingResult,
+    truncateIfLong,
+  ]);
 
   const handleReset = React.useCallback(() => {
     setFormData({});
@@ -916,8 +924,6 @@ const SimpleCalculatorComponent: React.FC<{
 
     // Use original markdown content without parsing tables or changing layout
     // Just normalize Unicode characters for PDF compatibility
-    const cleanContent = normalizeForPdf(contentToPrint);
-
     const sections: any[] = [];
 
     // Extract images from form data for PDF inclusion
@@ -1468,11 +1474,6 @@ const MemoizedFormRenderer = React.memo<{
 
     // Use ref to store formGadget instance to prevent recreation
     const formGadgetRef = React.useRef<DocumentFormGadget | null>(null);
-
-    // Only create new gadget if gadgetOptions actually changed (deep comparison of length and first item id)
-    const gadgetOptionsKey = React.useMemo(() => {
-      return `${gadgetOptions.length}-${gadgetOptions[0]?.id || "empty"}`;
-    }, [gadgetOptions]);
 
     if (
       !formGadgetRef.current ||

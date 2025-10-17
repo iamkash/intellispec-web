@@ -4,7 +4,7 @@
  * Tests validation logic for different field types including email, phone, URL, and password validation.
  */
 
-import FormValidator, { ValidationResult, FieldConfig } from './FormValidator';
+import FormValidator, { FieldConfig } from './FormValidator';
 
 describe('FormValidator', () => {
   

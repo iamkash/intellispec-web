@@ -275,6 +275,7 @@ return;
       ...query,
       embedding: { $exists: true }
     });
+    console.log(`  • Documents with embeddings before run: ${existingEmbeddings}`);
 // Process documents in batches
     let processed = 0;
     const totalResults = {
@@ -312,6 +313,8 @@ const finalEmbeddingCount = await collection.countDocuments({
         embedding: { $exists: true }
       });
 // Sample verification
+      console.log(`  • Documents with embeddings after run: ${finalEmbeddingCount}`);
+
       const sampleDoc = await collection.findOne({
         ...query,
         embedding: { $exists: true }

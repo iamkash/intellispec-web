@@ -4,7 +4,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Rate, Typography, Space } from 'antd';
-import { StarOutlined, HeartOutlined } from '@ant-design/icons';
+import { StarOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 

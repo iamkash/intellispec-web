@@ -11,7 +11,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import React, { useCallback, useEffect, useState } from 'react';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 export interface PDFReportPreviewWidgetProps {
   id: string;
@@ -105,26 +105,7 @@ export const PDFReportPreviewWidget: React.FC<PDFReportPreviewWidgetProps> = ({
   showPreview = true,
   autoGenerate = false
 }) => {
-  // Simple message implementation that doesn't rely on external dependencies
-  const messageApi = {
-    success: (content: string) => {
-// You could add a toast notification here if needed
-    },
-    error: (content: string) => {
-      console.error('❌ Error:', content);
-      // You could add a toast notification here if needed
-    },
-    warning: (content: string) => {
-      console.warn('⚠️ Warning:', content);
-      // You could add a toast notification here if needed
-    },
-    info: (content: string) => {
-      console.info('ℹ️ Info:', content);
-      // You could add a toast notification here if needed
-    }
-  };
   // Get form data from context or props
-  const [localFormData, setLocalFormData] = useState<any>({});
   const [processedSections, setProcessedSections] = useState<any[]>([]);
 
   // Load real section data from the wizard configuration
@@ -242,7 +223,6 @@ setProcessedSections(loadedSections);
       const pageHeight = doc.internal.pageSize.getHeight();
       const marginLeft = margins.left;
       const marginRight = margins.right;
-      const contentWidth = pageWidth - marginLeft - marginRight;
       let yPosition = margins.top;
 
       // Header
@@ -438,17 +418,27 @@ setProcessedSections(loadedSections);
       const url = URL.createObjectURL(pdfBlob);
       setPdfUrl(url);
 
-      messageApi.success('PDF report generated successfully');
+      console.log('✅ PDF report generated successfully');
       
     } catch (error) {
       console.error('Error generating PDF:', error);
-      messageApi.error('Failed to generate PDF report');
+      console.error('❌ Failed to generate PDF report');
     } finally {
       setIsGenerating(false);
     }
   }, [
-    processedSections, reportTitle, reportSubtitle, companyName, inspectorName, 
-    inspectionDate, vesselId, vesselName, pageSize, orientation, margins
+    processedSections,
+    reportTitle,
+    reportSubtitle,
+    companyName,
+    inspectorName,
+    inspectionDate,
+    vesselId,
+    vesselName,
+    pageSize,
+    orientation,
+    margins,
+    sections
   ]);
 
   // Download PDF

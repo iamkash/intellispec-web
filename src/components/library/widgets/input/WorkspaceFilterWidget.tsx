@@ -9,12 +9,24 @@
 import { ClearOutlined, FilterOutlined } from '@ant-design/icons';
 import { Button, Card, Col, DatePicker, Input, Row, Select, Space } from 'antd';
 import dayjs from 'dayjs';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { FilterDefinition, useWorkspaceFilters } from '../../../../contexts/WorkspaceFilterContext';
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import WorkspaceFilterContext, { FilterDefinition, WorkspaceFilterContextValue } from '../../../../contexts/WorkspaceFilterContext';
 import { BaseGadget } from '../../gadgets/base';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
+
+const noop = () => {};
+const fallbackWorkspaceFilters: WorkspaceFilterContextValue = {
+  filters: {},
+  filterDefinitions: [],
+  setFilter: noop,
+  clearFilter: noop,
+  clearAllFilters: noop,
+  getFilterQuery: () => ({}),
+  isLoading: false,
+  refreshTrigger: 0
+};
 
 export interface WorkspaceFilterWidgetProps {
   filterDefinitions: FilterDefinition[];
@@ -31,23 +43,24 @@ export const WorkspaceFilterWidget: React.FC<WorkspaceFilterWidgetProps> = ({
   showFilterCount = true,
   className = ''
 }) => {
-  // Try to get workspace filters, but provide fallback if not available
-  let filters: Record<string, any> = {};
-  let setFilter = (_filterId: string, _value: any) => {};
-  let clearFilter = (_filterId: string) => {};
-  let clearAllFilters = () => {};
-  let isLoading = false;
+  const workspaceFiltersFromContext = useContext(WorkspaceFilterContext);
 
-  try {
-    const workspaceFilters = useWorkspaceFilters();
-    filters = workspaceFilters.filters;
-    setFilter = workspaceFilters.setFilter;
-    clearFilter = workspaceFilters.clearFilter;
-    clearAllFilters = workspaceFilters.clearAllFilters;
-    isLoading = workspaceFilters.isLoading;
-  } catch (error) {
-    console.warn('WorkspaceFilterWidget: No filter context available, using fallback');
-  }
+  useEffect(() => {
+    if (!workspaceFiltersFromContext) {
+      console.warn('WorkspaceFilterWidget: No filter context available, using fallback');
+    }
+  }, [workspaceFiltersFromContext]);
+
+  const {
+    filters,
+    setFilter,
+    clearFilter,
+    clearAllFilters,
+    isLoading
+  } = useMemo(
+    () => workspaceFiltersFromContext ?? fallbackWorkspaceFilters,
+    [workspaceFiltersFromContext]
+  );
 
   const [filterOptions, setFilterOptions] = useState<Record<string, Array<{ label: string; value: any }>>>({});
   const [loadingOptions, setLoadingOptions] = useState<Record<string, boolean>>({});

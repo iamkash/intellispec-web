@@ -17,8 +17,7 @@
  * - GDPR-compliant data retention
  */
 
-import { AuthLog, IAuthLog } from '../models';
-import mongoose from 'mongoose';
+import { AuthLog } from '../models';
 
 // ==================== TYPES AND INTERFACES ====================
 
@@ -226,7 +225,7 @@ export class AuthLoggingService {
       const securityContext = await this.analyzeSecurityContext(enhancedEvent);
 
       // Create log entry
-      const logEntry = await AuthLog.create({
+      await AuthLog.create({
         tenantSlug: enhancedEvent.tenantSlug,
         userId: enhancedEvent.userId,
         email: enhancedEvent.email,
@@ -966,9 +965,11 @@ export async function logPermissionCheck(context: {
 // Export singleton instance
 export const authLoggingService = AuthLoggingService.getInstance();
 
-export default {
+const AuthLoggingExports = {
   AuthLoggingService,
   authLoggingService,
   logAuthEvent,
   logPermissionCheck
 };
+
+export default AuthLoggingExports;

@@ -4,7 +4,6 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { AutoComplete, Typography, Space } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -110,7 +109,7 @@ export const AutoCompleteWidget: React.FC<AutoCompleteWidgetProps> = ({
     }
 
     onChange?.(newValue);
-  }, [value, validator, onChange]);
+  }, [validator, onChange]);
 
   const handleSelect = useCallback((selectedValue: string, option: any) => {
     const selectedOption = options.find(opt => opt.value === selectedValue);

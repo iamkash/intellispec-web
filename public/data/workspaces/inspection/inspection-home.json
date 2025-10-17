@@ -1,5 +1,5 @@
 {
-  "id": "inspection-home",
+  "id": "inspection/inspection-home",
   "type": "dashboard",
   "title": "Inspection Home",
   "description": "Main inspection dashboard with quick access to inspection tools and workflows",
@@ -31,7 +31,12 @@
             "type": "workspace",
             "workspace": "inspection/ai-inspection-assistant",
             "category": "ai",
-            "tags": ["ai", "voice", "image", "automation"]
+            "tags": [
+              "ai",
+              "voice",
+              "image",
+              "automation"
+            ]
           },
           {
             "id": "api-510-pressure-vessel",
@@ -41,7 +46,11 @@
             "type": "workspace",
             "workspace": "inspection/api-510-pressure-vessel-inspection",
             "category": "pressure_vessel",
-            "tags": ["api-510", "pressure-vessel", "inspection"]
+            "tags": [
+              "api-510",
+              "pressure-vessel",
+              "inspection"
+            ]
           },
           {
             "id": "piping-inspection-dashboard",
@@ -51,7 +60,13 @@
             "type": "workspace",
             "workspace": "inspection/piping-inspection-dashboard",
             "category": "piping",
-            "tags": ["api-570", "piping", "corrosion", "ai", "dashboard"]
+            "tags": [
+              "api-570",
+              "piping",
+              "corrosion",
+              "ai",
+              "dashboard"
+            ]
           },
           {
             "id": "piping-visual-inspection-wizard",
@@ -61,7 +76,13 @@
             "type": "workspace",
             "workspace": "inspection/piping-visual-inspection-wizard",
             "category": "piping",
-            "tags": ["api-574", "piping", "visual", "inspection", "ai"]
+            "tags": [
+              "api-574",
+              "piping",
+              "visual",
+              "inspection",
+              "ai"
+            ]
           },
           {
             "id": "ai-project-plan-wizard",
@@ -71,7 +92,11 @@
             "type": "workspace",
             "workspace": "inspection/ai-project-plan-wizard",
             "category": "planning",
-            "tags": ["project", "planning", "ai"]
+            "tags": [
+              "project",
+              "planning",
+              "ai"
+            ]
           },
           {
             "id": "final-documentation-attachments",
@@ -81,7 +106,11 @@
             "type": "workspace",
             "workspace": "inspection/final-documentation-attachments",
             "category": "documentation",
-            "tags": ["documentation", "reports", "attachments"]
+            "tags": [
+              "documentation",
+              "reports",
+              "attachments"
+            ]
           },
           {
             "id": "nde-requirements-results",
@@ -91,7 +120,12 @@
             "type": "workspace",
             "workspace": "inspection/nde-requirements-results",
             "category": "nde",
-            "tags": ["nde", "ultrasonic", "radiographic", "testing"]
+            "tags": [
+              "nde",
+              "ultrasonic",
+              "radiographic",
+              "testing"
+            ]
           },
           {
             "id": "thickness-measurements",
@@ -101,7 +135,11 @@
             "type": "workspace",
             "workspace": "inspection/thickness-measurements",
             "category": "measurements",
-            "tags": ["thickness", "ultrasonic", "corrosion"]
+            "tags": [
+              "thickness",
+              "ultrasonic",
+              "corrosion"
+            ]
           },
           {
             "id": "visual-examination",
@@ -111,7 +149,11 @@
             "type": "workspace",
             "workspace": "inspection/visual-examination",
             "category": "visual",
-            "tags": ["visual", "inspection", "examination"]
+            "tags": [
+              "visual",
+              "inspection",
+              "examination"
+            ]
           },
           {
             "id": "inspection-results-analysis",
@@ -121,7 +163,11 @@
             "type": "workspace",
             "workspace": "inspection/inspection-results-analysis",
             "category": "analysis",
-            "tags": ["analysis", "results", "recommendations"]
+            "tags": [
+              "analysis",
+              "results",
+              "recommendations"
+            ]
           },
           {
             "id": "repairs-modifications",
@@ -131,7 +177,11 @@
             "type": "workspace",
             "workspace": "inspection/repairs-modifications",
             "category": "repairs",
-            "tags": ["repairs", "modifications", "post-repair"]
+            "tags": [
+              "repairs",
+              "modifications",
+              "post-repair"
+            ]
           },
           {
             "id": "operating-conditions-history",
@@ -141,7 +191,12 @@
             "type": "workspace",
             "workspace": "inspection/operating-conditions-history",
             "category": "history",
-            "tags": ["operating", "conditions", "history", "maintenance"]
+            "tags": [
+              "operating",
+              "conditions",
+              "history",
+              "maintenance"
+            ]
           },
           {
             "id": "safety-access-preparation",
@@ -151,7 +206,12 @@
             "type": "workspace",
             "workspace": "inspection/safety-access-preparation",
             "category": "safety",
-            "tags": ["safety", "access", "permits", "preparation"]
+            "tags": [
+              "safety",
+              "access",
+              "permits",
+              "preparation"
+            ]
           },
           {
             "id": "vessel-identification-planning",
@@ -161,7 +221,11 @@
             "type": "workspace",
             "workspace": "inspection/vessel-identification-planning",
             "category": "planning",
-            "tags": ["vessel", "identification", "planning"]
+            "tags": [
+              "vessel",
+              "identification",
+              "planning"
+            ]
           }
         ]
       }
@@ -174,7 +238,20 @@
       "enableHoverEffects": true,
       "autoRefresh": false,
       "groupByCategory": true,
-      "showCategories": ["ai", "piping", "pressure_vessel", "planning", "documentation", "nde", "measurements", "visual", "analysis", "repairs", "history", "safety"]
+      "showCategories": [
+        "ai",
+        "piping",
+        "pressure_vessel",
+        "planning",
+        "documentation",
+        "nde",
+        "measurements",
+        "visual",
+        "analysis",
+        "repairs",
+        "history",
+        "safety"
+      ]
     }
   }
-} 
+}

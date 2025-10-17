@@ -1,5 +1,5 @@
 {
-  "id": "ai-inspection-assistant",
+  "id": "intelliINSPECT/ai-inspection-assistant",
   "title": "AI Inspection Assistant",
   "description": "AI-powered inspection assistant for equipment assessment and documentation",
   "layout": "dashboard",
@@ -658,14 +658,14 @@
           },
           {
             "id": "mdmt",
-            "label": "MDMT (\u00b0F)",
+            "label": "MDMT (°F)",
             "type": "number",
             "groupId": "design_data",
             "lgSpan": 6
           },
           {
             "id": "design_temp",
-            "label": "Design Temperature (\u00b0F)",
+            "label": "Design Temperature (°F)",
             "type": "number",
             "groupId": "design_data",
             "lgSpan": 6
@@ -1024,8 +1024,8 @@
           "disablePopulatedFields": true,
           "urlParams": [
             {
-              "name": "recordId",
-              "queryParam": "record_id",
+              "name": "documentId",
+              "queryParam": "documentId",
               "required": true
             }
           ],
@@ -1033,8 +1033,8 @@
             "url": "/api/documents",
             "method": "GET",
             "query": {
-              "type": "asset",
-              "id": "{params.recordId}"
+              "type": "wizard",
+              "id": "{params.documentId}"
             }
           },
           "responseSelector": "data.0"
@@ -1071,6 +1071,38 @@
             "pump": "Pump",
             "compressor": "Compressor",
             "turbine": "Turbine"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "inspection",
+          "domainLabel": "Inspection",
+          "domainSubType": "ai_inspection_assistant",
+          "domainSubTypeLabel": "AI Inspection Assistant"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "recordIdPath": [
+            "data.id",
+            "data._id",
+            "id",
+            "_id"
+          ],
+          "successMessages": {
+            "create": "Wizard record saved",
+            "update": "Wizard record updated",
+            "progress": "Wizard progress saved"
           }
         }
       },

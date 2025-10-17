@@ -30,14 +30,28 @@
     "groupId": "overall-assessment-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
-
   {
     "id": "weld-assessment-group",
     "type": "group",
@@ -61,11 +75,26 @@
     "groupId": "weld-assessment-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Not Applicable", "value": "na"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Not Applicable",
+        "value": "na"
+      }
     ]
   },
   {
@@ -107,8 +136,14 @@
     "groupId": "corrosion-assessment-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -150,8 +185,14 @@
     "groupId": "cracking-assessment-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -193,8 +234,14 @@
     "groupId": "deformation-assessment-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -236,8 +283,14 @@
     "groupId": "leakage-assessment-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -280,11 +333,26 @@
     "groupId": "external-inspection-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Failed", "value": "failed"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Failed",
+        "value": "failed"
+      }
     ]
   },
   {
@@ -315,11 +383,26 @@
     "groupId": "external-inspection-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -361,8 +444,14 @@
     "groupId": "hot-work-inspection-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -393,11 +482,26 @@
     "groupId": "hot-work-inspection-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Defective", "value": "defective"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Defective",
+        "value": "defective"
+      }
     ]
   },
   {
@@ -439,8 +543,14 @@
     "groupId": "high-pressure-inspection-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -471,11 +581,26 @@
     "groupId": "high-pressure-inspection-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Critical", "value": "critical"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Critical",
+        "value": "critical"
+      }
     ]
   },
   {
@@ -500,8 +625,14 @@
     "groupId": "high-temperature-inspection-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -531,8 +662,14 @@
     "groupId": "high-temperature-inspection-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -587,11 +724,26 @@
     "groupId": "elevated-work-inspection-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Unsafe", "value": "unsafe"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Unsafe",
+        "value": "unsafe"
+      }
     ]
   },
   {
@@ -604,8 +756,14 @@
     "groupId": "elevated-work-inspection-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -636,11 +794,26 @@
     "groupId": "confined-space-inspection-group",
     "defaultValue": "",
     "options": [
-      {"label": "Excellent", "value": "excellent"},
-      {"label": "Good", "value": "good"},
-      {"label": "Fair", "value": "fair"},
-      {"label": "Poor", "value": "poor"},
-      {"label": "Hazardous", "value": "hazardous"}
+      {
+        "label": "Excellent",
+        "value": "excellent"
+      },
+      {
+        "label": "Good",
+        "value": "good"
+      },
+      {
+        "label": "Fair",
+        "value": "fair"
+      },
+      {
+        "label": "Poor",
+        "value": "poor"
+      },
+      {
+        "label": "Hazardous",
+        "value": "hazardous"
+      }
     ]
   },
   {
@@ -653,8 +826,14 @@
     "groupId": "confined-space-inspection-group",
     "defaultValue": "no",
     "options": [
-      {"label": "Yes", "value": "yes"},
-      {"label": "No", "value": "no"}
+      {
+        "label": "Yes",
+        "value": "yes"
+      },
+      {
+        "label": "No",
+        "value": "no"
+      }
     ]
   },
   {
@@ -695,4 +874,4 @@
     "groupId": "general-notes-group",
     "defaultValue": ""
   }
-] 
+]

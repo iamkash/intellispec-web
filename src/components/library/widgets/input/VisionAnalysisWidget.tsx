@@ -53,9 +53,9 @@ export const VisionAnalysisWidget: React.FC<VisionAnalysisWidgetProps> = React.m
   // Ensure analyzing state is properly reset
   React.useEffect(() => {
     if (analyzing) {
-setAnalyzing(false);
+      setAnalyzing(false);
     }
-  }, [images]); // Reset when images change
+  }, [images, analyzing]); // Reset when images change
 
   // Sync from external initialResult when it changes (e.g., opening a saved plan)
   React.useEffect(() => {
@@ -101,7 +101,7 @@ setAnalyzing(false);
     setOverview(initialResult.overview || undefined);
     setSuggestions(normalizeItems(initialResult.suggestions || []));
     setSelectedIds(initialResult.selectedSuggestionIds || []);
-  }, [initialResult?.overview, initialResult?.selectedSuggestionIds, /* suggestions can be big: use length */ initialResult?.suggestions?.length]);
+  }, [initialResult]);
 
   const orderedSuggestions = useMemo(() => {
     const weight = (p: string) => (p === 'high' ? 0 : p === 'medium' ? 1 : 2);
@@ -120,7 +120,7 @@ setAnalyzing(false);
       return;
     }
     try {
-setAnalyzing(true);
+      setAnalyzing(true);
 
       // Use LangGraph if configured
       if (langGraphConfig?.enabled && langGraphConfig?.workflowId) {
@@ -158,7 +158,7 @@ setAnalyzing(true);
         }
 
         const langGraphResult = await response.json();
-// Convert LangGraph result to VisionAnalysisResult format
+        // Convert LangGraph result to VisionAnalysisResult format
         const result: VisionAnalysisResult = {
           overview: langGraphResult.analysis?.overview || langGraphResult.summary || '',
           suggestions: langGraphResult.analysis?.recommendations || langGraphResult.findings || [],
@@ -224,9 +224,9 @@ setAnalyzing(true);
     } catch (e: any) {
       message.error(e?.message || 'Analysis failed');
     } finally {
-setAnalyzing(false);
+      setAnalyzing(false);
     }
-  }, [images, text, promptConfig, analyzeVision, initialSelection, onResult]);
+  }, [images, text, promptConfig, analyzeVision, initialSelection, onResult, langGraphConfig?.enabled, langGraphConfig?.workflowId, langGraphConfig?.agents]);
 
   return (
     <Card size="small" title={title || promptConfig?.title || 'AI Vision Analysis'} className="ai-vision-card" style={{ marginTop: 8 }}>
@@ -330,5 +330,4 @@ setAnalyzing(false);
 });
 
 VisionAnalysisWidget.displayName = 'VisionAnalysisWidget';
-
 

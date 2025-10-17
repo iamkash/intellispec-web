@@ -13,7 +13,7 @@ import {
   SoundOutlined
 } from '@ant-design/icons';
 import { Alert, Button, Card, Select, Space, Typography } from 'antd';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 const { Text, Paragraph } = Typography;
 const { Option } = Select;
 
@@ -55,13 +55,10 @@ export const RealtimeVoiceWidget: React.FC<RealtimeVoiceWidgetProps> = ({
 }) => {
 const [isConnected, setIsConnected] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [transcription, setTranscription] = useState(value.transcription || '');
   const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
-  const [audioChunksSent, setAudioChunksSent] = useState(0);
 
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const websocketRef = useRef<WebSocket | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -73,7 +70,7 @@ const [isConnected, setIsConnected] = useState(false);
   const turnDetectionEnabledRef = useRef<boolean>(false);
 
   // Default configuration
-  const defaultConfig = {
+  const defaultConfig = useMemo(() => ({
     model: 'gpt-realtime',
     voice: 'alloy',
     language: 'en-US',
@@ -81,7 +78,7 @@ const [isConnected, setIsConnected] = useState(false);
     temperature: 0.3,
     maxTokens: 150,
     ...config
-  };
+  }), [config]);
 // Audio conversion functions
   const floatToPCM16 = useCallback((input: Float32Array): Int16Array => {
     const out = new Int16Array(input.length);
@@ -119,7 +116,7 @@ const [isConnected, setIsConnected] = useState(false);
     src.buffer = buf;
     src.connect(ctx.destination);
     src.start();
-  }, []);
+  }, [base64ToUint8]);
 
   const playPcm16ArrayBuffer = useCallback(async (buffer: ArrayBuffer) => {
     try {
@@ -232,7 +229,6 @@ websocketRef.current.send(audioMessage);
 
           // Track buffered samples
           bufferedSamplesRef.current += pcm16.length;
-          const bufferedMs = (bufferedSamplesRef.current / 24000) * 1000;
 // Don't auto-commit when VAD is enabled - let the server handle turn detection
           // The server VAD will automatically detect end of speech and generate response
         }
@@ -243,7 +239,7 @@ setIsRecording(true);
       console.error('❌ [RealtimeVoiceWidget] Failed to start audio streaming:', error);
       setError('Failed to start audio streaming');
     }
-  }, []);
+  }, [floatToPCM16, toBase64]);
 
   const safeCommitAndRequestResponse = useCallback(() => {
     if (turnDetectionEnabledRef.current) {
@@ -259,7 +255,6 @@ return;
     }
     websocketRef.current.send(JSON.stringify({ type: 'input_audio_buffer.commit' }));
     bufferedSamplesRef.current = 0;
-    setAudioChunksSent(0);
 }, []);
 
   const requestResponseNow = useCallback(() => {
@@ -270,6 +265,74 @@ setError('Model is responding. Your next request will be sent when it finishes.'
     }
     safeCommitAndRequestResponse();
   }, [safeCommitAndRequestResponse]);
+
+  const handleRealtimeMessage = useCallback((message: any) => {
+switch (message.type) {
+      case 'response.created':
+        // If a response is already in progress, cancel this new one
+        if (responseInProgressRef.current) {
+if (websocketRef.current?.readyState === WebSocket.OPEN && message.response?.id) {
+            websocketRef.current.send(JSON.stringify({ 
+              type: 'response.cancel',
+              response_id: message.response.id 
+            }));
+          }
+          return; // Don't process this duplicate response
+        }
+        
+        responseInProgressRef.current = true;
+// Clear the input buffer immediately to prevent additional responses
+        if (websocketRef.current?.readyState === WebSocket.OPEN) {
+          websocketRef.current.send(JSON.stringify({ type: 'input_audio_buffer.clear' }));
+          bufferedSamplesRef.current = 0;
+}
+        break;
+
+      case 'conversation.item.input_audio_transcription.completed':
+        const newTranscription = message.transcript;
+setTranscription(prev => prev + ' ' + newTranscription);
+        break;
+
+      case 'response.output_audio.delta':
+// Handle audio output - base64 PCM16 from OpenAI
+        if (message.delta) {
+playAudioResponse(message.delta);
+        }
+        break;
+
+      case 'response.output_text.delta':
+// Handle text output
+        break;
+
+      case 'response.done':
+        responseInProgressRef.current = false;
+// Implement a cooldown period to prevent immediate new responses
+        setTimeout(() => {
+if (pendingCommitRef.current) {
+            const minSamples = 2400; // 100ms
+            if (bufferedSamplesRef.current >= minSamples) {
+safeCommitAndRequestResponse();
+            } else {
+}
+            pendingCommitRef.current = false;
+          }
+        }, 2000); // 2 second cooldown before accepting new input
+        break;
+
+      case 'error':
+        console.error('❌ [RealtimeVoiceWidget] Realtime API error:', message.error);
+        setError(message.error.message);
+        break;
+
+      case 'session.created':
+break;
+
+      case 'session.updated':
+break;
+
+      default:
+}
+  }, [playAudioResponse, safeCommitAndRequestResponse]);
 
   const handleConnect = useCallback(async () => {
     try {
@@ -381,75 +444,7 @@ playPcm16ArrayBuffer(event.data);
       setError('Failed to access microphone or connect to Realtime API');
       setConnectionStatus('error');
     }
-  }, [defaultConfig]);
-
-  const handleRealtimeMessage = useCallback((message: any) => {
-switch (message.type) {
-      case 'response.created':
-        // If a response is already in progress, cancel this new one
-        if (responseInProgressRef.current) {
-if (websocketRef.current?.readyState === WebSocket.OPEN && message.response?.id) {
-            websocketRef.current.send(JSON.stringify({ 
-              type: 'response.cancel',
-              response_id: message.response.id 
-            }));
-          }
-          return; // Don't process this duplicate response
-        }
-        
-        responseInProgressRef.current = true;
-// Clear the input buffer immediately to prevent additional responses
-        if (websocketRef.current?.readyState === WebSocket.OPEN) {
-          websocketRef.current.send(JSON.stringify({ type: 'input_audio_buffer.clear' }));
-          bufferedSamplesRef.current = 0;
-}
-        break;
-
-      case 'conversation.item.input_audio_transcription.completed':
-        const newTranscription = message.transcript;
-setTranscription(prev => prev + ' ' + newTranscription);
-        break;
-
-      case 'response.output_audio.delta':
-// Handle audio output - base64 PCM16 from OpenAI
-        if (message.delta) {
-playAudioResponse(message.delta);
-        }
-        break;
-
-      case 'response.output_text.delta':
-// Handle text output
-        break;
-
-      case 'response.done':
-        responseInProgressRef.current = false;
-// Implement a cooldown period to prevent immediate new responses
-        setTimeout(() => {
-if (pendingCommitRef.current) {
-            const minSamples = 2400; // 100ms
-            if (bufferedSamplesRef.current >= minSamples) {
-safeCommitAndRequestResponse();
-            } else {
-}
-            pendingCommitRef.current = false;
-          }
-        }, 2000); // 2 second cooldown before accepting new input
-        break;
-
-      case 'error':
-        console.error('❌ [RealtimeVoiceWidget] Realtime API error:', message.error);
-        setError(message.error.message);
-        break;
-
-      case 'session.created':
-break;
-
-      case 'session.updated':
-break;
-
-      default:
-}
-  }, []);
+  }, [defaultConfig, startAudioStreaming, handleRealtimeMessage, playPcm16ArrayBuffer]);
 
   const handleDisconnect = useCallback(() => {
 // Clear heartbeat interval
@@ -481,16 +476,6 @@ break;
     setConnectionStatus('disconnected');
     setIsRecording(false);
 }, []);
-
-  const handleValueChange = useCallback((newValue: any) => {
-    const updatedValue = {
-      ...value,
-      ...newValue,
-      transcription,
-      sessionId: websocketRef.current ? 'active' : undefined
-    };
-    onChange?.(updatedValue);
-  }, [value, transcription, onChange]);
 
   useEffect(() => {
     return () => {
