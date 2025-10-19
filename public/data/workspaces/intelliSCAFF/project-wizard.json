@@ -1,0 +1,1230 @@
+{
+  "id": "intelliSCAFF/project-wizard",
+  "title": "Scaffolding Project Creation Wizard",
+  "description": "AI-supported wizard for planning, approving, and launching scaffolding projects end-to-end.",
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  },
+  "gadgets": [
+    {
+      "id": "scaffolding-project-wizard-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Scaffolding Project Creation",
+      "description": "Capture scope, logistics, safety, and approvals for new scaffolding engagements with AI guidance.",
+      "config": {
+        "title": "Scaffolding Project Creation",
+        "description": "Create a world-class scaffolding project package with AI-assisted insights, resource planning, and governance gates.",
+        "theme": "light",
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "autoAdvance": false,
+        "typeLabel": "Project Focus",
+        "typePlaceholder": "Select scaffolding project type",
+        "typeHelpText": "Choose the primary delivery focus for this scaffolding engagement.",
+        "reportTitle": "Scaffolding Project Blueprint",
+        "reportHeaderText": "INTELLISCAFF PROJECT BLUEPRINT",
+        "reportHeaderSubtext": "Erection • Dismantling • Maintenance • Emergency",
+        "reportFooterText": "Generated with IntelliSCAFF AI Project Creation Wizard",
+        "editModalTitle": "Edit Scaffolding Project Blueprint",
+        "steps": {
+          "sections": [
+            {
+              "id": "voice_capture",
+              "title": "Voice Capture",
+              "description": "Record stakeholder briefings, site notes, or risk calls. Transcript feeds later AI steps.",
+              "sectionType": "voice",
+              "includeInPdf": false,
+              "voice": {
+                "enabled": true,
+                "maxDuration": 240,
+                "showVisualization": true,
+                "transcriptionModel": "gpt-4o-mini-transcribe"
+              }
+            },
+            {
+              "id": "image_capture",
+              "title": "Visual Context",
+              "description": "Upload structure photos, hazard snapshots, or sketches to anchor the plan.",
+              "sectionType": "image",
+              "includeInPdf": false,
+              "images": {
+                "maxCount": 20,
+                "maxSize": 15728640,
+                "accept": "image/jpeg,image/png,image/webp",
+                "multiple": true,
+                "showPreview": true,
+                "showThumbnails": true,
+                "thumbnailSize": 140,
+                "drawingEnabled": true,
+                "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow"],
+                "uploadText": "Click or drag images here to upload",
+                "dragText": "Drop images here to upload"
+              }
+            },
+            {
+              "id": "ai_blueprint",
+              "title": "AI Blueprint Synthesis",
+              "description": "AI synthesizes captured context into a draft scaffolding blueprint and risk register.",
+              "promptSourceIds": ["voice_capture", "image_capture"],
+              "includeInPdf": true,
+              "analysisWidget": "simple",
+              "imageAnalysisPromptRef": "scaffoldingBlueprintAnalysis"
+            },
+            {
+              "id": "project_overview",
+              "title": "Project Overview",
+              "description": "Define the project charter, stakeholders, and baseline metadata.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+              "btnLabel": "Generate Overview",
+              "promptRef": "projectOverviewPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "identity",
+                    "title": "Project Identity",
+                    "fields": [
+                      { "id": "project_name", "label": "Project Name", "type": "text", "required": true, "placeholder": "e.g. CDU-3 West Elevation Access", "lgSpan": 24 },
+                      { "id": "project_code", "label": "Project Code", "type": "text", "placeholder": "Auto-generated or custom (SCAF-YYYY-####)", "lgSpan": 12 },
+                      {
+                        "id": "project_type",
+                        "label": "Project Type",
+                        "type": "select",
+                        "required": true,
+                        "defaultValue": "erection",
+                        "lgSpan": 12,
+                        "options": [
+                          { "label": "Erection", "value": "erection" },
+                          { "label": "Modification / Maintenance", "value": "maintenance" },
+                          { "label": "Dismantling", "value": "dismantling" },
+                          { "label": "Emergency Stabilization", "value": "emergency" },
+                          { "label": "Inspection Only", "value": "inspection" }
+                        ],
+                        "props": {
+                          "allowClear": false,
+                          "showSearch": false
+                        }
+                      },
+                      {
+                        "id": "scaffold_type",
+                        "label": "Scaffold Type",
+                        "type": "select",
+                        "required": true,
+                        "lgSpan": 12,
+                        "options": [
+                          { "label": "Suspended Scaffold", "value": "suspended" },
+                          { "label": "Supported Scaffold", "value": "supported" },
+                          { "label": "Rolling/Mobile Scaffold", "value": "rolling" },
+                          { "label": "Aerial Lift Platform", "value": "aerial" },
+                          { "label": "Cantilever Scaffold", "value": "cantilever" },
+                          { "label": "System Scaffold (Modular)", "value": "system" },
+                          { "label": "Custom/Engineered", "value": "custom" }
+                        ]
+                      },
+                      {
+                        "id": "project_status",
+                        "label": "Status",
+                        "type": "select",
+                        "required": true,
+                        "defaultValue": "requested",
+                        "lgSpan": 6,
+                        "options": [
+                          { "label": "Requested", "value": "requested" },
+                          { "label": "Planned", "value": "planned" },
+                          { "label": "Design", "value": "design" },
+                          { "label": "Approved", "value": "approved" },
+                          { "label": "In Progress", "value": "in_progress" },
+                          { "label": "Inspection", "value": "inspection" },
+                          { "label": "In Service", "value": "in_service" },
+                          { "label": "Closed", "value": "closed" }
+                        ],
+                        "props": {
+                          "helpText": "Workflow: Requested → Planned → Design → Approved → In Progress → Inspection → In Service → Closed"
+                        }
+                      },
+                      {
+                        "id": "project_priority",
+                        "label": "Priority",
+                        "type": "select",
+                        "required": true,
+                        "lgSpan": 6,
+                        "options": [
+                          { "label": "Critical", "value": "critical" },
+                          { "label": "High", "value": "high" },
+                          { "label": "Medium", "value": "medium" },
+                          { "label": "Low", "value": "low" }
+                        ],
+                        "defaultValue": "high"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "client_info",
+                    "title": "Client Information",
+                    "fields": [
+                      { "id": "client_company", "label": "Client/Company Name", "type": "text", "required": true, "placeholder": "Client organization name", "lgSpan": 24 },
+                      { "id": "client_contact_name", "label": "Primary Contact", "type": "text", "required": true, "placeholder": "Contact person name", "lgSpan": 12 },
+                      { "id": "client_contact_phone", "label": "Contact Phone", "type": "tel", "required": true, "placeholder": "(555) 123-4567", "lgSpan": 6 },
+                      { "id": "client_contact_email", "label": "Contact Email", "type": "email", "required": true, "placeholder": "contact@company.com", "lgSpan": 6 }
+                    ]
+                  },
+                  {
+                    "id": "site_location",
+                    "title": "Site Location",
+                    "fields": [
+                      { "id": "site_name", "label": "Site/Facility Name", "type": "text", "required": true, "placeholder": "Site or facility name" },
+                      { "id": "site_address", "label": "Site Address", "type": "text", "required": true, "placeholder": "Full street address" },
+                      { "id": "site_city", "label": "City", "type": "text", "required": true, "lgSpan": 8 },
+                      { "id": "site_state", "label": "State/Province", "type": "text", "required": true, "lgSpan": 8 },
+                      { "id": "site_zip", "label": "ZIP/Postal Code", "type": "text", "required": true, "lgSpan": 8 },
+                      { "id": "site_access_instructions", "label": "Site Access Instructions", "type": "textarea", "placeholder": "Gate codes, check-in procedures, parking, etc.", "props": { "rows": 3 } }
+                    ]
+                  },
+                  {
+                    "id": "stakeholders",
+                    "title": "Project Team",
+                    "fields": [
+                      { "id": "requestor", "label": "Requestor", "type": "text", "placeholder": "Name / role submitting the request", "lgSpan": 12 },
+                      { "id": "project_manager", "label": "Project Lead", "type": "text", "required": true, "placeholder": "Accountable scaffolding lead", "lgSpan": 12 },
+                      { "id": "site_supervisor", "label": "Site Supervisor", "type": "text", "required": true, "placeholder": "On-site supervisor", "lgSpan": 12 },
+                      { "id": "site_supervisor_phone", "label": "Supervisor Phone", "type": "tel", "placeholder": "(555) 123-4567", "lgSpan": 12 },
+                      { "id": "engineering_owner", "label": "Engineering Owner", "type": "text", "placeholder": "PE or design engineer", "lgSpan": 12 },
+                      { "id": "hse_owner", "label": "HSE Owner", "type": "text", "placeholder": "Safety officer", "lgSpan": 12 },
+                      { "id": "emergency_contact", "label": "Emergency Contact", "type": "text", "required": true, "lgSpan": 12 },
+                      { "id": "emergency_phone", "label": "Emergency Phone", "type": "tel", "required": true, "placeholder": "(555) 911-0000", "lgSpan": 12 }
+                    ]
+                  },
+                  {
+                    "id": "schedule_baseline",
+                    "title": "Schedule Baseline",
+                    "fields": [
+                      { "id": "requested_date", "label": "Requested Start", "type": "date", "lgSpan": 8 },
+                      { "id": "required_by", "label": "Required By", "type": "date", "lgSpan": 8 },
+                      { "id": "estimated_duration_days", "label": "Estimated Duration (days)", "type": "number", "props": { "min": 1 }, "lgSpan": 8 },
+                      { "id": "time_constraints", "label": "Time Constraints", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Describe shutdown windows, turnaround anchors, or curfews.", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "project_scope",
+              "title": "Scope & Geometry",
+              "description": "Outline the structural footprint, access intent, and working envelope.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Generate Scope",
+              "promptRef": "scopePopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "work_description",
+                    "title": "Work Scope",
+                    "fields": [
+                      { "id": "work_description", "label": "Detailed Work Description", "type": "textarea", "required": true, "placeholder": "Describe the work to be performed, purpose, and deliverables", "props": { "rows": 4 }, "lgSpan": 24 },
+                      { "id": "work_location_details", "label": "Specific Work Location", "type": "textarea", "required": true, "placeholder": "Building, floor, area, or structure details", "props": { "rows": 2 }, "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "structure_profile",
+                    "title": "Structure & Dimensions",
+                    "fields": [
+                      { "id": "structure_type", "label": "Structure Type", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Pipe Rack", "value": "pipe_rack" },
+                        { "label": "Column / Tower", "value": "column" },
+                        { "label": "Vessel / Tank", "value": "vessel" },
+                        { "label": "Building Facade", "value": "facade" },
+                        { "label": "Bridge / Span", "value": "bridge" },
+                        { "label": "Industrial Module", "value": "module" },
+                        { "label": "Equipment Platform", "value": "platform" },
+                        { "label": "Other", "value": "other" }
+                      ] },
+                      { "id": "working_levels", "label": "Working Levels/Decks", "type": "number", "required": true, "props": { "min": 1, "max": 50 }, "lgSpan": 12 },
+                      { "id": "estimated_height", "label": "Max Height (feet)", "type": "number", "required": true, "props": { "min": 1, "max": 500 }, "placeholder": "Height in feet", "lgSpan": 8 },
+                      { "id": "estimated_length", "label": "Length / Run (feet)", "type": "number", "props": { "min": 0 }, "placeholder": "Length in feet", "lgSpan": 8 },
+                      { "id": "estimated_width", "label": "Width (feet)", "type": "number", "props": { "min": 0 }, "placeholder": "Width in feet", "lgSpan": 8 }
+                    ]
+                  },
+                  {
+                    "id": "access_objectives",
+                    "title": "Access Requirements & Load",
+                    "fields": [
+                      { "id": "primary_objectives", "label": "Primary Work Objectives", "type": "textarea", "required": true, "props": { "rows": 4 }, "placeholder": "Inspection, welding, blasting, painting, containment, equipment replacement...", "lgSpan": 24 },
+                      {
+                        "id": "load_class",
+                        "label": "Design Load Class",
+                        "type": "select",
+                        "required": true,
+                        "lgSpan": 12,
+                        "options": [
+                          { "label": "Light Duty (25 lbs/sq ft)", "value": "light" },
+                          { "label": "Medium Duty (50 lbs/sq ft)", "value": "medium" },
+                          { "label": "Heavy Duty (75 lbs/sq ft)", "value": "heavy" },
+                          { "label": "Special Duty (Custom)", "value": "special" }
+                        ]
+                      },
+                      { "id": "access_side", "label": "Primary Access Side", "type": "select", "lgSpan": 12, "options": [
+                        { "label": "Full 360°", "value": "full" },
+                        { "label": "North Elevation", "value": "north" },
+                        { "label": "South Elevation", "value": "south" },
+                        { "label": "East Elevation", "value": "east" },
+                        { "label": "West Elevation", "value": "west" },
+                        { "label": "Selected Elevations", "value": "selected" }
+                      ] },
+                      {
+                        "id": "access_requirements",
+                        "label": "Access Type Requirements",
+                        "type": "checkbox_group",
+                        "lgSpan": 24,
+                        "options": [
+                          { "label": "Aerial Access Required", "value": "aerial" },
+                          { "label": "Confined Space Entry", "value": "confined_space" },
+                          { "label": "Hot Work Area", "value": "hot_work" },
+                          { "label": "Overhead Hazards Present", "value": "overhead" },
+                          { "label": "Ground Level Only", "value": "ground_level" }
+                        ]
+                      },
+                      {
+                        "id": "weather_protection",
+                        "label": "Weather Protection Needed",
+                        "type": "checkbox_group",
+                        "lgSpan": 24,
+                        "options": [
+                          { "label": "Debris Netting", "value": "debris_net" },
+                          { "label": "Weather Sheeting/Tarps", "value": "weather_sheet" },
+                          { "label": "Wind Screening", "value": "wind_screen" },
+                          { "label": "Roof/Canopy", "value": "roof" },
+                          { "label": "None Required", "value": "none" }
+                        ]
+                      },
+                      { "id": "special_constraints", "label": "Special Constraints", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Hot work controls, live electrical, process restrictions, noise limits, time windows...", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "risk_and_safety",
+              "title": "Risk & Safety Controls",
+              "description": "Surface critical risks, mitigation strategies, and required permits.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Analyse Risks",
+              "promptRef": "riskPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "safety_requirements",
+                    "title": "Safety Requirements",
+                    "fields": [
+                      {
+                        "id": "safety_requirements",
+                        "label": "Required Safety Controls",
+                        "type": "checkbox_group",
+                        "lgSpan": 24,
+                        "options": [
+                          { "label": "Fall Protection Required", "value": "fall_protection" },
+                          { "label": "PPE Required", "value": "ppe" },
+                          { "label": "Safety Training Required", "value": "training" },
+                          { "label": "Daily Inspections", "value": "daily_inspection" },
+                          { "label": "Competent Person On-Site", "value": "competent_person" },
+                          { "label": "Rescue Plan Required", "value": "rescue_plan" }
+                        ]
+                      },
+                      { "id": "top_risks", "label": "Identified Hazards & Top Risks", "type": "multi-select", "required": true, "placeholder": "Add each hazard or top risk item", "lgSpan": 24 },
+                      { "id": "risk_controls", "label": "Risk Controls & Mitigation", "type": "textarea", "props": { "rows": 4 }, "placeholder": "Describe controls and barriers for identified risks", "lgSpan": 24 },
+                      { "id": "rescue_strategy", "label": "Rescue/Emergency Plan", "type": "textarea", "required": true, "props": { "rows": 3 }, "placeholder": "Outline rescue procedures and emergency response", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "permits",
+                    "title": "Permits & Compliance",
+                    "fields": [
+                      {
+                        "id": "permit_requirements",
+                        "label": "Required Permits",
+                        "type": "checkbox_group",
+                        "lgSpan": 24,
+                        "options": [
+                          { "label": "Building Permit", "value": "building" },
+                          { "label": "Work Permit", "value": "work" },
+                          { "label": "Hot Work Permit", "value": "hot_work" },
+                          { "label": "Confined Space Entry", "value": "confined_space" },
+                          { "label": "Working at Height", "value": "working_at_height" },
+                          { "label": "Electrical Isolation", "value": "electrical_isolation" },
+                          { "label": "Lifting/Crane Operations", "value": "lifting" },
+                          { "label": "Road Closure", "value": "road_closure" },
+                          { "label": "OSHA Notification", "value": "osha" }
+                        ]
+                      },
+                      {
+                        "id": "engineering_required",
+                        "label": "Engineering/Design Required",
+                        "type": "radio",
+                        "required": true,
+                        "defaultValue": "no",
+                        "lgSpan": 24,
+                        "options": [
+                          { "label": "Yes - PE Stamp Required", "value": "yes" },
+                          { "label": "No - Standard Design", "value": "no" }
+                        ]
+                      },
+                      { "id": "safety_notes", "label": "Additional Safety Notes", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Any other safety considerations or requirements", "lgSpan": 24 },
+                      { "id": "inspection_hold_points", "label": "Inspection Hold Points", "type": "multi-select", "placeholder": "Add inspection checkpoints", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "logistics",
+              "title": "Crew & Execution Planning",
+              "description": "Plan crew deployment, equipment needs, and execution strategy.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Build Logistics Plan",
+              "promptRef": "logisticsPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "crew_strategy",
+                    "title": "Crew Planning",
+                    "fields": [
+                      { "id": "crew_size", "label": "Estimated Crew Size", "type": "number", "required": true, "props": { "min": 1, "max": 100 }, "placeholder": "Number of workers", "lgSpan": 8 },
+                      { "id": "lead_crew", "label": "Crew Lead/Foreman", "type": "text", "placeholder": "Assigned crew lead name", "lgSpan": 8 },
+                      { "id": "shift_pattern", "label": "Shift Pattern", "type": "select", "required": true, "lgSpan": 8, "options": [
+                        { "label": "Day Shift Only", "value": "day" },
+                        { "label": "Night Shift Only", "value": "night" },
+                        { "label": "Day + Night (Multi-Shift)", "value": "swing" },
+                        { "label": "Weekend Work Required", "value": "weekend" }
+                      ] },
+                      {
+                        "id": "crew_skills",
+                        "label": "Required Skills/Certifications",
+                        "type": "checkbox_group",
+                        "lgSpan": 24,
+                        "options": [
+                          { "label": "Scaffold Builder", "value": "builder" },
+                          { "label": "Rigger", "value": "rigger" },
+                          { "label": "Forklift Operator", "value": "forklift" },
+                          { "label": "Welder", "value": "welder" },
+                          { "label": "Competent Person", "value": "competent" }
+                        ]
+                      },
+                      { "id": "competency_requirements", "label": "Additional Competency Requirements", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Training, certifications, or qualifications needed", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "equipment_materials",
+                    "title": "Equipment & Staging",
+                    "fields": [
+                      {
+                        "id": "equipment_needs",
+                        "label": "Equipment Needs",
+                        "type": "checkbox_group",
+                        "lgSpan": 24,
+                        "options": [
+                          { "label": "Forklift", "value": "forklift" },
+                          { "label": "Crane", "value": "crane" },
+                          { "label": "Boom Lift", "value": "boom_lift" },
+                          { "label": "Material Hoist", "value": "hoist" },
+                          { "label": "Truck/Transport", "value": "truck" }
+                        ]
+                      },
+                      { "id": "staging_area", "label": "Material Staging Area", "type": "text", "placeholder": "Location for material storage and staging", "lgSpan": 24 },
+                      { "id": "material_delivery_plan", "label": "Material Delivery Plan", "type": "multi-select", "placeholder": "Add delivery steps or logistics notes", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "execution_sequence",
+                    "title": "Execution & Access",
+                    "fields": [
+                      { "id": "sequence_outline", "label": "Execution Sequence", "type": "multi-select", "required": true, "placeholder": "Add each sequence step or phase", "lgSpan": 24 },
+                      { "id": "site_access_windows", "label": "Site Access Windows", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Available work hours, access restrictions, or time constraints", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "materials_list",
+              "title": "Materials List",
+              "description": "List all required scaffold materials with quantities and specifications.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Scaffold Materials & Quantities",
+                "dataKey": "materialsList",
+                "columns": [
+                  {
+                    "key": "materialType",
+                    "title": "Material Type",
+                    "width": 220,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Frame/Standard",
+                      "Ledger/Horizontal",
+                      "Transom/Bearer",
+                      "Brace/Diagonal",
+                      "Plank/Deck Board",
+                      "Base Plate/Jack",
+                      "Coupler/Fitting",
+                      "Guardrail",
+                      "Toe Board",
+                      "Tie/Anchor",
+                      "Other"
+                    ],
+                    "summary": "uniqueCount"
+                  },
+                  {
+                    "key": "description",
+                    "title": "Description/Size",
+                    "editable": true,
+                    "summary": "countMissing"
+                  },
+                  {
+                    "key": "quantity",
+                    "title": "Quantity",
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "unit",
+                    "title": "Unit",
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Each",
+                      "Set",
+                      "Linear Feet",
+                      "Square Feet",
+                      "Ton"
+                    ]
+                  },
+                  {
+                    "key": "notes",
+                    "title": "Notes",
+                    "editable": true
+                  }
+                ],
+                "promptRef": "materialsPopulate",
+                "btnLabel": "Populate Materials List"
+              }
+            },
+            {
+              "id": "schedule_milestones",
+              "title": "Project Schedule",
+              "description": "Define key project milestones, phases, and timeline dependencies.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Schedule & Milestones",
+                "dataKey": "scheduleMilestones",
+                "columns": [
+                  {
+                    "key": "milestone",
+                    "title": "Milestone/Phase",
+                    "editable": true,
+                    "summary": "countMissing"
+                  },
+                  {
+                    "key": "description",
+                    "title": "Description",
+                    "editable": true,
+                    "summary": "countMissing"
+                  },
+                  {
+                    "key": "startDate",
+                    "title": "Start Date",
+                    "width": 160,
+                    "editable": true,
+                    "type": "date"
+                  },
+                  {
+                    "key": "durationDays",
+                    "title": "Duration (days)",
+                    "width": 140,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "dependencies",
+                    "title": "Dependencies",
+                    "width": 180,
+                    "editable": true
+                  },
+                  {
+                    "key": "status",
+                    "title": "Status",
+                    "width": 150,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Not Started",
+                      "In Progress",
+                      "Complete",
+                      "Delayed"
+                    ],
+                    "summary": "uniqueCount"
+                  }
+                ],
+                "promptRef": "schedulePopulate",
+                "btnLabel": "Populate Schedule"
+              }
+            }
+          ],
+          "pdf": {
+            "enabled": true,
+            "title": "Export Blueprint",
+            "description": "Generate a PDF package for approvals or field distribution.",
+            "reportConfig": {
+              "includeSections": [
+                "ai_blueprint",
+                "project_overview",
+                "project_scope",
+                "risk_and_safety",
+                "logistics",
+                "materials_list",
+                "schedule_milestones"
+              ],
+              "pdfStyling": {
+                "orientation": "portrait",
+                "margin": "1in",
+                "theme": "professional"
+              }
+            }
+          }
+        },
+        "prompts": {
+          "scaffoldingBlueprintAnalysis": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1800,
+              "temperature": 0.15
+            },
+            "promptConfig": {
+              "systemPrompt": "You are a senior scaffolding project director. Review the voice transcript and uploaded imagery to generate a concise blueprint covering scope headline, dominant constraints, and top risks. Classify the project focus as one of: Erection (building new access), Modification / Maintenance (altering existing scaffold), Dismantling (removing or demobilizing scaffold), Emergency Stabilization (urgent containment or shoring). If the voice transcript explicitly declares the project type, treat that declaration as authoritative even if the imagery appears different. Use strong signals such as dismantled bays, removal language, or demobilization instructions to avoid defaulting to erection. Reflect the detected focus explicitly in the synopsis and emphasize dismantling safety sequencing when applicable. Output structured markdown with sections: Project Synopsis, Structural Takeaways, Critical Barriers, AI Recommendations.",
+              "userPrompt": "VOICE & CONTEXT (VOICE DECLARATIONS TAKE PRIORITY):\n{text}\n\nIncorporate insights from the provided images and generate the scaffolding project blueprint per the required sections."
+            }
+          },
+          "projectOverviewPopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1500, "temperature": 0.15 },
+            "promptConfig": {
+              "systemPrompt": "Complete the Project Overview form section using the available metadata and conversation context. Return JSON only.",
+              "userPrompt": "{promptContext}"
+            }
+          },
+          "scopePopulate": {
+            "modelConfig": { "model": "gpt-5-nano", "maxCompletionTokens": 1500, "temperature": 0.2 },
+            "promptConfig": {
+              "systemPrompt": "Complete the Project Scope form section using the available metadata and conversation context. Return JSON only.",
+              "userPrompt": "{promptContext}"
+            }
+          },
+          "riskPopulate": {
+            "modelConfig": { "model": "gpt-5-mini", "maxCompletionTokens": 1500, "temperature": 0.15 },
+            "promptConfig": {
+              "systemPrompt": "Complete the Risk & Safety Controls form section using the provided metadata, transcript, and blueprint context. Focus on hazards, mitigations, rescue planning, and inspection checkpoints. Return JSON only.",
+              "userPrompt": "{promptContext}"
+            }
+          },
+          "logisticsPopulate": {
+            "modelConfig": { "model": "gpt-5-mini", "maxCompletionTokens": 1500, "temperature": 0.2 },
+            "promptConfig": {
+              "systemPrompt": "Complete the Crew & Execution Planning form section using the available metadata and context. Return JSON only.",
+              "userPrompt": "{promptContext}"
+            }
+          },
+          "materialsPopulate": {
+            "modelConfig": { "model": "gpt-5-mini", "maxCompletionTokens": 2000, "temperature": 0.2 },
+            "promptConfig": {
+              "systemPrompt": "Generate the scaffold materials list using the project metadata and context. Return JSON only.",
+              "userPrompt": "{promptContext}"
+            },
+            "autoPrompt": true
+          },
+          "schedulePopulate": {
+            "modelConfig": { "model": "gpt-5-mini", "maxCompletionTokens": 2000, "temperature": 0.2 },
+            "promptConfig": {
+              "systemPrompt": "Generate the project schedule using the available metadata and context. Return JSON only.",
+              "userPrompt": "{promptContext}"
+            },
+            "autoPrompt": true
+          }
+        },
+        "conditionalLogic": {
+          "initialState": {
+            "visibleSections": ["voice_capture", "image_capture", "ai_blueprint", "project_overview"],
+            "message": "Select a project type to continue and reveal additional sections",
+            "requireField": "project_type"
+          },
+          "sectionOrder": {
+            "enforceSequential": true,
+            "allowSkipping": false,
+            "allowBackward": true,
+            "sections": [
+              {
+                "id": "voice_capture",
+                "order": 1,
+                "optional": true,
+                "canSkip": true,
+                "minCompletionPercentage": 0,
+                "estimatedMinutes": 5
+              },
+              {
+                "id": "image_capture",
+                "order": 2,
+                "optional": true,
+                "canSkip": true,
+                "minCompletionPercentage": 0,
+                "estimatedMinutes": 5
+              },
+              {
+                "id": "ai_blueprint",
+                "order": 3,
+                "optional": true,
+                "canSkip": true,
+                "dependsOn": [],
+                "minCompletionPercentage": 0,
+                "estimatedMinutes": 2
+              },
+              {
+                "id": "project_overview",
+                "order": 4,
+                "optional": false,
+                "canSkip": false,
+                "requiredFields": ["project_name", "project_type", "scaffold_type", "project_priority", "client_company"],
+                "minCompletionPercentage": 80,
+                "estimatedMinutes": 10,
+                "validationRules": [
+                  {
+                    "type": "requiredFields",
+                    "message": "Complete all required identity fields before proceeding"
+                  }
+                ]
+              },
+              {
+                "id": "project_scope",
+                "order": 5,
+                "optional": false,
+                "canSkip": false,
+                "dependsOn": ["project_overview"],
+                "requiredFields": ["work_description", "estimated_height", "load_class"],
+                "minCompletionPercentage": 70,
+                "estimatedMinutes": 15,
+                "validationRules": [
+                  {
+                    "type": "requiredFields",
+                    "message": "Work scope and dimensions are required"
+                  },
+                  {
+                    "type": "custom",
+                    "validator": "heightValidation",
+                    "message": "Height must be between 1 and 500 feet"
+                  }
+                ]
+              },
+              {
+                "id": "risk_and_safety",
+                "order": 6,
+                "optional": false,
+                "canSkip": false,
+                "dependsOn": ["project_overview", "project_scope"],
+                "requiredFields": ["top_risks", "rescue_strategy", "engineering_required"],
+                "minCompletionPercentage": 75,
+                "estimatedMinutes": 12,
+                "validationRules": [
+                  {
+                    "type": "requiredFields",
+                    "message": "Safety requirements and risk assessment are mandatory"
+                  }
+                ]
+              },
+              {
+                "id": "logistics",
+                "order": 7,
+                "optional": false,
+                "canSkip": false,
+                "dependsOn": ["project_overview", "project_scope"],
+                "requiredFields": ["crew_size", "shift_pattern"],
+                "minCompletionPercentage": 60,
+                "estimatedMinutes": 10,
+                "validationRules": [
+                  {
+                    "type": "requiredFields",
+                    "message": "Crew planning is required for execution"
+                  }
+                ]
+              },
+              {
+                "id": "materials_list",
+                "order": 8,
+                "optional": false,
+                "canSkip": false,
+                "dependsOn": ["project_scope"],
+                "minCompletionPercentage": 0,
+                "estimatedMinutes": 15,
+                "validationRules": [
+                  {
+                    "type": "minRows",
+                    "minRows": 1,
+                    "message": "At least one material item is required"
+                  }
+                ]
+              },
+              {
+                "id": "schedule_milestones",
+                "order": 9,
+                "optional": false,
+                "canSkip": false,
+                "dependsOn": ["project_overview"],
+                "minCompletionPercentage": 0,
+                "estimatedMinutes": 12,
+                "validationRules": [
+                  {
+                    "type": "minRows",
+                    "minRows": 2,
+                    "message": "Define at least 2 milestones (start and completion)"
+                  }
+                ]
+              }
+            ]
+          },
+          "sectionDependencies": {
+            "project_scope": {
+              "requires": ["project_overview"],
+              "requiredFields": ["project_type"],
+              "validationMessage": "Complete Project Overview first, including project type selection",
+              "blockNavigation": true
+            },
+            "risk_and_safety": {
+              "requires": ["project_overview"],
+              "requiredFields": ["project_type", "work_description"],
+              "validationMessage": "Complete Project Overview and define work scope before addressing safety",
+              "blockNavigation": true
+            },
+            "logistics": {
+              "requires": ["project_overview", "project_scope"],
+              "requiredFields": ["project_type", "estimated_height"],
+              "validationMessage": "Complete scope and requirements before planning logistics",
+              "blockNavigation": true
+            },
+            "materials_list": {
+              "requires": ["project_scope"],
+              "requiredFields": ["estimated_height", "working_levels"],
+              "validationMessage": "Define project scope and dimensions before estimating materials",
+              "blockNavigation": true
+            },
+            "schedule_milestones": {
+              "requires": ["project_overview"],
+              "requiredFields": ["requested_date", "estimated_duration_days"],
+              "validationMessage": "Define project timeline before creating schedule milestones",
+              "blockNavigation": true
+            }
+          },
+          "sectionCompletion": {
+            "voice_capture": {
+              "completionCriteria": "optional",
+              "message": "Voice notes captured (optional)"
+            },
+            "image_capture": {
+              "completionCriteria": "optional",
+              "message": "Images uploaded (optional)"
+            },
+            "ai_blueprint": {
+              "completionCriteria": "optional",
+              "message": "AI analysis generated (optional)"
+            },
+            "project_overview": {
+              "completionCriteria": "allRequiredFields",
+              "requiredFieldsCount": 5,
+              "message": "All project identity fields completed"
+            },
+            "project_scope": {
+              "completionCriteria": "allRequiredFields",
+              "requiredFieldsCount": 3,
+              "message": "Work scope fully defined"
+            },
+            "risk_and_safety": {
+              "completionCriteria": "allRequiredFields",
+              "requiredFieldsCount": 3,
+              "message": "Safety requirements documented"
+            },
+            "logistics": {
+              "completionCriteria": "allRequiredFields",
+              "requiredFieldsCount": 2,
+              "message": "Crew planning complete"
+            },
+            "materials_list": {
+              "completionCriteria": "minRows",
+              "minRows": 1,
+              "message": "Materials list populated"
+            },
+            "schedule_milestones": {
+              "completionCriteria": "minRows",
+              "minRows": 2,
+              "message": "Schedule milestones defined"
+            }
+          },
+          "sectionVisibility": {
+            "voice_capture": {
+              "showAlways": true,
+              "description": "Available for all project types"
+            },
+            "image_capture": {
+              "showAlways": true,
+              "description": "Available for all project types"
+            },
+            "ai_blueprint": {
+              "showAlways": true,
+              "description": "Available for all project types"
+            },
+            "project_overview": {
+              "showAlways": true,
+              "description": "Required for all project types - includes project type selection"
+            },
+            "project_scope": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "in",
+                "values": ["erection", "dismantling", "maintenance", "emergency"]
+              },
+              "description": "Not required for inspection-only projects",
+              "hideUntilFieldSet": "project_type"
+            },
+            "risk_and_safety": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "isSet",
+                "values": []
+              },
+              "description": "Required for all project types",
+              "hideUntilFieldSet": "project_type"
+            },
+            "logistics": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "in",
+                "values": ["erection", "dismantling", "emergency"]
+              },
+              "description": "Required for physical work (erection, dismantling, emergency)",
+              "hideUntilFieldSet": "project_type"
+            },
+            "materials_list": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "in",
+                "values": ["erection", "dismantling", "emergency", "maintenance"]
+              },
+              "description": "Materials list for all work types",
+              "hideUntilFieldSet": "project_type"
+            },
+            "schedule_milestones": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "in",
+                "values": ["erection", "dismantling", "emergency", "maintenance"]
+              },
+              "description": "Schedule planning for all work types",
+              "hideUntilFieldSet": "project_type"
+            }
+          },
+          "fieldVisibility": {
+            "inspection_specific_notes": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "equals",
+                "value": "inspection"
+              }
+            },
+            "dismantling_notes": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "equals",
+                "value": "dismantling"
+              }
+            },
+            "emergency_response_time": {
+              "showIf": {
+                "field": "project_type",
+                "operator": "equals",
+                "value": "emergency"
+              }
+            }
+          },
+          "fieldStates": {
+            "requested": {
+              "readOnly": [],
+              "disabled": [],
+              "required": ["project_name", "project_type", "scaffold_type", "project_priority", "client_company"]
+            },
+            "planned": {
+              "readOnly": ["project_code"],
+              "disabled": [],
+              "required": ["project_name", "project_type", "client_company", "client_contact_name", "site_name", "site_address"]
+            },
+            "design": {
+              "readOnly": ["project_code", "project_name", "project_type", "scaffold_type"],
+              "disabled": [],
+              "required": ["work_description", "estimated_height", "load_class", "top_risks"]
+            },
+            "approved": {
+              "readOnly": ["project_code", "project_name", "project_type", "scaffold_type", "work_description", "estimated_height", "load_class"],
+              "disabled": [],
+              "required": ["engineering_required", "permit_requirements", "approval_owner"]
+            },
+            "in_progress": {
+              "readOnly": ["project_code", "project_name", "project_type", "scaffold_type", "work_description", "estimated_height", "load_class", "engineering_required"],
+              "disabled": ["project_type", "scaffold_type"],
+              "required": ["crew_size", "lead_crew", "shift_pattern"]
+            },
+            "inspection": {
+              "readOnly": ["project_code", "project_name", "project_type", "scaffold_type", "work_description", "estimated_height", "load_class", "crew_size", "shift_pattern"],
+              "disabled": ["project_type", "scaffold_type", "engineering_required"],
+              "required": ["inspection_hold_points"]
+            },
+            "in_service": {
+              "readOnly": ["project_code", "project_name", "project_type", "scaffold_type", "work_description", "estimated_height", "load_class", "crew_size", "shift_pattern", "engineering_required", "permit_requirements"],
+              "disabled": ["project_type", "scaffold_type", "load_class", "crew_size"],
+              "required": []
+            },
+            "closed": {
+              "readOnly": ["*"],
+              "disabled": ["*"],
+              "required": ["closeout_requirements"]
+            }
+          },
+          "statusTransitions": {
+            "requested": {
+              "allowedNext": ["planned", "closed"],
+              "requiresApproval": false,
+              "requiredFields": ["project_name", "project_type", "client_company"]
+            },
+            "planned": {
+              "allowedNext": ["design", "approved", "closed"],
+              "requiresApproval": false,
+              "requiredFields": ["project_name", "client_company", "site_name", "site_address", "work_description"]
+            },
+            "design": {
+              "allowedNext": ["approved", "planned", "closed"],
+              "requiresApproval": false,
+              "requiredFields": ["work_description", "estimated_height", "load_class", "top_risks", "engineering_required"]
+            },
+            "approved": {
+              "allowedNext": ["in_progress", "closed"],
+              "requiresApproval": true,
+              "approvalRoles": ["project_manager", "engineering_manager"],
+              "requiredFields": ["engineering_required", "permit_requirements", "approval_owner", "crew_size"]
+            },
+            "in_progress": {
+              "allowedNext": ["inspection", "closed"],
+              "requiresApproval": false,
+              "requiredFields": ["crew_size", "lead_crew", "shift_pattern", "requested_date"]
+            },
+            "inspection": {
+              "allowedNext": ["in_service", "in_progress", "closed"],
+              "requiresApproval": false,
+              "requiredFields": ["inspection_hold_points", "required_by"]
+            },
+            "in_service": {
+              "allowedNext": ["closed"],
+              "requiresApproval": true,
+              "approvalRoles": ["competent_person", "client_representative"],
+              "requiredFields": []
+            },
+            "closed": {
+              "allowedNext": [],
+              "requiresApproval": true,
+              "approvalRoles": ["project_manager", "accounting_manager"],
+              "requiredFields": ["closeout_requirements"]
+            }
+          },
+          "projectTypeSpecific": {
+            "erection": {
+              "requiredSections": ["project_overview", "project_scope", "risk_and_safety", "logistics", "materials_list", "schedule_milestones"],
+              "recommendedFields": ["engineering_required", "permit_requirements", "crew_size"],
+              "warnings": ["Ensure all safety requirements are documented before starting work"]
+            },
+            "dismantling": {
+              "requiredSections": ["project_overview", "project_scope", "risk_and_safety", "logistics", "materials_list", "schedule_milestones"],
+              "recommendedFields": ["staging_area", "rescue_strategy"],
+              "warnings": ["Document material recovery plan and disposal method"]
+            },
+            "maintenance": {
+              "requiredSections": ["project_overview", "project_scope", "risk_and_safety", "materials_list", "schedule_milestones"],
+              "recommendedFields": ["work_description", "special_constraints"],
+              "warnings": ["Verify existing scaffold capacity before adding loads"]
+            },
+            "emergency": {
+              "requiredSections": ["project_overview", "risk_and_safety", "logistics", "materials_list", "schedule_milestones"],
+              "recommendedFields": ["top_risks", "rescue_strategy", "crew_size", "emergency_contact"],
+              "warnings": ["URGENT: Expedited approval process - ensure competent person is on-site"],
+              "autoApprovalThreshold": "critical"
+            },
+            "inspection": {
+              "requiredSections": ["project_overview", "risk_and_safety"],
+              "recommendedFields": ["inspection_hold_points", "safety_requirements"],
+              "warnings": ["Document all findings and required corrective actions"]
+            }
+          }
+        },
+        "validationRules": {
+          "project_type": {
+            "required": true,
+            "message": "Project type must be selected"
+          },
+          "project_status": {
+            "required": true,
+            "customValidation": "statusTransitionValidator"
+          },
+          "estimated_height": {
+            "required": true,
+            "min": 1,
+            "max": 500,
+            "unit": "feet",
+            "message": "Height must be between 1 and 500 feet"
+          },
+          "crew_size": {
+            "required": {
+              "statuses": ["approved", "in_progress", "inspection"]
+            },
+            "min": 1,
+            "max": 100,
+            "message": "Crew size required before work can begin"
+          },
+          "engineering_required": {
+            "required": {
+              "statuses": ["design", "approved", "in_progress", "inspection", "in_service"]
+            },
+            "message": "Engineering determination required before design approval"
+          },
+          "client_contact_email": {
+            "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+            "message": "Valid email address required"
+          },
+          "client_contact_phone": {
+            "pattern": "^[+]?[(]?[0-9]{3}[)]?[-\\s.]?[0-9]{3}[-\\s.]?[0-9]{4,6}$",
+            "message": "Valid phone number required"
+          }
+        },
+        "notifications": {
+          "statusChange": {
+            "requested_to_planned": {
+              "recipients": ["project_manager"],
+              "template": "project_planned",
+              "channels": ["email", "in_app"]
+            },
+            "planned_to_design": {
+              "recipients": ["engineering_owner", "hse_owner"],
+              "template": "design_started",
+              "channels": ["email"]
+            },
+            "design_to_approved": {
+              "recipients": ["project_manager", "client_contact_name", "site_supervisor"],
+              "template": "project_approved",
+              "channels": ["email", "sms"]
+            },
+            "approved_to_in_progress": {
+              "recipients": ["lead_crew", "site_supervisor", "hse_owner"],
+              "template": "work_started",
+              "channels": ["email", "sms", "in_app"]
+            },
+            "in_progress_to_inspection": {
+              "recipients": ["engineering_owner", "hse_owner", "site_supervisor"],
+              "template": "inspection_requested",
+              "channels": ["email", "sms"]
+            },
+            "inspection_to_in_service": {
+              "recipients": ["client_contact_name", "project_manager"],
+              "template": "inspection_passed",
+              "channels": ["email"]
+            },
+            "in_service_to_closed": {
+              "recipients": ["project_manager", "client_contact_name"],
+              "template": "project_closed",
+              "channels": ["email"]
+            }
+          },
+          "escalations": {
+            "overdue_inspection": {
+              "condition": "status=inspection AND days_in_status>5",
+              "recipients": ["project_manager", "hse_owner"],
+              "template": "inspection_overdue",
+              "channels": ["email", "sms"]
+            },
+            "critical_priority": {
+              "condition": "priority=critical",
+              "recipients": ["project_manager", "hse_owner", "engineering_owner"],
+              "template": "critical_project",
+              "channels": ["email", "sms", "in_app"]
+            }
+          }
+        },
+        "domainConfig": {
+          "domain": "scaffolding",
+          "payloadType": "project",
+          "defaultType": "erection",
+          "typeMap": {
+            "erection": "Erection",
+            "maintenance": "Modification / Maintenance",
+            "dismantling": "Dismantling",
+            "emergency": "Emergency Stabilization",
+            "inspection": "Inspection Only"
+          },
+          "fields": {
+            "type": "project_type",
+            "name": "project_name",
+            "id": "project_code",
+            "date": "requested_date"
+          },
+          "outputKeys": {
+            "type": "projectType",
+            "name": "projectName",
+            "id": "projectCode",
+            "date": "requestedDate"
+          },
+          "navigation": {
+            "listingSuffix": "projects",
+            "homeSuffix": "home"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "scaffolding",
+          "domainLabel": "Scaffolding",
+          "domainSubType": "project_creation_wizard",
+          "domainSubTypeLabel": "Scaffolding Project Creation Wizard"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "successMessages": {
+            "create": "Project draft saved",
+            "update": "Project blueprint updated",
+            "progress": "Wizard progress captured"
+          },
+          "recordIdPath": ["data.id", "data._id", "id", "_id"]
+        }
+      },
+      "position": 24
+    }
+  ]
+}

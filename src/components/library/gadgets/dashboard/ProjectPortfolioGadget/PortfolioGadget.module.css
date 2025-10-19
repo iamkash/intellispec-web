@@ -1,0 +1,923 @@
+/**
+ * Shadcn-style CSS for Project Portfolio Gadget
+ * All colors use CSS custom properties - fully themeable
+ */
+
+.portfolioContainer {
+  padding: 12px;
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+}
+
+.portfolioHeader {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.portfolioHeaderContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.portfolioHeaderContent svg {
+  font-size: 18px;
+  color: hsl(var(--card-foreground));
+}
+
+.portfolioHeaderTitle {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  margin: 0 !important;
+  color: hsl(var(--card-foreground)) !important;
+  letter-spacing: -0.01em;
+}
+
+.portfolioHeaderSubtitle {
+  font-size: 12px !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-weight: 400;
+  margin-top: 2px;
+  display: block;
+}
+
+.fullscreenButton {
+  margin-left: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.fullscreenButton:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.fullscreenButton .anticon {
+  font-size: 16px !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.fullscreenButton:hover .anticon {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Fullscreen mode adjustments */
+.portfolioContainer:fullscreen {
+  background: hsl(var(--background));
+  padding: 20px;
+  overflow: auto;
+}
+
+.portfolioContainer:-webkit-full-screen {
+  background: hsl(var(--background));
+  padding: 20px;
+  overflow: auto;
+}
+
+.portfolioContainer:-moz-full-screen {
+  background: hsl(var(--background));
+  padding: 20px;
+  overflow: auto;
+}
+
+.portfolioContainer:-ms-fullscreen {
+  background: hsl(var(--background));
+  padding: 20px;
+  overflow: auto;
+}
+
+.portfolioToolbar {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--card)),
+    hsl(var(--muted) / 0.3)
+  );
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  transition: all 0.2s ease;
+}
+
+.portfolioToolbar:hover {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08), 0 2px 3px 0 rgba(0, 0, 0, 0.08);
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+.toolbarRight {
+  display: flex;
+  align-items: center;
+  gap: 0; /* Space component handles gaps */
+  flex-wrap: wrap;
+  flex: 0 1 auto;
+}
+
+.searchInput {
+  width: 100%;
+  max-width: 350px;
+  border-radius: 6px;
+}
+
+.searchInput:hover,
+.searchInput:focus {
+  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.2);
+}
+
+.sortSelect {
+  min-width: 150px;
+  border-radius: 6px;
+}
+
+.groupSelect {
+  min-width: 150px;
+  border-radius: 6px;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 1024px) {
+  .portfolioToolbar {
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .toolbarLeft {
+    min-width: 180px;
+  }
+
+  .sortSelect,
+  .groupSelect {
+    min-width: 130px;
+  }
+}
+
+/* Tablet breakpoint */
+@media (max-width: 768px) {
+  .portfolioToolbar {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .toolbarLeft {
+    flex: 1 1 100%;
+    min-width: 100%;
+    order: 1;
+  }
+
+  .toolbarRight {
+    flex: 1 1 100%;
+    width: 100%;
+    order: 2;
+    justify-content: flex-start;
+  }
+
+  .toolbarRight :global(.ant-space) {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .searchInput {
+    max-width: 100%;
+  }
+
+  .sortSelect,
+  .groupSelect {
+    min-width: 120px;
+    flex: 1 1 auto;
+  }
+}
+
+/* Mobile breakpoint */
+@media (max-width: 640px) {
+  .portfolioToolbar {
+    padding: 10px;
+    gap: 10px;
+    border-radius: 6px;
+  }
+
+  .toolbarLeft {
+    margin-bottom: 4px;
+  }
+
+  .toolbarRight {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .toolbarRight :global(.ant-space) {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px !important;
+  }
+
+  .toolbarRight :global(.ant-space-item) {
+    width: 100%;
+  }
+
+  .toolbarRight :global(.ant-divider-vertical) {
+    display: none; /* Hide vertical dividers on mobile */
+  }
+
+  .searchInput {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .sortSelect,
+  .groupSelect {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .toolbarRight :global(.ant-select) {
+    width: 100%;
+  }
+
+  .toolbarRight :global(.ant-btn) {
+    width: 100%;
+    height: 40px; /* Larger touch target */
+    border-radius: 6px;
+  }
+
+  .toolbarRight :global(.ant-space-compact) {
+    width: 100%;
+    display: flex;
+  }
+
+  .toolbarRight :global(.ant-space-compact .ant-btn) {
+    flex: 1;
+  }
+
+  /* Reset button on mobile */
+  .toolbarRight :global(.ant-btn:not(.ant-space-compact .ant-btn)) {
+    justify-content: center;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 480px) {
+  .portfolioToolbar {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .searchInput {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+
+  .toolbarRight :global(.ant-btn) {
+    height: 44px; /* Even larger for thumb-friendly tapping */
+    font-size: 14px;
+  }
+
+  /* Stack sort controls vertically on very small screens */
+  .toolbarRight :global(.ant-space-compact) {
+    flex-direction: column;
+  }
+
+  .toolbarRight :global(.ant-space-compact .ant-btn) {
+    width: 100%;
+  }
+
+  .portfolioContainer {
+    padding: 8px;
+  }
+
+  .portfolioHeader {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr; /* Single column on very small screens */
+    gap: 8px;
+  }
+}
+
+/* Responsive cards grid for different screen sizes */
+@media (max-width: 1024px) {
+  .cardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .cardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 8px;
+  }
+
+  .portfolioContainer {
+    padding: 10px;
+    border-radius: 6px;
+  }
+
+  .portfolioCard {
+    padding: 10px;
+  }
+
+  .cardTitle {
+    font-size: 12px !important;
+  }
+
+  .cardSubtitle {
+    font-size: 9px !important;
+  }
+
+  .cardListItem {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cardsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+
+  .groupHeader {
+    padding: 8px 10px;
+  }
+
+  .groupTitle {
+    font-size: 12px !important;
+  }
+}
+
+/* Toolbar control enhancements */
+.portfolioToolbar :global(.ant-select-selector) {
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.portfolioToolbar :global(.ant-select-selector:hover) {
+  border-color: hsl(var(--primary)) !important;
+}
+
+.portfolioToolbar :global(.ant-btn) {
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.portfolioToolbar :global(.ant-btn:hover) {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.portfolioToolbar :global(.ant-btn-primary) {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+.portfolioToolbar :global(.ant-divider-vertical) {
+  height: 24px;
+  margin: 0;
+  border-color: hsl(var(--border));
+}
+
+.portfolioBody {
+  min-height: 200px;
+}
+
+.cardGroup {
+  margin-bottom: 20px;
+}
+
+.cardGroup:last-child {
+  margin-bottom: 0;
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  background: hsl(var(--muted) / 0.3);
+  border: 1px solid hsl(var(--border));
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.groupHeader:hover {
+  background: hsl(var(--muted) / 0.5);
+  border-color: hsl(var(--primary));
+}
+
+.groupHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.groupHeaderLeft svg {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  transition: transform 0.2s ease;
+}
+
+.groupTitle {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: hsl(var(--foreground)) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.groupCount {
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: hsl(var(--muted-foreground)) !important;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: hsl(var(--background));
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.portfolioCard {
+  border-radius: 8px;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-left-width: 3px;
+  box-shadow: 0 1px 2px hsl(var(--foreground) / 0.05);
+  transition: all 0.2s ease;
+}
+
+.portfolioCard :global(.ant-card-body) {
+  padding: 12px;
+}
+
+.portfolioCard:hover {
+  border-color: hsl(var(--primary));
+  box-shadow: 0 2px 8px hsl(var(--primary) / 0.15);
+  cursor: pointer;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  position: relative;
+}
+
+.cardIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  background: hsl(var(--primary) / 0.1);
+  flex-shrink: 0;
+}
+
+.cardIcon svg {
+  font-size: 16px;
+  color: hsl(var(--card-foreground));
+}
+
+.cardHeaderContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  color: hsl(var(--card-foreground)) !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardSubtitle {
+  font-size: 10px !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.cardFavorite {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  background: hsl(var(--background));
+  transition: all 0.2s ease;
+}
+
+.cardFavorite:hover {
+  transform: scale(1.2);
+  background: hsl(var(--muted));
+}
+
+.favoriteIcon {
+  font-size: 16px;
+  color: hsl(var(--muted-foreground));
+  transition: color 0.2s ease;
+}
+
+.favoriteIcon:hover {
+  color: hsl(var(--primary));
+}
+
+.favoriteIconActive {
+  font-size: 16px;
+  color: hsl(var(--destructive));
+}
+
+.cardTags {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.cardTag {
+  border-radius: 4px;
+  font-size: 10px !important;
+  font-weight: 500;
+  padding: 2px 6px;
+  background: hsl(var(--muted));
+  color: hsl(var(--card-foreground)) !important;
+  border: none;
+  margin: 0;
+}
+
+.cardList {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardListItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cardListIcon {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.cardListIcon svg {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+}
+
+.cardListContent {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.cardListLabel {
+  font-size: 10px !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-weight: 400;
+  flex-shrink: 0;
+}
+
+.cardListValue {
+  font-size: 10px !important;
+  color: hsl(var(--card-foreground)) !important;
+  font-weight: 500;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.portfolioFooter {
+  margin-top: 12px;
+  padding-top: 6px;
+  border-top: 1px solid hsl(var(--border));
+}
+
+.portfolioFooter * {
+  font-size: 10px !important;
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* List View Styles */
+.listView {
+  width: 100%;
+}
+
+.listView .portfolioCard {
+  width: 100%;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 12px;
+  min-height: 60px;
+}
+
+.listView .cardHeader {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.listView .cardIcon {
+  font-size: 20px;
+  color: hsl(var(--primary));
+  flex-shrink: 0;
+}
+
+.listView .cardTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: hsl(var(--card-foreground));
+  margin: 0;
+  flex: 1;
+}
+
+.listView .cardSubtitle {
+  font-size: 12px;
+  color: hsl(var(--muted-foreground));
+  margin: 0;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.listView .cardTags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-left: 12px;
+}
+
+.listView .cardTag {
+  font-size: 10px;
+  padding: 2px 6px;
+}
+
+.listView .cardList {
+  display: none; /* Hide list items in list view for compactness */
+}
+
+.listView .cardFavorite {
+  position: static;
+  margin-left: 12px;
+}
+
+/* Table View Styles */
+.tableView {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.tableView .ant-table {
+  background: hsl(var(--card));
+  border-radius: 8px;
+}
+
+.tableView .ant-table-thead > tr > th {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.tableView .ant-table-tbody > tr > td {
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.tableView .ant-table-tbody > tr:hover > td {
+  background: hsl(var(--muted));
+}
+
+.tableView .ant-pagination {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.tableView .ant-pagination .ant-pagination-item {
+  background: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+.tableView .ant-pagination .ant-pagination-item a {
+  color: hsl(var(--foreground));
+}
+
+.tableView .ant-pagination .ant-pagination-item-active {
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
+}
+
+.tableView .ant-pagination .ant-pagination-item-active a {
+  color: hsl(var(--primary-foreground));
+}
+
+/* Kanban View Styles */
+.kanbanView {
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px;
+}
+
+.kanbanBoard {
+  display: flex;
+  gap: 16px;
+  padding: 8px;
+  min-height: 500px;
+  align-items: flex-start;
+}
+
+.kanbanColumn {
+  flex: 0 0 300px;
+  min-width: 300px;
+  background: hsl(var(--muted) / 0.2);
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 300px);
+}
+
+.kanbanColumnHeader {
+  padding: 14px 16px;
+  background: hsl(var(--muted));
+  border-bottom: 2px solid hsl(var(--primary) / 0.2);
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.kanbanColumnTitle {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: hsl(var(--foreground)) !important;
+  margin: 0 !important;
+  text-transform: capitalize;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.kanbanColumnBadge {
+  flex-shrink: 0;
+}
+
+.kanbanColumnCards {
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 200px;
+}
+
+.kanbanColumn .portfolioCard {
+  width: 100%;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kanbanColumn .portfolioCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  border-left-color: hsl(var(--primary));
+}
+
+.kanbanColumn .portfolioCard:active {
+  transform: translateY(0);
+}
+
+.kanbanColumnEmpty {
+  padding: 32px 16px;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 13px;
+  font-style: italic;
+  background: hsl(var(--card));
+  border-radius: 6px;
+  border: 1px dashed hsl(var(--border));
+}
+
+.kanbanEmpty {
+  width: 100%;
+  padding: 60px 20px;
+  text-align: center;
+  color: hsl(var(--muted-foreground));
+  font-size: 14px;
+}
+
+/* Scrollbar styling for Kanban columns */
+.kanbanColumnCards::-webkit-scrollbar {
+  width: 6px;
+}
+
+.kanbanColumnCards::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.3);
+  border-radius: 3px;
+}
+
+.kanbanColumnCards::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+.kanbanColumnCards::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Responsive Kanban */
+@media (max-width: 1024px) {
+  .kanbanColumn {
+    flex: 0 0 260px;
+    min-width: 260px;
+  }
+}
+
+@media (max-width: 768px) {
+  .kanbanBoard {
+    gap: 12px;
+    padding: 6px;
+  }
+
+  .kanbanColumn {
+    flex: 0 0 240px;
+    min-width: 240px;
+  }
+
+  .kanbanColumnHeader {
+    padding: 12px 14px;
+  }
+
+  .kanbanColumnTitle {
+    font-size: 13px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .kanbanView {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .kanbanBoard {
+    flex-direction: row; /* Horizontal scroll on mobile */
+    gap: 12px;
+    min-width: min-content;
+  }
+
+  .kanbanColumn {
+    flex: 0 0 280px;
+    min-width: 280px;
+    max-height: calc(100vh - 250px);
+  }
+
+  .kanbanColumnCards {
+    max-height: calc(100vh - 350px);
+  }
+}
+

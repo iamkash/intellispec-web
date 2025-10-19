@@ -1,0 +1,748 @@
+{
+  "id": "intelliSCAFF/daily-field-log-regular-activity",
+  "title": "Daily Activity Log - Regular Work",
+  "description": "Lightweight daily logging for regular scaffolding work activities, progress tracking, and compliance.",
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  },
+  "gadgets": [
+    {
+      "id": "daily-activity-log-wizard",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Daily Activity Log",
+      "description": "Quick daily logging for regular work with AI-assisted form population.",
+      "config": {
+        "title": "Daily Activity Log",
+        "subtitle": "Project: {recordContext.summary.project_name} • Site: {recordContext.summary.site_name} • Type: {recordContext.summary.project_type}",
+        "description": "Comprehensive daily logging for regular scaffolding activities with AI assistance for each section and automatic project context loading.",
+        "theme": "light",
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "autoAdvance": false,
+        "typeLabel": "Log Type",
+        "typePlaceholder": "Regular Activity",
+        "typeHelpText": "Regular work activity logging",
+        "reportTitle": "Daily Activity Report",
+        "reportHeaderText": "DAILY ACTIVITY LOG",
+        "reportHeaderSubtext": "Regular Work • Progress • Safety • Compliance",
+        "editModalTitle": "Edit Daily Activity Log",
+        "steps": {
+          "sections": [
+            {
+              "id": "voice_capture",
+              "title": "Voice Notes",
+              "description": "Record quick field observations (optional)",
+              "sectionType": "voice",
+              "includeInPdf": false,
+              "voice": {
+                "enabled": true,
+                "maxDuration": 120,
+                "showVisualization": true,
+                "transcriptionModel": "gpt-4o-mini-transcribe"
+              }
+            },
+            {
+              "id": "image_capture",
+              "title": "Progress Photos",
+              "description": "Capture work progress (optional)",
+              "sectionType": "image",
+              "includeInPdf": true,
+              "images": {
+                "maxCount": 10,
+                "maxSize": 15728640,
+                "accept": "image/jpeg,image/png,image/webp",
+                "multiple": true,
+                "showPreview": true,
+                "showThumbnails": true,
+                "thumbnailSize": 100
+              }
+            },
+            {
+              "id": "log_metadata",
+              "title": "Log Details",
+              "description": "Date, shift, crew size, and project context",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+              "includeInPdf": true,
+              "btnLabel": "Auto-Fill from Project",
+              "promptRef": "metadataPopulate",
+              "form": {
+                "groups": [
+                  {
+                    "id": "essentials",
+                    "title": "Log Information",
+                    "fields": [
+                      { "id": "log_date", "label": "Date", "type": "date", "required": true, "defaultValue": "today", "lgSpan": 12 },
+                      { "id": "shift", "label": "Shift", "type": "select", "required": true, "defaultValue": "day", "lgSpan": 12, "options": [
+                        { "label": "Day", "value": "day" },
+                        { "label": "Night", "value": "night" },
+                        { "label": "Swing", "value": "swing" }
+                      ] }
+                    ]
+                  },
+                  {
+                    "id": "project_reference",
+                    "title": "Project Reference (Auto-Populated)",
+                    "fields": [
+                      { "id": "project_name", "label": "Project Name", "type": "text", "required": true, "readOnly": true, "populateFromAsset": "formData.project_name", "lgSpan": 12 },
+                      { "id": "site_name", "label": "Site/Facility", "type": "text", "required": true, "readOnly": true, "populateFromAsset": "formData.site_name", "lgSpan": 12 }
+                    ]
+                  },
+                  {
+                    "id": "crew_info",
+                    "title": "Crew Details",
+                    "fields": [
+                      { "id": "crew_size", "label": "Crew Size", "type": "number", "required": true, "lgSpan": 4, "props": { "min": 1, "max": 100 } },
+                      { "id": "work_hours", "label": "Hours Worked", "type": "number", "required": true, "lgSpan": 4, "props": { "min": 0, "max": 24, "step": 0.5 } },
+                      { "id": "crew_lead", "label": "Crew Lead/Foreman", "type": "text", "required": true, "placeholder": "Lead name", "lgSpan": 8 },
+                      { "id": "competent_person", "label": "Competent Person", "type": "text", "required": true, "placeholder": "Competent person on site", "lgSpan": 8 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "daily_activities",
+              "title": "Work Activities",
+              "description": "Document activities performed, milestone progress, and task status",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Generate from Voice/Images",
+              "promptRef": "activitiesPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "work_description",
+                    "title": "Work Activities",
+                    "fields": [
+                      { "id": "work_description", "label": "Work Description", "type": "textarea", "required": true, "props": { "rows": 4 }, "placeholder": "Describe main activities and work performed today", "lgSpan": 24 },
+                      { "id": "active_milestone", "label": "Current Milestone", "type": "text", "required": true, "readOnly": true, "populateFromAsset": "formData.scheduleMilestones.0.milestone", "defaultValue": "Site Survey & Geotechnical Assessment", "lgSpan": 8 },
+                      { "id": "milestone_progress", "label": "Progress (%)", "type": "number", "required": true, "lgSpan": 8, "props": { "min": 0, "max": 100 } },
+                      { "id": "milestone_status", "label": "Status", "type": "select", "required": true, "lgSpan": 8, "options": [
+                        { "label": "In Progress", "value": "In Progress" },
+                        { "label": "Complete", "value": "Complete" },
+                        { "label": "Delayed", "value": "Delayed" }
+                      ] }
+                    ]
+                  },
+                  {
+                    "id": "task_tracking",
+                    "title": "Task Status",
+                    "fields": [
+                      { "id": "completed_tasks", "label": "Completed Tasks", "type": "multi-select", "placeholder": "Add completed tasks", "lgSpan": 8 },
+                      { "id": "ongoing_tasks", "label": "Tasks In Progress", "type": "multi-select", "placeholder": "Add ongoing tasks", "lgSpan": 8 },
+                      { "id": "blocked_tasks", "label": "Blocked Tasks", "type": "multi-select", "placeholder": "Add blocked or delayed tasks", "lgSpan": 8 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "equipment_materials",
+              "title": "Equipment & Materials",
+              "description": "Track equipment usage and material consumption",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Generate from Observations",
+              "promptRef": "equipmentMaterialsPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "equipment",
+                    "title": "Equipment Used",
+                    "fields": [
+                      { "id": "equipment_used", "label": "Equipment Used", "type": "multi-select", "placeholder": "Select equipment used today", "lgSpan": 24, "options": [
+                        "Forklift", "Crane", "Boom Lift", "Scissor Lift", "Material Hoist", "Welding Equipment", "Power Tools", "Hand Tools", "Safety Equipment", "Vehicle"
+                      ] },
+                      { "id": "equipment_hours", "label": "Total Equipment Hours", "type": "number", "lgSpan": 12, "props": { "min": 0, "max": 24 } },
+                      { "id": "equipment_condition", "label": "Equipment Condition", "type": "select", "lgSpan": 12, "options": [
+                        { "label": "Operational", "value": "operational" },
+                        { "label": "Needs Maintenance", "value": "needs_maintenance" },
+                        { "label": "Out of Service", "value": "out_of_service" }
+                      ] }
+                    ]
+                  },
+                  {
+                    "id": "materials",
+                    "title": "Materials Consumed",
+                    "fields": [
+                      { "id": "materials_consumed", "label": "Materials Used", "type": "multi-select", "placeholder": "Select materials consumed", "lgSpan": 24, "options": [
+                        "Frame/Standard", "Ledger/Horizontal", "Transom/Bearer", "Brace/Diagonal", "Plank/Deck Board", "Base Plate/Jack", "Coupler/Fitting", "Guardrail", "Toe Board", "Tie/Anchor", "Hardware/Fasteners"
+                      ] },
+                      { "id": "materials_quantity", "label": "Quantity Used", "type": "number", "lgSpan": 12, "props": { "min": 0 } },
+                      { "id": "materials_unit", "label": "Unit", "type": "select", "lgSpan": 12, "options": [
+                        { "label": "Each", "value": "each" },
+                        { "label": "Linear Feet", "value": "linear_feet" },
+                        { "label": "Square Feet", "value": "square_feet" },
+                        { "label": "Ton", "value": "ton" }
+                      ] }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "weather_conditions",
+              "title": "Weather & Site Conditions",
+              "description": "Document weather conditions and site conditions affecting work",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Analyze Weather Data",
+              "promptRef": "weatherPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "weather",
+                    "title": "Weather Conditions",
+                    "fields": [
+                      { "id": "weather_conditions", "label": "Weather", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Clear", "value": "clear" },
+                        { "label": "Partly Cloudy", "value": "partly_cloudy" },
+                        { "label": "Overcast", "value": "overcast" },
+                        { "label": "Light Rain", "value": "light_rain" },
+                        { "label": "Heavy Rain", "value": "heavy_rain" },
+                        { "label": "Snow", "value": "snow" },
+                        { "label": "High Winds", "value": "high_winds" }
+                      ] },
+                      { "id": "temperature", "label": "Temperature (F)", "type": "number", "lgSpan": 6, "props": { "min": -50, "max": 150 } },
+                      { "id": "wind_speed", "label": "Wind Speed (mph)", "type": "number", "lgSpan": 6, "props": { "min": 0, "max": 100 } },
+                      { "id": "site_conditions", "label": "Ground Conditions", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Dry", "value": "dry" },
+                        { "label": "Damp", "value": "damp" },
+                        { "label": "Wet/Muddy", "value": "wet" },
+                        { "label": "Frozen", "value": "frozen" },
+                        { "label": "Snow Covered", "value": "snow_covered" }
+                      ] },
+                      { "id": "visibility_conditions", "label": "Visibility", "type": "select", "lgSpan": 12, "options": [
+                        { "label": "Excellent", "value": "excellent" },
+                        { "label": "Good", "value": "good" },
+                        { "label": "Fair", "value": "fair" },
+                        { "label": "Low", "value": "low" },
+                        { "label": "Very Low/Fog", "value": "very_low" }
+                      ] }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "personnel_tracking",
+              "title": "Personnel On Site",
+              "description": "Track all personnel present today",
+              "sectionType": "grid",
+              "pdfLayout": { "type": "table", "columns": "auto" },
+              "btnLabel": "Extract from Voice/Images",
+              "promptRef": "personnelPopulate",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Personnel Log",
+                "dataKey": "personnel",
+                "columns": [
+                  { "key": "name", "title": "Name", "editable": true, "width": 200, "type": "text" },
+                  { "key": "role", "title": "Role/Trade", "editable": true, "width": 150, "type": "select", "options": [
+                    { "label": "Scaffold Erector", "value": "Scaffold Erector" },
+                    { "label": "Foreman", "value": "Foreman" },
+                    { "label": "Laborer", "value": "Laborer" },
+                    { "label": "Rigger", "value": "Rigger" },
+                    { "label": "Operator", "value": "Operator" },
+                    { "label": "Engineer", "value": "Engineer" },
+                    { "label": "Inspector", "value": "Inspector" },
+                    { "label": "HSE Officer", "value": "HSE Officer" },
+                    { "label": "Other", "value": "Other" }
+                  ] },
+                  { "key": "company", "title": "Company", "editable": true, "width": 150, "type": "text" },
+                  { "key": "hours", "title": "Hours Worked", "editable": true, "width": 100, "type": "text" },
+                  { "key": "tasks", "title": "Tasks Assigned", "editable": true, "width": 250, "type": "text" }
+                ],
+                "promptRef": "personnelPopulate",
+                "btnLabel": "Extract from Voice/Images"
+              }
+            },
+            {
+              "id": "visitors_deliveries",
+              "title": "Visitors & Deliveries",
+              "description": "Track site visitors and material deliveries",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Extract from Voice/Images",
+              "promptRef": "visitorsDeliveriesPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "visitors",
+                    "title": "Visitors",
+                    "fields": [
+                      { "id": "visitors_today", "label": "Visitors On Site", "type": "radio", "required": true, "defaultValue": "no", "lgSpan": 24, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "visitor_names", "label": "Visitor Names", "type": "textarea", "props": { "rows": 2 }, "placeholder": "List visitor names and companies", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "deliveries",
+                    "title": "Material Deliveries",
+                    "fields": [
+                      { "id": "deliveries_received", "label": "Deliveries Received", "type": "radio", "required": true, "defaultValue": "no", "lgSpan": 24, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "delivery_details", "label": "Delivery Details", "type": "textarea", "props": { "rows": 2 }, "placeholder": "Materials delivered, quantities, delivery time", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "quality_inspections",
+              "title": "Quality Control",
+              "description": "Quality checks performed today",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Generate Quality Report",
+              "promptRef": "qualityPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "quality",
+                    "title": "Quality Assessment",
+                    "fields": [
+                      { "id": "inspection_types", "label": "Inspections Performed", "type": "checkbox_group", "lgSpan": 24, "options": [
+                        { "label": "Daily Pre-Use Inspection", "value": "daily_preuse" },
+                        { "label": "Load Capacity Verification", "value": "load_capacity" },
+                        { "label": "Tie/Anchor Point Inspection", "value": "tie_inspection" },
+                        { "label": "Guardrail/Fall Protection Check", "value": "fall_protection" },
+                        { "label": "Platform/Plank Condition", "value": "platform_condition" }
+                      ] },
+                      { "id": "quality_issues_found", "label": "Quality Issues Identified", "type": "radio", "required": true, "defaultValue": "no", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "rework_required", "label": "Rework Required", "type": "radio", "defaultValue": "no", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "inspection_findings",
+              "title": "Inspection Findings & Deficiencies",
+              "description": "Detailed inspection findings, deficiencies, and corrective actions",
+              "sectionType": "grid",
+              "pdfLayout": { "type": "table", "columns": "auto" },
+              "btnLabel": "Extract Findings",
+              "promptRef": "findingsPopulate",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Inspection Findings Log",
+                "dataKey": "inspectionFindings",
+                "columns": [
+                  { "key": "finding_type", "title": "Type", "editable": true, "width": 120, "type": "select", "options": [
+                    { "label": "Deficiency", "value": "Deficiency" },
+                    { "label": "Observation", "value": "Observation" },
+                    { "label": "Non-Compliance", "value": "Non-Compliance" },
+                    { "label": "Good Practice", "value": "Good Practice" },
+                    { "label": "Hazard", "value": "Hazard" }
+                  ] },
+                  { "key": "location", "title": "Location", "editable": true, "width": 150, "type": "text" },
+                  { "key": "description", "title": "Description", "editable": true, "width": 300, "type": "text" },
+                  { "key": "severity", "title": "Severity", "editable": true, "width": 100, "type": "select", "options": [
+                    { "label": "Critical", "value": "Critical" },
+                    { "label": "High", "value": "High" },
+                    { "label": "Medium", "value": "Medium" },
+                    { "label": "Low", "value": "Low" }
+                  ] },
+                  { "key": "corrective_action", "title": "Corrective Action", "editable": true, "width": 250, "type": "text" },
+                  { "key": "resolved", "title": "Resolved", "editable": true, "width": 100, "type": "select", "options": [
+                    { "label": "Yes", "value": "Yes" },
+                    { "label": "No", "value": "No" },
+                    { "label": "In Progress", "value": "In Progress" }
+                  ] }
+                ],
+                "promptRef": "findingsPopulate",
+                "btnLabel": "Extract Findings"
+              }
+            },
+            {
+              "id": "delays_issues",
+              "title": "Delays & Issues",
+              "description": "Document any delays, issues, or impediments encountered",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+              "btnLabel": "Analyze Delays from Voice/Images",
+              "promptRef": "delaysPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "delays",
+                    "title": "Delays & Impediments",
+                    "fields": [
+                      { "id": "delays_encountered", "label": "Delays Today", "type": "radio", "required": true, "defaultValue": "no", "lgSpan": 24, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "delay_type", "label": "Delay Type", "type": "checkbox_group", "lgSpan": 24, "options": [
+                        { "label": "Weather", "value": "weather" },
+                        { "label": "Material Shortage", "value": "material" },
+                        { "label": "Equipment Breakdown", "value": "equipment" },
+                        { "label": "Access Issues", "value": "access" },
+                        { "label": "Permit/Coordination", "value": "permit" },
+                        { "label": "Safety Stop", "value": "safety" },
+                        { "label": "Other", "value": "other" }
+                      ] },
+                      { "id": "delay_description", "label": "Delay Description", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Describe the delay and impact on schedule", "lgSpan": 24 },
+                      { "id": "delay_duration", "label": "Delay Duration (hours)", "type": "number", "lgSpan": 12, "props": { "min": 0, "max": 24, "step": 0.5 } },
+                      { "id": "recovery_plan", "label": "Recovery Plan", "type": "textarea", "props": { "rows": 2 }, "placeholder": "How will this be mitigated?", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "safety_compliance",
+              "title": "Safety & Compliance",
+              "description": "Safety briefing, PPE, incidents, permits",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Analyze Safety Data",
+              "promptRef": "safetyPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "safety",
+                    "title": "Safety Status",
+                    "fields": [
+                      { "id": "safety_briefing_completed", "label": "Safety Briefing", "type": "radio", "required": true, "defaultValue": "yes", "lgSpan": 12, "options": [
+                        { "label": "Completed", "value": "yes" },
+                        { "label": "Not Completed", "value": "no" }
+                      ] },
+                      { "id": "ppe_compliance", "label": "PPE Compliance", "type": "select", "required": true, "defaultValue": "full", "lgSpan": 12, "options": [
+                        { "label": "100% Compliant", "value": "full" },
+                        { "label": "Mostly (90%+)", "value": "mostly" },
+                        { "label": "Partial (50-89%)", "value": "partial" }
+                      ] },
+                      { "id": "incidents_reported", "label": "Incidents", "type": "select", "required": true, "defaultValue": "none", "lgSpan": 12, "options": [
+                        { "label": "None", "value": "none" },
+                        { "label": "Near Miss", "value": "near_miss" },
+                        { "label": "First Aid", "value": "first_aid" }
+                      ] },
+                      { "id": "permits_valid", "label": "Permits Valid", "type": "radio", "required": true, "defaultValue": "yes", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "Verify", "value": "verify" }
+                      ] },
+                      { "id": "safety_observations", "label": "Safety Notes", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Any concerns or observations?", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "summary",
+              "title": "Summary & Sign-off",
+              "description": "Final summary and supervisor approval",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "summary_info",
+                    "title": "Daily Summary",
+                    "fields": [
+                      { "id": "overall_summary", "label": "Summary", "type": "textarea", "required": true, "props": { "rows": 3 }, "placeholder": "Summarize today's work...", "lgSpan": 24 },
+                      { "id": "supervisor_name", "label": "Supervisor", "type": "text", "required": true, "placeholder": "Name", "lgSpan": 12 },
+                      { "id": "supervisor_signature", "label": "Signature", "type": "signature", "required": true, "lgSpan": 12, "props": { "height": 80 } }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "pdf": {
+            "enabled": true,
+            "title": "Export Report",
+            "description": "Generate comprehensive PDF report for distribution",
+            "reportConfig": {
+              "includeSections": ["log_metadata", "daily_activities", "personnel_tracking", "visitors_deliveries", "equipment_materials", "weather_conditions", "quality_inspections", "inspection_findings", "delays_issues", "safety_compliance", "summary"],
+              "pdfStyling": {
+                "orientation": "portrait",
+                "margin": "0.75in",
+                "theme": "professional"
+              }
+            }
+          }
+        },
+        "prompts": {
+          "metadataPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract crew information from transcript or use project defaults. Be STRICT: only use stated values for crew_size and work_hours. Do NOT estimate. If unclear, leave field empty (null or empty string). Never return placeholder text.",
+              "userPrompt": "PROJECT: {recordContext.summary.project_name}\nCrew Lead (default): {recordContext.summary.site_supervisor}\nTranscript: {promptContext}\n\nExtract: crew_size (number or null), work_hours (number or null), crew_lead (string or null). Return JSON only."
+            }
+          },
+          "activitiesPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract work activities from voice transcript or images. VALIDATION: milestone_progress must be stated or conservatively inferred (0-100). milestone_status must match enum (In Progress|Complete|Delayed). completed_tasks, ongoing_tasks, blocked_tasks must match project plan terminology. Do NOT invent tasks or metrics. Leave fields empty if data not available. Never use placeholder text.",
+              "userPrompt": "PROJECT MILESTONES: {recordContext.summary.scheduleMilestones}\nVOICE/IMAGES: {promptContext}\n\nExtract: work_description (string or null), milestone_progress (0-100 or null), milestone_status (enum or null), completed_tasks (array or []), ongoing_tasks (array or []), blocked_tasks (array or []). Return JSON only."
+            }
+          },
+          "equipmentMaterialsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract equipment usage and material consumption from observations. STRICT: equipment_used must match enum values from project inventory. materials_consumed must match enum from project materials list. quantities must be explicitly stated. Do NOT estimate or invent usage. Leave fields empty if data not available. Never use placeholder text.",
+              "userPrompt": "EQUIPMENT INVENTORY: {recordContext.summary.equipment_needs}\nMATERIALS PLAN: {recordContext.summary.materialsList}\nOBSERVATIONS: {promptContext}\n\nExtract: equipment_used (array or []), equipment_hours (number or null), equipment_condition (enum or null), materials_consumed (array or []), materials_quantity (number or null), materials_unit (enum or null). Return JSON only."
+            }
+          },
+          "weatherPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract weather and site conditions from observations. STRICT: temperature, wind_speed must be stated values. All conditions must match enum values. Do NOT estimate weather data. Leave fields empty (null) if not stated. Never use placeholder text.",
+              "userPrompt": "OBSERVATIONS: {promptContext}\n\nExtract: weather_conditions (enum or null), temperature (number or null), wind_speed (number or null), site_conditions (enum or null), visibility_conditions (enum or null). Return JSON only."
+            }
+          },
+          "qualityPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "Assess quality control and inspections. CONSERVATIVE: quality_issues_found and rework_required default to 'no' unless explicitly stated. inspection_types must match enum. Leave fields empty if unclear. Never use placeholder text in field values.",
+              "userPrompt": "OBSERVATIONS: {promptContext}\n\nExtract: inspection_types (array or []), quality_issues_found (yes/no or null), rework_required (yes/no or null), inspection_findings (string or null). Return JSON only."
+            }
+          },
+          "personnelPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1200,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract personnel information from voice transcript or observations. STRICT: Only list personnel explicitly mentioned. Validate names against project team roster. Do NOT invent names or roles. Return JSON array format. If no personnel mentioned, return empty array []. Never use placeholder text.",
+              "userPrompt": "PROJECT TEAM: {recordContext.summary.project_manager}, {recordContext.summary.site_supervisor}\nOBSERVATIONS: {promptContext}\n\nExtract personnel array with: name (validate against roster), role (string), company (string or null), hours (number or null), tasks (string or null). Return JSON array or []."
+            }
+          },
+          "findingsPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract inspection findings, deficiencies, and observations. CONSERVATIVE: Classify severity conservatively (err toward higher severity). Mark location precisely. Return JSON array format. If no findings, return empty array []. Never use placeholder text in field values.",
+              "userPrompt": "{promptContext}"
+            }
+          },
+          "visitorsDeliveriesPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract visitor and delivery information from voice transcript or observations. STRICT: Only list explicitly mentioned visitors and deliveries. Do NOT invent names or deliveries. Leave fields empty if not mentioned. Never use placeholder text.",
+              "userPrompt": "OBSERVATIONS: {promptContext}\n\nExtract: visitors_today (yes/no or null), visitor_names (array or []), deliveries_received (yes/no or null), delivery_details (string or null). Return JSON only."
+            }
+          },
+          "delaysPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "Extract delay and issue information from voice transcript or observations. CONSERVATIVE: Only report explicitly stated delays. Calculate delay_duration from stated times only. Leave fields empty if unclear. Never use placeholder text. Be specific about impact on schedule.",
+              "userPrompt": "PROJECT SCHEDULE: {recordContext.summary.scheduleMilestones}\nOBSERVATIONS: {promptContext}\n\nExtract: delays_encountered (yes/no or null), delay_type (array or []), delay_description (string or null), delay_duration (number or null), recovery_plan (string or null). Return JSON only."
+            }
+          },
+          "safetyPopulate": {
+            "modelConfig": {
+              "model": "gpt-5-nano",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "Assess safety compliance. CONSERVATIVE: default to 'no' or null for incidents unless explicitly stated. ppe_compliance must match enum values. Leave fields empty if unclear. Never use placeholder text.",
+              "userPrompt": "PROJECT SAFETY: {recordContext.summary.safety_requirements}\nOBSERVATIONS: {promptContext}\n\nExtract: ppe_compliance (enum or null), incidents_reported (enum or null), safety_observations (string or null). Return JSON only."
+            }
+          }
+        },
+        "conditionalLogic": {
+          "initialState": {
+            "visibleSections": ["voice_capture", "image_capture", "log_metadata"],
+            "message": "Complete log details to continue"
+          },
+          "sectionVisibility": {
+            "voice_capture": { "showAlways": true },
+            "image_capture": { "showAlways": true },
+            "log_metadata": { "showAlways": true },
+            "daily_activities": { "showAlways": true },
+            "personnel_tracking": { "showAlways": true },
+            "visitors_deliveries": { "showAlways": true },
+            "equipment_materials": { "showAlways": true },
+            "weather_conditions": { "showAlways": true },
+            "quality_inspections": { "showAlways": true },
+            "inspection_findings": { "showAlways": true },
+            "delays_issues": { "showAlways": true },
+            "safety_compliance": { "showAlways": true },
+            "summary": { "showAlways": true }
+          }
+        },
+        "validationRules": {
+          "crew_size": {
+            "required": true,
+            "min": 1,
+            "max": 100,
+            "constraint": "must match personnel logged, not estimated"
+          },
+          "work_hours": {
+            "required": true,
+            "min": 0,
+            "max": 24,
+            "constraint": "must be stated or calculated from times"
+          },
+          "milestone_progress": {
+            "required": true,
+            "min": 0,
+            "max": 100,
+            "constraint": "conservatively inferred, not invented"
+          },
+          "temperature": {
+            "min": -50,
+            "max": 150,
+            "constraint": "must be stated value, not estimated"
+          },
+          "wind_speed": {
+            "min": 0,
+            "max": 100,
+            "constraint": "must be stated value, not estimated"
+          },
+          "equipment_hours": {
+            "min": 0,
+            "max": 24,
+            "constraint": "must be stated or calculated from times"
+          },
+          "materials_quantity": {
+            "min": 0,
+            "constraint": "must be stated value, not estimated"
+          }
+        },
+        "domainConfig": {
+          "domain": "scaffolding",
+          "payloadType": "daily_log",
+          "defaultType": "regular",
+          "typeMap": { "regular": "Regular Activity" },
+          "fields": {
+            "type": "log_type",
+            "name": "overall_summary",
+            "date": "log_date"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "scaffolding",
+          "domainLabel": "Scaffolding",
+          "domainSubType": "daily_field_log_regular_activity",
+          "domainSubTypeLabel": "Regular Activity Log"
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "populateOnLoad": true,
+          "disablePopulatedFields": true,
+          "urlParams": [
+            {
+              "name": "parentProjectId",
+              "queryParam": "parentProjectId",
+              "required": true,
+              "description": "Parent scaffolding project ID for context"
+            }
+          ],
+          "request": {
+            "url": "/api/documents/{params.parentProjectId}",
+            "method": "GET",
+            "headers": {
+              "Accept": "application/json"
+            },
+            "description": "Fetch parent project blueprint containing scope, team, schedule, permits, and safety baseline"
+          },
+          "responseSelector": "data",
+          "contextMapping": {
+            "summary": {
+              "project_name": "summary.project_name",
+              "project_code": "formData.project_code",
+              "project_type": "summary.project_type",
+              "site_name": "formData.site_name",
+              "site_address": "formData.site_address",
+              "site_city": "formData.site_city",
+              "site_state": "formData.site_state",
+              "site_zip": "formData.site_zip",
+              "site_supervisor": "formData.site_supervisor",
+              "project_manager": "formData.project_manager",
+              "scheduleMilestones": "summary.scheduleMilestones",
+              "current_milestone": "formData.current_milestone",
+              "current_milestone_name": "summary.scheduleMilestones.0.milestone",
+              "safety_requirements": "summary.safety_requirements",
+              "top_risks": "summary.top_risks",
+              "risk_controls": "summary.risk_controls",
+              "equipment_needs": "formData.equipment_needs",
+              "materialsList": "summary.materialsList",
+              "permit_requirements": "summary.permit_requirements",
+              "work_description": "formData.work_description",
+              "estimated_height": "formData.estimated_height",
+              "load_class": "formData.load_class"
+            }
+          },
+          "inheritResponseId": true,
+          "responseIdPath": "analysisData.previousResponseId",
+          "responseIdConfig": {
+            "sourceField": "data.id",
+            "targetField": "analysisData.parentResponseId",
+            "description": "Inherit parent project response ID for audit trail and context linking"
+          }
+        },
+        "persistence": {
+          "create": { "url": "/api/documents", "method": "POST" },
+          "update": { "url": "/api/documents/{id}", "method": "PUT" },
+          "progress": { "url": "/api/documents/{id}", "method": "PATCH" },
+          "successMessages": {
+            "create": "Daily log saved",
+            "update": "Log updated",
+            "progress": "Progress saved"
+          },
+          "recordIdPath": ["data.id", "data._id", "id", "_id"]
+        }
+      },
+      "position": 24
+    }
+  ]
+}

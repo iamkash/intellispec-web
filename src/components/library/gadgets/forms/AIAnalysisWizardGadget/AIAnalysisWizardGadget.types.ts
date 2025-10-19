@@ -153,6 +153,38 @@ export interface AIAnalysisWizardConfig {
     };
     responseSelector?: string;
     cache?: boolean;
+    /**
+     * ✅ ENHANCEMENT: Inherit parent document's OpenAI response ID for conversation continuity
+     * When true, the wizard will extract the response ID from the parent document
+     * and use it as the initial AI conversation context.
+     */
+    inheritResponseId?: boolean;
+    /**
+     * Path to the response ID in the parent document data (e.g., "analysisData.previousResponseId")
+     * Required when inheritResponseId is true.
+     */
+    responseIdPath?: string;
+    /**
+     * ✅ ENHANCEMENT: Context mapping for parent-child document relationships
+     * Maps fields from parent document to recordContext for AI prompt enrichment
+     * Example:
+     * {
+     *   "summary": {
+     *     "project_name": "formData.project_name",
+     *     "safety_requirements": "summary.safety_requirements"
+     *   }
+     * }
+     * This makes parent data available as {recordContext.summary.*} in AI prompts
+     */
+    contextMapping?: Record<string, Record<string, string>>;
+    /**
+     * Additional metadata for response ID inheritance
+     */
+    responseIdConfig?: {
+      sourceField?: string;
+      targetField?: string;
+      description?: string;
+    };
   };
   domainConfig?: {
     domain?: string;

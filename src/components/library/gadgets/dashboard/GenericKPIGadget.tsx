@@ -1,17 +1,32 @@
 /**
  * Generic KPI Gadget
- * 
+ *
  * A metadata-driven gadget that displays KPI metrics with aggregation support.
  * Supports complex aggregation configurations, data transformations, and dynamic KPI rendering.
  * All business logic is defined in metadata - no hardcoded calculations or field mappings.
- * 
+ *
  * This extends the basic KPIGadget to support complex workspace configurations like VOC analytics.
  */
 
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import WorkspaceFilterContext, { WorkspaceFilterContextValue } from '../../../../contexts/WorkspaceFilterContext';
-import { ValidationResult } from '../../core/base';
-import { BaseGadget, GadgetConfig, GadgetContext, GadgetMetadata, GadgetSchema, GadgetType } from '../base';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import WorkspaceFilterContext, {
+  WorkspaceFilterContextValue,
+} from "../../../../contexts/WorkspaceFilterContext";
+import { ValidationResult } from "../../core/base";
+import {
+  BaseGadget,
+  GadgetConfig,
+  GadgetContext,
+  GadgetMetadata,
+  GadgetSchema,
+  GadgetType,
+} from "../base";
 
 export interface KPIConfig {
   id: string;
@@ -20,9 +35,9 @@ export interface KPIConfig {
   icon?: string;
   iconColor?: string;
   unit?: string;
-  format?: 'number' | 'percentage' | 'currency' | 'decimal';
+  format?: "number" | "percentage" | "currency" | "decimal";
   decimals?: number;
-  status?: 'good' | 'warning' | 'danger' | 'excellent';
+  status?: "good" | "warning" | "danger" | "excellent";
   aggregationConfig?: {
     name: string;
     collection: string;
@@ -37,136 +52,139 @@ export interface KPIConfig {
   dataPath?: string;
   target?: {
     value: number;
-    comparison: 'gte' | 'lte' | 'eq' | 'ne';
+    comparison: "gte" | "lte" | "eq" | "ne";
   };
   trend?: {
     enabled: boolean;
-    periodComparison?: 'previous_period' | 'same_period_last_year';
+    periodComparison?: "previous_period" | "same_period_last_year";
   };
 }
 
 export interface GenericKPIGadgetConfig extends GadgetConfig {
   kpis: KPIConfig[];
-  kpiLayout?: 'grid' | 'row' | 'column';
+  kpiLayout?: "grid" | "row" | "column";
   columns?: number;
   showTrends?: boolean;
   showTargets?: boolean;
   autoRefresh?: boolean;
   refreshInterval?: number;
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
   dataUrl?: string;
 }
 
 export default class GenericKPIGadget extends BaseGadget {
   metadata: GadgetMetadata = {
-    id: 'generic-kpi-gadget',
-    name: 'Generic KPI Gadget',
-    version: '1.0.0',
-    description: 'Metadata-driven KPI gadget with aggregation support',
-    author: 'Gadget Library',
-    tags: ['kpi', 'metrics', 'dashboard', 'aggregation', 'generic'],
-    category: 'dashboard',
+    id: "generic-kpi-gadget",
+    name: "Generic KPI Gadget",
+    version: "1.0.0",
+    description: "Metadata-driven KPI gadget with aggregation support",
+    author: "Gadget Library",
+    tags: ["kpi", "metrics", "dashboard", "aggregation", "generic"],
+    category: "dashboard",
     gadgetType: GadgetType.DASHBOARD,
-    widgetTypes: ['kpi'],
+    widgetTypes: ["kpi"],
     dataFlow: {
-      inputs: ['filter-context', 'aggregation-data'],
-      outputs: ['kpi-events', 'kpi-data'],
-      transformations: ['aggregation', 'calculation', 'formatting']
+      inputs: ["filter-context", "aggregation-data"],
+      outputs: ["kpi-events", "kpi-data"],
+      transformations: ["aggregation", "calculation", "formatting"],
     },
     layout: {
-      type: 'grid',
-      responsive: true
+      type: "grid",
+      responsive: true,
     },
     interactions: {
-      events: ['kpi-click', 'kpi-hover', 'target-alert'],
-      handlers: ['onKPIClick', 'onKPIHover', 'onTargetAlert'],
-      workflows: ['drill-down', 'filtering', 'alerting']
-    }
+      events: ["kpi-click", "kpi-hover", "target-alert"],
+      handlers: ["onKPIClick", "onKPIHover", "onTargetAlert"],
+      workflows: ["drill-down", "filtering", "alerting"],
+    },
   };
 
   schema: GadgetSchema = {
-    type: 'object',
+    type: "object",
     properties: {
       kpis: {
-        type: 'array',
-        description: 'Array of KPI configurations',
+        type: "array",
+        description: "Array of KPI configurations",
         items: {
-          type: 'object',
+          type: "object",
           properties: {
-            id: { type: 'string' },
-            title: { type: 'string' },
-            description: { type: 'string' },
-            icon: { type: 'string' },
-            iconColor: { type: 'string' },
-            unit: { type: 'string' },
-            format: { 
-              type: 'string',
-              enum: ['number', 'percentage', 'currency', 'decimal']
+            id: { type: "string" },
+            title: { type: "string" },
+            description: { type: "string" },
+            icon: { type: "string" },
+            iconColor: { type: "string" },
+            unit: { type: "string" },
+            format: {
+              type: "string",
+              enum: ["number", "percentage", "currency", "decimal"],
             },
-            decimals: { type: 'number' },
-            aggregationConfig: { type: 'object' },
-            dataPath: { type: 'string' },
-            target: { type: 'object' },
-            trend: { type: 'object' }
+            decimals: { type: "number" },
+            aggregationConfig: { type: "object" },
+            dataPath: { type: "string" },
+            target: { type: "object" },
+            trend: { type: "object" },
           },
-          required: ['id', 'title']
-        }
+          required: ["id", "title"],
+        },
       },
       kpiLayout: {
-        type: 'string',
-        enum: ['grid', 'row', 'column'],
-        default: 'grid'
+        type: "string",
+        enum: ["grid", "row", "column"],
+        default: "grid",
       },
       columns: {
-        type: 'number',
-        description: 'Number of columns in grid layout',
-        default: 6
+        type: "number",
+        description: "Number of columns in grid layout",
+        default: 6,
       },
       showTrends: {
-        type: 'boolean',
-        default: true
+        type: "boolean",
+        default: true,
       },
       showTargets: {
-        type: 'boolean',
-        default: true
+        type: "boolean",
+        default: true,
       },
       autoRefresh: {
-        type: 'boolean',
-        default: true
+        type: "boolean",
+        default: true,
       },
       refreshInterval: {
-        type: 'number',
-        default: 300000
+        type: "number",
+        default: 300000,
       },
       size: {
-        type: 'string',
-        enum: ['small', 'medium', 'large'],
-        default: 'medium'
-      }
+        type: "string",
+        enum: ["small", "medium", "large"],
+        default: "medium",
+      },
     },
-    required: ['kpis'],
+    required: ["kpis"],
     widgetSchemas: {
-      'kpi': {
-        type: 'object',
+      kpi: {
+        type: "object",
         properties: {
-          kpis: { type: 'array' },
-          loading: { type: 'boolean' },
-          error: { type: 'string' }
-        }
-      }
-    }
+          kpis: { type: "array" },
+          loading: { type: "boolean" },
+          error: { type: "string" },
+        },
+      },
+    },
   };
 
   renderBody(props: any, context?: GadgetContext): React.ReactNode {
-    return React.createElement(GenericKPIGadgetComponent, { ...props, context });
+    return React.createElement(GenericKPIGadgetComponent, {
+      ...props,
+      context,
+    });
   }
 
   validate(config: GadgetConfig): ValidationResult {
     const errors: string[] = [];
     const kpiConfig = config as GenericKPIGadgetConfig;
-    
+
     if (!kpiConfig.kpis || !Array.isArray(kpiConfig.kpis)) {
-      errors.push('kpis array is required');
+      errors.push("kpis array is required");
     } else {
       kpiConfig.kpis.forEach((kpi, index) => {
         if (!kpi.id) {
@@ -177,29 +195,32 @@ export default class GenericKPIGadget extends BaseGadget {
         }
       });
     }
-    
-    if (kpiConfig.columns && (kpiConfig.columns < 1 || kpiConfig.columns > 24)) {
-      errors.push('columns must be between 1 and 24');
+
+    if (
+      kpiConfig.columns &&
+      (kpiConfig.columns < 1 || kpiConfig.columns > 24)
+    ) {
+      errors.push("columns must be between 1 and 24");
     }
-    
+
     if (kpiConfig.refreshInterval && kpiConfig.refreshInterval < 1000) {
-      errors.push('refreshInterval must be at least 1000ms');
+      errors.push("refreshInterval must be at least 1000ms");
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
   getRequiredWidgets(): string[] {
-    return ['kpi'];
+    return ["kpi"];
   }
 
   getWidgetLayout(): Record<string, any> {
     return {
-      type: 'grid',
-      responsive: true
+      type: "grid",
+      responsive: true,
     };
   }
 
@@ -207,28 +228,27 @@ export default class GenericKPIGadget extends BaseGadget {
     return {
       kpis: data?.kpis || [],
       loading: data?.loading || false,
-      error: data?.error || null
+      error: data?.error || null,
     };
   }
 
-  onGadgetMount(): void {
-}
+  onGadgetMount(): void {}
 
-  onGadgetUnmount(): void {
-}
+  onGadgetUnmount(): void {}
 
-  onWidgetAdd(widget: any): void {
-}
+  onWidgetAdd(widget: any): void {}
 
-  onWidgetRemove(widgetId: string): void {
-}
+  onWidgetRemove(widgetId: string): void {}
 
-  onDataFlowChange(connections: Map<string, string[]>): void {
-}
+  onDataFlowChange(connections: Map<string, string[]>): void {}
 }
 
 // Functional component for the actual rendering logic
-const GenericKPIGadgetComponent: React.FC<any> = ({ kpis, context, ...props }) => {
+const GenericKPIGadgetComponent: React.FC<any> = ({
+  kpis,
+  context,
+  ...props
+}) => {
   // Extract KPIs from either direct prop or nested config
   const actualKpis = useMemo(() => {
     if (kpis && kpis.length > 0) return kpis;
@@ -238,30 +258,40 @@ const GenericKPIGadgetComponent: React.FC<any> = ({ kpis, context, ...props }) =
   const [kpiData, setKpiData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const filterContext = useContext(WorkspaceFilterContext) as WorkspaceFilterContextValue | undefined;
+  const filterContext = useContext(WorkspaceFilterContext) as
+    | WorkspaceFilterContextValue
+    | undefined;
+
+  // Use BaseGadget's centralized placeholder resolution
+  const resolvePlaceholders = useCallback(
+    (url: string): string => {
+      return BaseGadget.resolvePlaceholders(url, context);
+    },
+    [context]
+  );
 
   // Extract value from data using dataPath
   const extractValue = useCallback((data: any, dataPath: string): any => {
     if (!dataPath || !data) return data;
-    
-    const parts = dataPath.split('.');
+
+    const parts = dataPath.split(".");
     let current = data;
-    
+
     for (const part of parts) {
-      if (part.includes('[') && part.includes(']')) {
+      if (part.includes("[") && part.includes("]")) {
         // Handle array access like "data[0]"
-        const [arrayName, indexStr] = part.split('[');
-        const index = parseInt(indexStr.replace(']', ''));
+        const [arrayName, indexStr] = part.split("[");
+        const index = parseInt(indexStr.replace("]", ""));
         current = current?.[arrayName]?.[index];
       } else {
         current = current?.[part];
       }
-      
+
       if (current === undefined || current === null) {
         return null;
       }
     }
-    
+
     return current;
   }, []);
 
@@ -276,17 +306,37 @@ const GenericKPIGadgetComponent: React.FC<any> = ({ kpis, context, ...props }) =
 
     try {
       // Check if we have a shared dataUrl (call once for all KPIs)
-      const sharedDataUrl = props.dataUrl || props.config?.dataUrl;
+      const rawDataUrl = props.dataUrl || props.config?.dataUrl;
       let sharedData: any = null;
-      
-      if (sharedDataUrl && !actualKpis.some((kpi: KPIConfig) => kpi.aggregationConfig)) {
+
+      if (
+        rawDataUrl &&
+        !actualKpis.some((kpi: KPIConfig) => kpi.aggregationConfig)
+      ) {
+        // Resolve placeholders in dataUrl
+        const sharedDataUrl = resolvePlaceholders(rawDataUrl);
+
+        // Check if there are still unresolved placeholders
+        if (/\{[^}]+\}/.test(sharedDataUrl)) {
+          console.error(
+            "[GenericKPIGadget] Cannot fetch data with unresolved placeholders:",
+            sharedDataUrl
+          );
+          setError("Missing required parameters");
+          setLoading(false);
+          return;
+        }
+
         // Fetch shared data once for all KPIs (optimization!)
         const url = new URL(sharedDataUrl, window.location.origin);
-        const response = await BaseGadget.makeAuthenticatedFetch(url.toString(), {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' }
-        });
-        
+        const response = await BaseGadget.makeAuthenticatedFetch(
+          url.toString(),
+          {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
         if (response.ok) {
           sharedData = await response.json();
         }
@@ -302,59 +352,76 @@ const GenericKPIGadgetComponent: React.FC<any> = ({ kpis, context, ...props }) =
               const filters: Record<string, any> = {};
 
               // Apply filter context mappings
-              if (kpi.aggregationConfig.fieldMappings && filterContext?.filters) {
-                Object.entries(filterContext.filters).forEach(([filterKey, filterObj]) => {
-                  const filterValue = filterObj?.value;
-                  if (filterValue === undefined || filterValue === null || filterValue === '') {
-                    return;
-                  }
+              if (
+                kpi.aggregationConfig.fieldMappings &&
+                filterContext?.filters
+              ) {
+                Object.entries(filterContext.filters).forEach(
+                  ([filterKey, filterObj]) => {
+                    const filterValue = filterObj?.value;
+                    if (
+                      filterValue === undefined ||
+                      filterValue === null ||
+                      filterValue === ""
+                    ) {
+                      return;
+                    }
 
-                  if (Array.isArray(filterValue) && filterValue.length > 0) {
-                    filters[filterKey] = filterValue;
-                  } else if (!Array.isArray(filterValue)) {
-                    filters[filterKey] = filterValue;
+                    if (Array.isArray(filterValue) && filterValue.length > 0) {
+                      filters[filterKey] = filterValue;
+                    } else if (!Array.isArray(filterValue)) {
+                      filters[filterKey] = filterValue;
+                    }
                   }
-                });
+                );
               }
               // Build aggregation request with correct API structure
               const aggregationRequest: any = {
-                config: kpi.aggregationConfig
+                config: kpi.aggregationConfig,
               };
-              
+
               // Only add filters if there are any active filters
               const hasActiveFilters = Object.keys(filters).length > 0;
               if (hasActiveFilters) {
                 aggregationRequest.filters = filters;
-}
+              }
 
               // Call aggregation API with authentication - use window.location.origin
-              const apiUrl = new URL('/api/aggregation', window.location.origin).toString();
-              
+              const apiUrl = new URL(
+                "/api/aggregation",
+                window.location.origin
+              ).toString();
+
               const response = await BaseGadget.makeAuthenticatedFetch(apiUrl, {
-                method: 'POST',
+                method: "POST",
                 headers: {
-                  'Content-Type': 'application/json'
+                  "Content-Type": "application/json",
                 },
-                body: JSON.stringify(aggregationRequest)
+                body: JSON.stringify(aggregationRequest),
               });
-              
+
               if (response.ok) {
                 const responseData = await response.json();
-if (kpi.dataPath) {
-value = extractValue(responseData, kpi.dataPath);
-} else {
-value = responseData;
+                if (kpi.dataPath) {
+                  value = extractValue(responseData, kpi.dataPath);
+                } else {
+                  value = responseData;
                 }
-                
+
                 // Check if we got an empty result
-                if (value === null || value === undefined || (Array.isArray(responseData.data) && responseData.data.length === 0)) {
-}
+                if (
+                  value === null ||
+                  value === undefined ||
+                  (Array.isArray(responseData.data) &&
+                    responseData.data.length === 0)
+                ) {
+                }
               } else {
                 value = null;
               }
             } else if (sharedData) {
               // Use shared data fetched once for all KPIs
-              
+
               // If response has a stats array, find the matching stat by ID
               if (Array.isArray(sharedData.stats)) {
                 const stat = sharedData.stats.find((s: any) => s.id === kpi.id);
@@ -374,22 +441,23 @@ value = responseData;
             }
 
             // Determine status based on target
-            let status: 'good' | 'warning' | 'danger' | undefined;
+            let status: "good" | "warning" | "danger" | undefined;
             if (kpi.target && value !== null && value !== undefined) {
-              const numValue = typeof value === 'string' ? parseFloat(value) : value;
+              const numValue =
+                typeof value === "string" ? parseFloat(value) : value;
               if (!isNaN(numValue)) {
                 switch (kpi.target.comparison) {
-                  case 'gte':
-                    status = numValue >= kpi.target.value ? 'good' : 'warning';
+                  case "gte":
+                    status = numValue >= kpi.target.value ? "good" : "warning";
                     break;
-                  case 'lte':
-                    status = numValue <= kpi.target.value ? 'good' : 'warning';
+                  case "lte":
+                    status = numValue <= kpi.target.value ? "good" : "warning";
                     break;
-                  case 'eq':
-                    status = numValue === kpi.target.value ? 'good' : 'warning';
+                  case "eq":
+                    status = numValue === kpi.target.value ? "good" : "warning";
                     break;
-                  case 'ne':
-                    status = numValue !== kpi.target.value ? 'good' : 'warning';
+                  case "ne":
+                    status = numValue !== kpi.target.value ? "good" : "warning";
                     break;
                 }
               }
@@ -405,17 +473,17 @@ value = responseData;
               unit: kpi.unit,
               status: kpi.status || status, // Use explicit status from config or calculated status
               target: kpi.target ? kpi.target.value : undefined,
-              rawValue: value
+              rawValue: value,
             };
           } catch (kpiError) {
             return {
               id: kpi.id,
               title: kpi.title,
-              value: 'Error',
+              value: "Error",
               icon: kpi.icon,
               description: kpi.description,
-              status: 'danger' as const,
-              rawValue: null
+              status: "danger" as const,
+              rawValue: null,
             };
           }
         })
@@ -423,11 +491,18 @@ value = responseData;
 
       setKpiData(kpiResults);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch KPI data');
+      setError(err instanceof Error ? err.message : "Failed to fetch KPI data");
     } finally {
       setLoading(false);
     }
-  }, [actualKpis, filterContext?.filters, extractValue, props.config?.dataUrl, props.dataUrl]); // Specific dependencies only
+  }, [
+    actualKpis,
+    filterContext?.filters,
+    extractValue,
+    resolvePlaceholders,
+    props.config?.dataUrl,
+    props.dataUrl,
+  ]); // Specific dependencies only
 
   // Initial load
   useEffect(() => {
@@ -436,7 +511,10 @@ value = responseData;
 
   // Listen to filter changes via refreshTrigger
   useEffect(() => {
-    if (filterContext?.refreshTrigger !== undefined && filterContext.refreshTrigger > 0) {
+    if (
+      filterContext?.refreshTrigger !== undefined &&
+      filterContext.refreshTrigger > 0
+    ) {
       fetchKPIData();
     }
   }, [fetchKPIData, filterContext?.refreshTrigger]); // Depend on refreshTrigger and fetcher
@@ -455,18 +533,18 @@ value = responseData;
   const widgetRegistry = (context as any)?.widgetRegistry;
   if (!widgetRegistry) {
     return React.createElement(
-      'div',
-      { style: { color: 'red', padding: '20px' } },
-      'Error: Widget registry not available'
+      "div",
+      { style: { color: "red", padding: "20px" } },
+      "Error: Widget registry not available"
     );
   }
 
-  const KPIWidget = widgetRegistry.get('kpi');
+  const KPIWidget = widgetRegistry.get("kpi");
   if (!KPIWidget) {
     return React.createElement(
-      'div',
-      { style: { color: 'red', padding: '20px' } },
-      'Error: KPI widget not found'
+      "div",
+      { style: { color: "red", padding: "20px" } },
+      "Error: KPI widget not found"
     );
   }
 
@@ -475,9 +553,7 @@ value = responseData;
     loading,
     error,
     columns: props.config?.columns,
-    onKPIClick: (kpi: any) => {
-},
-    onKPIHover: (kpi: any) => {
-}
+    onKPIClick: (kpi: any) => {},
+    onKPIHover: (kpi: any) => {},
   });
 };

@@ -142,16 +142,16 @@ export const BaseGadgetContainer: React.FC<BaseGadgetContainerProps> = ({
   };
 
   // Debug logging for calculator gadget
-  if (title?.includes("Calculator") || title === undefined) {
-    console.log(
-      "[BaseGadgetContainer] noPadding:",
-      noPadding,
-      "padding:",
-      bodyStyle.padding,
-      "title:",
-      title
-    );
-  }
+  // if (title?.includes("Calculator") || title === undefined) {
+  //   console.log(
+  //     "[BaseGadgetContainer] noPadding:",
+  //     noPadding,
+  //     "padding:",
+  //     bodyStyle.padding,
+  //     "title:",
+  //     title
+  //   );
+  // }
 
   const footerStyle: React.CSSProperties = {
     padding:

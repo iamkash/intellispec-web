@@ -1,35 +1,41 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { BaseGadget } from '../../../base';
-import { getStepItems } from '../utils/iconUtils';
-import { convertRecordToWizardData, getStableRestoreIdFromUrl, tryFetchRecordFromApi } from '../utils/restore';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { BaseGadget } from "../../../base";
+import { getStepItems } from "../utils/iconUtils";
+import {
+  convertRecordToWizardData,
+  getStableRestoreIdFromUrl,
+  tryFetchRecordFromApi,
+} from "../utils/restore";
 import type {
   AIAnalysisWizardConfig,
   AIAnalysisWizardData,
-  WizardIdentityConfig
-} from '../AIAnalysisWizardGadget.types';
-import { AIAnalysisWizardGadget } from '../AIAnalysisWizardGadget';
-import { useWizardRecordSave } from '../../../../../../hooks/useWizardRecordSave';
+  WizardIdentityConfig,
+} from "../AIAnalysisWizardGadget.types";
+import { AIAnalysisWizardGadget } from "../AIAnalysisWizardGadget";
+import { useWizardRecordSave } from "../../../../../../hooks/useWizardRecordSave";
 import type {
   EndpointConfig,
   WizardRecordSaveOptions,
-  PersistRequest
-} from '../../../../../../hooks/useWizardRecordSave';
-import { useNavigation } from '../../../../../../contexts/NavigationContext';
-import { InputStep } from './InputStep';
-import { PDFStep } from './PDFStep';
-import { SectionStep } from './SectionStep';
-import { WizardFooter } from './WizardFooter';
-import { WizardHeader } from './WizardHeader';
-import { WizardSidebar } from './WizardSidebar';
+  PersistRequest,
+} from "../../../../../../hooks/useWizardRecordSave";
+import { useNavigation } from "../../../../../../contexts/NavigationContext";
+import { InputStep } from "./InputStep";
+import { PDFStep } from "./PDFStep";
+import { SectionStep } from "./SectionStep";
+import { WizardFooter } from "./WizardFooter";
+import { WizardHeader } from "./WizardHeader";
+import { WizardSidebar } from "./WizardSidebar";
 
 interface GenericWizardRendererProps {
   gadget: AIAnalysisWizardGadget;
   config: AIAnalysisWizardConfig;
 }
 
-type WizardSectionConfig = NonNullable<AIAnalysisWizardConfig['steps']['sections']>[number];
+type WizardSectionConfig = NonNullable<
+  AIAnalysisWizardConfig["steps"]["sections"]
+>[number];
 
-type SectionState = NonNullable<AIAnalysisWizardData['sections']>[number];
+type SectionState = NonNullable<AIAnalysisWizardData["sections"]>[number];
 
 type TemplateContext = Record<string, any>;
 
@@ -45,15 +51,15 @@ interface WizardRuntimePersistence {
   update: EndpointConfig;
   progress: EndpointConfig;
   recordIdPaths: string[];
-  successMessages?: WizardRecordSaveOptions['successMessages'];
-  errorMessages?: WizardRecordSaveOptions['errorMessages'];
+  successMessages?: WizardRecordSaveOptions["successMessages"];
+  errorMessages?: WizardRecordSaveOptions["errorMessages"];
 }
 
 interface WizardRuntimeContext {
   sections: WizardSectionConfig[];
-  inputStep?: AIAnalysisWizardConfig['steps']['input'];
-  domainConfig?: AIAnalysisWizardConfig['domainConfig'];
-  recordDataPopulation?: AIAnalysisWizardConfig['recordDataPopulation'];
+  inputStep?: AIAnalysisWizardConfig["steps"]["input"];
+  domainConfig?: AIAnalysisWizardConfig["domainConfig"];
+  recordDataPopulation?: AIAnalysisWizardConfig["recordDataPopulation"];
   persistence: WizardRuntimePersistence;
   identity: WizardIdentityConfig;
 }
@@ -74,8 +80,8 @@ const EMPTY_OBJECT: Record<string, any> = {};
 // Utility: normalize dotted/bracket path selectors into array segments
 const toPathSegments = (selector: string): string[] =>
   selector
-    .replace(/\[(\w+)\]/g, '.$1')
-    .split('.')
+    .replace(/\[(\w+)\]/g, ".$1")
+    .split(".")
     .map((segment) => segment.trim())
     .filter(Boolean);
 
@@ -96,7 +102,9 @@ const selectFromPath = (data: any, selector?: string): any => {
 
 const toArray = <T,>(value: T | T[] | undefined | null): T[] => {
   if (Array.isArray(value)) {
-    return value.filter((item): item is T => item !== undefined && item !== null);
+    return value.filter(
+      (item): item is T => item !== undefined && item !== null
+    );
   }
   if (value === undefined || value === null) {
     return [];
@@ -104,59 +112,83 @@ const toArray = <T,>(value: T | T[] | undefined | null): T[] => {
   return [value];
 };
 
-const normaliseEndpoint = (endpoint: EndpointConfig | undefined, key: string): EndpointConfig => {
+const normaliseEndpoint = (
+  endpoint: EndpointConfig | undefined,
+  key: string
+): EndpointConfig => {
   if (!endpoint?.url) {
-    throw new Error(`Wizard persistence configuration is missing a url for "${key}"`);
+    throw new Error(
+      `Wizard persistence configuration is missing a url for "${key}"`
+    );
   }
   if (!endpoint.method) {
-    throw new Error(`Wizard persistence configuration is missing an HTTP method for "${key}"`);
+    throw new Error(
+      `Wizard persistence configuration is missing an HTTP method for "${key}"`
+    );
   }
   return {
     ...endpoint,
     url: endpoint.url,
-    method: endpoint.method.toUpperCase() as EndpointConfig['method']
+    method: endpoint.method.toUpperCase() as EndpointConfig["method"],
   };
 };
 
-const buildWizardRuntimeContext = (config: AIAnalysisWizardConfig): WizardRuntimeContext => {
+const buildWizardRuntimeContext = (
+  config: AIAnalysisWizardConfig
+): WizardRuntimeContext => {
   if (!config) {
-    throw new Error('GenericWizardRenderer requires configuration metadata');
+    throw new Error("GenericWizardRenderer requires configuration metadata");
   }
 
-  const sections = Array.isArray(config.steps?.sections) ? config.steps.sections : [];
+  const sections = Array.isArray(config.steps?.sections)
+    ? config.steps.sections
+    : [];
   if (sections.length === 0) {
-    throw new Error('Wizard configuration must define at least one section in steps.sections');
+    throw new Error(
+      "Wizard configuration must define at least one section in steps.sections"
+    );
   }
 
-  const identityConfig = (config as any).identity as WizardIdentityConfig | undefined;
+  const identityConfig = (config as any).identity as
+    | WizardIdentityConfig
+    | undefined;
   if (!identityConfig) {
-    throw new Error('Wizard configuration is missing identity metadata (config.identity)');
+    throw new Error(
+      "Wizard configuration is missing identity metadata (config.identity)"
+    );
   }
 
   const { recordType, domain, domainSubType } = identityConfig;
   if (!recordType || !domain || !domainSubType) {
-    throw new Error('Wizard identity metadata must include recordType, domain, and domainSubType');
+    throw new Error(
+      "Wizard identity metadata must include recordType, domain, and domainSubType"
+    );
   }
 
-  const persistenceMeta = (config as any).persistence as Partial<WizardRuntimePersistence> & {
+  const persistenceMeta = (config as any)
+    .persistence as Partial<WizardRuntimePersistence> & {
     recordIdPath?: string | string[];
   };
   if (!persistenceMeta) {
-    throw new Error('Wizard configuration is missing persistence metadata (config.persistence)');
+    throw new Error(
+      "Wizard configuration is missing persistence metadata (config.persistence)"
+    );
   }
 
   const recordIdPaths = toArray(persistenceMeta.recordIdPath ?? []);
   if (recordIdPaths.length === 0) {
-    throw new Error('Wizard persistence metadata must provide at least one recordIdPath entry');
+    throw new Error(
+      "Wizard persistence metadata must provide at least one recordIdPath entry"
+    );
   }
 
   const persistence: WizardRuntimePersistence = {
-    create: normaliseEndpoint(persistenceMeta.create, 'create'),
-    update: normaliseEndpoint(persistenceMeta.update, 'update'),
-    progress: normaliseEndpoint(persistenceMeta.progress, 'progress'),
+    create: normaliseEndpoint(persistenceMeta.create, "create"),
+    update: normaliseEndpoint(persistenceMeta.update, "update"),
+    progress: normaliseEndpoint(persistenceMeta.progress, "progress"),
     recordIdPaths: recordIdPaths.map((entry) => entry.trim()),
     successMessages: persistenceMeta.successMessages,
-    errorMessages: persistenceMeta.errorMessages
+    errorMessages: persistenceMeta.errorMessages,
   };
 
   return {
@@ -174,14 +206,14 @@ const buildWizardRuntimeContext = (config: AIAnalysisWizardConfig): WizardRuntim
       domainSubTypeLabel:
         identityConfig.domainSubTypeLabel ??
         identityConfig.domainTypeLabel ??
-        identityConfig.label
-    }
+        identityConfig.label,
+    },
   };
 };
 
 // Resolve templated strings/objects using a metadata-provided context map
 const resolveTemplateValue = (value: any, context: TemplateContext): any => {
-  if (typeof value === 'string') {
+  if (typeof value === "string") {
     const trimmed = value.trim();
     if (/^\{[^}]+\}$/.test(trimmed)) {
       const tokenKey = trimmed.slice(1, -1).trim();
@@ -189,12 +221,12 @@ const resolveTemplateValue = (value: any, context: TemplateContext): any => {
     }
     return value.replace(/\{([^}]+)\}/g, (_match, token) => {
       const resolved = selectFromPath(context, String(token).trim());
-      if (resolved === undefined || resolved === null) return '';
-      if (typeof resolved === 'object') {
+      if (resolved === undefined || resolved === null) return "";
+      if (typeof resolved === "object") {
         try {
           return JSON.stringify(resolved);
         } catch {
-          return '';
+          return "";
         }
       }
       return String(resolved);
@@ -205,26 +237,33 @@ const resolveTemplateValue = (value: any, context: TemplateContext): any => {
     return value.map((item) => resolveTemplateValue(item, context));
   }
 
-  if (value && typeof value === 'object') {
-    return Object.entries(value).reduce<Record<string, any>>((acc, [key, v]) => {
-      const resolved = resolveTemplateValue(v, context);
-      if (resolved !== undefined) {
-        acc[key] = resolved;
-      }
-      return acc;
-    }, {});
+  if (value && typeof value === "object") {
+    return Object.entries(value).reduce<Record<string, any>>(
+      (acc, [key, v]) => {
+        const resolved = resolveTemplateValue(v, context);
+        if (resolved !== undefined) {
+          acc[key] = resolved;
+        }
+        return acc;
+      },
+      {}
+    );
   }
 
   return value;
 };
 
-const collectUrlParamContext = (populationConfig: NonNullable<AIAnalysisWizardConfig['recordDataPopulation']>) => {
-  if (typeof window === 'undefined') {
+const collectUrlParamContext = (
+  populationConfig: NonNullable<AIAnalysisWizardConfig["recordDataPopulation"]>
+) => {
+  if (typeof window === "undefined") {
     return { templateContext: {}, hasRequiredParams: true };
   }
 
   const searchParams = new URLSearchParams(window.location.search);
-  const definitions = Array.isArray(populationConfig.urlParams) ? populationConfig.urlParams : [];
+  const definitions = Array.isArray(populationConfig.urlParams)
+    ? populationConfig.urlParams
+    : [];
   const params: Record<string, string | string[]> = {};
 
   definitions.forEach((definition) => {
@@ -244,41 +283,44 @@ const collectUrlParamContext = (populationConfig: NonNullable<AIAnalysisWizardCo
     .filter((definition) => definition.required)
     .every((definition) => {
       const value = params[definition.name];
-      return value !== undefined && value !== null && value !== '';
+      return value !== undefined && value !== null && value !== "";
     });
 
   return {
     templateContext: {
       params,
       query: Object.fromEntries(searchParams.entries()),
-      urlSearch: window.location.search
+      urlSearch: window.location.search,
     },
-    hasRequiredParams
+    hasRequiredParams,
   };
 };
 
 const buildRecordFetchRequest = (
-  populationConfig: NonNullable<AIAnalysisWizardConfig['recordDataPopulation']>,
+  populationConfig: NonNullable<AIAnalysisWizardConfig["recordDataPopulation"]>,
   context: TemplateContext
 ) => {
   const request = populationConfig.request;
   if (!request?.url && !populationConfig.apiEndpoint) {
-    throw new Error('recordDataPopulation requires a request.url or apiEndpoint');
+    throw new Error(
+      "recordDataPopulation requires a request.url or apiEndpoint"
+    );
   }
 
   const urlTemplate = request?.url || populationConfig.apiEndpoint!;
   const resolvedUrl = resolveTemplateValue(urlTemplate, context);
-  let url = typeof resolvedUrl === 'string' ? resolvedUrl : String(resolvedUrl ?? '');
+  let url =
+    typeof resolvedUrl === "string" ? resolvedUrl : String(resolvedUrl ?? "");
   const headers = resolveTemplateValue(request?.headers || {}, context);
-  const method = (request?.method || 'GET').toUpperCase();
+  const method = (request?.method || "GET").toUpperCase();
   let body: BodyInit | undefined;
 
   if (request?.query) {
     const resolvedQuery = resolveTemplateValue(request.query, context);
-    if (resolvedQuery && typeof resolvedQuery === 'object') {
+    if (resolvedQuery && typeof resolvedQuery === "object") {
       const params = new URLSearchParams();
       Object.entries(resolvedQuery).forEach(([key, value]) => {
-        if (value === undefined || value === null || value === '') return;
+        if (value === undefined || value === null || value === "") return;
         if (Array.isArray(value)) {
           value.forEach((entry) => {
             if (entry !== undefined && entry !== null) {
@@ -291,14 +333,14 @@ const buildRecordFetchRequest = (
       });
       const queryString = params.toString();
       if (queryString) {
-        url += url.includes('?') ? `&${queryString}` : `?${queryString}`;
+        url += url.includes("?") ? `&${queryString}` : `?${queryString}`;
       }
     }
   }
 
   if (request?.body !== undefined) {
     const resolvedBody = resolveTemplateValue(request.body, context);
-    if (typeof resolvedBody === 'string') {
+    if (typeof resolvedBody === "string") {
       body = resolvedBody;
     } else if (resolvedBody !== undefined && resolvedBody !== null) {
       body = JSON.stringify(resolvedBody);
@@ -310,8 +352,8 @@ const buildRecordFetchRequest = (
     options: {
       method,
       headers: headers as HeadersInit | undefined,
-      body
-    } as RequestInit
+      body,
+    } as RequestInit,
   };
 };
 
@@ -322,7 +364,9 @@ interface SectionFieldPopulation {
 }
 
 // Precompute (sectionId, fieldId, sourcePath) tuples for asset-based auto-population
-const buildPopulationDescriptors = (sections: WizardSectionConfig[]): SectionFieldPopulation[] => {
+const buildPopulationDescriptors = (
+  sections: WizardSectionConfig[]
+): SectionFieldPopulation[] => {
   const descriptors: SectionFieldPopulation[] = [];
   sections.forEach((section) => {
     section?.form?.groups?.forEach((group) => {
@@ -331,7 +375,7 @@ const buildPopulationDescriptors = (sections: WizardSectionConfig[]): SectionFie
           descriptors.push({
             sectionId: section.id,
             fieldId: field.id,
-            sourcePath: field.populateFromAsset
+            sourcePath: field.populateFromAsset,
           });
         }
       });
@@ -340,9 +384,11 @@ const buildPopulationDescriptors = (sections: WizardSectionConfig[]): SectionFie
   return descriptors;
 };
 
-const aggregateFormData = (wizardData: AIAnalysisWizardData): Record<string, any> => {
+const aggregateFormData = (
+  wizardData: AIAnalysisWizardData
+): Record<string, any> => {
   const aggregate: Record<string, any> = {
-    ...(wizardData.globalFormData || {})
+    ...(wizardData.globalFormData || {}),
   };
 
   wizardData.sections?.forEach((section) => {
@@ -357,23 +403,18 @@ const aggregateFormData = (wizardData: AIAnalysisWizardData): Record<string, any
 // Drop upload-only metadata before persisting any image reference
 const sanitiseImage = (image: any) => {
   if (!image) return image;
-  const {
-    originFileObj,
-    preview,
-    thumbUrl,
-    status,
-    percent,
-    ...rest
-  } = image;
+  const { originFileObj, preview, thumbUrl, status, percent, ...rest } = image;
   return rest;
 };
 
 const sanitiseSection = (section: SectionState): SectionState => {
   if (!section) return section;
-  const images = Array.isArray(section.images) ? section.images.map(sanitiseImage) : section.images;
+  const images = Array.isArray(section.images)
+    ? section.images.map(sanitiseImage)
+    : section.images;
   return {
     ...section,
-    images
+    images,
   };
 };
 
@@ -382,20 +423,23 @@ const sanitiseSections = (sections: SectionState[] = []): SectionState[] =>
 
 // Project domainConfig fields onto canonical/label maps for downstream payload mapping
 const buildDomainResolution = (
-  config: AIAnalysisWizardConfig['domainConfig'],
+  config: AIAnalysisWizardConfig["domainConfig"],
   aggregate: Record<string, any>
 ): DomainResolution => {
   const fields = config?.fields ?? EMPTY_OBJECT;
   const typeMap = config?.typeMap ?? EMPTY_OBJECT;
 
-  const canonicalEntries = Object.entries(fields).reduce<Record<string, any>>((acc, [key, fieldId]) => {
-    if (!fieldId) return acc;
-    const value = aggregate[fieldId];
-    if (value !== undefined && value !== null && value !== '') {
-      acc[key] = value;
-    }
-    return acc;
-  }, {});
+  const canonicalEntries = Object.entries(fields).reduce<Record<string, any>>(
+    (acc, [key, fieldId]) => {
+      if (!fieldId) return acc;
+      const value = aggregate[fieldId];
+      if (value !== undefined && value !== null && value !== "") {
+        acc[key] = value;
+      }
+      return acc;
+    },
+    {}
+  );
 
   if (config?.defaultType && canonicalEntries.type === undefined) {
     canonicalEntries.type = config.defaultType;
@@ -411,7 +455,7 @@ const buildDomainResolution = (
 
   return {
     canonical: canonicalEntries,
-    labels
+    labels,
   };
 };
 
@@ -439,12 +483,12 @@ const buildSummary = (
 ) => {
   const summary: Record<string, any> = {
     ...(wizardData.summary || {}),
-    ...aggregate
+    ...aggregate,
   };
 
   const combinedValues = {
     ...domainResolution.canonical,
-    ...domainResolution.labels
+    ...domainResolution.labels,
   };
 
   applyMappings(summary, config.domainConfig?.outputKeys, combinedValues);
@@ -476,7 +520,7 @@ const buildMappedPayload = (
   const payload: Record<string, any> = {};
   const combinedValues = {
     ...domainResolution.canonical,
-    ...domainResolution.labels
+    ...domainResolution.labels,
   };
   applyMappings(payload, config.domainConfig?.payloadKeys, combinedValues);
   if (config.domainConfig?.payloadType) {
@@ -494,16 +538,19 @@ const buildPersistencePayload = ({
   labels,
   mappedPayload,
   aggregate,
-  identity
+  identity,
 }: PersistencePayloadContext) => {
   const combinedSections = sanitiseSections(wizardData.sections || []);
   const completedSteps = Array.isArray(wizardData.completedSteps)
     ? Array.from(new Set(wizardData.completedSteps))
     : [];
   const totalSections = combinedSections.length;
-  const progressValue = totalSections > 0 ? Math.round((completedSteps.length / totalSections) * 100) : 0;
+  const progressValue =
+    totalSections > 0
+      ? Math.round((completedSteps.length / totalSections) * 100)
+      : 0;
   const derivedStatus =
-    wizardData.status ?? (progressValue >= 100 ? 'completed' : 'in_progress');
+    wizardData.status ?? (progressValue >= 100 ? "completed" : "in_progress");
 
   const snapshot: AIAnalysisWizardData = {
     ...wizardData,
@@ -511,14 +558,24 @@ const buildPersistencePayload = ({
     domain: identity.domain,
     domainLabel: identity.domainLabel ?? wizardData.domainLabel,
     domainSubType: identity.domainSubType,
-    domainSubTypeLabel: identity.domainSubTypeLabel ?? wizardData.domainSubTypeLabel,
+    domainSubTypeLabel:
+      identity.domainSubTypeLabel ?? wizardData.domainSubTypeLabel,
     domainType: identity.domainSubType,
-    domainTypeLabel: identity.domainTypeLabel ?? identity.domainSubTypeLabel ?? wizardData.domainTypeLabel,
+    domainTypeLabel:
+      identity.domainTypeLabel ??
+      identity.domainSubTypeLabel ??
+      wizardData.domainTypeLabel,
     summary,
     sections: combinedSections,
     progress: progressValue,
-    status: derivedStatus
+    status: derivedStatus,
   };
+
+  // ✅ ENHANCEMENT: Include parent document reference for MongoDB querying
+  const parentDocumentId =
+    wizardData.recordParams?.parentProjectId ||
+    wizardData.recordParams?.parentDocumentId ||
+    wizardData.recordParams?.parentId;
 
   return {
     type: identity.recordType,
@@ -546,17 +603,30 @@ const buildPersistencePayload = ({
     recordContext: wizardData.recordContext,
     recordParams: wizardData.recordParams,
     globalFormData: wizardData.globalFormData,
-    formData: aggregate
+    formData: aggregate,
+    // ✅ Add parent document reference for MongoDB indexing and querying
+    ...(parentDocumentId
+      ? {
+          parentDocumentId,
+          parentDocumentType:
+            wizardData.recordContext?._parentDocumentType ||
+            wizardData.recordContext?.summary?.domainSubType ||
+            identity.domain + "_parent",
+        }
+      : {}),
   };
 };
 
-const createInitialWizardData = (sections: WizardSectionConfig[], identity: WizardIdentityConfig): AIAnalysisWizardData => ({
+const createInitialWizardData = (
+  sections: WizardSectionConfig[],
+  identity: WizardIdentityConfig
+): AIAnalysisWizardData => ({
   currentStep: 0,
   completedSteps: [],
   sections: sections.map((section) => ({
     id: section.id,
     title: section.title,
-    formData: {}
+    formData: {},
   })),
   voiceData: {},
   imageData: [],
@@ -569,32 +639,34 @@ const createInitialWizardData = (sections: WizardSectionConfig[], identity: Wiza
   domainTypeLabel: identity.domainTypeLabel ?? identity.domainSubTypeLabel,
   domainSubType: identity.domainSubType,
   domainSubTypeLabel: identity.domainSubTypeLabel ?? identity.domainTypeLabel,
-  status: 'in_progress',
+  status: "in_progress",
   progress: 0,
   globalFormData: {},
   recordContext: {},
-  recordParams: {}
+  recordParams: {},
 });
 
 // Translate wizard-level persistence metadata into hook configuration
-const createPersistenceOptions = (persistence: WizardRuntimePersistence): WizardRecordSaveOptions => {
+const createPersistenceOptions = (
+  persistence: WizardRuntimePersistence
+): WizardRecordSaveOptions => {
   return {
     endpoints: {
       create: persistence.create,
       update: persistence.update,
-      progress: persistence.progress
+      progress: persistence.progress,
     },
     resolveRecordId: (response) => {
       for (const pathSelector of persistence.recordIdPaths) {
         const value = selectFromPath(response, pathSelector);
-        if (value !== undefined && value !== null && value !== '') {
+        if (value !== undefined && value !== null && value !== "") {
           return String(value);
         }
       }
       return undefined;
     },
     successMessages: persistence.successMessages,
-    errorMessages: persistence.errorMessages
+    errorMessages: persistence.errorMessages,
   };
 };
 
@@ -606,14 +678,18 @@ const getSectionIndexForStep = (
 ) => {
   const offset = hasInputStep ? 1 : 0;
   const visibleIndex = stepIndex - offset;
-  if (visibleIndex < 0 || visibleIndex >= visibleSections.length) return undefined;
+  if (visibleIndex < 0 || visibleIndex >= visibleSections.length)
+    return undefined;
   const sectionId = visibleSections[visibleIndex]?.id;
   if (!sectionId) return undefined;
   const fullIndex = sections.findIndex((section) => section.id === sectionId);
   return fullIndex >= 0 ? fullIndex : undefined;
 };
 
-export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ gadget, config }) => {
+export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({
+  gadget,
+  config,
+}) => {
   const runtime = useMemo(() => buildWizardRuntimeContext(config), [config]);
   const {
     sections: sectionDefinitions,
@@ -621,18 +697,34 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     domainConfig,
     recordDataPopulation,
     persistence,
-    inputStep
+    inputStep,
   } = runtime;
 
-  const domainTypeMap = useMemo(() => domainConfig?.typeMap ?? EMPTY_OBJECT, [domainConfig?.typeMap]);
-  const [wizardData, setWizardData] = useState<AIAnalysisWizardData>(() => createInitialWizardData(sectionDefinitions, identity));
+  const domainTypeMap = useMemo(
+    () => domainConfig?.typeMap ?? EMPTY_OBJECT,
+    [domainConfig?.typeMap]
+  );
+  const [wizardData, setWizardData] = useState<AIAnalysisWizardData>(() =>
+    createInitialWizardData(sectionDefinitions, identity)
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const persistenceOptions = useMemo(() => createPersistenceOptions(persistence), [persistence]);
-  const { recordId: persistedRecordId, saveRecord, saveRecordProgress, setRecordId } = useWizardRecordSave(persistenceOptions);
+  const persistenceOptions = useMemo(
+    () => createPersistenceOptions(persistence),
+    [persistence]
+  );
+  const {
+    recordId: persistedRecordId,
+    saveRecord,
+    saveRecordProgress,
+    setRecordId,
+  } = useWizardRecordSave(persistenceOptions);
 
-  const populationDescriptors = useMemo(() => buildPopulationDescriptors(sectionDefinitions), [sectionDefinitions]);
+  const populationDescriptors = useMemo(
+    () => buildPopulationDescriptors(sectionDefinitions),
+    [sectionDefinitions]
+  );
 
   const navigation = useNavigation();
   const currentWorkspaceId = navigation.currentWorkspaceId;
@@ -642,7 +734,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
       return;
     }
 
-    const moduleId = currentWorkspaceId?.split('/')?.[0];
+    const moduleId = currentWorkspaceId?.split("/")?.[0];
     if (moduleId) {
       const fallback = navigation.getLastWorkspaceForModule(moduleId);
       if (fallback && fallback !== currentWorkspaceId) {
@@ -661,14 +753,14 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
   }, [navigateBackOrFallback]);
 
   useEffect(() => {
-    if (typeof gadget.updateWizardData === 'function') {
+    if (typeof gadget.updateWizardData === "function") {
       gadget.updateWizardData(wizardData);
     }
   }, [gadget, wizardData]);
 
   useEffect(() => {
     const id = wizardData.analysisData?.previousResponseId;
-    if (typeof window !== 'undefined' && id) {
+    if (typeof window !== "undefined" && id) {
       try {
         (window as any).__previousResponseId = id;
       } catch {}
@@ -691,7 +783,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
         domainType: nextDomainType,
         domainTypeLabel: nextDomainTypeLabel,
         domainSubType: identity.domainSubType,
-        domainSubTypeLabel: identity.domainSubTypeLabel ?? nextDomainTypeLabel
+        domainSubTypeLabel: identity.domainSubTypeLabel ?? nextDomainTypeLabel,
       };
     });
   }, [identity, domainTypeMap]);
@@ -703,7 +795,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
       setWizardData((prev) => ({
         ...prev,
         domainTypeLabel: mappedLabel,
-        domainSubTypeLabel: mappedLabel
+        domainSubTypeLabel: mappedLabel,
       }));
     }
   }, [domainTypeMap, wizardData.domainType, wizardData.domainTypeLabel]);
@@ -720,7 +812,8 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
           const converted = convertRecordToWizardData(recordPayload, config);
           if (!cancelled && converted) {
             setWizardData((prev) => {
-              const nextDomainType = converted.domainType ?? identity.domainSubType;
+              const nextDomainType =
+                converted.domainType ?? identity.domainSubType;
               const nextDomainTypeLabel =
                 converted.domainTypeLabel ??
                 identity.domainTypeLabel ??
@@ -732,11 +825,15 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
                 ...converted,
                 recordType: identity.recordType,
                 domain: identity.domain,
-                domainLabel: identity.domainLabel ?? converted.domainLabel ?? prev.domainLabel,
+                domainLabel:
+                  identity.domainLabel ??
+                  converted.domainLabel ??
+                  prev.domainLabel,
                 domainType: nextDomainType,
                 domainTypeLabel: nextDomainTypeLabel,
                 domainSubType: identity.domainSubType,
-                domainSubTypeLabel: identity.domainSubTypeLabel ?? nextDomainTypeLabel
+                domainSubTypeLabel:
+                  identity.domainSubTypeLabel ?? nextDomainTypeLabel,
               };
             });
             if (recordPayload?.id || recordPayload?._id) {
@@ -747,28 +844,43 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
         }
 
         if (recordDataPopulation?.enabled) {
-          const populationConfig = recordDataPopulation as NonNullable<AIAnalysisWizardConfig['recordDataPopulation']>;
-          const { templateContext, hasRequiredParams } = collectUrlParamContext(populationConfig);
+          const populationConfig = recordDataPopulation as NonNullable<
+            AIAnalysisWizardConfig["recordDataPopulation"]
+          >;
+          const { templateContext, hasRequiredParams } =
+            collectUrlParamContext(populationConfig);
           if (!hasRequiredParams) {
             return;
           }
 
-          const { url, options } = buildRecordFetchRequest(populationConfig, templateContext);
-          const response = await BaseGadget.makeAuthenticatedFetch(url, options);
+          const { url, options } = buildRecordFetchRequest(
+            populationConfig,
+            templateContext
+          );
+          const response = await BaseGadget.makeAuthenticatedFetch(
+            url,
+            options
+          );
           if (!response.ok) {
-            throw new Error(`Failed to populate record data: ${response.statusText}`);
+            throw new Error(
+              `Failed to populate record data: ${response.statusText}`
+            );
           }
 
           const payload = await response.json();
           const recordData =
-            selectFromPath(payload, populationConfig.responseSelector) ?? payload?.data ?? payload;
+            selectFromPath(payload, populationConfig.responseSelector) ??
+            payload?.data ??
+            payload;
 
           if (!cancelled && recordData) {
             setWizardData((prev) => {
               const populatedIds = new Set<string>();
 
               const nextSections = (prev.sections || []).map((sectionState) => {
-                const sectionConfig = sectionDefinitions.find((section) => section.id === sectionState.id);
+                const sectionConfig = sectionDefinitions.find(
+                  (section) => section.id === sectionState.id
+                );
                 if (!sectionConfig) return sectionState;
 
                 const descriptors = populationDescriptors.filter(
@@ -778,8 +890,11 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
 
                 const formData = { ...(sectionState.formData || {}) };
                 descriptors.forEach((descriptor) => {
-                  const value = selectFromPath(recordData, descriptor.sourcePath);
-                  if (value !== undefined && value !== null && value !== '') {
+                  const value = selectFromPath(
+                    recordData,
+                    descriptor.sourcePath
+                  );
+                  if (value !== undefined && value !== null && value !== "") {
                     formData[descriptor.fieldId] = value;
                     populatedIds.add(descriptor.fieldId);
                   }
@@ -787,25 +902,142 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
 
                 return {
                   ...sectionState,
-                  formData
+                  formData,
                 };
               });
+
+              // ✅ ENHANCEMENT: Inherit parent's OpenAI response ID for conversation continuity
+              let inheritedResponseId = null;
+              if (
+                populationConfig.inheritResponseId &&
+                populationConfig.responseIdPath
+              ) {
+                inheritedResponseId = selectFromPath(
+                  recordData,
+                  populationConfig.responseIdPath
+                );
+
+                if (inheritedResponseId) {
+                  console.log(
+                    `🔗 [Response ID Inheritance] Inheriting from parent: ${inheritedResponseId}`
+                  );
+                  console.log(
+                    `   Source path: ${populationConfig.responseIdPath}`
+                  );
+
+                  // Store in window for immediate use by AI sections
+                  try {
+                    (window as any).__previousResponseId = inheritedResponseId;
+                  } catch (err) {
+                    console.warn(
+                      "[Response ID Inheritance] Failed to set window.__previousResponseId:",
+                      err
+                    );
+                  }
+                } else {
+                  console.log(
+                    `⚠️ [Response ID Inheritance] No response ID found at path: ${populationConfig.responseIdPath}`
+                  );
+                }
+              }
+
+              // ✅ ENHANCEMENT: Process contextMapping to enrich recordContext with parent data
+              // Only store mapped fields, NOT entire parent document (prevent data duplication)
+              let enrichedRecordContext: Record<string, any> = {};
+              if (populationConfig.contextMapping) {
+                console.log(
+                  "[Context Mapping] Processing parent context mapping..."
+                );
+
+                // Store parent document metadata for reference
+                enrichedRecordContext._parentDocumentId =
+                  recordData.id || recordData._id;
+                enrichedRecordContext._parentDocumentType =
+                  recordData.domainSubType || recordData.type;
+
+                Object.entries(populationConfig.contextMapping).forEach(
+                  ([targetKey, mappings]) => {
+                    if (typeof mappings === "object" && mappings !== null) {
+                      const mappedData: Record<string, any> = {};
+
+                      Object.entries(mappings).forEach(
+                        ([field, sourcePath]) => {
+                          if (typeof sourcePath === "string") {
+                            const value = selectFromPath(
+                              recordData,
+                              sourcePath
+                            );
+                            if (value !== undefined && value !== null) {
+                              mappedData[field] = value;
+                              console.log(
+                                `  ✅ Mapped ${targetKey}.${field} ← ${sourcePath}`
+                              );
+                            } else {
+                              console.log(
+                                `  ⚠️  No value at ${sourcePath} for ${targetKey}.${field}`
+                              );
+                            }
+                          }
+                        }
+                      );
+
+                      enrichedRecordContext[targetKey] = mappedData;
+                      console.log(
+                        `  📊 ${targetKey}: ${
+                          Object.keys(mappedData).length
+                        } fields mapped`
+                      );
+                    }
+                  }
+                );
+
+                console.log(
+                  `[Context Mapping] Complete: ${
+                    Object.keys(populationConfig.contextMapping).length
+                  } context sections created`
+                );
+                console.log(
+                  `  🔗 Parent reference: ${enrichedRecordContext._parentDocumentId} (${enrichedRecordContext._parentDocumentType})`
+                );
+              } else {
+                // No contextMapping - store minimal parent reference only
+                enrichedRecordContext = {
+                  _parentDocumentId: recordData.id || recordData._id,
+                  _parentDocumentType:
+                    recordData.domainSubType || recordData.type,
+                };
+              }
 
               return {
                 ...prev,
                 sections: nextSections,
-                globalFormData: { ...(prev.globalFormData || {}), ...recordData },
-                recordContext: recordData,
+                globalFormData: {
+                  ...(prev.globalFormData || {}),
+                  // ✅ Don't duplicate parent data - only store wizard's own form data
+                },
+                recordContext: enrichedRecordContext,
                 recordParams: templateContext.params || {},
                 disabledFields: populationConfig.disablePopulatedFields
-                  ? Array.from(new Set([...(prev.disabledFields || []), ...Array.from(populatedIds)]))
-                  : prev.disabledFields
+                  ? Array.from(
+                      new Set([
+                        ...(prev.disabledFields || []),
+                        ...Array.from(populatedIds),
+                      ])
+                    )
+                  : prev.disabledFields,
+                // ✅ ENHANCEMENT: Set initial analysisData with inherited response ID
+                analysisData: {
+                  ...(prev.analysisData || {}),
+                  previousResponseId:
+                    inheritedResponseId ||
+                    prev.analysisData?.previousResponseId,
+                },
               };
             });
           }
         }
       } catch (error) {
-        console.error('[GenericWizardRenderer] Initialization failed', error);
+        console.error("[GenericWizardRenderer] Initialization failed", error);
       } finally {
         if (!cancelled) {
           setIsLoading(false);
@@ -824,14 +1056,72 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     populationDescriptors,
     recordDataPopulation,
     sectionDefinitions,
-    setRecordId
+    setRecordId,
   ]);
 
-  const aggregatedFormData = useMemo(() => aggregateFormData(wizardData), [wizardData]);
+  const aggregatedFormData = useMemo(
+    () => aggregateFormData(wizardData),
+    [wizardData]
+  );
 
   // Visibility and flow decisions are driven entirely by metadata expressions
   const evaluateSectionVisibility = useCallback(
     (section: WizardSectionConfig) => {
+      // New metadata-driven section visibility
+      const conditionalLogic = (config as any)?.conditionalLogic;
+      const sectionVisibility = conditionalLogic?.sectionVisibility;
+
+      if (sectionVisibility && sectionVisibility[section.id]) {
+        const rule = sectionVisibility[section.id];
+
+        // Always show if specified
+        if (rule.showAlways === true) {
+          return true;
+        }
+
+        // Hide until field is set
+        if (rule.hideUntilFieldSet) {
+          const fieldValue = aggregatedFormData[rule.hideUntilFieldSet];
+          if (
+            fieldValue === undefined ||
+            fieldValue === null ||
+            fieldValue === ""
+          ) {
+            return false;
+          }
+        }
+
+        // Conditional visibility based on showIf
+        if (rule.showIf) {
+          const { field, operator, values } = rule.showIf;
+          const fieldValue = aggregatedFormData[field];
+
+          switch (operator) {
+            case "equals":
+              return fieldValue === rule.showIf.value;
+
+            case "in":
+              if (!Array.isArray(values)) return false;
+              return values.includes(fieldValue);
+
+            case "isSet":
+              return (
+                fieldValue !== undefined &&
+                fieldValue !== null &&
+                fieldValue !== ""
+              );
+
+            default:
+              console.warn(`[SectionVisibility] Unknown operator: ${operator}`);
+              return true;
+          }
+        }
+
+        // If rule exists but no showIf, show by default
+        return true;
+      }
+
+      // Fallback to old pattern for backward compatibility
       const metadata = section as Record<string, any>;
       const watchField = metadata.watchField as string | undefined;
       const condition = metadata.showWhen;
@@ -846,7 +1136,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
       }
       return value === condition;
     },
-    [aggregatedFormData]
+    [config, aggregatedFormData]
   );
 
   const visibleSections = useMemo(
@@ -862,14 +1152,14 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     if (!Number.isFinite(step)) return;
     setWizardData((prev) => ({
       ...prev,
-      currentStep: step
+      currentStep: step,
     }));
   }, []);
 
   const goPrev = useCallback(() => {
     setWizardData((prev) => ({
       ...prev,
-      currentStep: Math.max((prev.currentStep ?? 0) - 1, 0)
+      currentStep: Math.max((prev.currentStep ?? 0) - 1, 0),
     }));
   }, []);
 
@@ -877,30 +1167,39 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     setIsFullscreen((prev) => !prev);
   }, []);
 
-  const handleDataUpdate = useCallback((next: Partial<AIAnalysisWizardData>) => {
-    setWizardData((prev) => ({
-      ...prev,
-      ...next
-    }));
-  }, []);
-
-  const updateSectionData = useCallback((sectionIndex: number, update: Partial<SectionState>) => {
-    setWizardData((prev) => {
-      const sections = prev.sections ? [...prev.sections] : [];
-      if (!sections[sectionIndex]) return prev;
-      sections[sectionIndex] = {
-        ...sections[sectionIndex],
-        ...update
-      };
-      return {
+  const handleDataUpdate = useCallback(
+    (next: Partial<AIAnalysisWizardData>) => {
+      setWizardData((prev) => ({
         ...prev,
-        sections
-      };
-    });
-  }, []);
+        ...next,
+      }));
+    },
+    []
+  );
+
+  const updateSectionData = useCallback(
+    (sectionIndex: number, update: Partial<SectionState>) => {
+      setWizardData((prev) => {
+        const sections = prev.sections ? [...prev.sections] : [];
+        if (!sections[sectionIndex]) return prev;
+        sections[sectionIndex] = {
+          ...sections[sectionIndex],
+          ...update,
+        };
+        return {
+          ...prev,
+          sections,
+        };
+      });
+    },
+    []
+  );
 
   const updateAnalysisContext = useCallback(
-    (responseId?: string | null, patch?: Partial<AIAnalysisWizardData['analysisData']>) => {
+    (
+      responseId?: string | null,
+      patch?: Partial<AIAnalysisWizardData["analysisData"]>
+    ) => {
       if (!responseId && !patch) return;
 
       if (responseId) {
@@ -912,7 +1211,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
       setWizardData((prev) => {
         const nextAnalysis = {
           ...(prev.analysisData || {}),
-          ...(patch || {})
+          ...(patch || {}),
         };
 
         if (responseId) {
@@ -921,7 +1220,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
 
         return {
           ...prev,
-          analysisData: nextAnalysis
+          analysisData: nextAnalysis,
         };
       });
     },
@@ -929,12 +1228,29 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
   );
 
   const handleStepComplete = useCallback(async () => {
-    const sectionIndex = getSectionIndexForStep(currentStep, sectionDefinitions, visibleSections, hasInputStep);
-    const currentSection = typeof sectionIndex === 'number' ? sectionDefinitions[sectionIndex] : undefined;
+    const sectionIndex = getSectionIndexForStep(
+      currentStep,
+      sectionDefinitions,
+      visibleSections,
+      hasInputStep
+    );
+    const currentSection =
+      typeof sectionIndex === "number"
+        ? sectionDefinitions[sectionIndex]
+        : undefined;
     const isFinalStep = currentStep >= totalSteps - 1;
 
-    const domainResolution = buildDomainResolution(domainConfig, aggregatedFormData);
-    const summary = buildSummary(wizardData, aggregatedFormData, domainResolution, config, identity);
+    const domainResolution = buildDomainResolution(
+      domainConfig,
+      aggregatedFormData
+    );
+    const summary = buildSummary(
+      wizardData,
+      aggregatedFormData,
+      domainResolution,
+      config,
+      identity
+    );
     const mappedPayload = buildMappedPayload(domainResolution, config);
 
     const payload = buildPersistencePayload({
@@ -945,33 +1261,36 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
       labels: domainResolution.labels,
       mappedPayload,
       aggregate: aggregatedFormData,
-      identity
+      identity,
     });
 
     if (isFinalStep) {
       payload.progress = 100;
-      payload.status = 'completed';
+      payload.status = "completed";
       if (payload.wizardState) {
         payload.wizardState.progress = 100;
-        payload.wizardState.status = 'completed';
+        payload.wizardState.status = "completed";
       }
     }
 
     const request: PersistRequest = {
       payload,
-      ...(persistedRecordId ? { recordId: persistedRecordId } : {})
+      ...(persistedRecordId ? { recordId: persistedRecordId } : {}),
     };
 
     const result = persistedRecordId
-      ? await saveRecordProgress({ ...request, mode: 'progress' })
-      : await saveRecord({ ...request, mode: 'create' });
+      ? await saveRecordProgress({ ...request, mode: "progress" })
+      : await saveRecord({ ...request, mode: "create" });
 
     setWizardData((prev) => {
       const nextCompleted = new Set(prev.completedSteps || []);
       nextCompleted.add(prev.currentStep ?? currentStep);
 
-      const nextWizardStateRaw = result?.wizardState as AIAnalysisWizardData | undefined;
-      const nextDomainType = nextWizardStateRaw?.domainType ?? identity.domainSubType;
+      const nextWizardStateRaw = result?.wizardState as
+        | AIAnalysisWizardData
+        | undefined;
+      const nextDomainType =
+        nextWizardStateRaw?.domainType ?? identity.domainSubType;
       const nextDomainTypeLabel =
         nextWizardStateRaw?.domainTypeLabel ??
         identity.domainSubTypeLabel ??
@@ -986,7 +1305,8 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
             domainType: nextDomainType,
             domainTypeLabel: nextDomainTypeLabel,
             domainSubType: identity.domainSubType,
-            domainSubTypeLabel: identity.domainSubTypeLabel ?? nextDomainTypeLabel
+            domainSubTypeLabel:
+              identity.domainSubTypeLabel ?? nextDomainTypeLabel,
           }
         : undefined;
 
@@ -999,15 +1319,18 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
           completedSteps: Array.from(nextCompleted),
           summary: nextWizardState?.summary || summary,
           progress: 100,
-          status: 'completed'
+          status: "completed",
         };
       }
 
       return {
         ...baseState,
-        currentStep: Math.min((prev.currentStep ?? currentStep) + 1, totalSteps - 1),
+        currentStep: Math.min(
+          (prev.currentStep ?? currentStep) + 1,
+          totalSteps - 1
+        ),
         completedSteps: Array.from(nextCompleted),
-        summary: nextWizardState?.summary || summary
+        summary: nextWizardState?.summary || summary,
       };
     });
 
@@ -1029,11 +1352,13 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     sectionDefinitions,
     totalSteps,
     visibleSections,
-    wizardData
+    wizardData,
   ]);
 
-
-  const stepItems = useMemo(() => getStepItems(config, visibleSections), [config, visibleSections]);
+  const stepItems = useMemo(
+    () => getStepItems(config, visibleSections),
+    [config, visibleSections]
+  );
 
   const menuItems = stepItems.map((step, index) => {
     const isActive = currentStep === index;
@@ -1041,7 +1366,11 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     return {
       key: String(index),
       icon: (
-        <div className={`sidebar-icon-wrapper ${isDone ? 'completed' : ''} ${isActive ? 'active' : ''}`}>
+        <div
+          className={`sidebar-icon-wrapper ${isDone ? "completed" : ""} ${
+            isActive ? "active" : ""
+          }`}
+        >
           {step.icon as any}
           {isDone && (
             <div className="sidebar-icon-check-overlay">
@@ -1056,12 +1385,19 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
           <div className="sidebar-menu-meta" />
         </div>
       ),
-      className: `sidebar-menu-item ${isDone ? 'completed' : ''} ${isActive ? 'active' : ''}`
+      className: `sidebar-menu-item ${isDone ? "completed" : ""} ${
+        isActive ? "active" : ""
+      }`,
     };
   });
 
   const renderBodyForCurrent = () => {
-    const stepSectionIndex = getSectionIndexForStep(currentStep, sectionDefinitions, visibleSections, hasInputStep);
+    const stepSectionIndex = getSectionIndexForStep(
+      currentStep,
+      sectionDefinitions,
+      visibleSections,
+      hasInputStep
+    );
 
     return (
       <>
@@ -1073,7 +1409,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
             handleStepComplete={handleStepComplete}
           />
         )}
-        {typeof stepSectionIndex === 'number' && (
+        {typeof stepSectionIndex === "number" && (
           <SectionStep
             section={sectionDefinitions[stepSectionIndex]}
             sectionIndex={stepSectionIndex}
@@ -1087,10 +1423,18 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
           />
         )}
         {!hasInputStep && currentStep === visibleSections.length && (
-          <PDFStep config={config} sections={sectionDefinitions} wizardData={wizardData} />
+          <PDFStep
+            config={config}
+            sections={sectionDefinitions}
+            wizardData={wizardData}
+          />
         )}
         {hasInputStep && currentStep === visibleSections.length + 1 && (
-          <PDFStep config={config} sections={sectionDefinitions} wizardData={wizardData} />
+          <PDFStep
+            config={config}
+            sections={sectionDefinitions}
+            wizardData={wizardData}
+          />
         )}
       </>
     );
@@ -1100,11 +1444,11 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     return (
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '400px',
-          color: 'hsl(var(--muted-foreground))'
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "400px",
+          color: "hsl(var(--muted-foreground))",
         }}
       >
         Loading wizard...
@@ -1112,9 +1456,13 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
     );
   }
   return (
-    <div className={`ai-analysis-wizard ${isFullscreen ? 'fullscreen' : ''}`} style={{ height: '100%', minHeight: 0, padding: 0 }}>
+    <div
+      className={`ai-analysis-wizard ${isFullscreen ? "fullscreen" : ""}`}
+      style={{ height: "100%", minHeight: 0, padding: 0 }}
+    >
       <WizardHeader
         config={config}
+        wizardData={wizardData}
         currentStep={currentStep}
         totalSteps={stepItems.length}
         isFullscreen={isFullscreen}
@@ -1123,8 +1471,17 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({ ga
       />
 
       <div className="wizard-doc-layout">
-        <WizardSidebar menuItems={menuItems} currentStep={currentStep} handleStepChange={handleStepChange} />
-        <main className="wizard-content" role="region" aria-label="Wizard content" style={{ height: '100%', minHeight: 0, overflow: 'auto' }}>
+        <WizardSidebar
+          menuItems={menuItems}
+          currentStep={currentStep}
+          handleStepChange={handleStepChange}
+        />
+        <main
+          className="wizard-content"
+          role="region"
+          aria-label="Wizard content"
+          style={{ height: "100%", minHeight: 0, overflow: "auto" }}
+        >
           {renderBodyForCurrent()}
         </main>
       </div>

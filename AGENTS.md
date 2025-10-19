@@ -73,3 +73,13 @@
 - File uploads and GridFS-backed storage require MongoDB; ensure the target database user has read/write and bucket permissions.
 - Toggle AI/RAG features with `ENABLE_AI_RAG`. The vector service is off by default in dev; enable it selectively with `ENABLE_VECTOR_SERVICE=true` plus `VECTOR_ALLOWED_COLLECTIONS`, `VECTOR_MAX_COLLECTIONS`, and related knobs to keep load predictable.
 - Set `ENFORCE_AUTH=true` for any shared or production environment so anonymous requests fail fast; it is auto-enabled when `NODE_ENV=production`.
+
+## Gadget development rules
+
+- Every gadget must ship with a README modeled on `ProjectPortfolioGadget/README.md` that documents module layout, runtime flow, configuration contracts, persistence boundaries, resilience strategy, performance considerations, and test entry points.
+- New gadget code should follow the BaseGadget layering already in the repo: `index.tsx` for schema/validation, a container component for orchestration, `components/` for memoized presentational pieces, `hooks/` for focused state logic, and `utils/` for metadata helpers.
+- Register gadgets through `src/components/library/core/RegistryInitializer.ts` and keep metadata ids aligned with workspace JSON entries so authoring tools auto-detect them.
+- Treat every gadget as part of a reusable framework: author cross-cutting behaviour in shared hooks/utilities, avoid tenant- or project-specific branching, and prefer configuration flags over bespoke code paths.
+- When extending gadget capabilities, update both the README and relevant workspace metadata examples (`public/data/workspaces/...`) so teams can validate configurations end-to-end.
+- Persist user-specific gadget settings (favorites, recents, preferences) with keys scoped by workspace, gadget id, and user id to prevent collisions across tenants or instances.
+- **STRICT REDLINE**: No hardcoded business rules, strings, or data bindings inside gadget code. All behaviour must be driven through the published schema/metadata contract; any deviation blocks merge until refactored.

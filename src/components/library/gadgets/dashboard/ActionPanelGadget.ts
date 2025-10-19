@@ -20,7 +20,8 @@ const ActionSchema = z.object({
   type: z.enum(['primary', 'default', 'dashed', 'text', 'link']).optional().default('default'),
   route: z.string().optional(),
   workspace: z.string().optional(),
-  disabled: z.boolean().optional().default(false)
+  disabled: z.boolean().optional().default(false),
+  params: z.record(z.any()).optional()
 });
 
 // Simplified Flat ActionPanelGadget configuration schema
@@ -110,18 +111,138 @@ class ActionPanelDataFetcher extends React.Component<any, any> {
   }
 
   handleActionClick = (action: any) => {
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.log('🔵 [ActionPanelGadget] handleActionClick CALLED', {
+        action: action.key || action.label,
+        actionParams: action.params,
+      });
+    }
+
     const { context } = this.props;
     const onAction = context?.onAction;
-    
-    if (onAction && action.workspace) {
-      // Use the onAction mechanism to trigger navigation
-      onAction('navigate', {
+
+    // Resolve action params using BaseGadget's centralized utility
+    const resolvedParams: Record<string, any> = {};
+
+    if (action.params) {
+      Object.entries(action.params).forEach(([key, rawValue]) => {
+        if (typeof rawValue === 'string') {
+          // Use BaseGadget.resolvePlaceholders for each param value
+          const resolved = BaseGadget.resolvePlaceholders(rawValue, context);
+          
+          // Only add if placeholder was resolved (not still contains {})
+          if (!/\{[^}]+\}/.test(resolved)) {
+            resolvedParams[key] = resolved;
+          } else if (process.env.NODE_ENV === 'development') {
+            // eslint-disable-next-line no-console
+            console.warn(`[ActionPanelGadget] ❌ Unresolved placeholder in param "${key}":`, rawValue);
+          }
+        } else {
+          resolvedParams[key] = rawValue;
+        }
+      });
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.log('🔍 [ActionPanelGadget] resolved params', {
+        action: action.key || action.label,
+        resolvedParams,
+      });
+    }
+
+    const hasParams = Object.keys(resolvedParams).length > 0;
+
+    if (action.workspace) {
+      const navigatePayload = {
         workspace: action.workspace,
         route: action.route,
         key: action.key || action.id,
         label: action.label || action.title,
-        type: action.type || 'item'
-      });
+        type: action.type || 'item',
+        params: hasParams ? resolvedParams : undefined
+      };
+
+      if (process.env.NODE_ENV === 'development') {
+        // eslint-disable-next-line no-console
+        console.log('🚀 [ActionPanelGadget] navigating with resolved params', {
+          action: action.key || action.label,
+          resolvedParams,
+          navigatePayload,
+        });
+      }
+
+      if (typeof window !== 'undefined') {
+        try {
+          window.sessionStorage.setItem(
+            `workspace:${action.workspace}`,
+            JSON.stringify(navigatePayload.params || {})
+          );
+          window.sessionStorage.setItem(
+            'portfolio:last-selection',
+            JSON.stringify({
+              workspace: action.workspace,
+              params: navigatePayload.params || {},
+            })
+          );
+        } catch (error) {
+          if (process.env.NODE_ENV === 'development') {
+            // eslint-disable-next-line no-console
+            console.warn('[ActionPanelGadget] failed to persist workspace params', error);
+          }
+        }
+      }
+
+      if (onAction) {
+        onAction('navigate', navigatePayload);
+
+        if (typeof window !== 'undefined') {
+          const nextUrl = new URL(window.location.href);
+          nextUrl.searchParams.set('workspace', action.workspace);
+
+          if (hasParams) {
+            Object.entries(resolvedParams).forEach(([key, value]) => {
+              if (value !== undefined && value !== null) {
+                nextUrl.searchParams.set(key, String(value));
+              }
+            });
+          }
+
+          window.history.pushState({}, '', `${nextUrl.pathname}${nextUrl.search}`);
+          if (process.env.NODE_ENV === 'development') {
+            // eslint-disable-next-line no-console
+            console.log('✅ [ActionPanelGadget] URL updated', {
+              url: nextUrl.toString(),
+            });
+          }
+        }
+
+        return;
+      }
+
+      if (typeof window !== 'undefined') {
+        const baseUrl = window.location.origin + window.location.pathname;
+        const searchParams = new URLSearchParams();
+        searchParams.append('workspace', action.workspace);
+
+        if (hasParams) {
+          Object.entries(resolvedParams).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+              searchParams.append(key, String(value));
+            }
+          });
+        }
+
+        if (process.env.NODE_ENV === 'development') {
+          // eslint-disable-next-line no-console
+          console.debug('[ActionPanelGadget] fallback navigation', {
+            url: `${baseUrl}?${searchParams.toString()}`,
+          });
+        }
+
+        window.location.href = `${baseUrl}?${searchParams.toString()}`;
+      }
     }
   };
 
@@ -281,7 +402,8 @@ export class ActionPanelGadget extends BaseGadget {
                 type: { type: 'string', enum: ['primary', 'default', 'dashed', 'text', 'link'], default: 'default' },
                 route: { type: 'string' },
                 workspace: { type: 'string' },
-                disabled: { type: 'boolean', default: false }
+                disabled: { type: 'boolean', default: false },
+                params: { type: 'object' }
               },
               required: ['key', 'label']
             }
@@ -511,42 +633,105 @@ const ActionPanelWidgetComponent = widgetRegistry.get ?
       icon: action.icon,
       color: action.type === 'primary' ? 'primary' : 'success',  // Map type to color
       onClick: async () => {
-if (action.workspace) {
-// Determine the target module from workspace path
+        // Resolve placeholders in action params using BaseGadget utility
+        const resolvedParams: Record<string, any> = {};
+        
+        if (action.params) {
+          Object.entries(action.params).forEach(([key, rawValue]) => {
+            if (typeof rawValue === 'string') {
+              // Use BaseGadget.resolvePlaceholders for each param value
+              const resolved = BaseGadget.resolvePlaceholders(rawValue, context);
+              
+              // Only add if placeholder was resolved (not still contains {})
+              if (!/\{[^}]+\}/.test(resolved)) {
+                resolvedParams[key] = resolved;
+              } else if (process.env.NODE_ENV === 'development') {
+                // eslint-disable-next-line no-console
+                console.warn(`[ActionPanelGadget/renderBody] ❌ Unresolved placeholder in param "${key}":`, rawValue);
+              }
+            } else {
+              resolvedParams[key] = rawValue;
+            }
+          });
+        }
+
+        // if (process.env.NODE_ENV === 'development') {
+        //   // eslint-disable-next-line no-console
+        //   console.log('🚀 [ActionPanelGadget/renderBody] resolved params', {
+        //     action: action.key || action.label,
+        //     resolvedParams,
+        //   });
+        // }
+
+        if (action.workspace) {
+          // Determine the target module from workspace path
           const workspacePath = action.workspace;
-          const moduleId = workspacePath.split('/')[0]; // e.g., 'asset-manager' from 'asset-manager/paint-specs-dashboard'
-// Check if we need to switch modules by comparing workspace paths
+          const moduleId = workspacePath.split('/')[0];
           const currentWorkspace = window.location.search.includes('workspace=') 
             ? new URLSearchParams(window.location.search).get('workspace') 
             : '';
           const currentModuleId = currentWorkspace ? currentWorkspace.split('/')[0] : '';
+          
           if (currentModuleId !== moduleId) {
             const url = new URL(window.location.href);
             url.searchParams.set('workspace', action.workspace);
+            
+            // Add resolved params to URL
+            if (Object.keys(resolvedParams).length > 0) {
+              Object.entries(resolvedParams).forEach(([key, value]) => {
+                if (value !== undefined && value !== null) {
+                  url.searchParams.set(key, String(value));
+                }
+              });
+            }
             
             window.location.href = url.toString();
             return;
           }
           
-          // Handle workspace navigation using the correct action type
+          // Handle workspace navigation with resolved params
           if (context && (context as any).onAction) {
             (context as any).onAction('navigate', {
               workspace: action.workspace,
               route: action.route,
               key: action.key,
               label: action.label || action.title,
-              type: action.type || 'item'
+              type: action.type || 'item',
+              params: Object.keys(resolvedParams).length > 0 ? resolvedParams : undefined
             });
+            
+            // Update URL with resolved params
+            if (typeof window !== 'undefined') {
+              const nextUrl = new URL(window.location.href);
+              nextUrl.searchParams.set('workspace', action.workspace);
+              
+              if (Object.keys(resolvedParams).length > 0) {
+                Object.entries(resolvedParams).forEach(([key, value]) => {
+                  if (value !== undefined && value !== null) {
+                    nextUrl.searchParams.set(key, String(value));
+                  }
+                });
+              }
+              
+              window.history.pushState({}, '', `${nextUrl.pathname}${nextUrl.search}`);
+              
+              // if (process.env.NODE_ENV === 'development') {
+              //   // eslint-disable-next-line no-console
+              //   console.log('✅ [ActionPanelGadget/renderBody] URL updated', {
+              //     url: nextUrl.toString(),
+              //   });
+              // }
+            }
           }
         } else if (action.route) {
-          
           // Handle route navigation
           if (context && (context as any).onAction) {
             (context as any).onAction('navigate', {
               route: action.route,
               key: action.key,
               label: action.label || action.title,
-              type: action.type || 'item'
+              type: action.type || 'item',
+              params: Object.keys(resolvedParams).length > 0 ? resolvedParams : undefined
             });
           }
         }

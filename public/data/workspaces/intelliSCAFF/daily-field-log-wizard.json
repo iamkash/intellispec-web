@@ -1,0 +1,1799 @@
+{
+  "id": "intelliSCAFF/daily-field-log-wizard",
+  "title": "Daily Field Log Wizard",
+  "description": "Enterprise-grade daily field activity tracking with AI integration and parent project context.",
+  "layout": "dashboard",
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  },
+  "gadgets": [
+    {
+      "id": "daily-field-log-wizard-gadget",
+      "type": "ai-analysis-wizard-gadget",
+      "title": "Daily Field Activity Log",
+      "description": "Professional daily field logging with structured data capture, AI analysis, and project integration.",
+      "_README_AI_ARCHITECTURE": {
+        "overview": "This daily field log wizard implements a sophisticated AI-powered data capture system that prevents hallucination and data invention through strict validation, parent project context, and conservative inference strategies.",
+        "key_features": {
+          "parent_project_integration": "Automatically loads parent scaffolding project details (scope, team, schedule, permits, hazards) via recordDataPopulation. All AI prompts reference this baseline to validate generated content.",
+          "response_id_inheritance": "Inherits parent project response ID (from projectCreation wizard) to maintain audit trail and enable cross-document linking for compliance.",
+          "hallucination_prevention": "Each AI prompt includes specific validation rules: enum constraints, field dependencies, cross-reference requirements, and [UNCLEAR]/[ESTIMATE] flagging for manual review.",
+          "conservative_inference": "Default to more restrictive interpretations (e.g., safety compliance defaults to non_compliant unless explicitly confirmed; permits default to requiring manual verification).",
+          "low_temperature_settings": "Uses temperature 0.05-0.1 (vs default 0.7) to reduce randomness in AI outputs, especially for structured data extraction.",
+          "explicit_data_extraction": "Prompts emphasize 'ONLY report what was explicitly mentioned' to prevent inferential hallucination from voice transcripts or images."
+        },
+        "prompt_categories": {
+          "dailyFieldSummary": {
+            "purpose": "Synthesize voice transcript and images into factual daily summary",
+            "model": "gpt-4o-mini (fastest, cost-effective for synthesis)",
+            "temperature": 0.1,
+            "tokens": 2000,
+            "validation_strategy": "Flags uncertainties as [UNCLEAR]; validates personnel against project roster; reports facts only without speculation",
+            "input_sources": ["voice_capture transcription", "image_capture analysis", "project context"]
+          },
+          "activitiesPopulate": {
+            "purpose": "Extract work activities and populate milestone tracking",
+            "model": "gpt-4o-mini",
+            "temperature": 0.1,
+            "tokens": 1500,
+            "validation_strategy": "Uses project plan as source of truth; only lists tasks from schedule; marks null for unclear data; conservative progress calculation",
+            "constraints": ["milestone_progress must be stated or inferred conservatively", "milestone_status must match enum", "task names must match project plan terminology"],
+            "input_sources": ["transcript analysis", "project milestones", "project scope"]
+          },
+          "safetyAnalysisPopulate": {
+            "purpose": "Assess safety compliance and incident status",
+            "model": "gpt-4o-mini",
+            "temperature": 0.1,
+            "tokens": 1200,
+            "validation_strategy": "Conservative: defaults to non_compliant unless proven compliant; flags for manual escalation any unclear safety concerns; validates incident types against enum",
+            "constraints": ["incidents must be explicitly stated", "ppe_compliance errs conservative", "permits require manual verification if uncertain", "all data must be factual"],
+            "input_sources": ["transcript observations", "project safety baseline", "required permits", "identified hazards"]
+          },
+          "personnelPopulate": {
+            "purpose": "Extract and validate personnel from daily log",
+            "model": "gpt-4o-mini",
+            "temperature": 0.05,
+            "tokens": 1000,
+            "validation_strategy": "Validates names against project roster; flags unknown personnel with [UNCONFIRMED]; calculates hours only from stated times; marks null for missing data",
+            "constraints": ["names must match roster or be flagged", "roles must match enum", "hours must be stated or calculated, not estimated"],
+            "input_sources": ["transcript mentions", "project team roster", "approved subcontractors"]
+          },
+          "equipmentPopulate": {
+            "purpose": "Track equipment usage and condition",
+            "model": "gpt-4o-mini",
+            "temperature": 0.05,
+            "tokens": 800,
+            "validation_strategy": "Only reports equipment explicitly mentioned; hours must be stated; operator must be from roster; no assumed usage",
+            "constraints": ["equipmentType must match enum", "hoursUsed only if stated", "condition must match enum", "no invented usage patterns"],
+            "input_sources": ["transcript field notes", "equipment inventory", "personnel roster"]
+          },
+          "materialsPopulate": {
+            "purpose": "Track material consumption against project plan",
+            "model": "gpt-4o-mini",
+            "temperature": 0.05,
+            "tokens": 1200,
+            "validation_strategy": "Strict: quantity must be explicitly stated; marks [ESTIMATE - VERIFY] for any assumptions; validates against materials plan and current inventory",
+            "constraints": ["quantity must be stated, not calculated", "materialType must match enum", "source must be confirmed", "remainingStock only if counted"],
+            "input_sources": ["transcript quantities", "materials plan", "current inventory", "field observations"]
+          },
+          "weatherPopulate": {
+            "purpose": "Record daily weather observations",
+            "model": "gpt-4o-mini",
+            "temperature": 0.05,
+            "tokens": 600,
+            "validation_strategy": "Lowest temperature; only accepts observed/stated values; marks [OBSERVED - NOT MEASURED] for any estimates; never assumes weather",
+            "constraints": ["temperature/wind_speed must be stated values", "conditions must match enum", "no weather data invention"],
+            "input_sources": ["transcript weather mentions", "observed conditions"]
+          }
+        },
+        "parent_project_context_flow": {
+          "step1_fetch": "recordDataPopulation fetches parent project via /api/documents/{parentProjectId}",
+          "step2_map": "Response mapped to recordContext.summary via contextMapping config",
+          "step3_inject": "All AI prompts receive parent context: project scope, team roster, schedule, hazards, permits, materials plan, current inventory",
+          "step4_validate": "AI uses parent data as source of truth: validates personnel names, task names, equipment types, material types against parent configuration",
+          "step5_inherit": "Parent project response ID inherited to analysisData.parentResponseId for audit trail linking",
+          "step6_store": "Daily log saved with parentResponseId to enable reverse-linking in parent project"
+        },
+        "hallucination_prevention_techniques": {
+          "technique_1_explicit_constraints": "Every prompt lists valid enum values (e.g., 'Must match one of: [list]'). AI cannot invent new enum values.",
+          "technique_2_roster_validation": "Personnel names cross-checked against project roster. Unknown names flagged as [UNCONFIRMED] instead of accepted.",
+          "technique_3_plan_templating": "Task names and material types must come from project plan, not AI-generated. Prevents inventing new tasks or materials.",
+          "technique_4_conservative_defaults": "Safety and compliance fields default to 'no/unconfirmed/non_compliant' unless explicitly proven otherwise.",
+          "technique_5_[UNCLEAR]_flagging": "Prompts instruct AI to mark data it cannot confirm with [UNCLEAR] or [REQUIRES ESCALATION] for human review.",
+          "technique_6_low_temperature": "Temperature 0.05-0.1 (vs default 0.7) reduces model creativity and increases deterministic behavior.",
+          "technique_7_source_attribution": "Every field must be traceable to transcript, images, or project baseline. No synthesis without source.",
+          "technique_8_cross_validation": "Numeric fields cross-validated: crew_size must match personnel grid sum; work_hours must match personnel hours sum, etc."
+        },
+        "usage_example": {
+          "url": "/workspaces/intelliSCAFF/daily-field-log?parentProjectId=<project-id>",
+          "flow": [
+            "1. Wizard loads and fetches parent project blueprint via parentProjectId param",
+            "2. recordDataPopulation populates recordContext.summary with project scope, team, schedule",
+            "3. User records voice/images OR skips to manual entry",
+            "4. AI sections trigger: voice_capture → AI synthesizes with project context",
+            "5. Each form section pre-populated by AI using parent project constraints",
+            "6. System auto-validates output: enum values, personnel roster, material plan matches",
+            "7. Any [UNCLEAR] or [ESTIMATE] fields flagged for manual review",
+            "8. On save: daily log stored with parentResponseId linking back to project blueprint"
+          ],
+          "validation_workflow": [
+            "Frontend: Real-time enum validation during form entry",
+            "AI Layer: Each prompt includes explicit constraints and validation rules",
+            "Backend: Cross-field validation (crew_size vs personnel grid sum, work_hours vs personnel hours sum)",
+            "Audit: Parent response ID logged for compliance trail"
+          ]
+        },
+        "data_accuracy_guarantees": {
+          "guarantee_1": "No metric values invented: hours, quantities, progress % must be stated in transcript or parent plan",
+          "guarantee_2": "Personnel must be from project roster or explicitly flagged [UNCONFIRMED]",
+          "guarantee_3": "Equipment types constrained to project inventory enum",
+          "guarantee_4": "Material consumption validated against materials plan and current inventory",
+          "guarantee_5": "Safety data conservative: defaults to non-compliant unless proven otherwise",
+          "guarantee_6": "All numeric data traceable to transcript or measurement, not interpolation",
+          "guarantee_7": "Incidents and hazards require explicit confirmation, not inference"
+        },
+        "prompt_best_practices": {
+          "rule_1": "Always reference parent project baseline as 'source of truth'",
+          "rule_2": "Use temperature 0.05-0.1 for structured data extraction, avoid creativity",
+          "rule_3": "Provide explicit enum values in system prompt: 'Must match one of: [list]'",
+          "rule_4": "Instruct AI to flag uncertainties: mark with [UNCLEAR], [ESTIMATE], [UNCONFIRMED]",
+          "rule_5": "For numeric fields, instruct: 'ONLY use explicitly stated values, do NOT calculate or estimate'",
+          "rule_6": "For cross-validation: 'Validate against project plan terminology', 'Match roster names'",
+          "rule_7": "For safety: 'Be conservative - err toward more restrictive classification'",
+          "rule_8": "Always return JSON only, never markdown or narrative text for structured sections"
+        }
+      },
+      "config": {
+        "title": "Daily Field Activity Log",
+        "description": "World-class daily field logging system with AI-powered insights and comprehensive tracking.",
+        "theme": "light",
+        "showProgress": true,
+        "allowStepNavigation": true,
+        "autoAdvance": false,
+        "typeLabel": "Activity Focus",
+        "typePlaceholder": "Select today's primary activity focus",
+        "typeHelpText": "Choose the main type of activity for this daily log entry.",
+        "reportTitle": "Daily Field Activity Report",
+        "reportHeaderText": "DAILY FIELD ACTIVITY LOG",
+        "reportHeaderSubtext": "Progress • Safety • Quality • Compliance",
+        "reportFooterText": "Generated with IntelliSCAFF AI Field Log System",
+        "editModalTitle": "Edit Daily Field Log",
+        "steps": {
+          "sections": [
+            {
+              "id": "voice_capture",
+              "title": "Voice Capture",
+              "description": "Record daily briefings, site observations, or team updates. Transcript feeds AI analysis.",
+              "sectionType": "voice",
+              "includeInPdf": false,
+              "voice": {
+                "enabled": true,
+                "maxDuration": 240,
+                "showVisualization": true,
+                "transcriptionModel": "gpt-4o-mini-transcribe"
+              }
+            },
+            {
+              "id": "image_capture",
+              "title": "Visual Documentation",
+              "description": "Capture progress photos, safety observations, equipment status, or site conditions.",
+              "sectionType": "image",
+              "includeInPdf": true,
+              "images": {
+                "maxCount": 20,
+                "maxSize": 15728640,
+                "accept": "image/jpeg,image/png,image/webp",
+                "multiple": true,
+                "showPreview": true,
+                "showThumbnails": true,
+                "thumbnailSize": 140,
+                "drawingEnabled": true,
+                "drawingTools": ["pen", "line", "circle", "rectangle", "text", "arrow"],
+                "uploadText": "Click or drag photos to upload",
+                "dragText": "Drop photos here"
+              }
+            },
+            {
+              "id": "ai_field_summary",
+              "title": "AI Field Summary",
+              "description": "AI synthesizes voice and visual context into structured daily insights.",
+              "promptSourceIds": ["voice_capture", "image_capture"],
+              "includeInPdf": true,
+              "analysisWidget": "simple",
+              "imageAnalysisPromptRef": "dailyFieldSummary"
+            },
+            {
+              "id": "log_metadata",
+              "title": "Log Metadata",
+              "description": "Essential log information, project context, and environmental conditions.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 3, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "log_identity",
+                    "title": "Log Identity",
+                    "fields": [
+                      { "id": "log_date", "label": "Date", "type": "date", "required": true, "defaultValue": "today", "lgSpan": 8 },
+                      { "id": "shift", "label": "Shift", "type": "select", "required": true, "defaultValue": "day", "lgSpan": 8, "options": [
+                        { "label": "Day Shift", "value": "day" },
+                        { "label": "Night Shift", "value": "night" },
+                        { "label": "Swing Shift", "value": "swing" },
+                        { "label": "Weekend", "value": "weekend" }
+                      ], "props": { "allowClear": false } },
+                      { "id": "log_type", "label": "Log Type", "type": "select", "required": true, "defaultValue": "regular", "lgSpan": 8, "options": [
+                        { "label": "Regular Activity", "value": "regular" },
+                        { "label": "Milestone Completion", "value": "milestone" },
+                        { "label": "Incident Report", "value": "incident" },
+                        { "label": "Inspection Log", "value": "inspection" },
+                        { "label": "Weather Delay", "value": "weather_delay" }
+                      ], "props": { "allowClear": false } }
+                    ]
+                  },
+                  {
+                    "id": "project_context",
+                    "title": "Project Context",
+                    "fields": [
+                      { "id": "parent_project_id", "label": "Parent Project ID", "type": "hidden", "defaultValue": "{parentProjectId}" },
+                      { "id": "project_name", "label": "Project Name", "type": "text", "required": true, "readOnly": true, "populateFromAsset": "summary.project_name", "lgSpan": 12 },
+                      { "id": "project_code", "label": "Project Code", "type": "text", "readOnly": true, "populateFromAsset": "summary.project_code", "lgSpan": 12 },
+                      { "id": "project_type", "label": "Project Type", "type": "text", "required": true, "readOnly": true, "populateFromAsset": "summary.project_type", "lgSpan": 8 },
+                      { "id": "site_name", "label": "Site/Facility", "type": "text", "required": true, "readOnly": true, "populateFromAsset": "summary.site_name", "lgSpan": 16 },
+                      { "id": "current_milestone", "label": "Active Milestone", "type": "select", "required": true, "lgSpan": 24, "optionsSource": "summary.scheduleMilestones", "labelField": "milestone", "valueField": "id", "props": { "placeholder": "Select the milestone being worked on today" } }
+                    ]
+                  },
+                  {
+                    "id": "environment",
+                    "title": "Environmental Conditions",
+                    "fields": [
+                      { "id": "weather_conditions", "label": "Weather", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Clear", "value": "clear" },
+                        { "label": "Partly Cloudy", "value": "partly_cloudy" },
+                        { "label": "Overcast", "value": "overcast" },
+                        { "label": "Light Rain", "value": "light_rain" },
+                        { "label": "Heavy Rain", "value": "heavy_rain" },
+                        { "label": "Snow", "value": "snow" },
+                        { "label": "High Winds", "value": "high_winds" },
+                        { "label": "Extreme Heat", "value": "extreme_heat" },
+                        { "label": "Extreme Cold", "value": "extreme_cold" }
+                      ] },
+                      { "id": "temperature", "label": "Temperature (F)", "type": "number", "lgSpan": 6, "props": { "min": -50, "max": 150 } },
+                      { "id": "wind_speed", "label": "Wind Speed (mph)", "type": "number", "lgSpan": 6, "props": { "min": 0, "max": 100 } },
+                      { "id": "site_conditions", "label": "Ground Conditions", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Dry", "value": "dry" },
+                        { "label": "Damp", "value": "damp" },
+                        { "label": "Wet/Muddy", "value": "wet" },
+                        { "label": "Frozen", "value": "frozen" },
+                        { "label": "Snow Covered", "value": "snow_covered" },
+                        { "label": "Other", "value": "other" }
+                      ] },
+                      { "id": "visibility_conditions", "label": "Visibility", "type": "select", "defaultValue": "clear", "lgSpan": 12, "options": [
+                        { "label": "Excellent", "value": "excellent" },
+                        { "label": "Good", "value": "good" },
+                        { "label": "Fair", "value": "fair" },
+                        { "label": "Low", "value": "low" },
+                        { "label": "Very Low/Fog", "value": "very_low" }
+                      ] }
+                    ]
+                  },
+                  {
+                    "id": "crew_resources",
+                    "title": "Crew & Resources",
+                    "fields": [
+                      { "id": "crew_size", "label": "Crew Size", "type": "number", "required": true, "lgSpan": 8, "props": { "min": 1, "max": 100 } },
+                      { "id": "work_hours", "label": "Work Hours", "type": "number", "required": true, "lgSpan": 8, "props": { "min": 0, "max": 24, "step": 0.5 } },
+                      { "id": "overtime_hours", "label": "Overtime Hours", "type": "number", "lgSpan": 8, "props": { "min": 0, "max": 12, "step": 0.5 } },
+                      { "id": "crew_lead", "label": "Crew Lead/Foreman", "type": "text", "required": true, "placeholder": "Crew foreman name", "lgSpan": 12 },
+                      { "id": "competent_person", "label": "Competent Person", "type": "text", "required": true, "placeholder": "Competent person on site", "lgSpan": 12 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "personnel_tracking",
+              "title": "Personnel & Visitors",
+              "description": "Track all personnel, subcontractors, and visitor activity on site.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "On-Site Personnel",
+                "dataKey": "personnelLog",
+                "columns": [
+                  {
+                    "key": "name",
+                    "title": "Name",
+                    "width": 150,
+                    "editable": true,
+                    "required": true
+                  },
+                  {
+                    "key": "role",
+                    "title": "Role/Position",
+                    "width": 150,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Crew Lead",
+                      "Laborer",
+                      "Ironworker",
+                      "Rigger",
+                      "Safety Officer",
+                      "Inspector",
+                      "Subcontractor",
+                      "Supervisor",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "key": "company",
+                    "title": "Company",
+                    "width": 130,
+                    "editable": true
+                  },
+                  {
+                    "key": "startTime",
+                    "title": "Start Time",
+                    "width": 100,
+                    "editable": true
+                  },
+                  {
+                    "key": "endTime",
+                    "title": "End Time",
+                    "width": 100,
+                    "editable": true
+                  },
+                  {
+                    "key": "hoursWorked",
+                    "title": "Hours",
+                    "width": 80,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "taskAssigned",
+                    "title": "Task Assigned",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "subcontractor_tracking",
+              "title": "Subcontractors & Visitors",
+              "description": "Track subcontractor teams, visitors, and external personnel on site.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Subcontractors and Visitors",
+                "dataKey": "subcontractorLog",
+                "columns": [
+                  {
+                    "key": "entityType",
+                    "title": "Type",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Subcontractor",
+                      "Inspector",
+                      "Client",
+                      "Architect/Engineer",
+                      "Visitor",
+                      "Other"
+                    ]
+                  },
+                  {
+                    "key": "company",
+                    "title": "Company/Organization",
+                    "width": 180,
+                    "editable": true,
+                    "required": true
+                  },
+                  {
+                    "key": "name",
+                    "title": "Contact Name",
+                    "width": 150,
+                    "editable": true
+                  },
+                  {
+                    "key": "purpose",
+                    "title": "Purpose of Visit",
+                    "width": 200,
+                    "editable": true
+                  },
+                  {
+                    "key": "arrivalTime",
+                    "title": "Arrival",
+                    "width": 100,
+                    "editable": true
+                  },
+                  {
+                    "key": "departureTime",
+                    "title": "Departure",
+                    "width": 100,
+                    "editable": true
+                  },
+                  {
+                    "key": "notes",
+                    "title": "Notes",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "daily_activities",
+              "title": "Activities & Progress",
+              "description": "Document activities performed, milestone progress, and task status.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Generate Activity Summary",
+              "promptRef": "activitiesPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "activities",
+                    "title": "Work Activities",
+                    "fields": [
+                      { "id": "work_description", "label": "Work Description", "type": "textarea", "required": true, "props": { "rows": 4 }, "placeholder": "Describe main activities and work performed today", "lgSpan": 24 },
+                      { "id": "milestone_progress", "label": "Milestone Progress (%)", "type": "number", "required": true, "lgSpan": 12, "props": { "min": 0, "max": 100 } },
+                      { "id": "milestone_status", "label": "Milestone Status", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Not Started", "value": "Not Started" },
+                        { "label": "In Progress", "value": "In Progress" },
+                        { "label": "Complete", "value": "Complete" },
+                        { "label": "Delayed", "value": "Delayed" }
+                      ] }
+                    ]
+                  },
+                  {
+                    "id": "task_tracking",
+                    "title": "Task Status",
+                    "fields": [
+                      { "id": "completed_tasks", "label": "Completed Tasks", "type": "multi-select", "placeholder": "Add completed tasks", "lgSpan": 24 },
+                      { "id": "ongoing_tasks", "label": "Tasks In Progress", "type": "multi-select", "placeholder": "Add ongoing tasks", "lgSpan": 24 },
+                      { "id": "blocked_tasks", "label": "Blocked Tasks", "type": "multi-select", "placeholder": "Add blocked or delayed tasks", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "equipment_materials",
+              "title": "Equipment & Materials",
+              "description": "Track equipment usage and material consumption with structured grids.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Equipment Used Today",
+                "dataKey": "equipmentLog",
+                "columns": [
+                  {
+                    "key": "equipmentType",
+                    "title": "Equipment Type",
+                    "width": 200,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Forklift",
+                      "Crane",
+                      "Boom Lift",
+                      "Scissor Lift",
+                      "Material Hoist",
+                      "Welding Equipment",
+                      "Power Tools",
+                      "Hand Tools",
+                      "Safety Equipment",
+                      "Vehicle",
+                      "Other"
+                    ],
+                    "summary": "uniqueCount"
+                  },
+                  {
+                    "key": "equipmentId",
+                    "title": "Equipment ID",
+                    "width": 140,
+                    "editable": true
+                  },
+                  {
+                    "key": "hoursUsed",
+                    "title": "Hours Used",
+                    "width": 120,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "operator",
+                    "title": "Operator",
+                    "width": 150,
+                    "editable": true
+                  },
+                  {
+                    "key": "fuelConsumed",
+                    "title": "Fuel (gal)",
+                    "width": 100,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "condition",
+                    "title": "Condition",
+                    "width": 150,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Operational",
+                      "Needs Maintenance",
+                      "Out of Service",
+                      "Returned to Yard"
+                    ]
+                  },
+                  {
+                    "key": "notes",
+                    "title": "Notes",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "materials_consumed",
+              "title": "Materials Consumed",
+              "description": "Track scaffold materials used or consumed during daily activities.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Materials Used Today",
+                "dataKey": "materialsConsumed",
+                "columns": [
+                  {
+                    "key": "materialType",
+                    "title": "Material Type",
+                    "width": 200,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Frame/Standard",
+                      "Ledger/Horizontal",
+                      "Transom/Bearer",
+                      "Brace/Diagonal",
+                      "Plank/Deck Board",
+                      "Base Plate/Jack",
+                      "Coupler/Fitting",
+                      "Guardrail",
+                      "Toe Board",
+                      "Tie/Anchor",
+                      "Hardware/Fasteners",
+                      "Safety Equipment",
+                      "Other"
+                    ],
+                    "summary": "uniqueCount"
+                  },
+                  {
+                    "key": "description",
+                    "title": "Description/Size",
+                    "width": 180,
+                    "editable": true
+                  },
+                  {
+                    "key": "quantity",
+                    "title": "Quantity",
+                    "width": 100,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "unit",
+                    "title": "Unit",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Each",
+                      "Set",
+                      "Linear Feet",
+                      "Square Feet",
+                      "Ton"
+                    ]
+                  },
+                  {
+                    "key": "source",
+                    "title": "Source",
+                    "width": 150,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "On-Site Inventory",
+                      "New Delivery",
+                      "Returned from Job",
+                      "Rental",
+                      "Client Supplied"
+                    ]
+                  },
+                  {
+                    "key": "remainingStock",
+                    "title": "Remaining Stock",
+                    "width": 120,
+                    "editable": true,
+                    "type": "number"
+                  },
+                  {
+                    "key": "notes",
+                    "title": "Notes",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "material_deliveries",
+              "title": "Material Deliveries",
+              "description": "Track all incoming material deliveries, quantities, and condition.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Materials Delivered Today",
+                "dataKey": "deliveryLog",
+                "columns": [
+                  {
+                    "key": "deliveryTime",
+                    "title": "Delivery Time",
+                    "width": 120,
+                    "editable": true
+                  },
+                  {
+                    "key": "vendor",
+                    "title": "Vendor/Supplier",
+                    "width": 180,
+                    "editable": true
+                  },
+                  {
+                    "key": "materialDescription",
+                    "title": "Material Description",
+                    "width": 200,
+                    "editable": true
+                  },
+                  {
+                    "key": "quantity",
+                    "title": "Quantity Received",
+                    "width": 120,
+                    "editable": true,
+                    "type": "number"
+                  },
+                  {
+                    "key": "unit",
+                    "title": "Unit",
+                    "width": 100,
+                    "editable": true
+                  },
+                  {
+                    "key": "conditionOnArrival",
+                    "title": "Condition",
+                    "width": 130,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Excellent",
+                      "Good",
+                      "Fair",
+                      "Damaged",
+                      "Partially Damaged"
+                    ]
+                  },
+                  {
+                    "key": "receivedBy",
+                    "title": "Received By",
+                    "width": 150,
+                    "editable": true
+                  },
+                  {
+                    "key": "damageNotes",
+                    "title": "Damage/Issues",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "safety_compliance",
+              "title": "Safety & Compliance",
+              "description": "Safety briefings, PPE compliance, incidents, and regulatory compliance.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "btnLabel": "Analyze Safety Data",
+              "promptRef": "safetyAnalysisPopulate",
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "safety_briefing",
+                    "title": "Safety Briefing & PPE",
+                    "fields": [
+                      { "id": "safety_briefing_completed", "label": "Daily Safety Briefing", "type": "radio", "required": true, "defaultValue": "yes", "lgSpan": 12, "options": [
+                        { "label": "Completed", "value": "yes" },
+                        { "label": "Not Completed", "value": "no" }
+                      ] },
+                      { "id": "ppe_compliance", "label": "PPE Compliance Level", "type": "select", "required": true, "defaultValue": "full", "lgSpan": 12, "options": [
+                        { "label": "100% Compliant", "value": "full" },
+                        { "label": "Mostly Compliant (90%+)", "value": "mostly" },
+                        { "label": "Partial Compliance (50-89%)", "value": "partial" },
+                        { "label": "Non-Compliant (<50%)", "value": "non_compliant" }
+                      ] },
+                      { "id": "toolbox_talk_topics", "label": "Toolbox Talk Topics", "type": "multi-select", "placeholder": "Add topics covered in toolbox talk", "lgSpan": 24 },
+                      { "id": "safety_observations", "label": "Safety Observations", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Positive observations, concerns, near misses, or hazards identified", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "incidents",
+                    "title": "Incidents & Injuries",
+                    "fields": [
+                      { "id": "incidents_reported", "label": "Incidents/Injuries Today", "type": "select", "required": true, "defaultValue": "none", "lgSpan": 12, "options": [
+                        { "label": "None", "value": "none" },
+                        { "label": "Near Miss", "value": "near_miss" },
+                        { "label": "First Aid", "value": "first_aid" },
+                        { "label": "Medical Treatment", "value": "medical_treatment" },
+                        { "label": "Lost Time Injury", "value": "lost_time" },
+                        { "label": "Equipment Damage", "value": "equipment_damage" },
+                        { "label": "Environmental Incident", "value": "environmental" },
+                        { "label": "Property Damage", "value": "property_damage" }
+                      ] },
+                      { "id": "incident_severity", "label": "Severity Level", "type": "select", "required": true, "lgSpan": 12, "showIf": { "field": "incidents_reported", "operator": "!=", "value": "none" }, "options": [
+                        { "label": "Low", "value": "low" },
+                        { "label": "Medium", "value": "medium" },
+                        { "label": "High", "value": "high" },
+                        { "label": "Critical", "value": "critical" }
+                      ] },
+                      { "id": "incident_description", "label": "Incident Description", "type": "textarea", "required": true, "props": { "rows": 4 }, "placeholder": "What happened? Who was involved? When? Where? Immediate response taken?", "lgSpan": 24, "showIf": { "field": "incidents_reported", "operator": "!=", "value": "none" } },
+                      { "id": "corrective_actions", "label": "Corrective Actions", "type": "textarea", "required": true, "props": { "rows": 3 }, "placeholder": "Immediate corrective actions and preventive measures implemented", "lgSpan": 24, "showIf": { "field": "incidents_reported", "operator": "!=", "value": "none" } },
+                      { "id": "incident_reported_to", "label": "Reported To", "type": "text", "placeholder": "Names of supervisors/managers notified", "lgSpan": 24, "showIf": { "field": "incidents_reported", "operator": "!=", "value": "none" } }
+                    ]
+                  },
+                  {
+                    "id": "compliance",
+                    "title": "Permits & Compliance",
+                    "fields": [
+                      { "id": "permits_valid", "label": "All Permits Valid", "type": "radio", "required": true, "defaultValue": "yes", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "permit_numbers", "label": "Active Permit Numbers", "type": "text", "placeholder": "e.g. WP-2024-1234, HOT-2024-567", "lgSpan": 12 },
+                      { "id": "permit_issues", "label": "Permit Issues", "type": "textarea", "props": { "rows": 2 }, "placeholder": "Describe permit concerns or compliance issues", "lgSpan": 24, "showIf": { "field": "permits_valid", "operator": "=", "value": "no" } },
+                      { "id": "regulatory_visits", "label": "Regulatory Visits", "type": "textarea", "props": { "rows": 2 }, "placeholder": "OSHA, building inspector, or other regulatory authority visits", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "quality_inspections",
+              "title": "Quality Control & Inspections",
+              "description": "Quality checks, inspections performed, and any rework requirements.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "inspections",
+                    "title": "Inspections Performed",
+                    "fields": [
+                      { "id": "inspection_types", "label": "Inspection Types", "type": "checkbox_group", "lgSpan": 24, "options": [
+                        { "label": "Daily Pre-Use Inspection", "value": "daily_preuse" },
+                        { "label": "Load Capacity Verification", "value": "load_capacity" },
+                        { "label": "Tie/Anchor Point Inspection", "value": "tie_inspection" },
+                        { "label": "Guardrail/Fall Protection Check", "value": "fall_protection" },
+                        { "label": "Platform/Plank Condition", "value": "platform_condition" },
+                        { "label": "Access/Ladder Inspection", "value": "access_ladder" },
+                        { "label": "Competent Person Inspection", "value": "competent_person" },
+                        { "label": "Post-Weather Event Inspection", "value": "post_weather" }
+                      ] },
+                      { "id": "inspection_findings", "label": "Inspection Findings", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Key findings from inspections performed", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "quality",
+                    "title": "Quality & Rework",
+                    "fields": [
+                      { "id": "quality_issues_found", "label": "Quality Issues Identified", "type": "radio", "required": true, "defaultValue": "no", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "rework_required", "label": "Rework Required", "type": "radio", "defaultValue": "no", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "quality_issue_description", "label": "Quality Issue Description", "type": "textarea", "required": true, "props": { "rows": 3 }, "placeholder": "Describe non-conformances, defects, or quality concerns", "lgSpan": 24, "showIf": { "field": "quality_issues_found", "operator": "=", "value": "yes" } },
+                      { "id": "rework_details", "label": "Rework Details", "type": "textarea", "required": true, "props": { "rows": 3 }, "placeholder": "Description of rework required and corrective actions", "lgSpan": 24, "showIf": { "field": "rework_required", "operator": "=", "value": "yes" } }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "rfi_and_changes",
+              "title": "RFI & Change Orders",
+              "description": "Track requests for information and approved change orders.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "RFIs and Change Orders",
+                "dataKey": "rfiChangeLog",
+                "columns": [
+                  {
+                    "key": "rfINumber",
+                    "title": "RFI/CO Number",
+                    "width": 140,
+                    "editable": true,
+                    "required": true
+                  },
+                  {
+                    "key": "type",
+                    "title": "Type",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "RFI",
+                      "Change Order",
+                      "Clarification",
+                      "Approval Request"
+                    ]
+                  },
+                  {
+                    "key": "subject",
+                    "title": "Subject",
+                    "width": 200,
+                    "editable": true,
+                    "required": true
+                  },
+                  {
+                    "key": "description",
+                    "title": "Description",
+                    "width": 250,
+                    "editable": true
+                  },
+                  {
+                    "key": "submittedBy",
+                    "title": "Submitted By",
+                    "width": 150,
+                    "editable": true
+                  },
+                  {
+                    "key": "submittedDate",
+                    "title": "Date Submitted",
+                    "width": 120,
+                    "editable": true
+                  },
+                  {
+                    "key": "status",
+                    "title": "Status",
+                    "width": 130,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Pending",
+                      "In Review",
+                      "Approved",
+                      "Rejected",
+                      "Need Clarification"
+                    ]
+                  },
+                  {
+                    "key": "responseDate",
+                    "title": "Response Date",
+                    "width": 120,
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "communications",
+              "title": "Communications & Meetings",
+              "description": "Track meetings, communications, and decisions made on site.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "meetings",
+                    "title": "Meetings Held",
+                    "fields": [
+                      { "id": "meeting_types", "label": "Meeting Types", "type": "checkbox_group", "lgSpan": 24, "options": [
+                        { "label": "Daily Standup", "value": "standup" },
+                        { "label": "Safety Briefing", "value": "safety" },
+                        { "label": "Coordination Meeting", "value": "coordination" },
+                        { "label": "Client Meeting", "value": "client" },
+                        { "label": "Engineering Review", "value": "engineering" },
+                        { "label": "Problem Solving", "value": "problem_solving" },
+                        { "label": "Progress Review", "value": "progress" },
+                        { "label": "Inspection Kickoff", "value": "inspection" }
+                      ] },
+                      { "id": "meeting_attendees", "label": "Attendees", "type": "text", "placeholder": "Names and roles of meeting attendees", "lgSpan": 24 },
+                      { "id": "meeting_summary", "label": "Meeting Summary", "type": "textarea", "props": { "rows": 4 }, "placeholder": "Key topics discussed, decisions made, action items", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "communications_log",
+                    "title": "Communications",
+                    "fields": [
+                      { "id": "communication_types", "label": "Communication Types", "type": "checkbox_group", "lgSpan": 24, "options": [
+                        { "label": "Client Request", "value": "client_request" },
+                        { "label": "Architect Directive", "value": "architect_directive" },
+                        { "label": "Engineer Instruction", "value": "engineer_instruction" },
+                        { "label": "Regulatory Requirement", "value": "regulatory_req" },
+                        { "label": "Change Request", "value": "change_request" },
+                        { "label": "Clarification Received", "value": "clarification" }
+                      ] },
+                      { "id": "instructions_received", "label": "Instructions/Directives", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Important instructions, directives, or clarifications received", "lgSpan": 24 },
+                      { "id": "important_correspondence", "label": "Important Correspondence", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Emails, calls, or letters with significant project impact", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "erection_progress",
+              "title": "Erection Progress Tracking",
+              "description": "Detailed tracking of erection activities and progress by area.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Erection Progress by Area",
+                "dataKey": "erectionProgress",
+                "columns": [
+                  {
+                    "key": "area",
+                    "title": "Area/Zone",
+                    "width": 140,
+                    "editable": true
+                  },
+                  {
+                    "key": "baysErected",
+                    "title": "Bays Erected",
+                    "width": 120,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "levelsCompleted",
+                    "title": "Levels Complete",
+                    "width": 130,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "heightAchieved",
+                    "title": "Height (ft)",
+                    "width": 110,
+                    "editable": true,
+                    "type": "number"
+                  },
+                  {
+                    "key": "tiesInstalled",
+                    "title": "Ties/Anchors",
+                    "width": 120,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "guardrailsInstalled",
+                    "title": "Guardrails (ft)",
+                    "width": 130,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "status",
+                    "title": "Status",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "In Progress",
+                      "Complete",
+                      "On Hold",
+                      "Delayed"
+                    ]
+                  },
+                  {
+                    "key": "notes",
+                    "title": "Notes",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "dismantling_progress",
+              "title": "Dismantling Progress Tracking",
+              "description": "Detailed tracking of dismantling activities and material recovery.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Dismantling Progress by Area",
+                "dataKey": "dismantlingProgress",
+                "columns": [
+                  {
+                    "key": "area",
+                    "title": "Area/Zone",
+                    "width": 140,
+                    "editable": true
+                  },
+                  {
+                    "key": "baysDismantled",
+                    "title": "Bays Dismantled",
+                    "width": 130,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "levelsRemoved",
+                    "title": "Levels Removed",
+                    "width": 130,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "materialsRecovered",
+                    "title": "Materials (tons)",
+                    "width": 130,
+                    "editable": true,
+                    "type": "number",
+                    "summary": "sum"
+                  },
+                  {
+                    "key": "stagingLocation",
+                    "title": "Staging Location",
+                    "width": 150,
+                    "editable": true
+                  },
+                  {
+                    "key": "disposition",
+                    "title": "Disposition",
+                    "width": 140,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Reuse on Site",
+                      "Return to Yard",
+                      "Scrap/Recycle",
+                      "Rental Return",
+                      "Dispose"
+                    ]
+                  },
+                  {
+                    "key": "condition",
+                    "title": "Condition",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Good",
+                      "Fair",
+                      "Poor",
+                      "Damaged"
+                    ]
+                  },
+                  {
+                    "key": "notes",
+                    "title": "Notes",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "maintenance_work",
+              "title": "Maintenance Work Performed",
+              "description": "Track maintenance inspections, repairs, and component replacements.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Maintenance Activities",
+                "dataKey": "maintenanceLog",
+                "columns": [
+                  {
+                    "key": "component",
+                    "title": "Component/Area",
+                    "width": 180,
+                    "editable": true
+                  },
+                  {
+                    "key": "location",
+                    "title": "Location",
+                    "width": 140,
+                    "editable": true
+                  },
+                  {
+                    "key": "workType",
+                    "title": "Work Type",
+                    "width": 140,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Visual Inspection",
+                      "Load Test",
+                      "Component Repair",
+                      "Component Replacement",
+                      "Structural Adjustment",
+                      "Tie/Anchor Repair",
+                      "Platform Repair",
+                      "Cleaning/Maintenance",
+                      "Other"
+                    ],
+                    "summary": "uniqueCount"
+                  },
+                  {
+                    "key": "condition",
+                    "title": "Condition Found",
+                    "width": 130,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Good",
+                      "Fair",
+                      "Poor",
+                      "Failed",
+                      "Not Assessed"
+                    ]
+                  },
+                  {
+                    "key": "findings",
+                    "title": "Findings/Issues",
+                    "width": 200,
+                    "editable": true
+                  },
+                  {
+                    "key": "actionTaken",
+                    "title": "Action Taken",
+                    "width": 200,
+                    "editable": true
+                  },
+                  {
+                    "key": "followUpRequired",
+                    "title": "Follow-up",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "None",
+                      "Monitor",
+                      "Repair Scheduled",
+                      "Replace Scheduled",
+                      "Engineer Review"
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "access_site_conditions",
+              "title": "Site Conditions & Access",
+              "description": "Document site access issues, obstacles, and site condition changes.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "access",
+                    "title": "Site Access",
+                    "fields": [
+                      { "id": "site_access_status", "label": "Site Access Status", "type": "radio", "required": true, "defaultValue": "clear", "lgSpan": 12, "options": [
+                        { "label": "Clear/Unrestricted", "value": "clear" },
+                        { "label": "Partially Restricted", "value": "partial" },
+                        { "label": "Major Restrictions", "value": "major" },
+                        { "label": "Blocked", "value": "blocked" }
+                      ] },
+                      { "id": "access_restrictions", "label": "Access Restrictions/Hazards", "type": "textarea", "props": { "rows": 2 }, "placeholder": "Describe any access limitations or site hazards", "lgSpan": 24, "showIf": { "field": "site_access_status", "operator": "!=", "value": "clear" } },
+                      { "id": "access_routes_status", "label": "Access Routes", "type": "textarea", "props": { "rows": 2 }, "placeholder": "Condition of primary and emergency access routes", "lgSpan": 24 },
+                      { "id": "parking_availability", "label": "Parking Availability", "type": "select", "defaultValue": "adequate", "lgSpan": 12, "options": [
+                        { "label": "Adequate", "value": "adequate" },
+                        { "label": "Limited", "value": "limited" },
+                        { "label": "Severely Limited", "value": "severely_limited" }
+                      ] }
+                    ]
+                  },
+                  {
+                    "id": "site_conditions",
+                    "title": "General Site Conditions",
+                    "fields": [
+                      { "id": "site_cleanliness", "label": "Site Cleanliness", "type": "select", "required": true, "defaultValue": "clean", "lgSpan": 12, "options": [
+                        { "label": "Clean/Well Organized", "value": "clean" },
+                        { "label": "Fair", "value": "fair" },
+                        { "label": "Poor/Disorganized", "value": "poor" }
+                      ] },
+                      { "id": "housekeeping_status", "label": "Housekeeping Issues", "type": "textarea", "props": { "rows": 2 }, "placeholder": "Any debris, waste, or housekeeping issues encountered", "lgSpan": 24 },
+                      { "id": "site_changes", "label": "Site Changes/Observations", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Notable changes in site conditions, new obstacles, or observations", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "delays_blockers",
+              "title": "Delays & Blockers",
+              "description": "Document delays, schedule impacts, and mitigation actions.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "delays",
+                    "title": "Delays & Schedule Impact",
+                    "fields": [
+                      { "id": "delays_encountered", "label": "Delays Encountered", "type": "radio", "required": true, "defaultValue": "no", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "total_delay_hours", "label": "Total Delay (hours)", "type": "number", "lgSpan": 12, "props": { "min": 0, "max": 24, "step": 0.5 }, "showIf": { "field": "delays_encountered", "operator": "=", "value": "yes" } },
+                      { "id": "delay_categories", "label": "Delay Categories", "type": "checkbox_group", "lgSpan": 24, "showIf": { "field": "delays_encountered", "operator": "=", "value": "yes" }, "options": [
+                        { "label": "Weather Conditions", "value": "weather" },
+                        { "label": "Material Shortage/Delay", "value": "material_shortage" },
+                        { "label": "Equipment Breakdown", "value": "equipment_breakdown" },
+                        { "label": "Equipment Unavailable", "value": "equipment_unavailable" },
+                        { "label": "Crew/Labor Shortage", "value": "crew_shortage" },
+                        { "label": "Site Access Restricted", "value": "access_restricted" },
+                        { "label": "Permit/Documentation Issues", "value": "permit_issues" },
+                        { "label": "Design/Engineering Changes", "value": "design_changes" },
+                        { "label": "Client Request/Change Order", "value": "client_changes" },
+                        { "label": "Safety Stand-Down", "value": "safety_standdown" },
+                        { "label": "Coordination with Other Trades", "value": "coordination" },
+                        { "label": "Other", "value": "other" }
+                      ] },
+                      { "id": "delay_description", "label": "Delay Description", "type": "textarea", "required": true, "props": { "rows": 4 }, "placeholder": "Describe the delay, root cause, and impact on project schedule", "lgSpan": 24, "showIf": { "field": "delays_encountered", "operator": "=", "value": "yes" } },
+                      { "id": "schedule_impact", "label": "Schedule Impact Assessment", "type": "select", "lgSpan": 12, "showIf": { "field": "delays_encountered", "operator": "=", "value": "yes" }, "options": [
+                        { "label": "No Impact", "value": "none" },
+                        { "label": "Minor (<1 day)", "value": "minor" },
+                        { "label": "Moderate (1-3 days)", "value": "moderate" },
+                        { "label": "Significant (>3 days)", "value": "significant" },
+                        { "label": "Critical Path Impact", "value": "critical" }
+                      ] },
+                      { "id": "recovery_plan", "label": "Recovery/Mitigation Plan", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Actions to recover schedule or mitigate impact", "lgSpan": 24, "showIf": { "field": "delays_encountered", "operator": "=", "value": "yes" } }
+                    ]
+                  },
+                  {
+                    "id": "blockers",
+                    "title": "Current Blockers",
+                    "fields": [
+                      { "id": "active_blockers", "label": "Active Blockers", "type": "multi-select", "placeholder": "Add current blockers preventing progress", "lgSpan": 24 },
+                      { "id": "blocker_details", "label": "Blocker Details", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Details on blockers and required resolution actions", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "punch_list",
+              "title": "Punch List & Follow-ups",
+              "description": "Track outstanding items, punch list items, and follow-up actions.",
+              "includeInPdf": true,
+              "grid": {
+                "title": "Punch List & Outstanding Items",
+                "dataKey": "punchList",
+                "columns": [
+                  {
+                    "key": "itemNumber",
+                    "title": "Item #",
+                    "width": 80,
+                    "editable": true
+                  },
+                  {
+                    "key": "description",
+                    "title": "Description",
+                    "width": 250,
+                    "editable": true,
+                    "required": true
+                  },
+                  {
+                    "key": "location",
+                    "title": "Location",
+                    "width": 150,
+                    "editable": true
+                  },
+                  {
+                    "key": "priority",
+                    "title": "Priority",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Critical",
+                      "High",
+                      "Medium",
+                      "Low"
+                    ]
+                  },
+                  {
+                    "key": "assignedTo",
+                    "title": "Assigned To",
+                    "width": 150,
+                    "editable": true
+                  },
+                  {
+                    "key": "targetDate",
+                    "title": "Target Date",
+                    "width": 120,
+                    "editable": true
+                  },
+                  {
+                    "key": "status",
+                    "title": "Status",
+                    "width": 120,
+                    "editable": true,
+                    "type": "select",
+                    "options": [
+                      "Pending",
+                      "In Progress",
+                      "Complete",
+                      "On Hold"
+                    ]
+                  },
+                  {
+                    "key": "notes",
+                    "title": "Notes",
+                    "editable": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": "weather_delay_details",
+              "title": "Weather Delay Documentation",
+              "description": "Detailed documentation for weather-related work stoppages.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "weather_conditions",
+                    "title": "Weather Conditions",
+                    "fields": [
+                      { "id": "weather_start_time", "label": "Weather Event Start Time", "type": "text", "required": true, "placeholder": "e.g. 10:30 AM", "lgSpan": 12 },
+                      { "id": "weather_end_time", "label": "Weather Event End Time", "type": "text", "placeholder": "e.g. 2:45 PM (or TBD if ongoing)", "lgSpan": 12 },
+                      { "id": "weather_type", "label": "Weather Type", "type": "checkbox_group", "required": true, "lgSpan": 24, "options": [
+                        { "label": "Heavy Rain", "value": "heavy_rain" },
+                        { "label": "Lightning/Thunderstorm", "value": "lightning" },
+                        { "label": "High Winds (>25 mph)", "value": "high_winds" },
+                        { "label": "Snow/Ice", "value": "snow_ice" },
+                        { "label": "Low Visibility/Fog", "value": "low_visibility" },
+                        { "label": "Extreme Heat (>95F)", "value": "extreme_heat" },
+                        { "label": "Extreme Cold (<20F)", "value": "extreme_cold" }
+                      ] },
+                      { "id": "weather_impact", "label": "Impact on Work", "type": "textarea", "required": true, "props": { "rows": 3 }, "placeholder": "How did weather conditions affect work activities?", "lgSpan": 24 },
+                      { "id": "crew_disposition", "label": "Crew Disposition", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Sent Home", "value": "sent_home" },
+                        { "label": "Standby/Shelter", "value": "standby" },
+                        { "label": "Alternate Work Assigned", "value": "alternate_work" },
+                        { "label": "Partial Crew Working", "value": "partial_crew" }
+                      ] },
+                      { "id": "estimated_recovery_date", "label": "Estimated Recovery", "type": "date", "lgSpan": 12 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "incident_report_details",
+              "title": "Incident Report Details",
+              "description": "Comprehensive incident documentation and investigation details.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "incident_details",
+                    "title": "Incident Information",
+                    "fields": [
+                      { "id": "incident_time", "label": "Incident Time", "type": "text", "required": true, "placeholder": "e.g. 2:30 PM", "lgSpan": 12 },
+                      { "id": "incident_location", "label": "Incident Location", "type": "text", "required": true, "placeholder": "Specific location on site", "lgSpan": 12 },
+                      { "id": "persons_involved", "label": "Persons Involved", "type": "text", "required": true, "placeholder": "Names of persons involved or injured", "lgSpan": 24 },
+                      { "id": "witnesses", "label": "Witnesses", "type": "text", "placeholder": "Names of witnesses", "lgSpan": 24 },
+                      { "id": "incident_narrative", "label": "Incident Narrative", "type": "textarea", "required": true, "props": { "rows": 5 }, "placeholder": "Detailed description of what happened, sequence of events, contributing factors", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "incident_response",
+                    "title": "Immediate Response & Investigation",
+                    "fields": [
+                      { "id": "immediate_response", "label": "Immediate Response", "type": "textarea", "required": true, "props": { "rows": 3 }, "placeholder": "First aid provided, emergency services called, scene secured, etc.", "lgSpan": 24 },
+                      { "id": "root_cause", "label": "Preliminary Root Cause", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Initial assessment of root cause (pending full investigation)", "lgSpan": 24 },
+                      { "id": "investigation_required", "label": "Formal Investigation Required", "type": "radio", "required": true, "defaultValue": "yes", "lgSpan": 12, "options": [
+                        { "label": "Yes", "value": "yes" },
+                        { "label": "No", "value": "no" }
+                      ] },
+                      { "id": "investigation_lead", "label": "Investigation Lead", "type": "text", "placeholder": "Name of investigator assigned", "lgSpan": 12, "showIf": { "field": "investigation_required", "operator": "=", "value": "yes" } }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "inspection_checklist",
+              "title": "Inspection Checklist & Findings",
+              "description": "Comprehensive inspection checklist and detailed findings documentation.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 2, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "inspection_scope",
+                    "title": "Inspection Scope",
+                    "fields": [
+                      { "id": "inspection_type", "label": "Inspection Type", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Daily Pre-Use", "value": "daily_preuse" },
+                        { "label": "Weekly Competent Person", "value": "weekly_competent" },
+                        { "label": "Post-Modification", "value": "post_modification" },
+                        { "label": "Post-Weather Event", "value": "post_weather" },
+                        { "label": "Acceptance/Tag-Out", "value": "acceptance" },
+                        { "label": "Regulatory/Third-Party", "value": "regulatory" }
+                      ] },
+                      { "id": "inspector_name", "label": "Inspector Name", "type": "text", "required": true, "placeholder": "Name of competent person conducting inspection", "lgSpan": 12 },
+                      { "id": "areas_inspected", "label": "Areas/Zones Inspected", "type": "multi-select", "required": true, "placeholder": "Add areas inspected", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "inspection_results",
+                    "title": "Inspection Results",
+                    "fields": [
+                      { "id": "overall_status", "label": "Overall Status", "type": "select", "required": true, "lgSpan": 12, "options": [
+                        { "label": "Pass - Safe for Use", "value": "pass" },
+                        { "label": "Conditional Pass - Minor Issues", "value": "conditional" },
+                        { "label": "Fail - Unsafe", "value": "fail" },
+                        { "label": "Out of Service", "value": "out_of_service" }
+                      ] },
+                      { "id": "deficiencies_found", "label": "Deficiencies Found", "type": "number", "required": true, "defaultValue": 0, "lgSpan": 6, "props": { "min": 0 } },
+                      { "id": "critical_deficiencies", "label": "Critical Deficiencies", "type": "number", "required": true, "defaultValue": 0, "lgSpan": 6, "props": { "min": 0 } },
+                      { "id": "inspection_findings", "label": "Detailed Findings", "type": "textarea", "required": true, "props": { "rows": 5 }, "placeholder": "Document all deficiencies, non-conformances, and observations", "lgSpan": 24 },
+                      { "id": "corrective_actions_required", "label": "Required Corrective Actions", "type": "textarea", "props": { "rows": 4 }, "placeholder": "List all corrective actions required before scaffold can be used", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "id": "summary_signoff",
+              "title": "Summary & Sign-off",
+              "description": "Daily summary, tomorrow's plan, and supervisor approval.",
+              "sectionType": "form",
+              "pdfLayout": { "type": "grid", "columns": 1, "labelPosition": "top" },
+              "includeInPdf": true,
+              "form": {
+                "groups": [
+                  {
+                    "id": "daily_summary",
+                    "title": "Daily Summary",
+                    "fields": [
+                      { "id": "accomplishments", "label": "Key Accomplishments", "type": "multi-select", "placeholder": "Add today's key achievements and completions", "lgSpan": 24 },
+                      { "id": "overall_summary", "label": "Overall Summary", "type": "textarea", "required": true, "props": { "rows": 4 }, "placeholder": "Summarize the day's work, progress, significant events, and outcomes", "lgSpan": 24 },
+                      { "id": "lessons_learned", "label": "Lessons Learned", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Key insights, lessons, or improvements identified", "lgSpan": 24 }
+                    ]
+                  },
+                  {
+                    "id": "tomorrow_plan",
+                    "title": "Tomorrow's Plan",
+                    "fields": [
+                      { "id": "tomorrow_priorities", "label": "Tomorrow's Priorities", "type": "multi-select", "required": true, "placeholder": "Add key tasks and priorities for tomorrow", "lgSpan": 24 },
+                      { "id": "resources_needed", "label": "Resources Needed Tomorrow", "type": "textarea", "props": { "rows": 3 }, "placeholder": "Materials, equipment, permits, or support required", "lgSpan": 24 },
+                      { "id": "expected_crew_size", "label": "Expected Crew Size", "type": "number", "lgSpan": 12, "props": { "min": 1, "max": 100 } },
+                      { "id": "expected_work_hours", "label": "Expected Work Hours", "type": "number", "lgSpan": 12, "props": { "min": 0, "max": 24, "step": 0.5 } }
+                    ]
+                  },
+                  {
+                    "id": "signoff",
+                    "title": "Supervisor Sign-off",
+                    "fields": [
+                      { "id": "supervisor_name", "label": "Field Supervisor", "type": "text", "required": true, "placeholder": "Name of field supervisor", "lgSpan": 12 },
+                      { "id": "supervisor_signature", "label": "Digital Signature", "type": "signature", "required": true, "lgSpan": 12, "props": { "height": 100 } },
+                      { "id": "supervisor_notes", "label": "Supervisor Notes", "type": "textarea", "props": { "rows": 2 }, "placeholder": "Additional supervisor comments, concerns, or escalations", "lgSpan": 24 }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "pdf": {
+            "enabled": true,
+            "title": "Export Daily Log",
+            "description": "Generate professional PDF report for distribution, archival, or compliance.",
+            "reportConfig": {
+              "includeSections": [
+                "ai_field_summary",
+                "log_metadata",
+                "daily_activities",
+                "equipment_materials",
+                "materials_consumed",
+                "safety_compliance",
+                "quality_inspections",
+                "erection_progress",
+                "dismantling_progress",
+                "maintenance_work",
+                "delays_blockers",
+                "weather_delay_details",
+                "incident_report_details",
+                "inspection_checklist",
+                "summary_signoff"
+              ],
+              "pdfStyling": {
+                "orientation": "portrait",
+                "margin": "0.75in",
+                "theme": "professional"
+              }
+            }
+          }
+        },
+        "prompts": {
+          "dailyFieldSummary": {
+            "modelConfig": {
+              "model": "gpt-4o-mini",
+              "maxCompletionTokens": 2000,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "You are an expert scaffolding field supervisor AI. Your role is to synthesize voice transcripts and site imagery into accurate, factual daily summaries. CRITICAL RULES:\n1. ONLY report what was explicitly mentioned in voice transcript or visible in images\n2. Do NOT invent, assume, or hallucinate any project details, metrics, or activities\n3. Extract ONLY confirmed observations: completed tasks, personnel present, equipment used, weather, incidents\n4. For metrics (crew size, hours, quantities), use ONLY values explicitly stated\n5. Flag any uncertainties or unclear information as [UNCLEAR] for manual review\n6. Validate all personnel names and roles against project team roster if provided\n7. For safety events, report facts only - let domain experts interpret severity\n8. Output structured markdown with sections: Daily Highlights, Confirmed Activities, Personnel Noted, Equipment Observed, Weather/Conditions, Safety Observations, Uncertainties/Clarifications Needed",
+              "userPrompt": "PROJECT CONTEXT (Validate against this - use only matching data):\nProject: {recordContext.summary.project_name}\nCode: {recordContext.summary.project_code}\nType: {recordContext.summary.project_type}\nStatus: {recordContext.summary.status}\nSite: {recordContext.summary.site_name}\nProject Team: {recordContext.summary.team_roster}\n\nVOICE TRANSCRIPT:\n{text}\n\nIMAGE ANALYSIS:\n{imageAnalysis}\n\nCRITICAL: Only include information that is explicitly present in the transcript or images. Mark anything unclear or assumed as [UNCLEAR]. Do not reference project details not mentioned in voice recording."
+            }
+          },
+          "activitiesPopulate": {
+            "modelConfig": {
+              "model": "gpt-4o-mini",
+              "maxCompletionTokens": 1500,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "You are analyzing scaffolding daily field work to populate a structured form. VALIDATION CONSTRAINTS:\n1. work_description: Must be factual activities from transcript/images. Report only what was actually done.\n2. milestone_progress: Use ONLY explicit percentages mentioned. If not stated, infer conservatively from completed vs planned activities. Range: 0-100.\n3. milestone_status: Must match one of: ['Not Started', 'In Progress', 'Complete', 'Delayed']. Base on explicit statements.\n4. completed_tasks: List ONLY tasks explicitly marked complete in transcript.\n5. ongoing_tasks: List tasks stated as active or in-progress.\n6. blocked_tasks: List only explicitly mentioned blockers with reason.\n7. For any field marked [UNCLEAR] in transcript, use null or 'NEEDS CLARIFICATION'.\n8. Return valid JSON only. Do not invent task names - use project plan terminology.",
+              "userPrompt": "PROJECT PLAN:\nMilestones: {recordContext.summary.scheduleMilestones}\nActive Milestone: {recordContext.summary.current_milestone}\nProject Scope: {recordContext.summary.work_description}\n\nTRANSCRIPT ANALYSIS:\n{promptContext}\n\nPOPULATE FORM FIELDS:\n- work_description (string): Detailed factual activities performed today\n- milestone_progress (0-100): Percentage complete for active milestone\n- milestone_status (enum): Not Started|In Progress|Complete|Delayed\n- completed_tasks (array): Task names from project plan that were completed\n- ongoing_tasks (array): Task names currently in progress\n- blocked_tasks (array): Task names blocked with brief reason\n\nReturn JSON only. Flag uncertainties as null values with console warning."
+            }
+          },
+          "safetyAnalysisPopulate": {
+            "modelConfig": {
+              "model": "gpt-4o-mini",
+              "maxCompletionTokens": 1200,
+              "temperature": 0.1
+            },
+            "promptConfig": {
+              "systemPrompt": "You are analyzing scaffolding safety data for the day. CRITICAL SAFETY VALIDATION:\n1. incidents_reported: Must match one of: ['none', 'near_miss', 'first_aid', 'medical_treatment', 'lost_time', 'equipment_damage', 'environmental', 'property_damage']\n2. incident_severity: ['low', 'medium', 'high', 'critical'] - Only report if incident explicitly stated\n3. ppe_compliance: ['full', 'mostly', 'partial', 'non_compliant'] - Base on observed compliance percentage\n4. safety_observations: Report ONLY facts observed or stated - do NOT speculate about trends or root causes\n5. permits_valid: Only mark 'yes' if permits explicitly verified - default to flagging for manual check\n6. All safety data must be conservative (err toward more restrictive classification)\n7. Any unclear safety concerns should be marked [REQUIRES ESCALATION]\n8. Return valid JSON. Do not invent incident details.",
+              "userPrompt": "PROJECT SAFETY BASELINE:\nRequired Permits: {recordContext.summary.permit_requirements}\nKey Hazards: {recordContext.summary.top_risks}\nRequired Controls: {recordContext.summary.safety_requirements}\nOn-Site Competent Person: {recordContext.summary.competent_person}\n\nDAY'S OBSERVATIONS:\n{promptContext}\n\nPOPULATE SAFETY FORM:\n- incidents_reported (enum): none|near_miss|first_aid|medical_treatment|lost_time|equipment_damage|environmental|property_damage\n- incident_severity (enum): low|medium|high|critical (only if incident)\n- ppe_compliance (enum): full|mostly|partial|non_compliant\n- safety_briefing_completed (yes/no): Was daily briefing held?\n- permits_valid (yes/no): [FLAG FOR MANUAL VERIFICATION IF UNCERTAIN]\n- safety_observations (string): Factual observations only\n\nReturn JSON only. Mark [REQUIRES ESCALATION] for any safety concerns. Do not assume compliance - default to more restrictive rating."
+            }
+          },
+          "personnelPopulate": {
+            "modelConfig": {
+              "model": "gpt-4o-mini",
+              "maxCompletionTokens": 1000,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "You are extracting personnel information from field notes. CRITICAL VALIDATION:\n1. name: Match against project roster when provided. Flag if not found.\n2. role: Must match one of: ['Crew Lead', 'Laborer', 'Ironworker', 'Rigger', 'Safety Officer', 'Inspector', 'Subcontractor', 'Supervisor', 'Other']\n3. hoursWorked: Calculate from startTime and endTime if provided. Use ONLY stated hours otherwise.\n4. startTime/endTime: Accept only times explicitly mentioned in transcript\n5. Do NOT invent personnel or hours - mark [UNCONFIRMED] if unclear\n6. company: Validate against approved subcontractor list if provided\n7. For missing data, leave null - do not assume or estimate",
+              "userPrompt": "PROJECT TEAM ROSTER (validate names against this):\n{recordContext.summary.team_roster}\n\nAPPROVED SUBCONTRACTORS:\n{recordContext.summary.approved_subcontractors}\n\nTRANSCRIPT PERSONNEL DATA:\n{promptContext}\n\nEXTRACT PERSONNEL:\nFor each person mentioned, provide:\n- name (string): [UNCONFIRMED] if not on roster\n- role (enum): Crew Lead|Laborer|Ironworker|Rigger|Safety Officer|Inspector|Subcontractor|Supervisor|Other\n- company (string): [VALIDATE] if not approved subcontractor\n- hoursWorked (number): Calculated or stated hours only\n- startTime/endTime (time): Only if explicitly stated\n\nReturn JSON array only. Do not invent personnel data. Mark uncertainties clearly."
+            }
+          },
+          "equipmentPopulate": {
+            "modelConfig": {
+              "model": "gpt-4o-mini",
+              "maxCompletionTokens": 800,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "You are extracting equipment usage from field observations. CRITICAL RULES:\n1. equipmentType: Must match one of: ['Forklift', 'Crane', 'Boom Lift', 'Scissor Lift', 'Material Hoist', 'Welding Equipment', 'Power Tools', 'Hand Tools', 'Safety Equipment', 'Vehicle', 'Other']\n2. hoursUsed: ONLY use explicitly stated hours or calculate from start/end times mentioned\n3. operator: Match against project personnel roster\n4. condition: ['Operational', 'Needs Maintenance', 'Out of Service', 'Returned to Yard']\n5. Do NOT invent equipment usage - only report what was explicitly mentioned\n6. For incomplete data, leave null",
+              "userPrompt": "EQUIPMENT INVENTORY:\n{recordContext.summary.equipment_list}\n\nFIELD OBSERVATIONS:\n{promptContext}\n\nEXTRACT EQUIPMENT USAGE:\nFor each equipment item mentioned:\n- equipmentType (enum): Forklift|Crane|Boom Lift|Scissor Lift|Material Hoist|Welding Equipment|Power Tools|Hand Tools|Safety Equipment|Vehicle|Other\n- equipmentId (string): Specific equipment identifier if mentioned\n- hoursUsed (number): Only if stated or calculable from times\n- operator (string): Person's name from roster\n- condition (enum): Operational|Needs Maintenance|Out of Service|Returned to Yard\n- fuelConsumed (number): Only if explicitly stated\n\nReturn JSON array only. Only report equipment explicitly mentioned. Do not assume usage."
+            }
+          },
+          "materialsPopulate": {
+            "modelConfig": {
+              "model": "gpt-4o-mini",
+              "maxCompletionTokens": 1200,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "You are tracking material consumption on a scaffolding project. STRICT VALIDATION:\n1. materialType: Must match one of: ['Frame/Standard', 'Ledger/Horizontal', 'Transom/Bearer', 'Brace/Diagonal', 'Plank/Deck Board', 'Base Plate/Jack', 'Coupler/Fitting', 'Guardrail', 'Toe Board', 'Tie/Anchor', 'Hardware/Fasteners', 'Safety Equipment', 'Other']\n2. quantity: ONLY use numbers explicitly stated in transcript. Do not calculate or estimate.\n3. unit: Must match one of: ['Each', 'Set', 'Linear Feet', 'Square Feet', 'Ton']\n4. source: ['On-Site Inventory', 'New Delivery', 'Returned from Job', 'Rental', 'Client Supplied']\n5. remainingStock: Only if explicitly mentioned during count\n6. For any estimated/unclear data, mark [ESTIMATE - VERIFY] in notes\n7. Do NOT invent consumption data - only report confirmed usage",
+              "userPrompt": "PROJECT MATERIALS PLAN:\n{recordContext.summary.materials_list}\n\nCURRENT INVENTORY:\n{recordContext.summary.current_inventory}\n\nFIELD NOTES:\n{promptContext}\n\nEXTRACT MATERIAL CONSUMPTION:\nFor each material type mentioned:\n- materialType (enum): Frame/Standard|Ledger/Horizontal|Transom/Bearer|Brace/Diagonal|Plank/Deck Board|Base Plate/Jack|Coupler/Fitting|Guardrail|Toe Board|Tie/Anchor|Hardware/Fasteners|Safety Equipment|Other\n- description (string): Size or specification\n- quantity (number): Only confirmed quantities\n- unit (enum): Each|Set|Linear Feet|Square Feet|Ton\n- source (enum): On-Site Inventory|New Delivery|Returned from Job|Rental|Client Supplied\n- remainingStock (number): Only if counted and confirmed\n- notes (string): Mark [ESTIMATE] if not confirmed\n\nReturn JSON array only. Do not assume or estimate quantities. Verify against materials plan."
+            }
+          },
+          "weatherPopulate": {
+            "modelConfig": {
+              "model": "gpt-4o-mini",
+              "maxCompletionTokens": 600,
+              "temperature": 0.05
+            },
+            "promptConfig": {
+              "systemPrompt": "You are recording daily weather conditions. VALIDATION RULES:\n1. temperature: Use ONLY stated values. Range: -50 to 150°F\n2. wind_speed: Use ONLY stated values. Range: 0-100 mph\n3. weather_conditions: Must match one of: ['clear', 'partly_cloudy', 'overcast', 'light_rain', 'heavy_rain', 'snow', 'high_winds', 'extreme_heat', 'extreme_cold']\n4. site_conditions: ['dry', 'damp', 'wet', 'frozen', 'snow_covered', 'other']\n5. visibility_conditions: ['excellent', 'good', 'fair', 'low', 'very_low']\n6. Do NOT estimate - only use observed/reported values\n7. If weather instrument readings not available, mark [OBSERVED - NOT MEASURED]",
+              "userPrompt": "OBSERVED WEATHER DATA:\n{promptContext}\n\nEXTRACT WEATHER CONDITIONS:\n- temperature (number): °F (stated value only)\n- wind_speed (number): mph (stated value only)\n- weather_conditions (enum): clear|partly_cloudy|overcast|light_rain|heavy_rain|snow|high_winds|extreme_heat|extreme_cold\n- site_conditions (enum): dry|damp|wet|frozen|snow_covered|other\n- visibility_conditions (enum): excellent|good|fair|low|very_low\n\nReturn JSON only. Mark [OBSERVED - NOT MEASURED] if values estimated. Do not invent weather data."
+            }
+          }
+        },
+        "recordDataPopulation": {
+          "enabled": true,
+          "urlParams": [
+            {
+              "name": "parentProjectId",
+              "queryParam": "parentProjectId",
+              "required": true,
+              "description": "Parent scaffolding project ID for context"
+            },
+            {
+              "name": "projectId",
+              "queryParam": "projectId",
+              "required": false,
+              "description": "Optional - daily log ID if editing existing"
+            }
+          ],
+          "request": {
+            "url": "/api/documents/{params.parentProjectId}",
+            "method": "GET",
+            "headers": {
+              "Accept": "application/json"
+            },
+            "description": "Fetch parent project blueprint containing scope, team, schedule, permits, and safety baseline"
+          },
+          "contextMapping": {
+            "summary": {
+              "project_name": "data.analysisData.project_name",
+              "project_code": "data.analysisData.project_code",
+              "project_type": "data.analysisData.project_type",
+              "status": "data.analysisData.project_status",
+              "site_name": "data.analysisData.site_name",
+              "site_address": "data.analysisData.site_address",
+              "team_roster": "data.analysisData.stakeholders",
+              "approved_subcontractors": "data.analysisData.approved_subcontractors",
+              "equipment_list": "data.analysisData.equipment_needs",
+              "materials_list": "data.analysisData.materialsList",
+              "current_inventory": "data.analysisData.current_materials",
+              "scheduleMilestones": "data.analysisData.scheduleMilestones",
+              "current_milestone": "data.analysisData.current_milestone",
+              "permit_requirements": "data.analysisData.permit_requirements",
+              "top_risks": "data.analysisData.top_risks",
+              "safety_requirements": "data.analysisData.safety_requirements",
+              "competent_person": "data.analysisData.hse_owner",
+              "work_description": "data.analysisData.work_description"
+            }
+          },
+          "disablePopulatedFields": true,
+          "inheritResponseId": true,
+          "responseIdConfig": {
+            "sourceField": "data.id",
+            "targetField": "analysisData.parentResponseId",
+            "description": "Inherit parent project response ID for audit trail and context linking"
+          },
+          "fallbackHandling": {
+            "onNotFound": "show_error",
+            "errorMessage": "Parent project not found. Please verify the parent project ID.",
+            "retryable": true
+          },
+          "caching": {
+            "enabled": true,
+            "ttl": 300,
+            "description": "Cache parent project data for 5 minutes to reduce API calls"
+          }
+        },
+        "validationRules": {
+          "log_date": {
+            "required": true,
+            "type": "date",
+            "message": "Log date is required",
+            "constraint": "must be today or past date, not future"
+          },
+          "crew_size": {
+            "required": true,
+            "type": "number",
+            "min": 1,
+            "max": 100,
+            "message": "Crew size must be between 1 and 100",
+            "constraint": "must match actual personnel logged in personnel_tracking grid"
+          },
+          "work_hours": {
+            "required": true,
+            "type": "number",
+            "min": 0,
+            "max": 24,
+            "message": "Work hours must be between 0 and 24",
+            "constraint": "should match sum of personnel hoursWorked values"
+          },
+          "milestone_progress": {
+            "required": true,
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "message": "Progress percentage must be between 0 and 100",
+            "constraint": "must be from transcript or calculated conservatively, not invented"
+          },
+          "temperature": {
+            "type": "number",
+            "min": -50,
+            "max": 150,
+            "message": "Temperature must be between -50F and 150F",
+            "constraint": "only accept observed/stated values, not estimates"
+          },
+          "wind_speed": {
+            "type": "number",
+            "min": 0,
+            "max": 100,
+            "message": "Wind speed must be between 0 and 100 mph",
+            "constraint": "only accept observed/stated values"
+          },
+          "deficiencies_found": {
+            "type": "number",
+            "min": 0,
+            "message": "Number of deficiencies cannot be negative",
+            "constraint": "must match inspection findings documentation"
+          },
+          "material_quantities": {
+            "constraint": "each material quantity must match transcript statement or be marked [ESTIMATE]",
+            "validation": "cross-reference against materials_list and inventory",
+            "message": "Material quantities must be confirmed from field documentation"
+          },
+          "personnel_names": {
+            "constraint": "personnel names should match project roster when possible",
+            "validation": "flag unknown personnel with [UNCONFIRMED]",
+            "message": "Personnel should be from approved project team roster"
+          },
+          "incident_data": {
+            "constraint": "all incident fields must be factual, not speculated",
+            "validation": "incidents should match project HSE report if available",
+            "message": "Incident data must be confirmed - mark [REQUIRES ESCALATION] if uncertain"
+          }
+        },
+        "domainConfig": {
+          "domain": "scaffolding",
+          "payloadType": "daily_log",
+          "defaultType": "regular",
+          "typeMap": {
+            "regular": "Regular Activity",
+            "milestone": "Milestone Completion",
+            "incident": "Incident Report",
+            "inspection": "Inspection Log",
+            "weather_delay": "Weather Delay"
+          },
+          "fields": {
+            "type": "log_type",
+            "name": "overall_summary",
+            "date": "log_date"
+          },
+          "outputKeys": {
+            "type": "logType",
+            "name": "summary",
+            "date": "logDate"
+          }
+        },
+        "identity": {
+          "recordType": "wizard",
+          "domain": "scaffolding",
+          "domainLabel": "Scaffolding",
+          "domainSubType": "daily_field_log_wizard",
+          "domainSubTypeLabel": "Daily Field Log Wizard"
+        },
+        "persistence": {
+          "create": {
+            "url": "/api/documents",
+            "method": "POST"
+          },
+          "update": {
+            "url": "/api/documents/{id}",
+            "method": "PUT"
+          },
+          "progress": {
+            "url": "/api/documents/{id}",
+            "method": "PATCH"
+          },
+          "successMessages": {
+            "create": "Daily field log saved successfully",
+            "update": "Daily field log updated",
+            "progress": "Progress auto-saved"
+          },
+          "recordIdPath": ["data.id", "data._id", "id", "_id"]
+        }
+      },
+      "position": 24
+    }
+  ]
+}

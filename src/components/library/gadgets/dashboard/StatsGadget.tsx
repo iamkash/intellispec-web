@@ -176,7 +176,7 @@ export class StatsGadget extends BaseGadget {
   renderBody(props: any): React.ReactNode {
     const config = props as StatsGadgetConfig;
     const data = props.data || [];
-console.log('StatsGadget renderBody - data:', data);
+    // console.log('StatsGadget renderBody - data:', data);
 
     // Ensure data is an array
     const statsData = Array.isArray(data) ? data : [];

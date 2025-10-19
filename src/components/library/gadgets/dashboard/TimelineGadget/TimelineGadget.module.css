@@ -1,0 +1,340 @@
+/**
+ * Shadcn-style CSS for Timeline Gadget
+ * All colors use CSS custom properties - fully themeable
+ */
+
+.timelineContainer {
+  padding: 0 16px 16px 16px;
+  background: hsl(var(--card));
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar styling */
+.timelineContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.timelineContainer::-webkit-scrollbar-track {
+  background: hsl(var(--muted) / 0.1);
+  border-radius: 3px;
+}
+
+.timelineContainer::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 3px;
+}
+
+.timelineContainer::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+.timelineHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 -16px 16px -16px;
+  padding: 12px 16px;
+  border-bottom: 1px solid hsl(var(--border));
+  position: sticky;
+  top: 0;
+  background: hsl(var(--card));
+  z-index: 100;
+  box-shadow: 0 2px 4px hsl(var(--foreground) / 0.05);
+}
+
+.timelineHeaderIcon svg {
+  font-size: 18px;
+  color: hsl(var(--primary));
+}
+
+.timelineHeaderContent {
+  flex: 1;
+}
+
+.timelineHeaderTitle {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  color: hsl(var(--card-foreground)) !important;
+}
+
+.timelineHeaderSubtitle {
+  font-size: 11px !important;
+  color: hsl(var(--muted-foreground)) !important;
+  margin-top: 2px;
+}
+
+.timelineList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+
+.timelineItem {
+  display: flex;
+  gap: 12px;
+  position: relative;
+}
+
+.timelineItem:last-child .timelineLine {
+  display: none;
+}
+
+.timelineDate {
+  width: 90px;
+  flex-shrink: 0;
+  text-align: right;
+  padding-right: 8px;
+  padding-top: 2px;
+}
+
+.timelineDateText {
+  font-size: 11px !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.timelineMarker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.timelineDot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid; /* Color set via inline style */
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.timelineIcon svg {
+  font-size: 12px;
+  transition: color 0.3s ease;
+}
+
+.timelineNumber {
+  font-size: 11px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.timelineLine {
+  width: 2px;
+  flex: 1;
+  margin-top: 4px;
+  min-height: 32px;
+  transition: background-color 0.3s ease;
+}
+
+.timelineContent {
+  flex: 1;
+  padding-bottom: 16px;
+  position: relative;
+  z-index: 0;
+}
+
+.timelineItemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.timelineTitle {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  color: hsl(var(--card-foreground)) !important;
+  line-height: 1.3 !important;
+  flex: 1;
+}
+
+.timelineBadges {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.timelineDuration {
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--muted-foreground)) !important;
+  border: none !important;
+}
+
+.timelineStatus {
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+}
+
+.timelineActionButton {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: hsl(var(--muted-foreground)) !important;
+  border-radius: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.timelineActionButton:hover {
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--card-foreground)) !important;
+}
+
+.timelineStatusGroup {
+  margin-bottom: 8px;
+}
+
+.timelineStatusSegmented {
+  font-size: 10px !important;
+}
+
+.timelineStatusSegmented :global(.ant-segmented-item) {
+  padding: 2px 8px !important;
+  min-height: 24px !important;
+}
+
+.timelineStatusSegmented :global(.ant-segmented-item-label) {
+  font-size: 10px !important;
+  line-height: 20px !important;
+}
+
+.timelineStatusTag {
+  font-size: 10px !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+}
+
+.timelineDescription {
+  font-size: 11px !important;
+  color: hsl(var(--muted-foreground)) !important;
+  display: block;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.timelineMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.timelineMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.timelineMetaLabel {
+  font-size: 11px !important;
+  color: hsl(var(--muted-foreground)) !important;
+  font-weight: 500;
+}
+
+.timelineMetaValue {
+  font-size: 11px !important;
+  color: hsl(var(--card-foreground)) !important;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timelineContainer {
+    padding: 0 12px 12px 12px;
+    max-height: 500px;
+  }
+
+  .timelineItem {
+    gap: 10px;
+  }
+
+  .timelineDate {
+    width: 70px;
+    font-size: 10px;
+  }
+
+  .timelineDot {
+    width: 24px;
+    height: 24px;
+  }
+
+  .timelineIcon svg {
+    font-size: 11px;
+  }
+
+  .timelineNumber {
+    font-size: 10px;
+  }
+
+  .timelineTitle {
+    font-size: 12px !important;
+  }
+
+  .timelineBadges {
+    gap: 4px;
+  }
+
+  .timelineDuration,
+  .timelineStatus {
+    font-size: 9px !important;
+    padding: 1px 4px !important;
+  }
+
+  .timelineStatusSegmented {
+    font-size: 9px !important;
+  }
+
+  .timelineStatusSegmented :global(.ant-segmented-item) {
+    padding: 1px 6px !important;
+    min-height: 20px !important;
+  }
+
+  .timelineStatusSegmented :global(.ant-segmented-item-label) {
+    font-size: 9px !important;
+    line-height: 18px !important;
+  }
+
+  .timelineStatusTag {
+    font-size: 9px !important;
+    padding: 1px 4px !important;
+  }
+
+  .timelineDescription {
+    font-size: 10px !important;
+  }
+
+  .timelineMeta {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .timelineContent {
+    padding-bottom: 12px;
+  }
+}
+

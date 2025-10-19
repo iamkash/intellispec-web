@@ -181,30 +181,31 @@ export function useDevWorkspaceValidation(config: unknown = null) {
     if (process.env.NODE_ENV === 'development' && validation.validationResult) {
       const { success, errors, warnings } = validation.validationResult;
 
-      console.group('🛡️ Workspace Validation');
+      // console.group('🛡️ Workspace Validation');
       
-      if (success) {
-} else {
-        console.error(`❌ ${errors.length} validation error(s):`);
-        errors.forEach((error, index) => {
-          console.error(`${index + 1}. ${error.path.join('.')}: ${error.message}`);
-          if (error.suggestion) {
-            console.info(`   💡 ${error.suggestion}`);
-          }
-        });
-      }
+      // if (success) {
+      //   console.log('✅ Valid workspace configuration');
+      // } else {
+      //   console.error(`❌ ${errors.length} validation error(s):`);
+      //   errors.forEach((error, index) => {
+      //     console.error(`${index + 1}. ${error.path.join('.')}: ${error.message}`);
+      //     if (error.suggestion) {
+      //       console.info(`   💡 ${error.suggestion}`);
+      //     }
+      //   });
+      // }
 
-      if (warnings.length > 0) {
-        console.warn(`⚠️ ${warnings.length} warning(s):`);
-        warnings.forEach((warning, index) => {
-          console.warn(`${index + 1}. ${warning.path.join('.')}: ${warning.message}`);
-          if (warning.suggestion) {
-            console.info(`   💡 ${warning.suggestion}`);
-          }
-        });
-      }
+      // if (warnings.length > 0) {
+      //   console.warn(`⚠️ ${warnings.length} warning(s):`);
+      //   warnings.forEach((warning, index) => {
+      //     console.warn(`${index + 1}. ${warning.path.join('.')}: ${warning.message}`);
+      //     if (warning.suggestion) {
+      //       console.info(`   💡 ${warning.suggestion}`);
+      //     }
+      //   });
+      // }
 
-      console.groupEnd();
+      // console.groupEnd();
     }
   }, [validation.validationResult]);
 

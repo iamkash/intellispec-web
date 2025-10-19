@@ -1,5 +1,6 @@
 import React from 'react';
 import type { AIAnalysisWizardData } from '../AIAnalysisWizardGadget.types';
+import { normalizeVisionPromptConfig } from '../utils/vision';
 
 // Lazy-load heavy widgets to reduce initial bundle size
 const VisionAnalysisWidget = React.lazy(() => import('../../../../widgets/input').then(m => ({ default: m.VisionAnalysisWidget })));
@@ -15,6 +16,7 @@ interface SectionImageAnalysisProps {
   gadget: any;
   triggerRerender: () => void;
   onUpdateResponseId?: (responseId?: string | null, patch?: Partial<AIAnalysisWizardData['analysisData']>) => void;
+  config?: any;
 }
 
 export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.memo(({
@@ -24,7 +26,8 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
   updateSectionData,
   gadget,
   triggerRerender,
-  onUpdateResponseId
+  onUpdateResponseId,
+  config
 }) => {
   const section = sections[sectionIndex];
   const sectionData = React.useMemo(() => (wizardData.sections || [])[sectionIndex] || {}, [wizardData.sections, sectionIndex]);
@@ -419,6 +422,16 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
     }
   })();
 
+  const resolvedPromptConfig = React.useMemo(() => {
+    const direct = (section as any)?.imageAnalysisPrompt;
+    if (direct) return direct;
+    const ref = (section as any)?.imageAnalysisPromptRef;
+    if (ref && config?.prompts && config.prompts[ref]) {
+      return normalizeVisionPromptConfig(config.prompts[ref]) || config.prompts[ref];
+    }
+    return undefined;
+  }, [section, config]);
+
   const analysisWidgetType = String((section as any)?.analysisWidget || 'vision');
   
   // Debug logging to help diagnose widget selection
@@ -578,12 +591,12 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
 
   return (
     <React.Suspense fallback={<div style={{ padding: 8, color: 'hsl(var(--muted-foreground))' }}>Loading analysis...</div>}>
-      {analysisWidgetType === 'simple'
+          {analysisWidgetType === 'simple'
         ? React.createElement(SimpleAnalysisWidget as any, {
             title: (section as any).imageAnalysisPrompt?.title || section.title || 'AI Analysis',
             images,
             text: combinedText,
-            promptConfig: (section as any).imageAnalysisPrompt as any,
+            promptConfig: resolvedPromptConfig as any,
             mockDataUrl: (section as any)?.mockDataUrl,
             initialResult: analysisData as any,
             initialSelection: analysisData?.selectedSuggestionIds || [],
@@ -596,7 +609,7 @@ export const SectionImageAnalysis: React.FC<SectionImageAnalysisProps> = React.m
           title={(section as any).imageAnalysisPrompt?.title || section.title || 'AI Vision Analysis'}
           images={images}
           text={combinedText}
-          promptConfig={(section as any).imageAnalysisPrompt as any}
+          promptConfig={resolvedPromptConfig as any}
           initialResult={analysisData as any}
           initialSelection={analysisData?.selectedSuggestionIds || []}
           compactDefault={false}

@@ -29,7 +29,7 @@ export interface ComponentSchema {
   type: string;
   properties?: Record<string, ComponentSchema>;
   required?: string[];
-  additionalProperties?: boolean;
+  additionalProperties?: boolean | ComponentSchema;
   items?: ComponentSchema; // For array types
   enum?: any[]; // For enum types
   minimum?: number;

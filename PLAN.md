@@ -23,10 +23,24 @@ The platform navigation refactor and safety portfolio uplift are now converged u
 - [x] Add audit entry once `PATCH /api/documents/:id` is live for progress saves.
 - **Risks:** Metadata gaps may surface late, blocking runtime; existing safety wizards could regress if new contracts are misaligned.
 
+### Current Task — Scaffolding Projects Mega Menu
+- **Goal:** Publish a mega menu experience so scaffolding coordinators can browse curated project playbooks directly from the IntelliSCAFF projects workspace.
+- **Context:** The projects dashboard only surfaced quick links; stakeholders requested parity with calculator dashboards so project templates and active programs are discoverable without bespoke navigation.
+- **Milestones:**
+  - [x] Curate mega menu dataset with representative scaffolding project scenarios and navigation targets.
+  - [x] Wire the mega menu gadget into `intelliSCAFF/projects` with search, tagging, filtering, authenticated data sourcing, and metadata-driven field mapping.
+  - [ ] Validate menu metadata against runtime expectations (icon coverage, workspace navigation) once UI smoke-tested.
+- **Progress:**
+  - [x] Integrated the mega menu with `/api/documents?type=scaffolding_project`, mapping summaries to navigation entries with record-aware params.
+  - [x] Introduced metadata-driven item mapping so gadget logic stays generic (key/label/icon/category/tags configured in JSON).
+  - [x] Removed temporary mock data source now that live document feed powers the gadget.
+  - [ ] Pending UI validation to confirm gadget render and navigation flows.
+- **Risks:** Document summaries may be inconsistent across tenants; need to harden mapping once additional sample payloads are available (status labels, project types, client metadata).
+
 ## Programme Objectives
 
 1. **Unified Navigation Platform**  
-   Deploy a shared navigation provider, typed contracts, and validation tooling so menus, quick actions, and wizards behave consistently across modules.
+  Deploy a shared navigation provider, typed contracts, and validation tooling so menus, quick actions, and wizards behave consistently across modules.
 2. **Workspace Hygiene & Governance**  
    Enforce `module/workspace` conventions, automate validation, and keep module menus, quick actions, and metadata in lockstep.
 3. **Safety Command Excellence**  

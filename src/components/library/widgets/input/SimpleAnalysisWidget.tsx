@@ -129,8 +129,8 @@ text = firstHalf;
       message.warning('Analysis not configured');
       return;
     }
-    if ((images || []).length === 0) {
-      message.warning('Please add images first');
+    if ((images || []).length === 0 && !(text && text.trim().length > 0)) {
+      message.warning('Provide at least an image or voice/text context before running analysis.');
       return;
     }
     
@@ -530,4 +530,3 @@ setStreamingProgress(accumulatedText);
 };
 
 export default SimpleAnalysisWidget;
-

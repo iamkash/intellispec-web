@@ -1,0 +1,280 @@
+/**
+ * Custom Driver.js Theme
+ * Matches shadcn/ui design system with HSL theme colors
+ * Clean, minimal, professional - no emojis, uses icons
+ */
+
+/* Override Driver.js default styles */
+.driver-popover,
+.portfolio-tour-popover {
+  background: hsl(var(--card)) !important;
+  color: hsl(var(--card-foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  padding: 0 !important;
+  max-width: 380px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+}
+
+/* Popover header */
+.driver-popover-title {
+  background: transparent !important;
+  color: hsl(var(--foreground)) !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 20px 20px 12px 20px !important;
+  border-bottom: none !important;
+  border-radius: 8px 8px 0 0 !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Icon in title */
+.driver-popover-title .anticon,
+.driver-popover-title svg {
+  font-size: 18px !important;
+  color: hsl(var(--primary)) !important;
+  vertical-align: middle !important;
+}
+
+/* Popover description */
+.driver-popover-description {
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  padding: 0 20px 20px 20px !important;
+  margin: 0 !important;
+}
+
+/* Popover footer */
+.driver-popover-footer {
+  background: transparent !important;
+  border-top: 1px solid hsl(var(--border)) !important;
+  padding: 16px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-radius: 0 0 8px 8px !important;
+  gap: 12px !important;
+}
+
+/* Progress text */
+.driver-popover-progress-text {
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: uppercase !important;
+}
+
+/* Buttons - shadcn style */
+.driver-popover-btn {
+  background: hsl(var(--primary)) !important;
+  color: hsl(var(--primary-foreground)) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 10px 18px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  height: 36px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  white-space: nowrap !important;
+}
+
+.driver-popover-btn:hover:not(:disabled) {
+  background: hsl(var(--primary) / 0.9) !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+.driver-popover-btn:active:not(:disabled) {
+  transform: scale(0.98) !important;
+}
+
+/* Previous button - outline variant */
+.driver-popover-prev-btn {
+  background: transparent !important;
+  color: hsl(var(--foreground)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+}
+
+.driver-popover-prev-btn:hover:not(:disabled) {
+  background: hsl(var(--muted)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Close button */
+.driver-popover-close-btn {
+  color: hsl(var(--muted-foreground)) !important;
+  background: transparent !important;
+  border: none !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  transition: all 0.2s ease !important;
+}
+
+.driver-popover-close-btn:hover {
+  background: hsl(var(--muted)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Overlay - subtle, no blur to keep elements visible */
+.driver-overlay {
+  background: hsl(var(--background) / 0.4) !important;
+  backdrop-filter: none !important;
+  animation: driverOverlayFadeIn 0.3s ease !important;
+}
+
+@keyframes driverOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Highlighted element - clear visibility with ring */
+.driver-highlighted-element {
+  box-shadow: 0 0 0 2px hsl(var(--background)),
+    0 0 0 4px hsl(var(--ring)) !important;
+  border-radius: 8px !important;
+  outline: none !important;
+  background: hsl(var(--background)) !important;
+  position: relative !important;
+  z-index: 10000 !important;
+}
+
+/* Make sure highlighted element content is visible */
+.driver-highlighted-element * {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+/* Popover arrow - cleaner without */
+.driver-popover-arrow {
+  display: none !important;
+}
+
+/* Navigation button group */
+.driver-popover-navigation-btns {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+/* Responsive - Mobile First */
+@media (max-width: 640px) {
+  .driver-popover,
+  .portfolio-tour-popover {
+    max-width: calc(100vw - 32px) !important;
+    margin: 16px !important;
+  }
+
+  .driver-popover-title {
+    font-size: 15px !important;
+    padding: 16px 16px 10px 16px !important;
+  }
+
+  .driver-popover-description {
+    font-size: 13px !important;
+    padding: 0 16px 16px 16px !important;
+  }
+
+  .driver-popover-footer {
+    padding: 12px 16px !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .driver-popover-navigation-btns {
+    width: 100% !important;
+    flex-direction: row !important;
+  }
+
+  .driver-popover-btn {
+    flex: 1 !important;
+    height: 40px !important;
+  }
+
+  .driver-popover-progress-text {
+    order: -1 !important;
+    width: 100% !important;
+    text-align: center !important;
+    margin-bottom: 4px !important;
+  }
+
+  .driver-popover-close-btn {
+    top: 12px !important;
+    right: 12px !important;
+  }
+}
+
+/* Smooth fade-in animation */
+@keyframes driverPopoverFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.driver-popover,
+.portfolio-tour-popover {
+  animation: driverPopoverFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Focus states for accessibility - shadcn ring style */
+.driver-popover-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring)) !important;
+  outline-offset: 2px !important;
+}
+
+.driver-popover-close-btn:focus-visible {
+  outline: 2px solid hsl(var(--ring)) !important;
+  outline-offset: 2px !important;
+  border-radius: 6px !important;
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  .driver-popover,
+  .portfolio-tour-popover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3),
+      0 4px 6px -2px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .driver-overlay {
+    background: hsl(var(--background) / 0.5) !important;
+  }
+
+  /* Ensure highlighted element is visible in dark mode */
+  .driver-highlighted-element {
+    box-shadow: 0 0 0 2px hsl(var(--background)),
+      0 0 0 4px hsl(var(--ring)),
+      0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
+/* Smooth transitions on all interactive elements */
+.driver-popover * {
+  transition: all 0.15s ease !important;
+}
+

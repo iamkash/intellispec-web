@@ -32,12 +32,107 @@
           {
             "key": "new-project",
             "label": "New Project",
-            "description": "Start planning a new scaffolding project",
+            "description": "Launch the IntelliSCAFF project creation wizard",
             "icon": "PlusOutlined",
             "type": "primary",
-            "workspace": "construction/scaffolding-project-plan-wizard"
+            "workspace": "intelliSCAFF/project-wizard"
           }
         ]
+      }
+    },
+    {
+      "id": "projects-portfolio-gadget",
+      "type": "project-portfolio-gadget",
+      "title": "Scaffolding Project Portfolio",
+      "description": "Browse, filter, and launch scaffolding project workspaces.",
+      "position": 48,
+      "size": 24,
+      "config": {
+        "header": {
+          "title": "Scaffolding Projects",
+          "subtitle": "Browse and manage your scaffolding project portfolio",
+          "icon": "ProjectOutlined",
+          "showCount": true
+        },
+        "toolbar": {
+          "enableSearch": true,
+          "searchPlaceholder": "Search projects...",
+          "enableSort": true,
+          "sortPlaceholder": "Sort by...",
+          "enableGroupBy": true,
+          "groupByPlaceholder": "Group by...",
+          "enableFavoritesFilter": true
+        },
+        "navigation": {
+          "workspace": "intelliSCAFF/project-details",
+          "paramName": "id",
+          "idPath": "id",
+          "additionalParams": [
+            {
+              "name": "projectName",
+              "path": "summary.project_name"
+            }
+          ]
+        },
+        "features": {
+          "enableFavorites": true,
+          "enableRecents": true,
+          "maxRecents": 10,
+          "persistKey": "intelliSCAFF-projects"
+        },
+        "viewModes": {
+          "enabled": ["grid", "list", "table", "kanban"],
+          "default": "grid",
+          "enableToggle": true,
+          "kanbanConfig": {
+            "statusField": "summary.project_status",
+            "columnOrder": ["requested", "planned", "design", "approved", "in_progress", "inspection", "in_service", "closed"]
+          }
+        },
+        "cardDisplay": {
+          "title": "summary.project_name",
+          "titleIcon": "ProjectOutlined",
+          "subtitle": "summary.project_code",
+          "tags": [
+            "summary.project_type",
+            "summary.project_status",
+            "summary.project_priority"
+          ],
+          "list": [
+            {
+              "label": "Scaffold Type",
+              "path": "summary.scaffold_type",
+              "icon": "BuildOutlined"
+            },
+            {
+              "label": "Client",
+              "path": "summary.client_name",
+              "icon": "UserOutlined"
+            },
+            {
+              "label": "Site",
+              "path": "summary.site_name",
+              "icon": "EnvironmentOutlined"
+            },
+            {
+              "label": "Requested",
+              "path": "summary.requested_date",
+              "icon": "CalendarOutlined"
+            },
+            {
+              "label": "Required By",
+              "path": "summary.required_by",
+              "icon": "ClockCircleOutlined"
+            },
+            {
+              "label": "Manager",
+              "path": "summary.project_manager",
+              "icon": "TeamOutlined"
+            }
+          ]
+        },
+        "dataUrl": "/api/documents?type=wizard&fields=id,summary.project_name,summary.projectName,summary.project_code,summary.project_type,summary.project_stage,summary.status,summary.project_status,summary.priority,summary.project_priority,summary.client_name,summary.project_manager,summary.project_value,summary.project_scope,summary.description,summary.scaffold_type,summary.site_name,summary.requested_date,summary.required_by,last_updated&limit=50&sort=-last_updated&domain=scaffolding&domainSubType=project_creation_wizard",
+        "dataPath": "data"
       }
     }
   ],
@@ -48,6 +143,13 @@
       "enableHoverEffects": true,
       "autoRefresh": false,
       "groupByCategory": false
+    },
+    "projects-portfolio-gadget": {
+      "defaultView": "grid",
+      "showDescriptions": true,
+      "enableHoverEffects": true,
+      "autoRefresh": false,
+      "groupByCategory": true
     }
   }
 }

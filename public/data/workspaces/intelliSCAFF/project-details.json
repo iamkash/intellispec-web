@@ -1,0 +1,334 @@
+{
+  "id": "intelliSCAFF/project-details",
+  "type": "dashboard",
+  "title": "Project Details",
+  "description": "Detailed workspace for reviewing scaffolding project metadata and follow-up actions.",
+  "icon": "ProfileOutlined",
+  "layout": "dashboard",
+  "gadgets": [
+    {
+      "id": "project-details-quicklinks",
+      "type": "action-panel-gadget",
+      "title": "Quick Links",
+      "description": "Navigate between project workspaces and create daily logs in a single click.",
+      "position": 24,
+      "config": {
+        "layout": "horizontal",
+        "maxItems": 6,
+        "showIcons": true,
+        "showLabels": true,
+        "cardSize": "medium",
+        "spacing": "even",
+        "actions": [
+          {
+            "key": "home",
+            "label": "Home",
+            "description": "Return to IntelliSCAFF home dashboard",
+            "icon": "HomeOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/home"
+          },
+          {
+            "key": "projects",
+            "label": "Projects",
+            "description": "Open the projects portfolio",
+            "icon": "AppstoreOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/projects"
+          },
+          {
+            "key": "new-project",
+            "label": "New Project",
+            "description": "Launch the scaffolding project wizard",
+            "icon": "PlusOutlined",
+            "type": "primary",
+            "workspace": "intelliSCAFF/project-wizard",
+            "params": {
+              "mode": "create"
+            }
+          },
+          {
+            "key": "edit-project",
+            "label": "Edit Project",
+            "description": "Open the project wizard in edit mode",
+            "icon": "EditOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/project-wizard",
+            "params": {
+              "mode": "continue",
+              "documentId": "{id}",
+              "id": "{id}"
+            }
+          },
+          {
+            "key": "daily-log-regular",
+            "label": "Daily Activity",
+            "description": "Log regular work activities and progress",
+            "icon": "FileTextOutlined",
+            "type": "primary",
+            "workspace": "intelliSCAFF/daily-field-log-regular-activity",
+            "params": {
+              "parentProjectId": "{id}",
+              "logType": "regular"
+            }
+          },
+          {
+            "key": "daily-log-milestone",
+            "label": "Milestone",
+            "description": "Document milestone completions and achievements",
+            "icon": "CheckCircleOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/daily-field-log-milestone",
+            "params": {
+              "parentProjectId": "{id}",
+              "logType": "milestone"
+            }
+          },
+          {
+            "key": "daily-log-incident",
+            "label": "Incident",
+            "description": "Report safety incidents and issues immediately",
+            "icon": "AlertOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/daily-field-log-incident",
+            "params": {
+              "parentProjectId": "{id}",
+              "logType": "incident"
+            }
+          },
+          {
+            "key": "daily-log-inspection",
+            "label": "Inspection",
+            "description": "Document inspections and findings",
+            "icon": "AuditOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/daily-field-log-inspection",
+            "params": {
+              "parentProjectId": "{id}",
+              "logType": "inspection"
+            }
+          },
+          {
+            "key": "daily-log-weather",
+            "label": "Weather Delay",
+            "description": "Document weather-related work stoppages",
+            "icon": "CloudOutlined",
+            "type": "default",
+            "workspace": "intelliSCAFF/daily-field-log-weather",
+            "params": {
+              "parentProjectId": "{id}",
+              "logType": "weather_delay"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "project-details-cards",
+      "type": "detail-cards-gadget",
+      "title": "Project Details",
+      "description": "Key project information displayed in card format.",
+      "position": 24,
+      "size": 24,
+      "config": {
+        "dataUrl": "/api/documents/{id}?type=wizard&domain=scaffolding&domainSubType=project_creation_wizard",
+        "dataPath": "data",
+        "cardsPerRow": 4,
+        "cardMinWidth": "240px",
+        "spacing": 12,
+        "cards": [
+          {
+            "id": "project-identity",
+            "title": "Project Identity",
+            "icon": "ProjectOutlined",
+            "fields": [
+              {
+                "label": "Project Name",
+                "path": "summary.project_name",
+                "icon": "FileTextOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Project Code",
+                "path": "summary.project_code",
+                "icon": "NumberOutlined",
+                "format": "text",
+                "fallback": "Auto-generated"
+              },
+              {
+                "label": "Project Type",
+                "path": "summary.project_type",
+                "icon": "DeploymentUnitOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Scaffold Type",
+                "path": "summary.scaffold_type",
+                "icon": "BuildOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Status",
+                "path": "summary.project_status",
+                "icon": "FlagOutlined",
+                "format": "text"
+              }
+            ]
+          },
+          {
+            "id": "company-site",
+            "title": "Company & Site",
+            "icon": "EnvironmentOutlined",
+            "fields": [
+              {
+                "label": "Client",
+                "path": "summary.client_company",
+                "icon": "BankOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Site Name",
+                "path": "summary.site_name",
+                "icon": "EnvironmentOutlined",
+                "format": "text"
+              },
+              {
+                "label": "City",
+                "path": "summary.site_city",
+                "icon": "EnvironmentOutlined",
+                "format": "text"
+              },
+              {
+                "label": "State",
+                "path": "summary.site_state",
+                "icon": "EnvironmentOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Address",
+                "path": "summary.site_address",
+                "icon": "HomeOutlined",
+                "format": "text"
+              }
+            ]
+          },
+          {
+            "id": "project-team",
+            "title": "Project Team",
+            "icon": "TeamOutlined",
+            "fields": [
+              {
+                "label": "Project Lead",
+                "path": "summary.project_manager",
+                "icon": "UserOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Site Supervisor",
+                "path": "summary.site_supervisor",
+                "icon": "SafetyOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Client Contact",
+                "path": "summary.client_contact_name",
+                "icon": "UserOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Contact Phone",
+                "path": "summary.client_contact_phone",
+                "icon": "PhoneOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Emergency",
+                "path": "summary.emergency_contact",
+                "icon": "PhoneOutlined",
+                "format": "text"
+              }
+            ]
+          },
+          {
+            "id": "structure-dimensions",
+            "title": "Structure & Dimensions",
+            "icon": "BuildOutlined",
+            "fields": [
+              {
+                "label": "Structure Type",
+                "path": "summary.structure_type",
+                "icon": "ApartmentOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Max Height (ft)",
+                "path": "summary.estimated_height",
+                "icon": "ArrowUpOutlined",
+                "format": "number"
+              },
+              {
+                "label": "Working Levels",
+                "path": "summary.working_levels",
+                "icon": "BuildOutlined",
+                "format": "number"
+              },
+              {
+                "label": "Load Class",
+                "path": "summary.load_class",
+                "icon": "DashboardOutlined",
+                "format": "text"
+              },
+              {
+                "label": "Priority",
+                "path": "summary.project_priority",
+                "icon": "FireOutlined",
+                "format": "text"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "project-schedule",
+      "type": "timeline-gadget",
+      "title": "Project Schedule",
+      "description": "Project milestones and timeline",
+      "position": 12,
+      "size": 24,
+      "config": {
+        "dataUrl": "/api/documents/{id}?type=wizard&domain=scaffolding&domainSubType=project_creation_wizard",
+        "dataPath": "data",
+        "itemsPath": "summary.scheduleMilestones",
+        "title": "Project Milestones",
+        "subtitle": "Key phases and schedule dependencies",
+        "icon": "CalendarOutlined",
+        "itemConfig": {
+          "titlePath": "milestone",
+          "descriptionPath": "description",
+          "datePath": "startDate",
+          "statusPath": "status",
+          "durationPath": "durationDays",
+          "dependenciesPath": "dependencies"
+        },
+        "statusColors": {
+          "Not Started": "gray",
+          "In Progress": "blue",
+          "Complete": "green",
+          "Delayed": "red"
+        },
+        "showDates": true,
+        "showDuration": true,
+        "showDependencies": false,
+        "showStatus": true,
+        "usePatchApi": false,
+        "debounceMs": 300
+      }
+    }
+  ],
+  "settings": {
+    "autoRefresh": false,
+    "theme": "light",
+    "density": "comfortable"
+  }
+}
