@@ -22,7 +22,6 @@
  */
 
 const mongoose = require('mongoose');
-const { MongoClient } = require('mongodb');
 const { logger } = require('./Logger');
 
 class DatabaseManager {
@@ -206,17 +205,11 @@ class DatabaseManager {
     
     await mongoose.connect(this.config.uri, mongooseOptions);
     
-    // Create native client for advanced operations (change streams, etc.)
-    this.nativeClient = new MongoClient(this.config.uri, {
-      minPoolSize: this.config.poolSize.min,
-      maxPoolSize: this.config.poolSize.max,
-      connectTimeoutMS: this.config.timeouts.connect,
-      serverSelectionTimeoutMS: this.config.timeouts.serverSelection
-    });
+    // Use Mongoose's underlying native client instead of creating a separate connection pool
+    // This avoids doubling the connection count
+    this.nativeClient = mongoose.connection.getClient();
     
-    await this.nativeClient.connect();
-    
-    logger.info('Native MongoDB client connected');
+    logger.info('Using Mongoose native client (no duplicate connection pool)');
   }
   
   /**
@@ -514,10 +507,8 @@ class DatabaseManager {
         logger.info('Mongoose connection closed');
       }
       
-      if (this.nativeClient) {
-        await this.nativeClient.close();
-        logger.info('Native MongoDB client closed');
-      }
+      // Native client is just a reference to Mongoose's client, no need to close separately
+      this.nativeClient = null;
       
       this.isConnected = false;
       this.metrics.totalDisconnections++;
