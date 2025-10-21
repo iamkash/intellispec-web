@@ -285,17 +285,16 @@ class DatabaseManager {
     
     try {
       await this.sleep(this.config.reconnect.reconnectInterval);
-      await this.establishConnection();
       
-      logger.info('Reconnection successful', {
+      // CRITICAL FIX: Don't call establishConnection() as it creates a NEW connection
+      // Instead, mongoose will auto-reconnect with the existing connection pool
+      // Just wait for the 'reconnected' event
+      logger.info('Waiting for mongoose auto-reconnect...', {
         attempt: this.reconnectionAttempts
       });
       
-      this.reconnectionAttempts = 0;
-      this.isConnected = true;
-      
     } catch (error) {
-      logger.error('Reconnection failed', {
+      logger.error('Reconnection attempt failed', {
         attempt: this.reconnectionAttempts,
         error: error.message
       });
