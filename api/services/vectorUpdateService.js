@@ -417,7 +417,7 @@ class VectorUpdateService extends EventEmitter {
     });
     
     changeStream.on('error', (error) => {
-      logger.error(`❌ Change stream error for ${collectionName}:`, error);
+      logger.error(`❌ Change stream error for ${collectionName}:`, error.message);
       this.metrics.errors++;
       
       // Handle specific MongoDB document size errors
@@ -427,9 +427,20 @@ class VectorUpdateService extends EventEmitter {
         return;
       }
       
-      this.emit('error', { collection: collectionName, error });
+      // Handle network/timeout errors gracefully
+      const isNetworkError = error.name === 'MongoServerSelectionError' || 
+                            error.name === 'MongoNetworkError' ||
+                            error.message?.includes('timed out') ||
+                            error.message?.includes('ECONNREFUSED') ||
+                            error.message?.includes('ETIMEDOUT');
       
-      // Restart change stream after delay for other errors
+      if (isNetworkError) {
+        logger.warn(`⚠️ Network error for change stream ${collectionName}. Will retry after ${this.config.processing.retryDelay}ms...`);
+      } else {
+        this.emit('error', { collection: collectionName, error });
+      }
+      
+      // Restart change stream after delay for all errors (except document size)
       setTimeout(() => {
         logger.info(`🔄 Restarting change stream for ${collectionName}...`);
         this.changeStreams.delete(collectionName);
