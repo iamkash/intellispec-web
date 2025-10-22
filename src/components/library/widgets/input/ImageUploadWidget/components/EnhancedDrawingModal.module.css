@@ -1,0 +1,85 @@
+/**
+ * EnhancedDrawingModal styles
+ */
+
+.drawingModal {
+  max-width: 95vw;
+}
+
+.drawingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.toolbar {
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.activeToolButton {
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.3);
+}
+
+.colorPalette {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.colorSwatch {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #d9d9d9;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.colorSwatch:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.colorSwatchActive {
+  border: 3px solid #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  transform: scale(1.15);
+}
+
+.canvasContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fafafa;
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 400px;
+  overflow: auto;
+}
+
+.drawingCanvas {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  max-height: 70vh;
+  background: white;
+}
+
+.instructions {
+  text-align: center;
+  padding: 8px 16px;
+  background: #e6f7ff;
+  border-radius: 4px;
+  border: 1px solid #91d5ff;
+}
+
+.instructions span {
+  font-size: 13px;
+}
+

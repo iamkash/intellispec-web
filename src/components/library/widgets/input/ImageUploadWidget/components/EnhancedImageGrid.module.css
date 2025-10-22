@@ -1,0 +1,77 @@
+/**
+ * EnhancedImageGrid styles
+ */
+
+.gridContainer {
+  margin-top: 16px;
+}
+
+.toolbar {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.toolbarSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.imageCount {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.selectedCount {
+  font-size: 13px;
+  color: #1890ff;
+  font-weight: 500;
+}
+
+.dragItem {
+  cursor: move;
+  transition: all 0.2s ease;
+}
+
+.dragItem:active {
+  cursor: grabbing;
+}
+
+.dragItemDragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.dragItemOver {
+  transform: scale(1.05);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 48px 24px;
+  color: #999;
+}
+
+.emptyStateIcon {
+  font-size: 48px;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+
+.emptyStateText {
+  font-size: 14px;
+  color: #666;
+}
+

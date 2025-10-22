@@ -3,13 +3,13 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useOpenAI } from "../../../../../../hooks/useOpenAI";
 import { getOpenAIConfig } from "../../../../../../utils/config";
 import type {
-  AIAnalysisWizardConfig,
-  AIAnalysisWizardData,
+    AIAnalysisWizardConfig,
+    AIAnalysisWizardData,
 } from "../AIAnalysisWizardGadget.types";
 import { getIconForSection } from "../utils/iconUtils";
 import { FormSection } from "./FormSection";
 import { GridSection } from "./GridSection";
-import { ImageSectionClean } from "./ImageSectionClean";
+import { ImageSection } from "./ImageSection";
 import { SectionImageAnalysis } from "./SectionImageAnalysis";
 import { VoiceSection } from "./VoiceSection";
 
@@ -494,9 +494,9 @@ export const SectionStep: React.FC<SectionStepProps> = ({
             />
           )}
 
-          {/* Image Section - Clean GridFS Implementation */}
+          {/* Image Section - GridFS Implementation */}
           {section.sectionType === "image" && (
-            <ImageSectionClean
+            <ImageSection
               section={section}
               sectionIndex={sectionIndex}
               wizardData={wizardData}

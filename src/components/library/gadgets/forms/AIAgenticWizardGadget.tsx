@@ -51,8 +51,8 @@ registerWidget('realtime-voice-widget', () =>
   }))
 );
 registerWidget('image-upload-with-drawing-widget', () =>
-  import('../../widgets/input/ImageUploadWithDrawingWidget').then((m) => ({
-    default: m.ImageUploadWithDrawingWidget,
+  import('../../widgets/input/ImageUploadWidget').then((m) => ({
+    default: m.ImageUploadWidget,
   }))
 );
 registerWidget('vision-analysis-widget', () =>

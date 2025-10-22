@@ -73,7 +73,7 @@ import { EditableGridWidget } from '../widgets/input/EditableGridWidget';
 import { FormSectionWidget } from '../widgets/input/FormSectionWidget';
 import { FormStepWidget } from '../widgets/input/FormStepWidget';
 import { FormTabsWidget } from '../widgets/input/FormTabsWidget';
-import { ImageUploadWithDrawingWidget } from '../widgets/input/ImageUploadWithDrawingWidget';
+import { ImageUploadWidget } from '../widgets/input/ImageUploadWidget';
 import { InputFieldWidget } from '../widgets/input/InputFieldWidget';
 import { InputNumberWidget } from '../widgets/input/InputNumberWidget';
 import { InspectionFindingsWidget } from '../widgets/input/InspectionFindingsWidget';
@@ -173,9 +173,9 @@ export function initializeRegistries(): void {
   WidgetRegistry.register('voice-recorder', VoiceRecorderWidget);
   WidgetRegistry.register('realtime-voice-widget', RealtimeVoiceWidget);
 WidgetRegistry.register('voice-recorder-widget', VoiceRecorderWidget);
-WidgetRegistry.register('image-upload-drawing', ImageUploadWithDrawingWidget);
-  // Alias with full name used in calculators
-  WidgetRegistry.register('image-upload-with-drawing', ImageUploadWithDrawingWidget);
+// Unified image upload widget (backwards compatible)
+  WidgetRegistry.register('image-upload-drawing', ImageUploadWidget);
+  WidgetRegistry.register('image-upload-with-drawing', ImageUploadWidget);
   WidgetRegistry.register('vision-analysis', VisionAnalysisWidget);
   WidgetRegistry.register('ai-analysis', AIAnalysisWidget);
   WidgetRegistry.register('pdf-generator', PDFGeneratorWidget);

@@ -5,7 +5,7 @@ import type { AIAnalysisWizardConfig, AIAnalysisWizardData } from '../AIAnalysis
 
 // Lazy-load heavy widgets to reduce initial bundle size
 const VoiceRecorderWidget = React.lazy(() => import('../../../../widgets/input').then(m => ({ default: m.VoiceRecorderWidget })));
-const ImageUploadWithDrawingWidget = React.lazy(() => import('../../../../widgets/input').then(m => ({ default: m.ImageUploadWithDrawingWidget })));
+const ImageUploadWidget = React.lazy(() => import('../../../../widgets/input').then(m => ({ default: m.ImageUploadWidget })));
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -89,8 +89,9 @@ export const InputStep: React.FC<InputStepProps> = ({
         {config.steps.input?.images?.enabled && (
           <Card className="glass-subcard" title={<span style={{ color: 'hsl(var(--foreground))' }}>Image Upload</span>} size="small">
             <React.Suspense fallback={null}>
-              <ImageUploadWithDrawingWidget 
+              <ImageUploadWidget 
                 id="image-upload" 
+                clientOnly={true}
                 maxCount={config.steps.input?.images?.maxCount as number} 
                 maxSize={config.steps.input?.images?.maxSize as number} 
                 drawingEnabled={Boolean(config.steps.input?.images?.drawingEnabled)} 

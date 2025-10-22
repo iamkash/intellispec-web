@@ -1,0 +1,207 @@
+/**
+ * EnhancedImageCard styles
+ */
+
+.imageCard {
+  height: 100%;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.imageCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.imageCardSelected {
+  border: 2px solid #1890ff;
+  box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
+}
+
+.imagePreviewContainer {
+  position: relative;
+  overflow: hidden;
+  background: #f5f5f5;
+  cursor: zoom-in;
+  width: 100%;
+  aspect-ratio: 4 / 3; /* Responsive 4:3 ratio */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagePreviewContainer:hover .imageOverlay {
+  opacity: 1;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.imageOverlayText {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.imageElement {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.selectionCheckbox {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px 6px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.progressContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cardTitleText {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardDescription {
+  width: 100%;
+}
+
+.captionContainer {
+  margin-bottom: 8px;
+}
+
+.captionInput {
+  font-size: 12px !important;
+  min-height: 60px !important;
+}
+
+.captionText {
+  margin: 0;
+  font-size: 12px;
+  cursor: pointer;
+  min-height: 40px;
+  padding: 4px 0;
+}
+
+.captionText:hover {
+  background: #f5f5f5;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.captionPlaceholder {
+  font-style: italic;
+  color: #999;
+  font-size: 11px;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.tag {
+  font-size: 10px;
+  margin: 0;
+  padding: 2px 6px;
+}
+
+.statusTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.statusTag {
+  font-size: 10px;
+  margin: 0;
+  padding: 1px 6px;
+  line-height: 18px;
+}
+
+.metadataInfo {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.metadataTitle {
+  font-weight: 600;
+  font-size: 11px;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.metadataRow {
+  margin-top: 4px;
+  padding: 2px 0;
+  color: #666;
+}
+
+.errorText {
+  font-size: 11px;
+  color: #ff4d4f;
+  margin-top: 4px;
+}
+
+.actionIcon {
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.actionIcon:hover {
+  transform: scale(1.2);
+}
+
+.deleteIcon {
+  color: #ff4d4f;
+}
+
+.deleteIcon:hover {
+  color: #ff7875;
+}
+

@@ -1,3 +1,5 @@
+import type { ImageData } from '../../../widgets/input/ImageUploadWidget';
+
 export interface DomainTypeOption {
   label: string;
   value: string;
@@ -55,7 +57,7 @@ export interface AIAnalysisWizardData {
     imagesCollapsed?: boolean;
     voiceData?: { audioUrl?: string; transcription?: string; confidence?: number };
     textData?: string;
-    images?: Array<{ uid: string; url: string; name: string; drawingData?: string; description?: string }>;
+    images?: ImageData[];
     imageAnalysis?: {
       overview?: string;
       suggestions?: Array<{
@@ -82,7 +84,7 @@ export interface AIAnalysisWizardData {
   }>;
   voiceData?: { audioUrl?: string; transcription?: string; confidence?: number };
   textData?: string;
-  imageData?: Array<{ uid: string; url: string; name: string; drawingData?: string }>;
+  imageData?: ImageData[];
   analysisData?: { analysisResults?: any[]; formData?: Record<string, any>; markdownReport?: string; previousResponseId?: string };
 }
 

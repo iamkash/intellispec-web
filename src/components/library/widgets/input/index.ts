@@ -126,14 +126,13 @@ export type { VoiceRecorderWidgetProps } from './VoiceRecorderWidget';
 export { RealtimeVoiceWidget } from './RealtimeVoiceWidget';
 export type { RealtimeVoiceWidgetProps } from './RealtimeVoiceWidget';
 
-export { ImageUploadWithDrawingWidget } from './ImageUploadWithDrawingWidget';
-export type { ImageUploadWithDrawingWidgetProps, ImageWithDrawing } from './ImageUploadWithDrawingWidget';
+// New unified image upload widget
+export { ImageUploadWidget } from './ImageUploadWidget';
+export type { DrawingTool, ImageData, ImageMetadata, ImageUploadWidgetProps } from './ImageUploadWidget';
 
-export { ImageUploadWithGridFS } from './ImageUploadWithGridFS';
-export type { GridFSImage, ImageUploadWithGridFSProps } from './ImageUploadWithGridFS';
-
-export { ImageUploadWithDrawingGridFS } from './ImageUploadWithDrawingGridFS';
-export type { GridFSImageWithDrawing, ImageUploadWithDrawingGridFSProps } from './ImageUploadWithDrawingGridFS';
+// Backwards compatibility exports (deprecated - use ImageUploadWidget instead)
+export { ImageUploadWidget as ImageUploadWithDrawingGridFS, ImageUploadWidget as ImageUploadWithDrawingWidget, ImageUploadWidget as ImageUploadWithGridFS } from './ImageUploadWidget';
+export type { ImageData as GridFSImage, ImageData as GridFSImageWithDrawing, ImageUploadWidgetProps as ImageUploadWithDrawingGridFSProps, ImageUploadWidgetProps as ImageUploadWithDrawingWidgetProps, ImageUploadWidgetProps as ImageUploadWithGridFSProps, ImageData as ImageWithDrawing } from './ImageUploadWidget';
 
 export { AIAnalysisWidget } from './AIAnalysisWidget';
 export type { AIAnalysisWidgetProps } from './AIAnalysisWidget';
