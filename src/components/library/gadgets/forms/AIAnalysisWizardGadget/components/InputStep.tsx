@@ -27,9 +27,18 @@ export const InputStep: React.FC<InputStepProps> = ({
   const domainTypeValue = wizardData.domainType;
 
   return (
-    <Card className="glass-card wizard-card" title={<span style={{ color: 'hsl(var(--foreground))' }}>{config.steps.input?.title}</span>}>
-      <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Form.Item label={<span style={{ color: 'hsl(var(--foreground))' }}>{config.typeLabel || 'Record Type'}</span>} required>
+    <Card 
+      className="glass-card wizard-card" 
+      title={<span style={{ color: 'hsl(var(--foreground))' }}>{config.steps.input?.title}</span>}
+      style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+      bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '24px' }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%', gap: '16px' }}>
+        <Form.Item 
+          label={<span style={{ color: 'hsl(var(--foreground))' }}>{config.typeLabel || 'Record Type'}</span>} 
+          required 
+          style={{ marginBottom: 0, flexShrink: 0 }}
+        >
           <Select 
             placeholder={config.typePlaceholder || 'Choose an option'} 
             value={domainTypeValue} 
@@ -48,46 +57,54 @@ export const InputStep: React.FC<InputStepProps> = ({
           </Select>
         </Form.Item>
         
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 16]} style={{ flex: 1, minHeight: 0, alignItems: 'stretch' }}>
           {config.steps.input?.voice?.enabled && (
-            <Col xs={24} md={12}>
-              <Card className="glass-subcard" title={<span style={{ color: 'hsl(var(--foreground))' }}>Voice Recording</span>} size="small" style={{ height: '280px' }}>
-                <div style={{ height: '200px', overflow: 'auto', padding: 'var(--spacing-2)' }}>
-                  <VoiceRecorderWidget 
-                    id="voice-recorder" 
-                    maxDuration={config.steps.input?.voice?.maxDuration as number} 
-                    showVisualization={Boolean(config.steps.input?.voice?.showVisualization)} 
-                    openaiConfig={getOpenAIConfig()} 
-                    autoTranscribe={true} 
-                    value={wizardData.voiceData} 
-                    onChange={(value) => handleDataUpdate({ voiceData: value })} 
-                  />
-                </div>
+            <Col xs={24} md={12} style={{ display: 'flex' }}>
+              <Card 
+                className="glass-subcard" 
+                title={<span style={{ color: 'hsl(var(--foreground))' }}>Voice Recording</span>} 
+                size="small" 
+                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                bodyStyle={{ flex: 1, padding: 'var(--spacing-2)', overflow: 'auto', display: 'flex', flexDirection: 'column' }}
+              >
+                <VoiceRecorderWidget 
+                  id="voice-recorder" 
+                  maxDuration={config.steps.input?.voice?.maxDuration as number} 
+                  showVisualization={Boolean(config.steps.input?.voice?.showVisualization)} 
+                  openaiConfig={getOpenAIConfig()} 
+                  autoTranscribe={true} 
+                  value={wizardData.voiceData} 
+                  onChange={(value) => handleDataUpdate({ voiceData: value })} 
+                />
               </Card>
             </Col>
           )}
           
           {config.steps.input?.text?.enabled && (
-            <Col xs={24} md={12}>
-              <Card className="glass-subcard" title={<span style={{ color: 'hsl(var(--foreground))' }}>Text Notes</span>} size="small" style={{ height: '280px' }}>
-                <div style={{ height: '200px', display: 'flex', flexDirection: 'column', padding: 'var(--spacing-2)' }}>
-                  <TextArea 
-                    placeholder={config.steps.input?.text?.placeholder} 
-                    value={wizardData.textData} 
-                    onChange={(e) => handleDataUpdate({ textData: e.target.value })} 
-                    rows={8} 
-                    maxLength={config.steps.input?.text?.maxLength} 
-                    showCount 
-                    style={{ flex: 1, resize: 'none' }} 
-                  />
-                </div>
+            <Col xs={24} md={12} style={{ display: 'flex' }}>
+              <Card 
+                className="glass-subcard" 
+                title={<span style={{ color: 'hsl(var(--foreground))' }}>Text Notes</span>} 
+                size="small" 
+                style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                bodyStyle={{ flex: 1, padding: 'var(--spacing-2)', display: 'flex', flexDirection: 'column' }}
+              >
+                <TextArea 
+                  className="full-height-textarea"
+                  placeholder={config.steps.input?.text?.placeholder} 
+                  value={wizardData.textData} 
+                  onChange={(e) => handleDataUpdate({ textData: e.target.value })} 
+                  maxLength={config.steps.input?.text?.maxLength} 
+                  showCount 
+                  style={{ resize: 'none' }} 
+                />
               </Card>
             </Col>
           )}
         </Row>
         
         {config.steps.input?.images?.enabled && (
-          <Card className="glass-subcard" title={<span style={{ color: 'hsl(var(--foreground))' }}>Image Upload</span>} size="small">
+          <Card className="glass-subcard" title={<span style={{ color: 'hsl(var(--foreground))' }}>Image Upload</span>} size="small" style={{ flexShrink: 0 }}>
             <React.Suspense fallback={null}>
               <ImageUploadWidget 
                 id="image-upload" 
@@ -103,7 +120,7 @@ export const InputStep: React.FC<InputStepProps> = ({
           </Card>
         )}
         
-        <Space>
+        <Space style={{ flexShrink: 0 }}>
           <Button 
             type="primary" 
             onClick={handleStepComplete} 
@@ -113,7 +130,7 @@ export const InputStep: React.FC<InputStepProps> = ({
             Next
           </Button>
         </Space>
-      </Space>
+      </div>
     </Card>
   );
 };

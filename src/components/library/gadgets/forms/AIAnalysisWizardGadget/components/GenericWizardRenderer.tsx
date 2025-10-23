@@ -1,24 +1,24 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigation } from "../../../../../../contexts/NavigationContext";
+import type {
+  EndpointConfig,
+  PersistRequest,
+  WizardRecordSaveOptions,
+} from "../../../../../../hooks/useWizardRecordSave";
+import { useWizardRecordSave } from "../../../../../../hooks/useWizardRecordSave";
 import { BaseGadget } from "../../../base";
+import { AIAnalysisWizardGadget } from "../AIAnalysisWizardGadget";
+import type {
+  AIAnalysisWizardConfig,
+  AIAnalysisWizardData,
+  WizardIdentityConfig,
+} from "../AIAnalysisWizardGadget.types";
 import { getStepItems } from "../utils/iconUtils";
 import {
   convertRecordToWizardData,
   getStableRestoreIdFromUrl,
   tryFetchRecordFromApi,
 } from "../utils/restore";
-import type {
-  AIAnalysisWizardConfig,
-  AIAnalysisWizardData,
-  WizardIdentityConfig,
-} from "../AIAnalysisWizardGadget.types";
-import { AIAnalysisWizardGadget } from "../AIAnalysisWizardGadget";
-import { useWizardRecordSave } from "../../../../../../hooks/useWizardRecordSave";
-import type {
-  EndpointConfig,
-  WizardRecordSaveOptions,
-  PersistRequest,
-} from "../../../../../../hooks/useWizardRecordSave";
-import { useNavigation } from "../../../../../../contexts/NavigationContext";
 import { InputStep } from "./InputStep";
 import { PDFStep } from "./PDFStep";
 import { SectionStep } from "./SectionStep";
@@ -1452,17 +1452,18 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({
     );
   };
 
-  // Calculate dynamic height accounting for UI overhead
-  // - Main header/navigation bar: ~64px
-  // - Module bar/breadcrumbs: ~58px
-  // - Workspace title/padding: ~64px
-  // - Card margins and gaps: ~58px
-  // - Bottom padding/buffer: ~50px
-  const uiOverhead = 64 + 58 + 64 + 58 + 50; // Total: ~294px
+  // Calculate dynamic height accounting for actual measured UI overhead
+  // From Layout.tsx and GadgetWorkspaceRenderer.tsx:
+  // - Header: 48px (Layout.tsx line 125)
+  // - Module bar: 40px (Layout.tsx line 126, 346)
+  // - Workspace padding: 8px (GadgetWorkspaceRenderer.tsx line 197)
+  // - Grid gap/spacing: 16px (GadgetWorkspaceRenderer.tsx line 207)
+  // - Minimal buffer: -2px (adjusted for maximum height)
+  const uiOverhead = 48 + 40+40 ; // Total: 110px
   const availableHeight = windowHeight - uiOverhead;
   
-  // Set minimum height of 400px to ensure usability
-  const calculatedHeight = Math.max(400, availableHeight);
+  // Set minimum height of 500px to ensure usability
+  const calculatedHeight = Math.max(500, availableHeight);
   const wizardHeight = isFullscreen ? "100vh" : `${calculatedHeight}px`;
 
   if (isLoading) {
