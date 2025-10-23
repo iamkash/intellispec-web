@@ -4,14 +4,17 @@
  * This file exports all chart widgets used by chart gadgets.
  */
 
-import { LineChartWidget, LineChartComponent } from './LineChart';
-import { BarChartWidget, BarChartComponent } from './BarChart';
-import { AreaChartWidget, AreaChartComponent } from './AreaChart';
-import { PieChartWidget, PieChartComponent } from './PieChart';
+// Import all chart widgets and components
+import { AreaChartComponent, AreaChartWidget } from './AreaChart';
+import { BarChartComponent, BarChartWidget } from './BarChart';
+import { LineChartComponent, LineChartWidget } from './LineChart';
+import { PieChartComponent, PieChartWidget } from './PieChart';
 
-// Export widgets
-export { LineChartWidget, BarChartWidget, AreaChartWidget, PieChartWidget };
-export { LineChartComponent, BarChartComponent, AreaChartComponent, PieChartComponent };
+// Re-export widgets
+export { AreaChartWidget, BarChartWidget, LineChartWidget, PieChartWidget };
+
+// Re-export components
+    export { AreaChartComponent, BarChartComponent, LineChartComponent, PieChartComponent };
 
 // Export for easy access
 export const chartWidgets = {
