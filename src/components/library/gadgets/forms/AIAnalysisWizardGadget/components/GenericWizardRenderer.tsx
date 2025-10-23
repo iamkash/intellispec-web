@@ -707,6 +707,18 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({
   const [wizardData, setWizardData] = useState<AIAnalysisWizardData>(() =>
     createInitialWizardData(sectionDefinitions, identity)
   );
+
+  // Track window height for dynamic sizing
+  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   const [isLoading, setIsLoading] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -1440,6 +1452,19 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({
     );
   };
 
+  // Calculate dynamic height accounting for UI overhead
+  // - Main header/navigation bar: ~64px
+  // - Module bar/breadcrumbs: ~58px
+  // - Workspace title/padding: ~64px
+  // - Card margins and gaps: ~58px
+  // - Bottom padding/buffer: ~50px
+  const uiOverhead = 64 + 58 + 64 + 58 + 50; // Total: ~294px
+  const availableHeight = windowHeight - uiOverhead;
+  
+  // Set minimum height of 400px to ensure usability
+  const calculatedHeight = Math.max(400, availableHeight);
+  const wizardHeight = isFullscreen ? "100vh" : `${calculatedHeight}px`;
+
   if (isLoading) {
     return (
       <div
@@ -1458,7 +1483,7 @@ export const GenericWizardRenderer: React.FC<GenericWizardRendererProps> = ({
   return (
     <div
       className={`ai-analysis-wizard ${isFullscreen ? "fullscreen" : ""}`}
-      style={{ height: "100%", minHeight: 0, padding: 0 }}
+      style={{ height: wizardHeight, minHeight: 0, padding: 0 }}
     >
       <WizardHeader
         config={config}

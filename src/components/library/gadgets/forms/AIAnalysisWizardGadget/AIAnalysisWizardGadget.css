@@ -117,7 +117,7 @@
 
 /* Force sidebar body to have scrollbar - same pattern as section-body */
 .ai-analysis-wizard .wizard-sidebar .sidebar-body {
-  height: calc(100vh - 350px); /* Adjust for header, footer, and sidebar header */
+  height: 100%; /* Changed from fixed calc to 100% for dynamic resizing */
   overflow: auto;
   padding-right: 8px;
 }
@@ -163,7 +163,7 @@
 
 /* Enhanced section body with better scrolling */
 .ai-analysis-wizard .wizard-content > .ant-card.wizard-card .section-body {
-  height: calc(100vh - 420px);
+  height: 100%; /* Changed from fixed calc to 100% for dynamic resizing */
   overflow: auto;
   padding-right: 8px;
 }
